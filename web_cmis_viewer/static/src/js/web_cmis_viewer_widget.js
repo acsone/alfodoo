@@ -6,7 +6,9 @@
  +*/
 
  odoo.define('web_cmis_viewer.cmis_viewer_widgets', function( require) {
- 
+"use strict";
+
+
  var core = require('web.core');
  var formWidget = require('web.form_widgets');
  var formats = require('web.formats');
@@ -18,6 +20,89 @@
  var _t = core._t;
  var QWeb = core.qweb;
 
+ 
+ var CmisContentRow = core.Class.extend({
+
+   init: function(cmis_object, cmis_session){
+     this.cmis_object = cmis_object;
+     this.cmi_session = cmis_session;
+     this.parse_object(cmis_object);
+   },
+
+   parse_object: function(cmis_object){
+       this.name = this.getSuccinctProperty('cmis:name', cmis_object);
+       this.mimetype = this.getSuccinctProperty('cmis:contentStreamMimeType', cmis_object);
+       this.baseTypeId = this.getSuccinctProperty('cmis:baseTypeId', cmis_object);
+       this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmis_object);
+       this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
+       this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
+   },
+
+   getSuccinctProperty: function(property, cmis_object){
+       cmis_object = cmis_object || this.cmis_object;
+       return this.cmis_object.object.succinctProperties[property];
+   },
+   
+   _get_css_class: function(){
+       if (this.baseTypeId === 'cmis:folder') {
+           return 'fa fa-folder';
+       }
+
+       if (this.mimetype){
+           switch (this.mimetype){
+               case 'application/pdf':
+                   return 'fa fa-file-pdf-o';
+               case 'text/plain':
+                   return 'fa fa-file-text-o';
+               case 'text/html':
+                   return 'fa fa-file-code-o';
+               case 'application/json':
+                   return 'fa fa-file-code-o';
+               case 'application/gzip':
+                   return 'fa fa-file-archive-o';
+               case 'application/zip':
+                   return 'fa fa-file-archive-o';
+               case 'application/octet-stream':
+                   return 'fa fa-file-o';
+           }
+           switch (this.mimetype.split('/')[0]){
+               case 'image':
+                   return 'fa fa-file-image-o';
+               case 'audio':
+                   return 'fa fa-file-audio-o';
+               case 'video':
+                   return 'fa fa-file-video-o';
+           }
+       }
+       return 'fa fa-fw';
+   },
+
+   /** fName
+    * return the cmis:name formatted to be rendered in ta datatable cell
+    * 
+    **/
+   fName: function() {
+       var cls = this._get_css_class();
+       return "<div class='" + cls + " cmic_content_icon'/>" + this.name;
+   },
+
+   /** fLastModificationDate
+    * return the cmis:mastModificationDate formatted to be rendered in ta datatable cell
+    * 
+    **/
+   fLastModificationDate: function() {
+       return this.format_cmis_timestamp(this.lastModificationDate);
+   },
+
+   format_cmis_timestamp: function(cmis_timestamp){
+       if (cmis_timestamp) {
+           var d = new Date(cmis_timestamp);
+           return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear();
+       }
+       return '';
+   }
+ });
+ 
  var CmisViewer = formWidget.FieldChar.extend({
     template: "CmisViewer",
 
@@ -25,6 +110,14 @@
     datatable: null,
     displayed_folder_id: null,
 
+    events: {
+        'change input': 'store_dom_value',
+        'click td.details-control': 'display_row_details',
+    },
+
+    /*
+     * Override base methods 
+     */
 
     init: function (field_manager, node) {
         this._super(field_manager, node);
@@ -52,7 +145,25 @@
         self.load_cmis_config();
         self.init_cmis_session();
     },
-    
+
+    render_value: function() {
+        var self = this;
+        this._super();
+        $.when(self.cmis_session_initialized, self.table_rendered).done(function() {
+            var value = self.get('value');
+            value = '7c5205b6-126d-40f9-a7a4-f39289c721fe';
+            self.set_root_folder_id(value);
+        });
+    },
+
+    reload_record: function() {
+        this.view.reload();
+    },
+
+    /*
+     * Specific methods 
+     */
+
     add_tab_listener: function() {
         var self = this;
         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
@@ -65,34 +176,6 @@
         });
     },
 
-    _get_css_class_for_mimetype: function(mimetype){
-        switch (mimetype){
-            case 'image':
-                return 'fa fa-file-image-o';
-            case 'audio':
-                return 'fa fa-file-audio-o';
-            case 'video':
-                return 'fa fa-file-video-o';
-            case 'application/pdf':
-                return 'fa fa-file-pdf-o';
-            case 'text/plain':
-                return 'fa fa-file-text-o';
-            case 'text/html':
-                return 'fa fa-file-code-o';
-            case 'application/json':
-                return 'fa fa-file-code-o';
-            case 'application/gzip':
-                return 'fa fa-file-archive-o';
-            case 'application/zip':
-                return 'fa fa-file-archive-o';
-            case 'application/octet-stream':
-                return 'fa fa-file-o';
-            default:
-                return null;
-        }
-    },
-
-    
     render_datatable: function() {
         if (_.isNull(this.datatable)){
             var self = this;
@@ -102,41 +185,32 @@
                 scrollCollapse: true,
                 pageLength:     25,
                 deferRender:    true,
+                serverSide:     true,
                 ajax: $.proxy(self, 'datatable_query_cmis_data'),
                 columns: [
-                    { data: 'object.succinctProperties.cmis:baseTypeId',
-                      render: function ( data, type, row ) {
-                        if (data == 'cmis:folder'){
-                            return "<span class='fa fa-folder'/>";
-                        }
-                        if (data == 'cmis:document'){
-                            mimetype = row.object.succinctProperties['cmis:contentStreamMimeType'];
-                            cls = self. _get_css_class_for_mimetype(mimetype) ||  _get_css_class_for_mimetype(mimetype.split('/')[0]);
-                            return "<span class='" + cls + "'/>";
-                        }
-                      }
+                    {
+                        className:      'details-control',
+                        orderable:      false,
+                        data:           null,
+                        defaultContent: '',
                     },
-                    { data: 'object.succinctProperties.cmis:name' },
-                    { data: 'object.succinctProperties.cmis:lastModificationDate',
-                      render: function ( data, type, row ) {
-                        // If display or filter data is requested, format the date
-                        if ( type === 'display' || type === 'filter' ) {
-                            var d = new Date( data );
-                            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear();
-                        }
-                 
-                        // Otherwise the data type requested (`type`) is type detection or
-                        // sorting data, for which we want to use the integer, so just return
-                        // that, unaltered
-                        return data; 
-                      }
+                    { data: 'fName()'},
+                    { data: 'fLastModificationDate()'},
+                    { data: 'lastModifiedBy'},
+                    { 
+                        data: null,
+                        defaultContent: '',
+                        orderable: false
                     },
-                    { data: 'object.succinctProperties.cmis:lastModifiedBy'},
-                    { data: 'object.succinctProperties.cmis:objectId' },
-                ], 
+                ],
+                "order": [[1, 'asc']]
             });
             this.table_rendered.resolve();
         }
+    },
+
+    row_content_factory: function(cmis_object) {
+        return new CmisContentRow(cmis_object);
     },
 
     /** function called by datatablet o obtain the required dat
@@ -170,50 +244,17 @@
                 //orderBy : orderBy
                 })
             .ok(function(data){
-                callback({'data': data.objects,
-                          'recordsTotal': data.numItems})
+                callback({'data': _.map(data.objects, self.row_content_factory),
+                          'recordsTotal': data.numItems,
+                          'recordsFiltered': data.numItems});
             });
             return;
-            /*request : {
-                success : function(data) {
-                    // Clean and hide elements
-                    $(library.element).find("#queryValue").val("");
-                    $(library.element).find("#queryClean").hide();
-
-                    // If there is no documents
-                    if (data.objects.length == 0) {
-                        if ($(library.element).find(".noDocument").length == 0)
-                            $(list).closest(".documentlist .table").after("<div class='noDocument'>There is no document in this folder");
-                        else
-                            $(library.element).find(".noDocument").show();
-                    } else {
-                        // For each node
-                        $(data.objects).each(function(index) {
-                            // Append a new item in the table
-                            library._appendItem(list, this.object);
-                        });
-                        // Append the pagination block
-                        library._appendPagination(data.hasMoreItems, data.numItems, "_displayChildren");
-                    }
-
-                    // Display the document list
-                    $(library.element).find(".library div.documentlist").fadeIn();
-                    $(library.element).find("#overlay").fadeOut();
-                },
-                error : function(jqXHR, textStatus, errorThrown) {
-                    // Display an error message
-                    library._addError("Can't get the children from the object " + folderId + " in the repository.");
-                    $(library.element).find(".library div.documentlist").fadeIn();
-                    $(library.element).find("#overlay").fadeOut();
-                }
-            }
-        });*/
     },
 
     load_cmis_config: function() {
         //var ds = new instance.web.DataSetSearch(this, 'cmis.backend', this.context, [[1, '=', 1]]);
         //ds.read_slice(['name', 'location', 'username', 'password'], {}).done(this.on_document_backend_loaded);
-        this.on_cmis_config_loaded({location: 'http://localhost:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser/'})
+        this.on_cmis_config_loaded({location: 'http://10.7.20.179:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser/'})
     },
 
     on_cmis_config_loaded: function(config) {
@@ -233,16 +274,6 @@
                 .ok(function(data) {
                     self.cmis_session_initialized.resolve();
                  });
-        });
-    },
-    
-    render_value: function() {
-        var self = this;
-        this._super();
-        $.when(self.cmis_session_initialized, self.table_rendered).done(function() {
-            var value = self.get('value');
-            value = '7c5205b6-126d-40f9-a7a4-f39289c721fe';
-            self.set_root_folder_id(value);
         });
     },
 
@@ -278,14 +309,35 @@
      */
     display_children: function(pageIndex, folderId) {
     },
-     
 
-    reload_record: function() {
-        this.view.reload();
+    /**
+     *  Display the details of the selected row
+     *  This method is triggered when the user click on the details icon 
+     */
+    display_row_details: function(e) {
+        var tr = $(e.target).closest('tr');
+        var row = this.datatable.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child(QWeb.render("CmisContentDetails", {object: row.data()}) ).show();
+            tr.addClass('shown');
+        }
     },
 });
 
 core.form_widget_registry
     .add('cmis_viewer', CmisViewer);
+
+return {
+    CmisContentRow: CmisContentRow,
+    CmisViewer: CmisViewer, 
+};
+
 });
  

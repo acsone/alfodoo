@@ -5,3 +5,19 @@ div.cmis_viewer{
 div.dataTables_scrollBody {
     min-height: 40vh;
 }
+
+div.cmic_content_icon:before {
+    margin-right: 4px;
+}
+
+div.cmis_viewer td.details-control {
+    background: url('/web_cmis_viewer/static/src/img/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+div.cmis_viewer tr.shown td.details-control {
+    background: url('/web_cmis_viewer/static/src/img/details_close.png') no-repeat center center;
+}
+
+div.cmis_viewer_details {
+//padding-left:50px;
+}

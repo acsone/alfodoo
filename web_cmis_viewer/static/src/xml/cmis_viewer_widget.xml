@@ -32,142 +32,80 @@
             </tr>
           </tfoot>
           <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-            </tr>
-            <tr>
-                <td>Garrett Winters</td>
-                <td>Accountant</td>
-                <td>Tokyo</td>
-                <td>63</td>
-                <td>2011/07/25</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-            </tr>
-            </tbody>
+          </tbody>
         </table>
     </div>
+</t>
+
+<t t-name="CmisContentDetails">
+<div class="cmis_viewer_details" cellpadding="5">
+    <ul role="tablist" class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" role="tab" href="#details">
+                Details
+            </a>
+        </li><li>
+            <a data-toggle="tab" role="tab" href="#content">
+                Content
+            </a>
+        </li><li>
+            <a data-toggle="tab" role="tab" href="#versions">
+                Versions
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content nav nav-tabs">
+        <div class="tab-pane fade in active" id="details">
+        <table cellpadding="5" cellspacing="0" border="0">
+        <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Type Id</label></td>
+            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectTypeId')"/></td>
+        </tr>
+        <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Id</label></td>
+            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:versionSeriesId')"/></td>
+        </tr>
+        <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Name</label></td>
+            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:name')"/></td>
+        </tr>
+        <t t-if="object.baseTypeId != 'cmis:folder'">
+        <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">MIME Type</label></td>
+            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:contentStreamMimeType')"/></td>
+        </tr>
+        </t>
+        <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Creation Date</label></td>
+            <td class="oe_form_group_cell date"><t t-esc="object.format_cmis_timestamp(object.getSuccinctProperty('cmis:creationDate'))"/></td>
+        </tr>
+        <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Created By</label></td>
+            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:createdBy')"/></td>
+        </tr>
+        <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified Date</label></td>
+            <td class="oe_form_group_cell date"><t t-esc="object.fLastModificationDate()"/></td>
+        </tr>
+        <tr>
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified By</label></td>
+            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:lastModifiedBy')"/></td>
+        </tr>
+        <t t-if="object.baseTypeId != 'cmis:folder'">
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Is Checked Out?</label></td>
+                <td class="oe_form_group_cell"><input type="checkbox" t-att-checked="object.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')" disabled='true'/></td>
+            </tr>
+        </t>
+    </table>
+        
+        </div>
+        <div class="tab-pane fade" id="content">
+        </div>
+        <div class="tab-pane fade" id="versions">
+        </div>
+    </div>
+</div>
 </t>
 
 </templates>
