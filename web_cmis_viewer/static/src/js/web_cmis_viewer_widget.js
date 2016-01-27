@@ -100,7 +100,18 @@
            return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear();
        }
        return '';
-   }
+   },
+
+   /**
+    * Content actions
+    * 
+    * render the list of available actions
+    */
+   fContentActions: function(){
+       return QWeb.render("CmisContentActions", {object: this});
+   },
+
+   
  });
  
  var CmisViewer = formWidget.FieldChar.extend({
@@ -186,6 +197,7 @@
                 pageLength:     25,
                 deferRender:    true,
                 serverSide:     true,
+                autoWidth:      false,
                 ajax: $.proxy(self, 'datatable_query_cmis_data'),
                 columns: [
                     {
@@ -198,9 +210,10 @@
                     { data: 'fLastModificationDate()'},
                     { data: 'lastModifiedBy'},
                     { 
-                        data: null,
+                        data: 'fContentActions()',
                         defaultContent: '',
-                        orderable: false
+                        orderable: false,
+                        
                     },
                 ],
                 "order": [[1, 'asc']]
@@ -241,14 +254,31 @@
                 includeAllowableActions : true,
                 skipCount : start,
                 maxItems : max,
-                //orderBy : orderBy
+                orderBy : "cmis:baseTypeId DESC,cmis:name"
                 })
             .ok(function(data){
                 callback({'data': _.map(data.objects, self.row_content_factory),
                           'recordsTotal': data.numItems,
                           'recordsFiltered': data.numItems});
+                self.$el.find('.dropdown-toggle').click(function (e){
+                    self.dropDownFixPosition($(e.target),$('.dropdown-menu'));
+                });
             });
             return;
+    },
+
+    /**
+     * fix for dropdowns that are inside a container with "overflow: scroll"
+     * This fix is required in order to have the dropdown to be displayed
+     * on top of the table without scrolling. Without this fix, the menu will
+     * appears into the table container but at the same time, scrollbars will
+     * appear for the parts of the menu thaht overflows the initial div
+     * container 
+     */
+    dropDownFixPosition: function(button,dropdown){
+        var dropDownTop = button.offset().top + button.outerHeight();
+          dropdown.css('top', dropDownTop + "px");
+          dropdown.css('left', button.offset().left + "px");
     },
 
     load_cmis_config: function() {
@@ -325,7 +355,7 @@
         }
         else {
             // Open this row
-            row.child(QWeb.render("CmisContentDetails", {object: row.data()}) ).show();
+            row.child(QWeb.render("CmisContentDetails", {object: row.data()})).show();
             tr.addClass('shown');
         }
     },

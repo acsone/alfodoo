@@ -38,74 +38,74 @@
 </t>
 
 <t t-name="CmisContentDetails">
-<div class="cmis_viewer_details" cellpadding="5">
-    <ul role="tablist" class="nav nav-tabs">
-        <li class="active">
-            <a data-toggle="tab" role="tab" href="#details">
-                Details
-            </a>
-        </li><li>
-            <a data-toggle="tab" role="tab" href="#content">
-                Content
-            </a>
-        </li><li>
-            <a data-toggle="tab" role="tab" href="#versions">
-                Versions
-            </a>
-        </li>
-    </ul>
-    <div class="tab-content nav nav-tabs">
-        <div class="tab-pane fade in active" id="details">
+    <div class="cmis_viewer_details" cellpadding="5">
         <table cellpadding="5" cellspacing="0" border="0">
-        <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Type Id</label></td>
-            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectTypeId')"/></td>
-        </tr>
-        <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Id</label></td>
-            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:versionSeriesId')"/></td>
-        </tr>
-        <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Name</label></td>
-            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:name')"/></td>
-        </tr>
-        <t t-if="object.baseTypeId != 'cmis:folder'">
-        <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">MIME Type</label></td>
-            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:contentStreamMimeType')"/></td>
-        </tr>
-        </t>
-        <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Creation Date</label></td>
-            <td class="oe_form_group_cell date"><t t-esc="object.format_cmis_timestamp(object.getSuccinctProperty('cmis:creationDate'))"/></td>
-        </tr>
-        <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Created By</label></td>
-            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:createdBy')"/></td>
-        </tr>
-        <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified Date</label></td>
-            <td class="oe_form_group_cell date"><t t-esc="object.fLastModificationDate()"/></td>
-        </tr>
-        <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified By</label></td>
-            <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:lastModifiedBy')"/></td>
-        </tr>
-        <t t-if="object.baseTypeId != 'cmis:folder'">
             <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Is Checked Out?</label></td>
-                <td class="oe_form_group_cell"><input type="checkbox" t-att-checked="object.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')" disabled='true'/></td>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Type Id</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectTypeId')"/></td>
             </tr>
-        </t>
-    </table>
-        
-        </div>
-        <div class="tab-pane fade" id="content">
-        </div>
-        <div class="tab-pane fade" id="versions">
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Id</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:versionSeriesId')"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Name</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:name')"/></td>
+            </tr>
+            <t t-if="object.baseTypeId != 'cmis:folder'">
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">MIME Type</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:contentStreamMimeType')"/></td>
+            </tr>
+            </t>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Creation Date</label></td>
+                <td class="oe_form_group_cell date"><t t-esc="object.format_cmis_timestamp(object.getSuccinctProperty('cmis:creationDate'))"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Created By</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:createdBy')"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified Date</label></td>
+                <td class="oe_form_group_cell date"><t t-esc="object.fLastModificationDate()"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified By</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:lastModifiedBy')"/></td>
+            </tr>
+            <t t-if="object.baseTypeId != 'cmis:folder'">
+                <tr>
+                    <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Is Checked Out?</label></td>
+                    <td class="oe_form_group_cell"><input type="checkbox" t-att-checked="object.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')" disabled='true'/></td>
+                </tr>
+            </t>
+        </table>
+    </div>
+</t>
+
+<t t-name="CmisContentActions">
+    <div class="cmis_viewer_content_actions">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default btn-xs" aria-label="Download">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default btn-xs" aria-label="Preview">
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </button>
+            <a type="button" class="btn btn-default btn-xs dropdown-toggle glyphicon glyphicon-align-justify" t-att-id="object.getSuccinctProperty('cmis:objectId')" aria-label="More actions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                
+            </a>
+            <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+            </ul>
         </div>
     </div>
-</div>
+    
 </t>
 
 </templates>

@@ -21,3 +21,12 @@ div.cmis_viewer tr.shown td.details-control {
 div.cmis_viewer_details {
 //padding-left:50px;
 }
+
+
+div.cmis_viewer_content_actions a.dropdown-toggle.glyphicon.glyphicon-align-justify {
+  top: 0px;
+} 
+
+div.cmis_viewer_content_actions ul.dropdown-menu{
+  position: fixed;
+}
