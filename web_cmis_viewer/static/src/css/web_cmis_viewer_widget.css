@@ -30,3 +30,8 @@ div.cmis_viewer_content_actions a.dropdown-toggle.glyphicon.glyphicon-align-just
 div.cmis_viewer_content_actions ul.dropdown-menu{
   position: fixed;
 }
+
+div.cmis_update_content_stream input[type="file"] {
+    width: 90%;
+    height: initial !important;
+}

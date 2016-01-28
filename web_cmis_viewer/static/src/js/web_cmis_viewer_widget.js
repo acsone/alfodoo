@@ -16,16 +16,60 @@
  var pyeval = require('web.pyeval');
  var Registry = require('web.Registry');
  var session = require('web.session');
+ var Dialog = require('web.Dialog');
+ var framework = require('web.framework');
+
  
  var _t = core._t;
  var QWeb = core.qweb;
 
+ var CmisUpdateContentStreamDialog = Dialog.extend({
+    template: 'CmisUpdateContentStreamView',
+    init: function(parent, row) {
+        var self = this;
+        var options = {
+            buttons: [
+                {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
+                {text: _t("Update content"), click: function () { self.on_click_update_content(); }}
+            ],
+            close: function () { self.close();}
+        };
+        this._super(parent, options);
+        this.row = row;
+        this.data = row.data();
+        this.set_title(_t("Update content of ") + this.data.name);
+    },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+
+    },
+
+    on_click_update_content: function() {
+        var self = this;
+        var fileSelect = this.$el.find("input[type='file']")[0];
+        var mimeType = fileSelect.files[0].type;
+        framework.blockUI();
+        this.data.cmis_session
+            .setContentStream(this.data.objectId, fileSelect.files[0], true, mimeType)
+            .ok(function(data) {
+                framework.unblockUI();
+                self.$el.parents('.modal').modal('hide');
+             })
+            .notOk(framework.unblockUI);
+    },
+    
+    close: function() {
+        this._super();
+    }
+});
+ 
  
  var CmisContentRow = core.Class.extend({
 
    init: function(cmis_object, cmis_session){
      this.cmis_object = cmis_object;
-     this.cmi_session = cmis_session;
+     this.cmis_session = cmis_session;
      this.parse_object(cmis_object);
    },
 
@@ -36,6 +80,7 @@
        this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmis_object);
        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
        this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
+       this.url = this.cmis_session.getContentStreamURL(this.objectId, 'attachment');
    },
 
    getSuccinctProperty: function(property, cmis_object){
@@ -108,10 +153,14 @@
     * render the list of available actions
     */
    fContentActions: function(){
-       return QWeb.render("CmisContentActions", {object: this});
+       var ctx = {object: this};
+       _.map(this.cmis_object.object.allowableActions, function (value, actionName) {
+           ctx[actionName] = value;
+       });
+       ctx['canPreview'] = ctx['canGetContentStream'] && this.mimetype === 'application/pdf';
+       return QWeb.render("CmisContentActions", ctx);
    },
 
-   
  });
  
  var CmisViewer = formWidget.FieldChar.extend({
@@ -123,7 +172,7 @@
 
     events: {
         'change input': 'store_dom_value',
-        'click td.details-control': 'display_row_details',
+        'click td.details-control': 'on_details_control_click',
     },
 
     /*
@@ -218,12 +267,13 @@
                 ],
                 "order": [[1, 'asc']]
             });
+            this.datatable.on('draw.dt', $.proxy(self, 'register_content_events'));
             this.table_rendered.resolve();
         }
     },
 
     row_content_factory: function(cmis_object) {
-        return new CmisContentRow(cmis_object);
+        return new CmisContentRow(cmis_object, this.session);
     },
 
     /** function called by datatablet o obtain the required dat
@@ -257,14 +307,82 @@
                 orderBy : "cmis:baseTypeId DESC,cmis:name"
                 })
             .ok(function(data){
-                callback({'data': _.map(data.objects, self.row_content_factory),
+                callback({'data': _.map(data.objects, self.row_content_factory, self),
                           'recordsTotal': data.numItems,
                           'recordsFiltered': data.numItems});
-                self.$el.find('.dropdown-toggle').click(function (e){
-                    self.dropDownFixPosition($(e.target),$('.dropdown-menu'));
-                });
             });
             return;
+    },
+
+    /**
+     * Method called once all the content has been rendered into the datatable
+     */
+    register_content_events: function(e, settings){
+         var self = this;
+         /* some UI fixes */
+         this.$el.find('.dropdown-toggle').off('click');
+         this.$el.find('.dropdown-toggle').on('click', function (e){
+        	 self.dropdown_fix_position($(e.target));
+         });
+         
+         this.$el.find('.dropdown-menu').off('mouseleave');
+         // hide the dropdown menu on mouseleave
+         this.$el.find('.dropdown-menu').on('mouseleave', function(e){
+        	 $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+         });
+         // hide the dropdown menu on link clicked
+         this.$el.find('.dropdown-menu a').on('click', function(e){
+             $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+         });
+
+         /* bind content events */
+         var $el_actions = this.$el.find('.cmis_viewer_content_actions')
+         $el_actions.find('.content-action-download').on('click', function(e) {
+             var row = self._get_event_row(e);
+             self.on_download_click(row);
+         });
+         $el_actions.find('.content-action-preview').on('click', function(e) {
+             var row = self._get_event_row(e);
+             self.on_preview_click(row);
+         });
+         
+         $el_actions.find('.content-action-get-properties').on('click', function(e) {
+             var row = self._get_event_row(e);
+             self.on_get_properties_click(row);
+         });
+         $el_actions.find('.content-action-set-content-stream').on('click', function(e) {
+             var row = self._get_event_row(e);
+             self.on_set_content_stream_click(row);
+         });
+    },
+
+    /**
+     * Return the DataTable row on which the event has occured
+     */
+    _get_event_row: function(e){
+        return this.datatable.row( $(e.target).closest('tr') );
+    },
+
+    on_download_click: function(row){
+        window.open(row.data().url);
+    },
+
+    on_preview_click: function(row){
+        alert('Preview not yet implemented');
+    },
+
+    on_get_properties_click: function(row){
+        this.display_row_details(row)
+    },
+
+    on_details_control_click: function(e){
+        var row = this._get_event_row(e);
+        this.display_row_details(row)
+    },
+    
+    on_set_content_stream_click: function(row){
+        var dialog = new CmisUpdateContentStreamDialog(this, row);
+        dialog.open();
     },
 
     /**
@@ -274,8 +392,11 @@
      * appears into the table container but at the same time, scrollbars will
      * appear for the parts of the menu thaht overflows the initial div
      * container 
+     * see also http://www.datatables.net/forums/discussion/18529/bootstrap-dropdown-issue-with-datatables
+     * and https://github.com/twbs/bootstrap/issues/7160#issuecomment-28180085
      */
-    dropDownFixPosition: function(button,dropdown){
+    dropdown_fix_position: function(button){
+        var dropdown = $(button.parent()).find('.dropdown-menu');
         var dropDownTop = button.offset().top + button.outerHeight();
           dropdown.css('top', dropDownTop + "px");
           dropdown.css('left', button.offset().left + "px");
@@ -344,10 +465,8 @@
      *  Display the details of the selected row
      *  This method is triggered when the user click on the details icon 
      */
-    display_row_details: function(e) {
-        var tr = $(e.target).closest('tr');
-        var row = this.datatable.row( tr );
- 
+    display_row_details: function(row) {
+        var tr = $(row.node());
         if ( row.child.isShown() ) {
             // This row is already open - close it
             row.child.hide();
@@ -365,8 +484,9 @@ core.form_widget_registry
     .add('cmis_viewer', CmisViewer);
 
 return {
+    CmisUpdateContentStreamDialog: CmisUpdateContentStreamDialog,
     CmisContentRow: CmisContentRow,
-    CmisViewer: CmisViewer, 
+    CmisViewer: CmisViewer,
 };
 
 });
