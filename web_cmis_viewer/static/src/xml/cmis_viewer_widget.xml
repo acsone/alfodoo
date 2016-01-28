@@ -46,17 +46,22 @@
             </tr>
             <tr>
                 <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Id</label></td>
-                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:versionSeriesId')"/></td>
+                <t t-if="object.baseTypeId != 'cmis:folder'">
+                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:versionSeriesId')"/></td>
+                </t>
+                <t t-if="object.baseTypeId == 'cmis:folder'">
+                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectId')"/></td>
+                </t>
             </tr>
             <tr>
                 <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Name</label></td>
                 <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:name')"/></td>
             </tr>
             <t t-if="object.baseTypeId != 'cmis:folder'">
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">MIME Type</label></td>
-                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:contentStreamMimeType')"/></td>
-            </tr>
+                <tr>
+                    <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">MIME Type</label></td>
+                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:contentStreamMimeType')"/></td>
+                </tr>
             </t>
             <tr>
                 <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Creation Date</label></td>
