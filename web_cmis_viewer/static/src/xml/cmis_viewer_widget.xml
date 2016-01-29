@@ -114,11 +114,11 @@
             <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
                 <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
                 <li t-if='canSetContentStream'><a class='content-action-set-content-stream' href="#">Update</a></li>
-                <li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li>
+                <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li>
                 <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>
                 <li t-if='canCheckIn'><a class='content-action-check-in' href="#">Check-In</a></li>
                 <li t-if='canCancelCheckOut'><a class='content-action-cancel-checkout' href="#">Cancel Check-Out</a></li>
-                <li t-if='canCheckOut'><a class='content-action-checkout' href="#">Check-Out</a></li>
+                <li t-if='canCheckOut'><a class='content-action-checkout' href="#">Check-Out</a></li -->
                 <li role="separator" class="divider"></li>
                 <li t-if='canDeleteObject'><a class='content-action-delete-object' href="#">Delete</a></li>
             </ul>
@@ -133,5 +133,10 @@
     </div>
 </t>
 
+<t t-name="CMISSessionr.warning">
+    <div class="o_dialog_warning">
+        <t t-raw="error.stacktrace"/>
+    </div>
+</t>
 
 </templates>

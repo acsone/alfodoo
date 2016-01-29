@@ -11,6 +11,7 @@
 
  var core = require('web.core');
  var formWidget = require('web.form_widgets');
+ var crash_manager = require('web.crash_manager');
  var formats = require('web.formats');
  var ProgressBar = require('web.ProgressBar');
  var pyeval = require('web.pyeval');
@@ -48,15 +49,14 @@
     on_click_update_content: function() {
         var self = this;
         var fileSelect = this.$el.find("input[type='file']")[0];
-        var mimeType = fileSelect.files[0].type;
+        var fileName = 'application/pdf'; //fileSelect.files[0].mimeType;
         framework.blockUI();
         this.data.cmis_session
-            .setContentStream(this.data.objectId, fileSelect.files[0], true, mimeType)
+            .setContentStream(this.data.objectId, fileSelect.files[0], true, fileName)
             .ok(function(data) {
                 framework.unblockUI();
                 self.$el.parents('.modal').modal('hide');
-             })
-            .notOk(framework.unblockUI);
+             });
     },
     
     close: function() {
@@ -172,7 +172,7 @@
 
     events: {
         'change input': 'store_dom_value',
-        'click td.details-control': 'on_details_control_click',
+        'click td.details-control': 'on_click_details_control',
     },
 
     /*
@@ -339,20 +339,24 @@
          var $el_actions = this.$el.find('.cmis_viewer_content_actions')
          $el_actions.find('.content-action-download').on('click', function(e) {
              var row = self._get_event_row(e);
-             self.on_download_click(row);
+             self.on_click_download(row);
          });
          $el_actions.find('.content-action-preview').on('click', function(e) {
              var row = self._get_event_row(e);
-             self.on_preview_click(row);
+             self.on_click_preview(row);
          });
          
          $el_actions.find('.content-action-get-properties').on('click', function(e) {
              var row = self._get_event_row(e);
-             self.on_get_properties_click(row);
+             self.on_click_get_properties(row);
          });
          $el_actions.find('.content-action-set-content-stream').on('click', function(e) {
              var row = self._get_event_row(e);
-             self.on_set_content_stream_click(row);
+             self.on_click_set_content_stream(row);
+         });
+         $el_actions.find('.content-action-delete-object').on('click', function(e) {
+             var row = self._get_event_row(e);
+             self.on_click_delete_object(row);
          });
     },
 
@@ -363,24 +367,38 @@
         return this.datatable.row( $(e.target).closest('tr') );
     },
 
-    on_download_click: function(row){
+    on_click_download: function(row){
         window.open(row.data().url);
     },
 
-    on_preview_click: function(row){
+    on_click_preview: function(row){
         alert('Preview not yet implemented');
     },
 
-    on_get_properties_click: function(row){
+    on_click_get_properties: function(row){
         this.display_row_details(row)
     },
 
-    on_details_control_click: function(e){
+    on_click_details_control: function(e){
         var row = this._get_event_row(e);
         this.display_row_details(row)
     },
+
+    on_click_delete_object: function(row){
+        var data = row.data();
+        var self = this;
+        Dialog.confirm(
+                self, _('Confirm deletion of ') + data.name ,
+                { confirm_callback: function(){
+                    var all_versions = true;
+                    self.session.deleteObject(data.objectId, all_versions).ok(function(){
+                       self.datatable.ajax.reload(); 
+                    });
+                }
+            });
+    },
     
-    on_set_content_stream_click: function(row){
+    on_click_set_content_stream: function(row){
         var dialog = new CmisUpdateContentStreamDialog(this, row);
         dialog.open();
     },
@@ -418,7 +436,7 @@
         var self = this;
         $.when(this.cmis_config_loaded).done(function (){
             self.session = cmis.createSession(self.cmis_location);
-            self.session.setGlobalHandlers(self.do_warn, self.do_warn);
+            self.session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
             self.session
                 .setCredentials('admin', 'admin')
                 .loadRepositories()
@@ -428,6 +446,29 @@
         });
     },
 
+    on_cmis_error: function(error){
+        framework.unblockUI();
+        if (error.type == 'application/json'){
+            error = JSON.parse(error.text);
+            new Dialog(this, {
+                size: 'medium',
+                title: _t("CMIS Error "),
+                subtitle: error.message,
+                $content: $('<div>').html(QWeb.render('CMISSessionr.warning', {error: error}))
+            }).open();
+        } else {
+            new Dialog(this, {
+                size: 'medium',
+                title: _t("CMIS Error"),
+                subtitle: error.statusText,
+                $content: $('<div>').html(error.text)
+            }).open();
+        }
+        
+        
+    },
+    
+    
     /**
      * Set a new Root 
      */
