@@ -7,7 +7,7 @@
                 <link rel="stylesheet" href="/web_cmis_viewer/static/src/css/web_cmis_viewer_widget.css"/>
                 <link rel="stylesheet" href="/web_cmis_viewer/static/src/css/bootstrap_fonts_fixes.css"/>
 
-                <script type="text/javascript" src="/web_cmis_viewer/static/lib/cmisjs/cmis.0.2.0.min-all.js"/>
+                <script type="text/javascript" src="/web_cmis_viewer/static/lib/cmisjs/cmis.0.3.0.min-all.js"/>
                 <script type="text/javascript" src="/web_cmis_viewer/static/lib/datatables/datatables.js"/>
                 <script type="text/javascript" src="/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js"/>
             </xpath>

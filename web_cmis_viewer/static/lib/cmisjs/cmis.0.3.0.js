@@ -1,7 +1,7 @@
-/*! CmisJS - v0.2.0 - 2015-05-20
+/*! CmisJS - v0.3.0 - 2016-01-25
 * a CMIS client library written in Javascript for node and the browser
 * http://github.com/agea/CmisJS
-* Copyright (c) 2015 Andrea Agili; Licensed  */
+* Copyright (c) 2016 Andrea Agili; Licensed  */
 ;
 (function (root, factory) {
   'use strict';
@@ -25,12 +25,17 @@
 
   var lib = {};
 
-  //check if we are running on node
-  var isCommonJSModules = typeof module !== 'undefined' && module.exports;
-  var isNode = isCommonJSModules && typeof window === 'undefined';
-  if (isCommonJSModules) {
+  // http://visionmedia.github.io/superagent
+  var request;
+
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = lib;
+    request = require('superagent');
+  } else {
+    request = window.superagent;
   }
+
+
   /**
    * @return {CmisSession}
    *
@@ -55,6 +60,7 @@
      */
     session.setToken = function (token) {
       _defaultOptions.token = token;
+      _token = token;
       return session;
     };
 
@@ -140,6 +146,27 @@
       options.cmisselector = 'object';
 
       return new CmisRequest(_get(session.defaultRepository.rootFolderUrl + path)
+        .query(options));
+    };
+
+    /**
+     * Gets the latest document object in the version series
+     *
+     * {@link http://docs.oasis-open.org/cmis/CMIS/v1.1/CMIS-v1.1.html#x1-3360004}
+     *
+     * @param {String} versionSeriesId
+     * @param {Object} options (possible options: major, filter, renditionFilter, includeAllowableActions, includeRelationships, includeACL, includePolicyIds, succinct, token)
+     *
+     * @return {CmisRequest}
+     */
+    session.getObjectOfLatestVersion = function (versionSeriesId, options) {
+      options = _fill(options);
+      options.cmisselector = 'object';
+      options.objectId = versionSeriesId;
+      options.versionSeriesId = versionSeriesId;
+      options.major = !!options.major;
+
+      return new CmisRequest(_get(session.defaultRepository.rootFolderUrl)
         .query(options));
     };
 
@@ -723,7 +750,7 @@
         .query(options), true);
     };
 
-    if (isNode) {
+    if (request.Request.prototype.pipe) {
       /**
        * pipes document content to stream - AVAILABLE ONLY IN NODE
        * @method pipeContentStream
@@ -738,6 +765,7 @@
           .query(options).pipe(stream);
       };
     }
+
 
     /**
      * Gets document content URL
@@ -840,18 +868,18 @@
      * @param {String} objectId
      * @param {String/Buffer} content
      * @param {Boolean} overwriteFlag
-     * @param {String} mimeType
+     * @param {String} filename (for mimetype detection by repository)
      * @param {Object} options (possible options: changeToken, succinct, token)
      * @return {CmisRequest}
      */
-    session.setContentStream = function (objectId, content, overwriteFlag, mimeType, options) {
+    session.setContentStream = function (objectId, content, overwriteFlag, filename, options) {
       var options = _fill(options);
       options.objectId = objectId;
       options.overwriteFlag = !!overwriteFlag;
       options.cmisaction = 'setContent';
 
       return _postMultipart(session.defaultRepository.rootFolderUrl,
-        options, content, mimeType);
+        options, content, filename);
 
     };
 
@@ -860,16 +888,17 @@
      * @param {String} objectId
      * @param {String/Buffer} content
      * @param {Boolean} isLastChunk
+     * @param {String} filename (for mimetype detection by repository)
      * @param {Object} options (possible options: changeToken, succinct, token)
      * @return {CmisRequest}
      */
-    session.appendContentStream = function (objectId, content, isLastChunk, options) {
+    session.appendContentStream = function (objectId, content, isLastChunk, filename, options) {
       var options = _fill(options);
       options.objectId = objectId;
       options.cmisaction = 'appendContent';
       options.isLastChunk = !!isLastChunk;
       return _postMultipart(session.defaultRepository.rootFolderUrl,
-        options, content);
+        options, content, filename);
     };
 
     /**
@@ -995,20 +1024,19 @@
       options.cmisaction = 'checkIn';
 
       return _postMultipart(session.defaultRepository.rootFolderUrl,
-        options, content, options.mimeType || properties['cmis:contentStreamMimeType'],
-        properties['cmis:name'])
+        options, content)
 
     };
 
     /**
      * gets versions of object
-     * @param {String} objectId
+     * @param {String} versionSeriesId
      * @param {Object} options (possible options: filter, includeAllowableActions, succinct, token)
      * @return {CmisRequest}
      */
-    session.getAllVersions = function (objectId, options) {
+    session.getAllVersions = function (versionSeriesId, options) {
       var options = _fill(options);
-      options.objectId = objectId;
+      options.versionSeriesId = versionSeriesId;
       options.cmisselector = 'versions';
       return new CmisRequest(_get(session.defaultRepository.rootFolderUrl)
         .query(options));
@@ -1121,16 +1149,6 @@
     };
 
 
-    // http://visionmedia.github.io/superagent
-    var request;
-
-    // if running on node.js require superagent
-    if (typeof module !== 'undefined' && module.exports) {
-      request = require('superagent');
-    } else {
-      request = window.superagent;
-    }
-
     /**
      * @class CmisRequest
      * superagent wrapper used to manage async requests
@@ -1143,7 +1161,7 @@
       var callback_error = _globalError;
 
       req.on('error', callback_error)
-        .end(function (res) {
+        .end(function (err, res) {
           if (res.ok) {
             if (callback_ok.scope) {
               callback_ok.scope.$apply(function () {
@@ -1253,15 +1271,31 @@
     var _password = null;
     var _afterlogin;
 
+    var _proxyUrl = null;
+    if ('undefined' !== typeof process && process.env.http_proxy) {
+      _proxyUrl = process.env.http_proxy;
+    }
+
     var _noop = function () {};
 
     var _globalNotOk = _noop;
     var _globalError = _noop;
 
     var _http = function (method, url) {
-      var r = request(method, url);
+      var r;
+
+      if (_proxyUrl) {
+        var proxy = require('superagent-proxy');
+        r = proxy(request(method, url), _proxyUrl);
+      } else {
+        r = request(method, url);
+      }
+
       if (_username && _password) {
-        return r.auth(_username, _password);
+        r.auth(_username, _password);
+      }
+      if (_token) {
+        r.set('Authorization', 'Bearer ' + _token);
       }
       return r;
     };
@@ -1278,40 +1312,27 @@
       return req;
     };
 
-    var _postMultipart = function (url, options, content, mimeType) {
-      var req = _post(url, true);
-
-      if (!isNode) {
-
-        var data = new FormData();
-        if (content) {
-          if ('string' == typeof content) {
-            content = new Blob([content]); //, {type:mimeType||'text/plain'});
+    var _postMultipart = function (url, options, content, filename) {
+      var req = _http('POST', url);
+      filename = filename || 'undefined';
+      for (var k in options) {
+        if (options[k] == 'cmis:name') {
+          filename = options[k.replace('Id', 'Value')];
+          break;
+        }
+      }
+      if (content) {
+        if ('string' == typeof content) {
+          if ('undefined' === typeof Buffer) {
+            content = new Blob([content]);
+          } else {
+            content = new Buffer(content);
           }
-          data.append("content", content);
         }
-        for (var k in options) {
-          data.append(k, options[k]);
-        }
-        req.send(data);
-        delete req.header['Content-Type'];
-
-      } else {
-        var p = req.type('multipart/form-data').part();
-        if (content) {
-          p.set('Content-Disposition', 'form-data; name="content"; filename="data"');
-          if (mimeType) {
-            p.set('Content-Type', mimeType);
-          }
-          p.write(content);
-        }
-        for (var k in options) {
-          req.part()
-            .set('Content-Disposition', 'form-data; name="' + k + '"')
-            .set('Content-Type', 'text/plain')
-            .write('' + options[k]);
-
-        }
+        req.attach("content", content, filename);
+      }
+      for (var k in options) {
+        req.field(k, '' + options[k]);
       }
       return new CmisRequest(req);
     }
