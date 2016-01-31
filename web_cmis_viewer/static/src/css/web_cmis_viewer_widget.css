@@ -17,6 +17,9 @@ div.cmis_viewer td.details-control {
 div.cmis_viewer tr.shown td.details-control {
     background: url('/web_cmis_viewer/static/src/img/details_close.png') no-repeat center center;
 }
+div.cmis_viewer .dataTables_length{
+    text-align: right;
+}
 
 div.cmis_viewer_details {
 //padding-left:50px;

@@ -265,6 +265,9 @@
                         
                     },
                 ],
+                dom: "<'row'<'col-sm-6 cmis-root-content-buttons'><'col-sm-6'lf>>" +
+                     "<'row'<'col-sm-12'tr>>" +
+                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 "order": [[1, 'asc']]
             });
             this.datatable.on('draw.dt', $.proxy(self, 'register_content_events'));
@@ -487,10 +490,25 @@
      * Add a link to the folder in the breadcrumb and display children
      */
     display_folder: function(pageIndex, folderId){
+        var self = this;
         this.displayed_folder_id  = folderId;
+        this.session.getObject(folderId, "latest", {
+            includeAllowableActions : true})
+            .ok(function(noderef){
+                self.dislayed_folder_noderef = noderef;
+                self.render_folder_actions();
+            });
         this.datatable.clear();
         this.datatable.page(0);
         this.datatable.ajax.reload();
+    },
+
+    render_folder_actions: function(){
+        var ctx = {object: this};
+        _.map(this.dislayed_folder_noderef.allowableActions, function (value, actionName) {
+            ctx[actionName] = value;
+        });
+        this.$el.find('.cmis-root-content-buttons').html(QWeb.render("CmisRootContentActions", ctx));
     },
 
     /**

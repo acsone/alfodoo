@@ -89,6 +89,23 @@
     </div>
 </t>
 
+<t t-name="CmisRootContentActions">
+    <div class="cmis_viewer_root_content_actions btn-toolbar">
+       <div class="btn-group">
+         <button type="button"
+                 t-attf-class="btn btn-default btn-sm {{ (canCreateFolder)?'': 'disabled' }}"
+                 aria-label="Create folder">
+             <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
+         </button>
+         <button type="button"
+                 t-attf-class="btn btn-default btn-sm {{ (canCreateDocument)?'': 'disabled' }}"
+                 aria-label="Create document">
+             <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+         </button>
+       </div>
+    </div>
+</t>
+
 <t t-name="CmisContentActions">
     <div class="cmis_viewer_content_actions">
     <div class="btn-group pull-right" role="group">
