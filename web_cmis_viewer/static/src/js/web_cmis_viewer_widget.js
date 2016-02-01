@@ -24,8 +24,50 @@
  var _t = core._t;
  var QWeb = core.qweb;
 
+ var CmisCreateFolderDialog = Dialog.extend({
+     template: 'CmisCreatefolderDialog',
+     init: function(parent, parent_noderef) {
+         var self = this;
+         var options = {
+             buttons: [
+                 {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
+                 {text: _t("Create"), click: function () { self.on_click_create(); }}
+             ],
+             close: function () { self.close();}
+         };
+         this._super(parent, options);
+         this.parent_noderef = parent_noderef;
+         this.set_title(_t("Create Folder "));
+     },
+     start: function() {
+         var self = this;
+         this._super.apply(this, arguments);
+
+     },
+
+     on_click_create: function() {
+         var self = this;
+         var input = this.$el.find("input[type='text']")[0];
+         framework.blockUI();
+         this.data.cmis_session
+             .setContentStream(this.data.objectId, fileSelect.files[0], true, fileName)
+             .ok(function(data) {
+                 framework.unblockUI();
+                 self.$el.parents('.modal').modal('hide');
+              });
+     },
+     
+     close: function() {
+         this._super();
+     }
+ });
+ 
  var CmisUpdateContentStreamDialog = Dialog.extend({
     template: 'CmisUpdateContentStreamView',
+    events: {
+        'change .btn-file :file' : 'on_file_change'
+    },
+
     init: function(parent, row) {
         var self = this;
         var options = {
@@ -46,6 +88,14 @@
 
     },
 
+    on_file_change: function(e){
+        var input = $(e.target),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        var input_text = input.closest('.input-group').find(':text');
+        input_text.val(label);
+    },
+    
     on_click_update_content: function() {
         var self = this;
         var fileSelect = this.$el.find("input[type='file']")[0];
@@ -55,6 +105,7 @@
             .setContentStream(this.data.objectId, fileSelect.files[0], true, fileName)
             .ok(function(data) {
                 framework.unblockUI();
+                self.getParent().datatable.ajax.reload();
                 self.$el.parents('.modal').modal('hide');
              });
     },
@@ -364,6 +415,21 @@
     },
 
     /**
+     * Method called when the a root folder is initialized
+     */
+    register_root_content_events: function(){
+        var self = this;
+        this.$el.find('.root-content-action-new-folder').on('click', function(e){
+            var dialog = new CmisCreateFolderDialog(self, this.dislayed_folder_noderef);
+            dialog.open();
+            
+        });
+        this.$el.find('.root-content-action-new-doc').on('click', function(e){
+            
+        });
+    },
+
+    /**
      * Return the DataTable row on which the event has occured
      */
     _get_event_row: function(e){
@@ -509,6 +575,7 @@
             ctx[actionName] = value;
         });
         this.$el.find('.cmis-root-content-buttons').html(QWeb.render("CmisRootContentActions", ctx));
+        this.register_root_content_events();    
     },
 
     /**
@@ -546,6 +613,7 @@ return {
     CmisUpdateContentStreamDialog: CmisUpdateContentStreamDialog,
     CmisContentRow: CmisContentRow,
     CmisViewer: CmisViewer,
+    CmisCreateFolderDialog: CmisCreateFolderDialog,
 };
 
 });

@@ -93,12 +93,12 @@
     <div class="cmis_viewer_root_content_actions btn-toolbar">
        <div class="btn-group">
          <button type="button"
-                 t-attf-class="btn btn-default btn-sm {{ (canCreateFolder)?'': 'disabled' }}"
+                 t-attf-class="btn btn-default btn-sm root-content-action-new-folder {{ (canCreateFolder)?'': 'disabled' }}"
                  aria-label="Create folder">
              <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
          </button>
          <button type="button"
-                 t-attf-class="btn btn-default btn-sm {{ (canCreateDocument)?'': 'disabled' }}"
+                 t-attf-class="btn btn-default btn-sm root-content-action-new-doc {{ (canCreateDocument)?'': 'disabled' }}"
                  aria-label="Create document">
              <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
          </button>
@@ -145,11 +145,34 @@
 </t>
 
 <t t-name='CmisUpdateContentStreamView'>
-     <div class="oe_form cmis_update_content_stream">
-           <div class="oe_form_group_cell"><input type="file" name="input-file" class="" autofocus="autofocus"/></div>
-    </div>
+    <form class="form-horizontal cmis_update_content_stream" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse&amp;hellip; <input type="file" required="required"/>
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly='1'/>
+            </div>
+            </div>
+        </div>
+    </form>
 </t>
 
+<t t-name='CmisCreatefolderDialog'>
+    <form class="form-horizontal" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <label for="page-name" class="col-sm-3 control-label">
+                Folder Name:
+            </label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" autofocus="autofocus" required="required"/>
+            </div>
+        </div>
+    </form>
+</t>
 <t t-name="CMISSessionr.warning">
     <div class="o_dialog_warning">
         <t t-raw="error.stacktrace"/>

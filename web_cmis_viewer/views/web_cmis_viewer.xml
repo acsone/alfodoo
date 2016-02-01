@@ -4,7 +4,7 @@
         <template id="assets_backend" name="web_cmis_viewer assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/web_cmis_viewer/static/lib/datatables/datatables.css"/>
-                <link rel="stylesheet" href="/web_cmis_viewer/static/src/css/web_cmis_viewer_widget.css"/>
+                <link rel="stylesheet" href="/web_cmis_viewer/static/src/less/web_cmis_viewer_widget.less"/>
                 <link rel="stylesheet" href="/web_cmis_viewer/static/src/css/bootstrap_fonts_fixes.css"/>
 
                 <script type="text/javascript" src="/web_cmis_viewer/static/lib/cmisjs/cmis.0.3.0.min-all.js"/>
