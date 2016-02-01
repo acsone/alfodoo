@@ -49,11 +49,12 @@
          var self = this;
          var input = this.$el.find("input[type='text']")[0];
          framework.blockUI();
-         this.getParent().cmis_session
+         var cmis_session = this.getParent().cmis_session;
+         cmis_session
              .createFolder(this.parent_noderef.objectId, input.value)
-             .ok(function(data) {
+             .ok(function(new_noderef) {
                  framework.unblockUI();
-                 self.getParent().datatable.ajax.reload();
+                 self.getParent().trigger('cmis_node_created', [new_noderef]);
                  self.$el.parents('.modal').modal('hide');
               });
      },
@@ -106,7 +107,7 @@
             .setContentStream(this.data.objectId, fileSelect.files[0], true, fileName)
             .ok(function(data) {
                 framework.unblockUI();
-                self.getParent().datatable.ajax.reload();
+                self.getParent().trigger('cmis_node_content_updated', [data]);
                 self.$el.parents('.modal').modal('hide');
              });
     },
@@ -238,6 +239,10 @@
         this.cmis_session_initialized = $.Deferred();
         this.cmis_config_loaded = $.Deferred();
         this.table_rendered = $.Deferred();
+        this.on('cmis_node_created', this, this.on_cmis_node_created);
+        this.on('cmis_node_deleted', this, this.on_cmis_node_deleted);
+        this.on('cmis_node_udated', this, this.on_cmis_node_updated);
+        this.on('cmis_node_content_updated', this, this.on_cmis_node_content_updated);
     },
 
     start: function () {
@@ -273,6 +278,27 @@
         this.view.reload();
     },
 
+    /*
+     * Cmis content events 
+     */
+    on_cmis_node_created: function(new_noderef){
+        this.datatable.ajax.reload();
+    },
+
+    on_cmis_node_deleted: function(deleted_noderef){
+        this.datatable.ajax.reload();
+    },
+
+    on_cmis_node_updated: function(updated_noderef){
+        this.datatable.ajax.reload();
+    },
+
+    on_cmis_node_content_updated: function(updated_noderef){
+        this.datatable.ajax.reload();
+    },
+
+
+    
     /*
      * Specific methods 
      */
@@ -463,7 +489,7 @@
                 { confirm_callback: function(){
                     var all_versions = true;
                     self.cmis_session.deleteObject(data.objectId, all_versions).ok(function(){
-                       self.datatable.ajax.reload(); 
+                        self.trigger('cmis_node_deleted', [data.cmis_object]);
                     });
                 }
             });
