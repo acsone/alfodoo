@@ -22,6 +22,7 @@
     ],
     # always loaded
     'data': [
+        'data/web_cmis_viewer.xml',
         'views/web_cmis_viewer.xml'
     ],
     # only loaded in demonstration mode

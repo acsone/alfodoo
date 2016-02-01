@@ -11,12 +11,10 @@
 
  var core = require('web.core');
  var formWidget = require('web.form_widgets');
- var Model = require('web.DataModel');
+ var data = require('web.data');
  var time = require('web.time');
  var ProgressBar = require('web.ProgressBar');
- var pyeval = require('web.pyeval');
  var Registry = require('web.Registry');
- var session = require('web.session');
  var Dialog = require('web.Dialog');
  var framework = require('web.framework');
 
@@ -330,10 +328,9 @@
         this._super();
         $.when(self.cmis_session_initialized, self.table_rendered).done(function() {
             var value = self.get('value');
-            if (value){
-                value = '7c5205b6-126d-40f9-a7a4-f39289c721fe';
-                self.set_root_folder_id(value);
-            } else {
+            self.$el.find('button.cmis-create-root').addClass('hidden');
+            self.set_root_folder_id(value);
+            if (!value){
                 self.$el.find('button.cmis-create-root').removeClass('hidden');
             }
         });
@@ -371,10 +368,28 @@
      * Create a node for the current model into the DMS
      */
     on_click_create_root: function(){
+        if (!this.getParent().datarecord.id){
+            Dialog.alert(this, _t('Create your object first'));
+            return;
+        }
         var self = this;
         $.when(this.cmis_config_loaded).done(function (){
-            
+            self.cmis_session.getObjectByPath(self.cmis_initial_directory_write_path)
+            .ok(function(noderef){
+                self.create_root_node_at(noderef);
+            });
         });
+    },
+
+    create_root_node_at: function(parent_noderef){
+        var self = this;
+        var noderef = new CmisNoderefWrapper(parent_noderef, this.cmis_session);
+        this.cmis_session.createFolder(noderef.objectId, this.getParent().datarecord.name)
+        .ok(function(new_noderef) {
+            var folder_noderef= new CmisNoderefWrapper(new_noderef, self.cmis_session);
+            self.set_value(folder_noderef.objectId);
+            self.getParent().save();
+         });
     },
 
     /**
@@ -432,7 +447,7 @@
         }
     },
 
-    row_content_factory: function(cmis_object) {
+    wrap_noderef: function(cmis_object) {
         return new CmisNoderefWrapper(cmis_object.object, this.cmis_session);
     },
 
@@ -451,7 +466,7 @@
         // Get children of the current folder
         var self = this;
         var cmis_session = self.cmis_session;
-        if (_.isNull(self.displayed_folder_id)){
+        if (_.isNull(self.displayed_folder_id)  || ! self.displayed_folder_id){
             callback({data : []});
             return;
         }
@@ -467,7 +482,7 @@
                 orderBy : "cmis:baseTypeId DESC,cmis:name"
                 })
             .ok(function(data){
-                callback({'data': _.map(data.objects, self.row_content_factory, self),
+                callback({'data': _.map(data.objects, self.wrap_noderef, self),
                           'recordsTotal': data.numItems,
                           'recordsFiltered': data.numItems});
             });
@@ -597,16 +612,21 @@
     },
 
     load_cmis_config: function() {
-        var P = new Model('ir.config_parameter');
-        P.call('get_param', ['database.uuid']).then(function(dbuuid) {});
-        //var ds = new instance.web.DataSetSearch(this, 'cmis.backend', this.context, [[1, '=', 1]]);
-        //ds.read_slice(['name', 'location', 'username', 'password'], {}).done(this.on_document_backend_loaded);
-        this.on_cmis_config_loaded({location: 'http://10.7.20.179:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser/'})
+        var ds = new data.DataSetSearch(this, 'ir.config_parameter', this.context, [
+            ['key', 'in', ['web_cmis_viewer.location', 'web_cmis_viewer.initial_directory_write_path']]]);
+        ds.read_slice(['key', 'value'], {}).done(this.on_cmis_config_loaded);
     },
 
-    on_cmis_config_loaded: function(config) {
+    on_cmis_config_loaded: function(result) {
         var self = this;
-        self.cmis_location = config.location;
+        _.each(result, function(item, index, list){
+            if (item.key === 'web_cmis_viewer.location'){
+                this.cmis_location = item.value
+            } else if (item.key === 'web_cmis_viewer.initial_directory_write_path'){
+                this.cmis_initial_directory_write_path = item.value;
+            }
+            
+        }, this);
         self.cmis_config_loaded.resolve();
     },
     
@@ -670,13 +690,15 @@
     display_folder: function(pageIndex, folderId){
         var self = this;
         this.displayed_folder_id  = folderId;
-        this.cmis_session.getObject(folderId, "latest", {
-            includeAllowableActions : true})
-            .ok(function(noderef){
-                self.dislayed_folder_noderef = new CmisNoderefWrapper(noderef, self.cmis_session);
-                self.render_folder_actions();
-            });
-        this.datatable.clear();
+        this.$el.find('.cmis-root-content-buttons').empty();
+        if(folderId){
+            this.cmis_session.getObject(folderId, "latest", {
+                includeAllowableActions : true})
+                .ok(function(noderef){
+                    self.dislayed_folder_noderef = new CmisNoderefWrapper(noderef, self.cmis_session);
+                    self.render_folder_actions();
+                });
+        }
         this.datatable.page(0);
         this.datatable.ajax.reload();
     },
