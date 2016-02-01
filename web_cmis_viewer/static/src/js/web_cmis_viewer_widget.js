@@ -49,10 +49,11 @@
          var self = this;
          var input = this.$el.find("input[type='text']")[0];
          framework.blockUI();
-         this.data.cmis_session
-             .setContentStream(this.data.objectId, fileSelect.files[0], true, fileName)
+         this.getParent().session
+             .createFolder(this.parent_noderef.succinctProperties['cmis:objectId'], input.value)
              .ok(function(data) {
                  framework.unblockUI();
+                 self.getParent().datatable.ajax.reload();
                  self.$el.parents('.modal').modal('hide');
               });
      },
@@ -420,7 +421,7 @@
     register_root_content_events: function(){
         var self = this;
         this.$el.find('.root-content-action-new-folder').on('click', function(e){
-            var dialog = new CmisCreateFolderDialog(self, this.dislayed_folder_noderef);
+            var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_noderef);
             dialog.open();
             
         });
