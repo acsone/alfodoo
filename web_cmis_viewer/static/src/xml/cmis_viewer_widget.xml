@@ -8,6 +8,7 @@
                t-att-tabindex="widget.node.attrs.tabindex"
                t-att-autofocus="widget.node.attrs.autofocus"
                t-att-placeholder="widget.node.attrs.placeholder" />
+        <button type="button" class="btn btn-primary cmis-create-root hidden">Create folder in DMS</button>
         <table
             t-att-id="widget.id_for_table" 
             class="table table-striped table-bordered"

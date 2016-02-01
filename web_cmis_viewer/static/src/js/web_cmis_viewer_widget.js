@@ -11,8 +11,8 @@
 
  var core = require('web.core');
  var formWidget = require('web.form_widgets');
- var crash_manager = require('web.crash_manager');
- var formats = require('web.formats');
+ var Model = require('web.DataModel');
+ var time = require('web.time');
  var ProgressBar = require('web.ProgressBar');
  var pyeval = require('web.pyeval');
  var Registry = require('web.Registry');
@@ -252,7 +252,11 @@
    format_cmis_timestamp: function(cmis_timestamp){
        if (cmis_timestamp) {
            var d = new Date(cmis_timestamp);
-           return d.getDate() +'-'+ (d.getMonth()+1) +'-'+ d.getFullYear();
+           var l10n = _t.database.parameters;
+           var date_format = time.strftime_to_moment_format(l10n.date_format);
+           var time_format = time.strftime_to_moment_format(l10n.time_format);
+           var value = moment(d);
+           return value.format(date_format + ' ' + time_format);
        }
        return '';
    },
@@ -283,6 +287,7 @@
     events: {
         'change input': 'store_dom_value',
         'click td.details-control': 'on_click_details_control',
+        'click button.cmis-create-root': 'on_click_create_root',
     },
 
     /*
@@ -325,8 +330,12 @@
         this._super();
         $.when(self.cmis_session_initialized, self.table_rendered).done(function() {
             var value = self.get('value');
-            value = '7c5205b6-126d-40f9-a7a4-f39289c721fe';
-            self.set_root_folder_id(value);
+            if (value){
+                value = '7c5205b6-126d-40f9-a7a4-f39289c721fe';
+                self.set_root_folder_id(value);
+            } else {
+                self.$el.find('button.cmis-create-root').removeClass('hidden');
+            }
         });
     },
 
@@ -353,12 +362,25 @@
         this.datatable.ajax.reload();
     },
 
-
     
     /*
      * Specific methods 
      */
 
+    /**
+     * Create a node for the current model into the DMS
+     */
+    on_click_create_root: function(){
+        var self = this;
+        $.when(this.cmis_config_loaded).done(function (){
+            
+        });
+    },
+
+    /**
+     * Add tab listener to render the table only when the tabe is active
+     * if the control is displayed in an inactive tab
+     */
     add_tab_listener: function() {
         var self = this;
         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
@@ -499,7 +521,7 @@
     },
 
     /**
-     * Method called when the a root folder is initialized
+     * Method called when a root folder is initialized
      */
     register_root_content_events: function(){
         var self = this;
@@ -575,6 +597,8 @@
     },
 
     load_cmis_config: function() {
+        var P = new Model('ir.config_parameter');
+        P.call('get_param', ['database.uuid']).then(function(dbuuid) {});
         //var ds = new instance.web.DataSetSearch(this, 'cmis.backend', this.context, [[1, '=', 1]]);
         //ds.read_slice(['name', 'location', 'username', 'password'], {}).done(this.on_document_backend_loaded);
         this.on_cmis_config_loaded({location: 'http://10.7.20.179:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser/'})
@@ -628,6 +652,9 @@
      */
     set_root_folder_id: function(folderId){
         var self = this;
+        if (self.root_folder_id === folderId){
+            return;
+        }
         $.when(self.cmis_session_initialized, self.table_rendered).done(function(){
             var library = this;
             self.root_folder_id = folderId;
