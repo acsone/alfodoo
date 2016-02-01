@@ -25,7 +25,7 @@
  var QWeb = core.qweb;
 
  var CmisCreateFolderDialog = Dialog.extend({
-     template: 'CmisCreatefolderDialog',
+     template: 'CmisCreateFolderDialog',
      init: function(parent, parent_noderef) {
          var self = this;
          var options = {
@@ -63,6 +63,63 @@
          this._super();
      }
  });
+
+ var CmisCreateDocumentDialog = Dialog.extend({
+     template: 'CmisCreateDocumentDialog',
+     events: {
+         'change .btn-file :file' : 'on_file_change'
+     },
+
+     init: function(parent, parent_noderef) {
+         var self = this;
+         var options = {
+             buttons: [
+                 {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
+                 {text: _t("Create"), click: function () { self.on_click_create(); }}
+             ],
+             close: function () { self.close();}
+         };
+         this._super(parent, options);
+         this.parent_noderef = parent_noderef;
+         this.set_title(_t("Create Documents "));
+     },
+
+     on_file_change: function(e){
+         var input = $(e.target),
+         numFiles = input.get(0).files ? input.get(0).files.length : 1,
+         label = input.val().replace(/\\/g, '/').replace(/.*\//, ''),
+         log = numFiles > 1 ? numFiles + ' files selected' : label;
+         var input_text = input.closest('.input-group').find(':text');
+         input_text.val(log);
+     },
+     
+     on_click_create: function() {
+         var self = this,
+         input = this.$el.find("input[type='file']")[0],
+         numFiles = input.files ? input.files.length : 1;
+         var processedFiles = [];
+         if (numFiles > 0) {
+             framework.blockUI();
+         }
+         var cmis_session = this.getParent().cmis_session;
+         _.each(input.files, function(file, index, list){
+             cmis_session
+             .createDocument(this.parent_noderef.objectId, file, file.name, file.mimeType)
+             .ok(function(data) {
+                 processedFiles.push(data);
+                 if (processedFiles.length == numFiles){
+                     framework.unblockUI();
+                     self.getParent().trigger('cmis_node_created', [processedFiles]);
+                     self.$el.parents('.modal').modal('hide');
+                 }
+              });
+         }, self);
+     },
+     
+     close: function() {
+         this._super();
+     }
+ });
  
  var CmisUpdateContentStreamDialog = Dialog.extend({
     template: 'CmisUpdateContentStreamView',
@@ -92,19 +149,18 @@
 
     on_file_change: function(e){
         var input = $(e.target),
-        numFiles = input.get(0).files ? input.get(0).files.length : 1,
-        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-        var input_text = input.closest('.input-group').find(':text');
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, ''),
+        input_text = input.closest('.input-group').find(':text');
         input_text.val(label);
     },
     
     on_click_update_content: function() {
         var self = this;
-        var fileSelect = this.$el.find("input[type='file']")[0];
-        var fileName = 'application/pdf'; //fileSelect.files[0].mimeType;
+        var file = this.$el.find("input[type='file']")[0].files[0];
+        var fileName = file.name;
         framework.blockUI();
         this.data.cmis_session
-            .setContentStream(this.data.objectId, fileSelect.files[0], true, fileName)
+            .setContentStream(this.data.objectId, file, true, fileName)
             .ok(function(data) {
                 framework.unblockUI();
                 self.getParent().trigger('cmis_node_content_updated', [data]);
@@ -453,7 +509,8 @@
             
         });
         this.$el.find('.root-content-action-new-doc').on('click', function(e){
-            
+            var dialog = new CmisCreateDocumentDialog(self, self.dislayed_folder_noderef);
+            dialog.open();
         });
     },
 
@@ -642,6 +699,7 @@ return {
     CmisNoderefWrapper: CmisNoderefWrapper,
     CmisViewer: CmisViewer,
     CmisCreateFolderDialog: CmisCreateFolderDialog,
+    CmisCreateDocumentDialog: CmisCreateDocumentDialog,
 };
 
 });

@@ -161,7 +161,24 @@
     </form>
 </t>
 
-<t t-name='CmisCreatefolderDialog'>
+<t t-name='CmisCreateDocumentDialog'>
+    <form class="form-horizontal cmis_create_document" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse&amp;hellip; <input type="file" required="required" multiple="true"/>
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly='1'/>
+            </div>
+            </div>
+        </div>
+    </form>
+</t>
+
+<t t-name='CmisCreateFolderDialog'>
     <form class="form-horizontal" role="form" t-att-id="id">
         <div class="form-group mb0">
             <label for="page-name" class="col-sm-3 control-label">
