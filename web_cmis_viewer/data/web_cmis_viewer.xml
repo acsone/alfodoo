@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="default_location" model="ir.config_parameter">
+            <field name="key">web_cmis_viewer.location</field>
+            <field name="value">http://10.7.20.179:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser/</field>
+        </record>
+
+        <record id="default_initial_directory_write_path" model="ir.config_parameter">
+            <field name="key">web_cmis_viewer.initial_directory_write_path</field>
+            <field name="value">/odoo</field>
+        </record>
+
+    </data>
+
+</odoo>
