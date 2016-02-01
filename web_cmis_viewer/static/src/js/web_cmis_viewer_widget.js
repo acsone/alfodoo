@@ -49,8 +49,8 @@
          var self = this;
          var input = this.$el.find("input[type='text']")[0];
          framework.blockUI();
-         this.getParent().session
-             .createFolder(this.parent_noderef.succinctProperties['cmis:objectId'], input.value)
+         this.getParent().cmis_session
+             .createFolder(this.parent_noderef.objectId, input.value)
              .ok(function(data) {
                  framework.unblockUI();
                  self.getParent().datatable.ajax.reload();
@@ -117,7 +117,7 @@
 });
  
  
- var CmisContentRow = core.Class.extend({
+ var CmisNoderefWrapper = core.Class.extend({
 
    init: function(cmis_object, cmis_session){
      this.cmis_object = cmis_object;
@@ -133,11 +133,12 @@
        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
        this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
        this.url = this.cmis_session.getContentStreamURL(this.objectId, 'attachment');
+       this.allowableActions = cmis_object.allowableActions;
    },
 
    getSuccinctProperty: function(property, cmis_object){
        cmis_object = cmis_object || this.cmis_object;
-       return this.cmis_object.object.succinctProperties[property];
+       return this.cmis_object.succinctProperties[property];
    },
    
    _get_css_class: function(){
@@ -206,7 +207,7 @@
     */
    fContentActions: function(){
        var ctx = {object: this};
-       _.map(this.cmis_object.object.allowableActions, function (value, actionName) {
+       _.map(this.cmis_object.allowableActions, function (value, actionName) {
            ctx[actionName] = value;
        });
        ctx['canPreview'] = ctx['canGetContentStream'] && this.mimetype === 'application/pdf';
@@ -328,7 +329,7 @@
     },
 
     row_content_factory: function(cmis_object) {
-        return new CmisContentRow(cmis_object, this.session);
+        return new CmisNoderefWrapper(cmis_object.object, this.cmis_session);
     },
 
     /** function called by datatablet o obtain the required dat
@@ -345,7 +346,7 @@
     datatable_query_cmis_data: function(data, callback, settings){
         // Get children of the current folder
         var self = this;
-        var session = self.session;
+        var cmis_session = self.cmis_session;
         if (_.isNull(self.displayed_folder_id)){
             callback({data : []});
             return;
@@ -354,7 +355,7 @@
         var start = settings._iDisplayStart;
         var max   = settings._iDisplayLength;
         var order = $.extend( true, [], settings.aaSorting );
-        session
+        cmis_session
             .getChildren(self.displayed_folder_id, {
                 includeAllowableActions : true,
                 skipCount : start,
@@ -461,7 +462,7 @@
                 self, _('Confirm deletion of ') + data.name ,
                 { confirm_callback: function(){
                     var all_versions = true;
-                    self.session.deleteObject(data.objectId, all_versions).ok(function(){
+                    self.cmis_session.deleteObject(data.objectId, all_versions).ok(function(){
                        self.datatable.ajax.reload(); 
                     });
                 }
@@ -505,9 +506,9 @@
     init_cmis_session: function(){
         var self = this;
         $.when(this.cmis_config_loaded).done(function (){
-            self.session = cmis.createSession(self.cmis_location);
-            self.session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
-            self.session
+            self.cmis_session = cmis.createSession(self.cmis_location);
+            self.cmis_session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
+            self.cmis_session
                 .setCredentials('admin', 'admin')
                 .loadRepositories()
                 .ok(function(data) {
@@ -559,10 +560,10 @@
     display_folder: function(pageIndex, folderId){
         var self = this;
         this.displayed_folder_id  = folderId;
-        this.session.getObject(folderId, "latest", {
+        this.cmis_session.getObject(folderId, "latest", {
             includeAllowableActions : true})
             .ok(function(noderef){
-                self.dislayed_folder_noderef = noderef;
+                self.dislayed_folder_noderef = new CmisNoderefWrapper(noderef, self.cmis_session);
                 self.render_folder_actions();
             });
         this.datatable.clear();
@@ -612,7 +613,7 @@ core.form_widget_registry
 
 return {
     CmisUpdateContentStreamDialog: CmisUpdateContentStreamDialog,
-    CmisContentRow: CmisContentRow,
+    CmisNoderefWrapper: CmisNoderefWrapper,
     CmisViewer: CmisViewer,
     CmisCreateFolderDialog: CmisCreateFolderDialog,
 };
