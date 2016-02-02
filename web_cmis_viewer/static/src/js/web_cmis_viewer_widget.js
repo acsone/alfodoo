@@ -477,7 +477,7 @@
         this.register_content_events();
     },
     
-    /** function called by datatablet to obtain the required dat
+    /** function called by datatablet to obtain the required data
      *
      * The function is given three parameters and no return is required. The
      * parameters are:
@@ -499,13 +499,13 @@
         var lang  = settings.oLanguage;
         var start = settings._iDisplayStart;
         var max   = settings._iDisplayLength;
-        var order = $.extend( true, [], settings.aaSorting );
+        var orderBy = this.prepare_order_by(settings.aaSorting);
         cmis_session
             .getChildren(self.displayed_folder_id, {
                 includeAllowableActions : true,
                 skipCount : start,
                 maxItems : max,
-                orderBy : "cmis:baseTypeId DESC,cmis:name"
+                orderBy : orderBy,
                 })
             .ok(function(data){
                 callback({'data': _.map(data.objects, self.wrap_noderef, self),
@@ -513,6 +513,37 @@
                           'recordsFiltered': data.numItems});
             });
             return;
+    },
+
+    /**
+     * Function called be fore calling cmis to build the oderBy parameters
+     * from settings given by datatable aaSorting info
+     * 
+     *  _aaSorting_ - aaSorting is an array of array for each column to be sorted 
+     *  initially containing the column's index and a direction string 
+     *  ('asc' or 'desc').
+     *  
+     *  The function return a cmis order_by string. 
+     */
+    prepare_order_by: function(aaSorting){
+        var orders_by = [];
+        _.each(aaSorting, function(sort_info, index, list){
+            var col_idx = sort_info[0];
+            var sort_order = sort_info[1].toUpperCase();
+            switch (col_idx){
+                case 1:
+                    orders_by.push('cmis:baseTypeId DESC,cmis:name ' + sort_order);
+                    break;
+                case 2:
+                    orders_by.push('cmis:lastModificationDate ' + sort_order);
+                    break;
+                case 3:
+                    orders_by.push('cmis:lastModifiedBy ' + sort_order);
+                    break;
+                
+            }
+        });
+        return orders_by.join();
     },
 
     /**
