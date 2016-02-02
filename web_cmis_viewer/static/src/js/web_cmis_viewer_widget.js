@@ -624,7 +624,55 @@
     },
 
     on_click_preview: function(row){
-        alert('Preview not yet implemented');
+        var data = row.data();
+        var cmis_session = this.cmis_session;
+        var documentUrl = cmis_session.getContentStreamURL(data.objectId, 'inline');
+        var fileName = data.name;
+        var $document_preview = this.$el.find(".documentpreview");
+        // Compute the list of headers required by the previewer
+        var headers = {};
+        if ($.ajaxSettings.headers != null)
+            headers = JSON.parse(JSON.stringify($.ajaxSettings.headers));
+        if (cmis_session._token != null) {
+            // Append the token at the document URL
+            var tokenName = Object.keys(cmis_session._token)[0];
+            var tokenValue = cmis_session.getToken()[tokenName];
+            documentUrl += "&" + tokenName + "=" + tokenValue;
+        } else {
+            var hash = btoa("admin:admin");
+            headers["Authorization"] = "Basic " + hash;
+        }
+
+        var width="100%";
+        var height =  '' + this.$el.height() - 30 + 'px'; //' ' + (H - r.top) + 'px';
+        // Create the previewer URL
+        var path = "/web_cmis_viewer/static/lib/viewerjs-0.5.8/ViewerJS/cmis_preview.html";
+        /*var mimetype = $(row).attr("mimetype");
+        if (typeof library.options.previewOptions !== undefined && library.options.previewOptions[mimetype] != null) {
+            if (library.options.previewOptions[mimetype].viewerPath != null)
+                path = library.options.previewOptions[mimetype].viewerPath;
+        }*/
+
+        var _url = path + '#' + JSON.stringify(headers) + "||" + documentUrl + "&type=" + fileName.slice(fileName.lastIndexOf('.')+1) + "&title=" + fileName;
+        $document_preview.empty();
+        $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': _url,
+                                                                    'width': width,
+                                                                    'height': height,
+                                                                    }));
+
+        // Show the previewer
+        var $tables_wrapper = this.$el.find(".dataTables_wrapper"); 
+        $tables_wrapper.fadeOut(400, function() {
+            $document_preview.fadeIn(400, function() {
+            });
+        });
+
+        // Attach an event to the "Back to document" icon
+        $document_preview.find(".button-back-browser").on('click', function() {
+            $document_preview.fadeOut(400, function() {
+                $tables_wrapper.fadeIn();
+            });
+        });
     },
 
     on_click_get_properties: function(row){
