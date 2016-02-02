@@ -198,7 +198,7 @@
    
    _get_css_class: function(){
        if (this.baseTypeId === 'cmis:folder') {
-           return 'fa fa-folder';
+           return 'fa fa-folder cmis-folder';
        }
 
        if (this.mimetype){
@@ -411,7 +411,10 @@
     render_datatable: function() {
         if (_.isNull(this.datatable)){
             var self = this;
-            this.datatable = $('#' + this.id_for_table).DataTable({
+            this.$datatable = $('#' + this.id_for_table)
+            this.$datatable.on('preInit.dt', $.proxy(self, 'on_datatable_preinit'));
+            this.$datatable.on('draw.dt', $.proxy(self, 'on_datatable_draw'));
+            this.datatable = this.$datatable.DataTable({
                 searching:      false,
                 scrollY:        '40vh',
                 scrollCollapse: true,
@@ -438,11 +441,11 @@
                     },
                 ],
                 dom: "<'row'<'col-sm-6 cmis-root-content-buttons'><'col-sm-6'lf>>" +
+                     "<'row'<'col-sm-12'<'cmis-breadcrumb-container'>>>" +
                      "<'row'<'col-sm-12'tr>>" +
                      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 "order": [[1, 'asc']]
             });
-            this.datatable.on('draw.dt', $.proxy(self, 'register_content_events'));
             this.table_rendered.resolve();
         }
     },
@@ -451,7 +454,30 @@
         return new CmisNoderefWrapper(cmis_object.object, this.cmis_session);
     },
 
-    /** function called by datatablet o obtain the required dat
+    /**
+     * This method is called by DataTables when a table is being initialised 
+     * and is about to request data. At the point of being called the table will
+     * have its columns and features initialised, but no data will have been
+     * loaded (either by Ajax, or reading from the DOM).
+     */
+    on_datatable_preinit: function(e, settings){
+        this.$breadcrumb = $('<ol class="breadcrumb"/>');
+        this.$el.find('div.cmis-breadcrumb-container').append(this.$breadcrumb);
+        
+    },
+
+    /**
+     * This method is called whenever the table is redrawn on the page.
+     * This function is to use to take actions on newly displayed data. At
+     * the point of being called, the table is filled with rows from the last
+     * call to the server. It's used to register events handlers to the newly
+     * created elements.
+     */
+    on_datatable_draw: function(e, settings){
+        this.register_content_events();
+    },
+    
+    /** function called by datatablet to obtain the required dat
      *
      * The function is given three parameters and no return is required. The
      * parameters are:
@@ -492,7 +518,7 @@
     /**
      * Method called once all the content has been rendered into the datatable
      */
-    register_content_events: function(e, settings){
+    register_content_events: function(){
          var self = this;
          /* some UI fixes */
          this.$el.find('.dropdown-toggle').off('click');
@@ -511,6 +537,10 @@
          });
 
          /* bind content events */
+         this.$el.find('.cmis-folder').on('click', function(e){
+             var row = self._get_event_row(e);
+             self.display_folder(0, row.data().objectId);
+         });
          var $el_actions = this.$el.find('.cmis_viewer_content_actions')
          $el_actions.find('.content-action-download').on('click', function(e) {
              var row = self._get_event_row(e);
@@ -611,12 +641,18 @@
           dropdown.css('left', button.offset().left + "px");
     },
 
+    /**
+     * Load CMIS settings from Odoo server 
+     */
     load_cmis_config: function() {
         var ds = new data.DataSetSearch(this, 'ir.config_parameter', this.context, [
             ['key', 'in', ['web_cmis_viewer.location', 'web_cmis_viewer.initial_directory_write_path']]]);
         ds.read_slice(['key', 'value'], {}).done(this.on_cmis_config_loaded);
     },
 
+    /**
+     * Parse the result of the call to the server to retrieve the CMIS settings
+     */
     on_cmis_config_loaded: function(result) {
         var self = this;
         _.each(result, function(item, index, list){
@@ -629,7 +665,11 @@
         }, this);
         self.cmis_config_loaded.resolve();
     },
-    
+
+    /**
+     * Initialize the CmisJS session and register handlers for warnings and errors 
+     *  occuring when calling the CMIS DMS
+     */
     init_cmis_session: function(){
         var self = this;
         $.when(this.cmis_config_loaded).done(function (){
@@ -644,6 +684,9 @@
         });
     },
 
+    /**
+     * Method called by the cmis session in case of error or warning
+     */
     on_cmis_error: function(error){
         framework.unblockUI();
         if (error.type == 'application/json'){
@@ -678,9 +721,16 @@
         $.when(self.cmis_session_initialized, self.table_rendered).done(function(){
             var library = this;
             self.root_folder_id = folderId;
-            //self.reset_bread_crumb();
+            self.reset_breadcrumb();
             self.display_folder(0, folderId);
         })
+    },
+
+    /**
+     * Empty the breadcrumb
+     */
+    reset_breadcrumb: function(){
+        this.$breadcrumb.empty();
     },
 
     /**
@@ -698,9 +748,37 @@
                     self.dislayed_folder_noderef = new CmisNoderefWrapper(noderef, self.cmis_session);
                     self.render_folder_actions();
                 });
+            this.display_folder_in_breadcrumb(folderId);
         }
         this.datatable.page(0);
         this.datatable.ajax.reload();
+    },
+
+    /**
+     * Display the folder into the breadcrumb.
+     */
+    display_folder_in_breadcrumb: function(folderId){
+        if (this.$breadcrumb.find('a[data-cmis-folder-id = "' + folderId + '"]').length === 0) {
+            var self = this;
+            // Get properties of this object and add link to the breadcrumb
+            this.cmis_session
+                .getObject(folderId, "latest", {includeAllowableActions : false})
+                .ok(function(noderef) {
+                    var wrapped_noderef =  new CmisNoderefWrapper(noderef, self.cmis_session);
+                    var name = (folderId == self.root_folder_id)? _t('Root') : wrapped_noderef.name;
+                    var link = $('<a>').attr('href', '#').attr('data-cmis-folder-id', folderId).append(name);
+                    self.$breadcrumb.append($('<li>').append(link));
+                    link.click(function(e) {
+                      e.preventDefault();
+                      var current_id = self.dislayed_folder_noderef.objectId;
+                      var selectedForlderId = $(e.target).attr('data-cmis-folder-id');
+                      if(selectedForlderId !== current_id){
+                          $(e.target.parentNode).nextAll().remove();
+                          self.display_folder(null, selectedForlderId);
+                      }
+                    });
+                 });
+        }  
     },
 
     render_folder_actions: function(){
