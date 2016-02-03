@@ -1,0 +1,327 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* web_cmis_viewer
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-03 17:00+0100\n"
+"PO-Revision-Date: 2016-02-03 17:51+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.8.4\n"
+"Last-Translator: \n"
+"Language: fr\n"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:153
+#, python-format
+msgid "&nbsp;Back to documents list"
+msgstr "Retour à la liste des documents"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:449
+#, python-format
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(filtré de _MAX_ éléments au total)"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:464
+#, python-format
+msgid ": activate to sort column ascending"
+msgstr ": activer pour trier la colonne par ordre croissant"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:465
+#, python-format
+msgid ": activate to sort column descending"
+msgstr ": activer pour trier la colonne par ordre décroissant"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:173
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:190
+#, python-format
+msgid "Browse&hellip;"
+msgstr "Parcourir&hellip;"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:807
+#, python-format
+msgid "CMIS Error"
+msgstr "Erreur CMIS"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:800
+#, python-format
+msgid "CMIS Error "
+msgstr "Erreur CMIS"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:31
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:75
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:132
+#, python-format
+msgid "Close"
+msgstr "Fermer"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:32
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:76
+#, python-format
+msgid "Create"
+msgstr "Créer"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:82
+#, python-format
+msgid "Create Documents "
+msgstr "Ajouter un/des documents"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:38
+#, python-format
+msgid "Create Folder "
+msgstr "Ajouter un répertoire"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:11
+#, python-format
+msgid "Create folder in DMS"
+msgstr "Créer le répertoire dans la GED"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:372
+#, python-format
+msgid "Create your object first"
+msgstr "Veuillez d'abord enregistrer votre objet un première fois."
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:73
+#, python-format
+msgid "Created By"
+msgstr "Créé par"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:69
+#, python-format
+msgid "Creation Date"
+msgstr "Date de création"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:142
+#, python-format
+msgid "Delete"
+msgstr "Supprimer"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:458
+#, python-format
+msgid "First"
+msgstr "Premier"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:204
+#, python-format
+msgid "Folder Name:"
+msgstr "Nom du répertoire:"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:86
+#, python-format
+msgid "Is Checked Out?"
+msgstr ""
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:459
+#, python-format
+msgid "Last"
+msgstr "Dernier"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:81
+#, python-format
+msgid "Last Modified By"
+msgstr "Dernière modification par"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:77
+#, python-format
+msgid "Last Modified Date"
+msgstr "Date de dernière modification"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:453
+#, python-format
+msgid "Loading..."
+msgstr "Chargement en cours..."
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:64
+#, python-format
+msgid "MIME Type"
+msgstr ""
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:21
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:30
+#, python-format
+msgid "Modified"
+msgstr "Date de modification"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:22
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:31
+#, python-format
+msgid "Modifier"
+msgstr "Modifié par"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:20
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:29
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:59
+#, python-format
+msgid "Name"
+msgstr "Nom"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:460
+#, python-format
+msgid "Next"
+msgstr "Suivant"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:446
+#, python-format
+msgid "No data available in table"
+msgstr "Aucun élément à afficher"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:456
+#, python-format
+msgid "No matching records found"
+msgstr "Aucune donnée disponible"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:50
+#, python-format
+msgid "Object Id"
+msgstr "Identifiant"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:46
+#, python-format
+msgid "Object Type Id"
+msgstr "Type de contenu"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:461
+#, python-format
+msgid "Previous"
+msgstr "Précédent"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:454
+#, python-format
+msgid "Processing..."
+msgstr "Traitement en cours..."
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:872
+#, python-format
+msgid "Root"
+msgstr "Racine"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:455
+#, python-format
+msgid "Search:"
+msgstr "Recherche:"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:452
+#, python-format
+msgid "Show _MENU_ entries"
+msgstr "Afficher _MENU_ éléments"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:448
+#, python-format
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Affichage de l'élément 0 à 0 sur 0 élément"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:447
+#, python-format
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:135
+#, python-format
+msgid "Update"
+msgstr "Mettre à jour"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:133
+#, python-format
+msgid "Update content"
+msgstr "Mettre à jour le contenu"
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:140
+#, python-format
+msgid "Update content of "
+msgstr "Mise à jour du contenu de "
+
+#. module: web_cmis_viewer
+#. openerp-web
+#: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:134
+#, python-format
+msgid "View Details"
+msgstr "Afficher les détails"
