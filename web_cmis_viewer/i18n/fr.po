@@ -22,7 +22,7 @@ msgstr ""
 #: code:addons/web_cmis_viewer/static/src/xml/cmis_viewer_widget.xml:153
 #, python-format
 msgid "&nbsp;Back to documents list"
-msgstr "Retour à la liste des documents"
+msgstr "&nbsp;Retour à la liste des documents"
 
 #. module: web_cmis_viewer
 #. openerp-web
