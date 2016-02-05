@@ -110,7 +110,7 @@ msgstr "Créer le répertoire dans la GED"
 #: code:addons/web_cmis_viewer/static/src/js/web_cmis_viewer_widget.js:372
 #, python-format
 msgid "Create your object first"
-msgstr "Veuillez d'abord enregistrer votre objet un première fois."
+msgstr "Veuillez d'abord enregistrer votre objet une première fois."
 
 #. module: web_cmis_viewer
 #. openerp-web
