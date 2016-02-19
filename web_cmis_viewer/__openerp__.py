@@ -16,6 +16,7 @@
     # any module necessary for this one to work correctly
     'depends': [
         'web',
+        'cmis'
     ],
     'qweb': [
         "static/src/xml/*.xml",
