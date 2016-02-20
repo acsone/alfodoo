@@ -374,22 +374,16 @@
         }
         var self = this;
         $.when(this.cmis_config_loaded).done(function (){
-            self.cmis_session.getObjectByPath(self.cmis_initial_directory_write_path)
-            .ok(function(noderef){
-                self.create_root_node_at(noderef);
+            var view = self.view;
+            view.dataset._model.call('create_in_cmis', [
+                [view.datarecord.id],
+                self.cmis_backend_id,
+                view.dataset.get_context()
+            ]).done(function(vals) {
+                var cmis_objectid = vals[view.datarecord.id];
+                view.reload();
             });
         });
-    },
-
-    create_root_node_at: function(parent_noderef){
-        var self = this;
-        var noderef = new CmisNoderefWrapper(parent_noderef, this.cmis_session);
-        this.cmis_session.createFolder(noderef.objectId, this.getParent().datarecord.name)
-        .ok(function(new_noderef) {
-            var folder_noderef= new CmisNoderefWrapper(new_noderef, self.cmis_session);
-            self.set_value(folder_noderef.objectId);
-            self.getParent().save();
-         });
     },
 
     /**
@@ -749,9 +743,9 @@
      * Load CMIS settings from Odoo server 
      */
     load_cmis_config: function() {
-        var ds = new data.DataSetSearch(this, 'ir.config_parameter', this.context, [
-            ['key', 'in', ['web_cmis_viewer.location', 'web_cmis_viewer.initial_directory_write_path']]]);
-        ds.read_slice(['key', 'value'], {}).done(this.on_cmis_config_loaded);
+        var ds = new data.DataSetSearch(this, 'cmis.backend', this.context, [
+            [1, '=', 1]]);
+        ds.read_slice(['id', 'location'], {}).done(this.on_cmis_config_loaded);
     },
 
     /**
@@ -759,14 +753,12 @@
      */
     on_cmis_config_loaded: function(result) {
         var self = this;
-        _.each(result, function(item, index, list){
-            if (item.key === 'web_cmis_viewer.location'){
-                this.cmis_location = item.value
-            } else if (item.key === 'web_cmis_viewer.initial_directory_write_path'){
-                this.cmis_initial_directory_write_path = item.value;
-            }
-            
-        }, this);
+        if (result.length != 1){
+            this.do_warn(_t("CMIS Config Error"), _t("One and only one CMIS backend must be configurerd"));
+            return;
+        }
+        this.cmis_location = result[0].location;
+        this.cmis_backend_id = result[0].id;
         self.cmis_config_loaded.resolve();
     },
 
