@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from openerp import fields, models
+from openerp import api, fields, models
 from openerp.tools.translate import _
+from openerp.report import interface
+
+from ..report import Aeroo_report
 
 
 class IrActionsReportXml(models.Model):
@@ -34,3 +37,11 @@ class IrActionsReportXml(models.Model):
         ],
         string='Strategy in case of duplicate',
         default='error')
+
+    @api.model
+    def register_report(self, name, model, tmpl_path, parser):
+        name = 'report.%s' % name
+        if name in interface.report_int._reports:
+            del interface.report_int._reports[name]
+        res = Aeroo_report(self.env.cr, name, model, tmpl_path, parser=parser)
+        return res
