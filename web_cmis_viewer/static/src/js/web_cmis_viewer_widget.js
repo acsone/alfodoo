@@ -686,12 +686,6 @@
         var height =  '' + this.$el.height() - 30 + 'px'; //' ' + (H - r.top) + 'px';
         // Create the previewer URL
         var path = "/web_cmis_viewer/static/lib/viewerjs-0.5.8/ViewerJS/cmis_preview.html";
-        /*var mimetype = $(row).attr("mimetype");
-        if (typeof library.options.previewOptions !== undefined && library.options.previewOptions[mimetype] != null) {
-            if (library.options.previewOptions[mimetype].viewerPath != null)
-                path = library.options.previewOptions[mimetype].viewerPath;
-        }*/
-
         var _url = path + '#' + JSON.stringify(headers) + "||" + documentUrl + "&type=pdf&title=" + fileName;
         $document_preview.empty();
         $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': _url,
