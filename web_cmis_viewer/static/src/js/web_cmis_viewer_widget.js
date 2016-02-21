@@ -269,7 +269,7 @@
        _.map(this.cmis_object.allowableActions, function (value, actionName) {
            ctx[actionName] = value;
        });
-       ctx['canPreview'] = ctx['canGetContentStream'] && this.mimetype === 'application/pdf';
+       ctx['canPreview'] = ctx['canGetContentStream']; // && this.mimetype === 'application/pdf';
        return QWeb.render("CmisContentActions", ctx);
    },
 
@@ -645,8 +645,28 @@
     on_click_preview: function(row){
         var data = row.data();
         var cmis_session = this.cmis_session;
-        var documentUrl = cmis_session.getContentStreamURL(data.objectId, 'inline');
+        var objectId = data.objectId;
         var fileName = data.name;
+        var self = this;
+        if (data.mimetype === 'application/pdf') {
+            var documentUrl = cmis_session.getContentStreamURL(objectId, 'inline');
+            self.display_preview(documentUrl, fileName);
+        } else {
+            cmis_session.getRenditions(objectId).ok(function(renditions){
+                var rendition = _.findWhere(renditions, {mimeType: 'application/pdf'});
+                if (!rendition){
+                    self.do_warn(_t("CMIS Preview"), _t("No preview available for this document"));
+                    return;
+                }
+                var documentUrl = cmis_session.getContentStreamURL(rendition['streamId']);
+                self.display_preview(documentUrl, fileName);
+                
+            });
+        }
+    },
+
+    display_preview: function(documentUrl, fileName){
+        var cmis_session = this.cmis_session;
         var $document_preview = this.$el.find(".documentpreview");
         // Compute the list of headers required by the previewer
         var headers = {};
@@ -672,7 +692,7 @@
                 path = library.options.previewOptions[mimetype].viewerPath;
         }*/
 
-        var _url = path + '#' + JSON.stringify(headers) + "||" + documentUrl + "&type=" + fileName.slice(fileName.lastIndexOf('.')+1) + "&title=" + fileName;
+        var _url = path + '#' + JSON.stringify(headers) + "||" + documentUrl + "&type=pdf&title=" + fileName;
         $document_preview.empty();
         $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': _url,
                                                                     'width': width,
