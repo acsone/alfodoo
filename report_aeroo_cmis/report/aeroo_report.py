@@ -6,7 +6,10 @@ import time
 import os.path
 
 import openerp
-from openerp.exceptions import Warning
+import mimetypes
+from cStringIO import StringIO
+from openerp.exceptions import Warning, UserError
+from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.cmis.models.cmis_folder import CmisFolder
 from openerp.addons.report_aeroo import report_aeroo
@@ -24,9 +27,9 @@ class Aeroo_report(report_aeroo.Aeroo_report):
             cr, uid, ids, report_xml.report_type, context=context)[0]
         if report_xml.cmis_filename:
             with openerp.api.Environment.manage():
-                env = openerp.api.Environment(cr, uid, context).sudo()
+                env = openerp.api.Environment(cr, uid, context)
                 report = env[report_xml._name].browse(report_xml.id)
-                self.store_in_cmis(
+                return self.store_in_cmis(
                     env, report, env[obj._name].browse(obj.id), res)
         return res
 
@@ -46,9 +49,55 @@ class Aeroo_report(report_aeroo.Aeroo_report):
         else:
             backend = report_xml.backend_id
         if not backend:
-            raise Warning("No CMIS Backend configured")
+            raise Warning(_("No CMIS Backend configured"))
         path = os.path.dirname(name) or '/'
         target_folder_objectid = backend.get_folder_by_path(
             path, create_if_not_found=True,
             cmis_parent_objectid=cmis_parent_objectid)
-            #backend 
+        file_name = os.path.basename(name)
+        repo = backend.check_auth()
+        parent_folder = repo.getObject(target_folder_objectid)
+        someDoc = self.ensure_unique_document(
+            env, file_name, parent_folder, report_xml, repo)
+        someDoc.setContentStream(
+            StringIO(pdf),
+            contentType=self.get_mimetype(
+                env, file_name, parent_folder, report_xml, repo))
+        cmis_objectid = someDoc.getObjectId()
+        return (cmis_objectid, 'cmis@%d' % backend.id)
+
+    def get_mimetype(self, env, file_name, cmis_parent_folder_obj,
+                     report_xml, repo):
+        return mimetypes.guess_type(file_name)[0]
+
+    def ensure_unique_document(self, env, file_name, cmis_parent_folder_obj,
+                               report_xml, repo):
+        """Create a cmis document or return an existing one if a document
+        already exists with the same name and the cmis_duplicate_handler
+        == 'new_version'
+        """
+        rs = cmis_parent_folder_obj.getChildren(
+            filter='cmis:name=%s' % file_name)
+        if (rs.getNumItems() == 0 or
+                report_xml.cmis_duplicate_handler == 'increment'):
+            if report_xml.cmis_duplicate_handler == 'increment':
+                name, ext = os.path.splitext(file_name)
+                testname = name + '(*)' + ext
+                rs = cmis_parent_folder_obj.getChildren(
+                    filter='cmis:name=%s' % testname)
+                file_name = name + '(%d)' % rs.getNumItems() + ext
+                props = {
+                    'cmis:name': file_name,
+                }
+                doc = cmis_parent_folder_obj.createDocument(
+                    file_name,
+                    properties=props,
+                )
+                return doc
+        if (rs.getNumItems() > 0 and
+                report_xml.cmis_duplicate_handler == 'new_version'):
+            return repo.getObject(rs.getResults()[0].getObjectId())
+
+        raise UserError(
+            _('Document "%s" already exists in CMIS at %s') % (
+             file_name, rs.getResults()[0].getPaths()[0]))
