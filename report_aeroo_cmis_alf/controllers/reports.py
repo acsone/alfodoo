@@ -18,10 +18,7 @@ class Reports(reports.Reports):
 
     def redirect_to_cmis(self, cmis_objectid, backend_id, token):
         backend = request.env['cmis.backend'].browse(int(backend_id))
-        repo = backend.check_auth()
-        noderef = repo.getObject(cmis_objectid).getProperties()['alfcmis:nodeRef']
-        # TODO cmis_alf
-        url = 'http://localhost:8080/share/page/document-details?nodeRef=' + noderef
+        url = backend.get_content_details_url(cmis_objectid)
         response = werkzeug.Response(json.dumps(
             {'url': url}),  mimetype='application/json')
         response.set_cookie('fileToken', token)

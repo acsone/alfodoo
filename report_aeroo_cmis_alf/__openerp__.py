@@ -15,7 +15,7 @@
     'license': 'AGPL-3',
     # any module necessary for this one to work correctly
     'depends': [
-        'cmis',
+        'cmis_alf',
         'report_aeroo_cmis'
     ],
     'data': [
