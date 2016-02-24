@@ -93,6 +93,12 @@
 
 <t t-name="CmisRootContentActions">
     <div class="cmis_viewer_root_content_actions btn-toolbar">
+        <button type="button"
+                class="btn btn-default btn-sm root-content-action-refresh"
+                aria-label="Refresh content table">
+             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+         </button>
+         <span class="btn-separator"></span>
        <div class="btn-group">
          <button type="button"
                  t-attf-class="btn btn-default btn-sm root-content-action-new-folder {{ (canCreateFolder)?'': 'disabled' }}"

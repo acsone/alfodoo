@@ -246,7 +246,7 @@
     **/
    fName: function() {
        var cls = this._get_css_class();
-       return "<div class='" + cls + " cmis_content_icon'></div><span>" + this.name + "</span>";
+       return "<div class='" + cls + " cmis_content_icon'>"+ this.name +"</div>";
    },
 
    /** fLastModificationDate
@@ -426,7 +426,7 @@
                 pageLength:     25,
                 deferRender:    true,
                 serverSide:     true,
-                autoWidth:      true,
+                autoWidth:      false,
                 ajax: $.proxy(self, 'datatable_query_cmis_data'),
                 columns: [
                     {
@@ -614,28 +614,23 @@
          $el_actions.find('.content-action-download').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_download(row);
-             e.stopPropagation();
          });
          $el_actions.find('.content-action-preview').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_preview(row);
-             e.stopPropagation();
          });
          
          $el_actions.find('.content-action-get-properties').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_get_properties(row);
-             e.stopPropagation();
          });
          $el_actions.find('.content-action-set-content-stream').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_set_content_stream(row);
-             e.stopPropagation();
          });
          $el_actions.find('.content-action-delete-object').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_delete_object(row);
-             e.stopPropagation();
          });
     },
 
@@ -644,6 +639,11 @@
      */
     register_root_content_events: function(){
         var self = this;
+        this.$el.find('.root-content-action-refresh').on('click', function(e){
+            if (self.datatable){
+            	self.datatable.ajax.reload();
+            }
+        });
         this.$el.find('.root-content-action-new-folder').on('click', function(e){
             var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_noderef);
             dialog.open();
