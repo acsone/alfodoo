@@ -8,6 +8,7 @@
             <field name="username">admin</field>
             <field name="password">admin</field>
             <field name="location">http://10.7.20.179:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser/</field>
+            <field name="share_location">http://10.7.20.179:8080/share</field>
         </record>
 
         <record id="default_location" model="ir.config_parameter">
