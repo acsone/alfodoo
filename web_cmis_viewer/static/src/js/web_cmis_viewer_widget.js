@@ -512,7 +512,9 @@
         var self = this;
         var cmis_session = self.cmis_session;
         if (_.isNull(self.displayed_folder_id)  || ! self.displayed_folder_id){
-            callback({data : []});
+            callback({'data' : [],
+                      'recordsTotal': 0,
+                      'recordsFiltered': 0});
             return;
         }
         var lang  = settings.oLanguage;
