@@ -102,14 +102,21 @@
          var cmis_session = this.getParent().cmis_session;
          _.each(input.files, function(file, index, list){
              cmis_session
-             .createDocument(this.parent_noderef.objectId, file, file.name, file.mimeType)
+             .createDocument(this.parent_noderef.objectId, file, {'cmis:name': file.name}, file.mimeType)
              .ok(function(data) {
                  processedFiles.push(data);
-                 if (processedFiles.length == numFiles){
-                     framework.unblockUI();
-                     self.getParent().trigger('cmis_node_created', [processedFiles]);
-                     self.$el.parents('.modal').modal('hide');
-                 }
+                 // encoding is not properly handled into multipart.... 
+                 // update the document name to work around this encooding issue
+                 cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
+                     {'cmis:name': file.name})
+                     .ok(function(){
+                         if (processedFiles.length == numFiles){
+                             framework.unblockUI();
+                             self.getParent().trigger('cmis_node_created', [processedFiles]);
+                             self.$el.parents('.modal').modal('hide');
+                         }
+                     }
+                 );
               });
          }, self);
      },
@@ -652,7 +659,6 @@
         }).appendTo(document.body);
         $form.submit();
         $form.remove();
-        //window.open(row.data().url);
     },
 
     on_click_preview: function(row){
