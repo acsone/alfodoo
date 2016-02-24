@@ -234,6 +234,9 @@
                    return 'fa fa-file-video-o';
            }
        }
+       if (this.baseTypeId === 'cmis:document') {
+           return 'fa fa-file-o';
+       }
        return 'fa fa-fw';
    },
 
@@ -243,7 +246,7 @@
     **/
    fName: function() {
        var cls = this._get_css_class();
-       return "<div class='" + cls + " cmic_content_icon'/>" + this.name;
+       return "<div class='" + cls + " cmis_content_icon'></div><span>" + this.name + "</span>";
    },
 
    /** fLastModificationDate
@@ -423,7 +426,7 @@
                 pageLength:     25,
                 deferRender:    true,
                 serverSide:     true,
-                autoWidth:      false,
+                autoWidth:      true,
                 ajax: $.proxy(self, 'datatable_query_cmis_data'),
                 columns: [
                     {
@@ -431,10 +434,17 @@
                         orderable:      false,
                         data:           null,
                         defaultContent: '',
+                        width:'20px'
                     },
                     { data: 'fName()'},
-                    { data: 'fLastModificationDate()'},
-                    { data: 'lastModifiedBy'},
+                    { 
+                        data:'fLastModificationDate()',
+                        width:'150px'
+                    },
+                    { 
+                        data: 'lastModifiedBy',
+                         width:'60px'
+                    },
                     { 
                         data: 'fContentActions()',
                         defaultContent: '',
