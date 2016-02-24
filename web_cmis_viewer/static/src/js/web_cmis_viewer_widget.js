@@ -597,23 +597,28 @@
          $el_actions.find('.content-action-download').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_download(row);
+             e.stopPropagation();
          });
          $el_actions.find('.content-action-preview').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_preview(row);
+             e.stopPropagation();
          });
          
          $el_actions.find('.content-action-get-properties').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_get_properties(row);
+             e.stopPropagation();
          });
          $el_actions.find('.content-action-set-content-stream').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_set_content_stream(row);
+             e.stopPropagation();
          });
          $el_actions.find('.content-action-delete-object').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_delete_object(row);
+             e.stopPropagation();
          });
     },
 
@@ -641,7 +646,13 @@
     },
 
     on_click_download: function(row){
-        window.open(row.data().url);
+        var $form = $('<form>', {
+            action: row.data().url,
+            method: 'GET'
+        }).appendTo(document.body);
+        $form.submit();
+        $form.remove();
+        //window.open(row.data().url);
     },
 
     on_click_preview: function(row){
