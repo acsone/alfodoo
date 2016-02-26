@@ -44,6 +44,11 @@ class Aeroo_report(report_aeroo.Aeroo_report):
         # stored as child of the referenced cmis object otherwise the report
         # will be saved as child of the repository
         if isinstance(obj, CmisFolder):
+            if not obj.cmis_objectid:
+                if not report_xml.backend_id:
+                    raise UserError(_('Not able to store document into cmis\n'
+                                      'No backend defined on the report'))
+                obj.create_in_cmis(report_xml.backend_id.id)
             cmis_parent_objectid = obj.cmis_objectid
             backend = obj.backend_id
         else:
@@ -78,23 +83,24 @@ class Aeroo_report(report_aeroo.Aeroo_report):
         """
         rs = cmis_parent_folder_obj.getChildren(
             filter='cmis:name=%s' % file_name)
-        if (rs.getNumItems() == 0 or
+        num_found_items = rs.getNumItems()
+        if (num_found_items == 0 or
                 report_xml.cmis_duplicate_handler == 'increment'):
-            if report_xml.cmis_duplicate_handler == 'increment':
+            if num_found_items > 0:
                 name, ext = os.path.splitext(file_name)
                 testname = name + '(*)' + ext
                 rs = cmis_parent_folder_obj.getChildren(
                     filter='cmis:name=%s' % testname)
                 file_name = name + '(%d)' % rs.getNumItems() + ext
-                props = {
-                    'cmis:name': file_name,
-                }
-                doc = cmis_parent_folder_obj.createDocument(
-                    file_name,
-                    properties=props,
-                )
-                return doc
-        if (rs.getNumItems() > 0 and
+            props = {
+                'cmis:name': file_name,
+            }
+            doc = cmis_parent_folder_obj.createDocument(
+                file_name,
+                properties=props,
+            )
+            return doc
+        if (num_found_items > 0 and
                 report_xml.cmis_duplicate_handler == 'new_version'):
             return repo.getObject(rs.getResults()[0].getObjectId())
 
