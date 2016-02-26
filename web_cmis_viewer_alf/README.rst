@@ -2,12 +2,11 @@
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 
-==================
-Cmis viewer Widget
-==================
+============================================
+Alfresco extension to the Cmis viewer Widget
+============================================
 
-This module provide a new widget that lets you browse a CMIS folder from an
-Odoo model
+This module was written to extend the functionality of ... to support ... and allow you to ...
 
 Installation
 ============

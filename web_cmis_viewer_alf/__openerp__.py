@@ -2,9 +2,9 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': "CMIS Viewer Widget",
+    'name': "Alfresco CMIS Viewer Widget",
     'summary': """
-        Embeddable CMIS Viewer Widget""",
+        Alfresco extension for the CMIS viewer widget""",
     'author': 'ACSONE SA/NV',
     'website': "http://acsone.eu",
 
@@ -15,16 +15,16 @@
     'license': 'AGPL-3',
     # any module necessary for this one to work correctly
     'depends': [
-        'web',
-        'cmis'
+        'cmis_alf',
+        'web_cmis_viewer'
+    ],
+
+    # always loaded
+    'data': [
+        'views/web_cmis_viewer_alf.xml'
     ],
     'qweb': [
         "static/src/xml/*.xml",
-    ],
-    # always loaded
-    'data': [
-        'data/web_cmis_viewer.xml',
-        'views/web_cmis_viewer.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

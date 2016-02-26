@@ -1,6 +1,6 @@
 /*---------------------------------------------------------
  + * Odoo web_cmis_viewer
- + * Author  Laurent Mignon 2015 Acsone SA/NV
+ + * Author  Laurent Mignon 2016 Acsone SA/NV
  + * License in __openerp__.py at root level of the module
  + *---------------------------------------------------------
  +*/
@@ -412,76 +412,83 @@
         });
     },
 
+    get_datatable_config: function(){
+        var l10n = _t.database.parameters;
+        var self = this;
+        var config = {
+            searching:      false,
+            scrollY:        '40vh',
+            scrollCollapse: true,
+            pageLength:     25,
+            deferRender:    true,
+            serverSide:     true,
+            autoWidth:      false,
+            ajax: $.proxy(self, 'datatable_query_cmis_data'),
+            columns: [
+                {
+                    className:      'details-control',
+                    orderable:      false,
+                    data:           null,
+                    defaultContent: '',
+                    width:'20px'
+                },
+                { data: 'fName()'},
+                { 
+                    data:'fLastModificationDate()',
+                    width:'150px'
+                },
+                { 
+                    data: 'lastModifiedBy',
+                     width:'60px'
+                },
+                { 
+                    data: 'fContentActions()',
+                    defaultContent: '',
+                    orderable: false,
+                    width: "80px",
+                },
+            ],
+            language: {
+                "decimal":        l10n.decimal_point,
+                "emptyTable":     _t("No data available in table"),
+                "info":           _t("Showing _START_ to _END_ of _TOTAL_ entries"),
+                "infoEmpty":      _t("Showing 0 to 0 of 0 entries"),
+                "infoFiltered":   _t("(filtered from _MAX_ total entries)"),
+                "infoPostFix":    _t(""),
+                "thousands":      l10n.thousands_sep,
+                "lengthMenu":     _t("Show _MENU_ entries"),
+                "loadingRecords": _t("Loading..."),
+                "processing":     _t("Processing..."),
+                "search":         _t("Search:"),
+                "zeroRecords":    _t("No matching records found"),
+                "paginate": {
+                    "first":      _t("First"),
+                    "last":       _t("Last"),
+                    "next":       _t("Next"),
+                    "previous":   _t("Previous")
+                },
+                "aria": {
+                    "sortAscending":  _t(": activate to sort column ascending"),
+                    "sortDescending": _t(": activate to sort column descending")
+                }
+            },
+            dom: "<'row'<'col-sm-6 cmis-root-content-buttons'><'col-sm-6'lf>>" +
+                 "<'row'<'col-sm-12'<'cmis-breadcrumb-container'>>>" +
+                 "<'row'<'col-sm-12'tr>>" +
+                 "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            "order": [[1, 'asc']]
+        };
+        return config;
+    },
+    
     render_datatable: function() {
         if (_.isNull(this.datatable)){
             var self = this;
-            var l10n = _t.database.parameters
-            this.$datatable = $('#' + this.id_for_table)
+            this.$datatable = $('#' + this.id_for_table);
             this.$datatable.on('preInit.dt', $.proxy(self, 'on_datatable_preinit'));
             this.$datatable.on('draw.dt', $.proxy(self, 'on_datatable_draw'));
-            this.datatable = this.$datatable.DataTable({
-                searching:      false,
-                scrollY:        '40vh',
-                scrollCollapse: true,
-                pageLength:     25,
-                deferRender:    true,
-                serverSide:     true,
-                autoWidth:      false,
-                ajax: $.proxy(self, 'datatable_query_cmis_data'),
-                columns: [
-                    {
-                        className:      'details-control',
-                        orderable:      false,
-                        data:           null,
-                        defaultContent: '',
-                        width:'20px'
-                    },
-                    { data: 'fName()'},
-                    { 
-                        data:'fLastModificationDate()',
-                        width:'150px'
-                    },
-                    { 
-                        data: 'lastModifiedBy',
-                         width:'60px'
-                    },
-                    { 
-                        data: 'fContentActions()',
-                        defaultContent: '',
-                        orderable: false,
-                        width: "80px",
-                    },
-                ],
-                language: {
-                    "decimal":        l10n.decimal_point,
-                    "emptyTable":     _t("No data available in table"),
-                    "info":           _t("Showing _START_ to _END_ of _TOTAL_ entries"),
-                    "infoEmpty":      _t("Showing 0 to 0 of 0 entries"),
-                    "infoFiltered":   _t("(filtered from _MAX_ total entries)"),
-                    "infoPostFix":    _t(""),
-                    "thousands":      l10n.thousands_sep,
-                    "lengthMenu":     _t("Show _MENU_ entries"),
-                    "loadingRecords": _t("Loading..."),
-                    "processing":     _t("Processing..."),
-                    "search":         _t("Search:"),
-                    "zeroRecords":    _t("No matching records found"),
-                    "paginate": {
-                        "first":      _t("First"),
-                        "last":       _t("Last"),
-                        "next":       _t("Next"),
-                        "previous":   _t("Previous")
-                    },
-                    "aria": {
-                        "sortAscending":  _t(": activate to sort column ascending"),
-                        "sortDescending": _t(": activate to sort column descending")
-                    }
-                },
-                dom: "<'row'<'col-sm-6 cmis-root-content-buttons'><'col-sm-6'lf>>" +
-                     "<'row'<'col-sm-12'<'cmis-breadcrumb-container'>>>" +
-                     "<'row'<'col-sm-12'tr>>" +
-                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                "order": [[1, 'asc']]
-            });
+            var config = this.get_datatable_config();
+            this.datatable = this.$datatable.DataTable(config);
             this.table_rendered.resolve();
         }
     },
