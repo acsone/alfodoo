@@ -822,7 +822,6 @@
             self.cmis_session = cmis.createSession(self.cmis_location);
             self.cmis_session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
             self.cmis_session
-                .setCredentials('admin', 'admin')
                 .loadRepositories()
                 .ok(function(data) {
                     self.cmis_session_initialized.resolve();

@@ -1297,7 +1297,7 @@
       if (_token) {
         r.set('Authorization', 'Bearer ' + _token);
       }
-      return r;
+      return r.withCredentials();
     };
 
     var _get = function (url) {
