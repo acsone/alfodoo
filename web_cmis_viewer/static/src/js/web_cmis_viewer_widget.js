@@ -616,6 +616,8 @@
 
          /* bind content events */
          this.$el.find('.cmis-folder').on('click', function(e){
+             e.preventDefault();
+             e.stopPropagation();
              var row = self._get_event_row(e);
              self.display_folder(0, row.data().objectId);
          });
@@ -630,19 +632,37 @@
          });
          
          $el_actions.find('.content-action-get-properties').on('click', function(e) {
+             self._prevent_on_hashchange(e);
              var row = self._get_event_row(e);
              self.on_click_get_properties(row);
          });
          $el_actions.find('.content-action-set-content-stream').on('click', function(e) {
+             self._prevent_on_hashchange(e);
              var row = self._get_event_row(e);
              self.on_click_set_content_stream(row);
          });
          $el_actions.find('.content-action-delete-object').on('click', function(e) {
+             self._prevent_on_hashchange(e);
              var row = self._get_event_row(e);
              self.on_click_delete_object(row);
          });
     },
 
+    _prevent_on_hashchange: function(e) {
+        /**
+         * Odoo register a global handler when the hash change on the current window
+         * $(window).bind('hashchange', self.on_hashchange);
+         * To avoid thah events triggered by a click on items into a dropdown-menu
+         * are handled by the main handler we must stop the propagations.
+         * This is required since dropdown menu designed with bootstrat are 
+         * a list of '<a href' elements and this trigger a 'hashchange' event
+         * when clicked
+         */
+         e.preventDefault();
+         e.stopPropagation();
+    },
+
+    
     /**
      * Method called when a root folder is initialized
      */
