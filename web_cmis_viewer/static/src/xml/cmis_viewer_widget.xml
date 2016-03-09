@@ -216,7 +216,7 @@
         </div>
     </form>
 </t>
-<t t-name="CMISSessionr.warning">
+<t t-name="CMISSession.warning">
     <div class="o_dialog_warning">
         <t t-raw="error.stacktrace"/>
     </div>

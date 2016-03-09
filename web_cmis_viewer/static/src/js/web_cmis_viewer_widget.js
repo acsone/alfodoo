@@ -862,7 +862,7 @@
                 size: 'medium',
                 title: _t("CMIS Error "),
                 subtitle: error.message,
-                $content: $('<div>').html(QWeb.render('CMISSessionr.warning', {error: error}))
+                $content: $('<div>').html(QWeb.render('CMISSession.warning', {error: error}))
             }).open();
         } else {
             new Dialog(this, {
