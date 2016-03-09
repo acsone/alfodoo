@@ -335,7 +335,6 @@
 
     render_value: function() {
         var self = this;
-        this._super();
         $.when(self.cmis_session_initialized, self.table_rendered).done(function() {
             var value = self.get('value');
             self.$el.find('button.cmis-create-root').addClass('hidden');
@@ -349,6 +348,9 @@
     reload_record: function() {
         this.view.reload();
     },
+    
+    _toggle_label: function() {//disabled
+     },
 
     /*
      * Cmis content events 
