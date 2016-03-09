@@ -865,9 +865,9 @@
         if (self.root_folder_id === folderId){
             return;
         }
+        self.root_folder_id = folderId;
         $.when(self.cmis_session_initialized, self.table_rendered).done(function(){
             var library = this;
-            self.root_folder_id = folderId;
             self.reset_breadcrumb();
             self.display_folder(0, folderId);
         })
