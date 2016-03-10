@@ -28,8 +28,11 @@
          var self = this;
          var options = {
              buttons: [
-                 {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
-                 {text: _t("Create"), click: function () { self.on_click_create(); }}
+                 {text: _t("Close"), 
+                  click: function () { self.$el.parents('.modal').modal('hide'); }},
+                 {text: _t("Create"),
+                  classes: "btn-primary",
+                  click: function () { self.on_click_create(); }}
              ],
              close: function () { self.close();}
          };
@@ -72,8 +75,11 @@
          var self = this;
          var options = {
              buttons: [
-                 {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
-                 {text: _t("Create"), click: function () { self.on_click_create(); }}
+                 {text: _t("Close"), 
+                  click: function () { self.$el.parents('.modal').modal('hide'); }},
+                 {text: _t("Create"),
+                  classes: "btn-primary",
+                  click: function () { self.on_click_create(); }}
              ],
              close: function () { self.close();}
          };
@@ -136,8 +142,11 @@
         var self = this;
         var options = {
             buttons: [
-                {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
-                {text: _t("Update content"), click: function () { self.on_click_update_content(); }}
+                {text: _t("Close"), 
+                 click: function () { self.$el.parents('.modal').modal('hide'); }},
+                {text: _t("Update content"),
+                 classes: "btn-primary",
+                 click: function () { self.on_click_update_content(); }}
             ],
             close: function () { self.close();}
         };
