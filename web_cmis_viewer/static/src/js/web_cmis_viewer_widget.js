@@ -28,8 +28,11 @@
          var self = this;
          var options = {
              buttons: [
-                 {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
-                 {text: _t("Create"), click: function () { self.on_click_create(); }}
+                 {text: _t("Close"), 
+                  click: function () { self.$el.parents('.modal').modal('hide'); }},
+                 {text: _t("Create"),
+                  classes: "btn-primary",
+                  click: function () { self.on_click_create(); }}
              ],
              close: function () { self.close();}
          };
@@ -72,8 +75,11 @@
          var self = this;
          var options = {
              buttons: [
-                 {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
-                 {text: _t("Create"), click: function () { self.on_click_create(); }}
+                 {text: _t("Close"), 
+                  click: function () { self.$el.parents('.modal').modal('hide'); }},
+                 {text: _t("Create"),
+                  classes: "btn-primary",
+                  click: function () { self.on_click_create(); }}
              ],
              close: function () { self.close();}
          };
@@ -136,8 +142,11 @@
         var self = this;
         var options = {
             buttons: [
-                {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
-                {text: _t("Update content"), click: function () { self.on_click_update_content(); }}
+                {text: _t("Close"), 
+                 click: function () { self.$el.parents('.modal').modal('hide'); }},
+                {text: _t("Update content"),
+                 classes: "btn-primary",
+                 click: function () { self.on_click_update_content(); }}
             ],
             close: function () { self.close();}
         };
@@ -418,7 +427,6 @@ var CmisMixin = {
 
     render_value: function() {
         var self = this;
-        this._super();
         $.when(self.cmis_session_initialized, self.table_rendered).done(function() {
             var value = self.get('value');
             self.$el.find('button.cmis-create-root').addClass('hidden');
@@ -432,6 +440,9 @@ var CmisMixin = {
     reload_record: function() {
         this.view.reload();
     },
+    
+    _toggle_label: function() {//disabled
+     },
 
     /*
      * Cmis content events 
@@ -693,6 +704,8 @@ var CmisMixin = {
 
          /* bind content events */
          this.$el.find('.cmis-folder').on('click', function(e){
+             e.preventDefault();
+             e.stopPropagation();
              var row = self._get_event_row(e);
              self.display_folder(0, row.data().objectId);
          });
@@ -707,19 +720,37 @@ var CmisMixin = {
          });
          
          $el_actions.find('.content-action-get-properties').on('click', function(e) {
+             self._prevent_on_hashchange(e);
              var row = self._get_event_row(e);
              self.on_click_get_properties(row);
          });
          $el_actions.find('.content-action-set-content-stream').on('click', function(e) {
+             self._prevent_on_hashchange(e);
              var row = self._get_event_row(e);
              self.on_click_set_content_stream(row);
          });
          $el_actions.find('.content-action-delete-object').on('click', function(e) {
+             self._prevent_on_hashchange(e);
              var row = self._get_event_row(e);
              self.on_click_delete_object(row);
          });
     },
 
+    _prevent_on_hashchange: function(e) {
+        /**
+         * Odoo register a global handler when the hash change on the current window
+         * $(window).bind('hashchange', self.on_hashchange);
+         * To avoid thah events triggered by a click on items into a dropdown-menu
+         * are handled by the main handler we must stop the propagations.
+         * This is required since dropdown menu designed with bootstrat are 
+         * a list of '<a href' elements and this trigger a 'hashchange' event
+         * when clicked
+         */
+         e.preventDefault();
+         e.stopPropagation();
+    },
+
+    
     /**
      * Method called when a root folder is initialized
      */
@@ -864,7 +895,7 @@ var CmisMixin = {
           dropdown.css('top', dropDownTop + "px");
           dropdown.css('left', button.offset().left + "px");
     },
-    
+
     
     /**
      * Set a new Root 
@@ -874,9 +905,9 @@ var CmisMixin = {
         if (self.root_folder_id === folderId){
             return;
         }
+        self.root_folder_id = folderId;
         $.when(self.cmis_session_initialized, self.table_rendered).done(function(){
             var library = this;
-            self.root_folder_id = folderId;
             self.reset_breadcrumb();
             self.display_folder(0, folderId);
         })

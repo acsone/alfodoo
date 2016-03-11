@@ -193,7 +193,7 @@
             <div class="col-sm-12">
             <div class="input-group">
                 <span class="input-group-btn">
-                    <span class="btn btn-primary btn-file">
+                    <span class="btn btn-primary btn-file" autofocus="autofocus">
                         Browse&amp;hellip; <input type="file" required="required" multiple="true"/>
                     </span>
                 </span>
@@ -216,7 +216,7 @@
         </div>
     </form>
 </t>
-<t t-name="CMISSessionr.warning">
+<t t-name="CMISSession.warning">
     <div class="o_dialog_warning">
         <t t-raw="error.stacktrace"/>
     </div>
