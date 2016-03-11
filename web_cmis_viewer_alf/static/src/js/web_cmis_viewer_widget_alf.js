@@ -35,7 +35,7 @@ cmis_widgets.CmisViewer.include({
         var self = this;
         this._super.apply(this, arguments);
         this.$el.find('.root-content-action-open-alf').on('click', function(e){
-            self.open_in_alf(self.dislayed_folder_noderef.objectId);
+            self.open_in_alf(self.dislayed_folder_cmisobject.objectId);
         });
     },
 

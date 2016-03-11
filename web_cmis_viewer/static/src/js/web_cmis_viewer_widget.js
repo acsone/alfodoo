@@ -24,7 +24,7 @@
 
  var CmisCreateFolderDialog = Dialog.extend({
      template: 'CmisCreateFolderDialog',
-     init: function(parent, parent_noderef) {
+     init: function(parent, parent_cmisobject) {
          var self = this;
          var options = {
              buttons: [
@@ -34,7 +34,7 @@
              close: function () { self.close();}
          };
          this._super(parent, options);
-         this.parent_noderef = parent_noderef;
+         this.parent_cmisobject = parent_cmisobject;
          this.set_title(_t("Create Folder "));
      },
      start: function() {
@@ -49,10 +49,10 @@
          framework.blockUI();
          var cmis_session = this.getParent().cmis_session;
          cmis_session
-             .createFolder(this.parent_noderef.objectId, input.value)
-             .ok(function(new_noderef) {
+             .createFolder(this.parent_cmisobject.objectId, input.value)
+             .ok(function(new_cmisobject) {
                  framework.unblockUI();
-                 self.getParent().trigger('cmis_node_created', [new_noderef]);
+                 self.getParent().trigger('cmis_node_created', [new_cmisobject]);
                  self.$el.parents('.modal').modal('hide');
               });
      },
@@ -68,7 +68,7 @@
          'change .btn-file :file' : 'on_file_change'
      },
 
-     init: function(parent, parent_noderef) {
+     init: function(parent, parent_cmisobject) {
          var self = this;
          var options = {
              buttons: [
@@ -78,7 +78,7 @@
              close: function () { self.close();}
          };
          this._super(parent, options);
-         this.parent_noderef = parent_noderef;
+         this.parent_cmisobject = parent_cmisobject;
          this.set_title(_t("Create Documents "));
      },
 
@@ -102,7 +102,7 @@
          var cmis_session = this.getParent().cmis_session;
          _.each(input.files, function(file, index, list){
              cmis_session
-             .createDocument(this.parent_noderef.objectId, file, {'cmis:name': file.name}, file.mimeType)
+             .createDocument(this.parent_cmisobject.objectId, file, {'cmis:name': file.name}, file.mimeType)
              .ok(function(data) {
                  processedFiles.push(data);
                  // encoding is not properly handled into multipart.... 
@@ -179,7 +179,7 @@
 });
  
  
- var CmisNoderefWrapper = core.Class.extend({
+ var CmisObjectWrapper = core.Class.extend({
 
    init: function(cmis_object, cmis_session){
      this.cmis_object = cmis_object;
@@ -285,7 +285,10 @@
 
  });
  
-var CmisBackendMixin = {
+ /**
+  * A Mixin class defining common methods used by Cmis widgets
+  */
+var CmisMixin = {
 
      init: function (){
          this.cmis_session_initialized = $.Deferred();
@@ -356,10 +359,16 @@ var CmisBackendMixin = {
          
          
      },
-     
+
+     /**
+      * Wrap a 
+      */
+     wrap_cmis_object: function(cmis_object) {
+         return new CmisObjectWrapper(cmis_object.object, this.cmis_session);
+     },
 };
  
- var CmisViewer = formWidget.FieldChar.extend(CmisBackendMixin, {
+ var CmisViewer = formWidget.FieldChar.extend(CmisMixin, {
     template: "CmisViewer",
 
     widget_class: 'cmis_viewer',
@@ -378,7 +387,7 @@ var CmisBackendMixin = {
 
     init: function (field_manager, node) {
         this._super(field_manager, node);
-        CmisBackendMixin.init.call(this);
+        CmisMixin.init.call(this);
         this.id_for_table = _.uniqueId('cmis_viewer_widgets_table');
         this.table_rendered = $.Deferred();
         this.on('cmis_node_created', this, this.on_cmis_node_created);
@@ -426,19 +435,19 @@ var CmisBackendMixin = {
     /*
      * Cmis content events 
      */
-    on_cmis_node_created: function(new_noderef){
+    on_cmis_node_created: function(new_cmisobject){
         this.datatable.ajax.reload();
     },
 
-    on_cmis_node_deleted: function(deleted_noderef){
+    on_cmis_node_deleted: function(deleted_cmisobject){
         this.datatable.ajax.reload();
     },
 
-    on_cmis_node_updated: function(updated_noderef){
+    on_cmis_node_updated: function(updated_cmisobject){
         this.datatable.ajax.reload();
     },
 
-    on_cmis_node_content_updated: function(updated_noderef){
+    on_cmis_node_content_updated: function(updated_cmisobject){
         this.datatable.ajax.reload();
     },
 
@@ -566,10 +575,6 @@ var CmisBackendMixin = {
         }
     },
 
-    wrap_noderef: function(cmis_object) {
-        return new CmisNoderefWrapper(cmis_object.object, this.cmis_session);
-    },
-
     /**
      * This method is called by DataTables when a table is being initialised 
      * and is about to request data. At the point of being called the table will
@@ -626,7 +631,7 @@ var CmisBackendMixin = {
                 orderBy : orderBy,
                 })
             .ok(function(data){
-                callback({'data': _.map(data.objects, self.wrap_noderef, self),
+                callback({'data': _.map(data.objects, self.wrap_cmis_object, self),
                           'recordsTotal': data.numItems,
                           'recordsFiltered': data.numItems});
             });
@@ -725,12 +730,12 @@ var CmisBackendMixin = {
             }
         });
         this.$el.find('.root-content-action-new-folder').on('click', function(e){
-            var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_noderef);
+            var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_cmisobject);
             dialog.open();
             
         });
         this.$el.find('.root-content-action-new-doc').on('click', function(e){
-            var dialog = new CmisCreateDocumentDialog(self, self.dislayed_folder_noderef);
+            var dialog = new CmisCreateDocumentDialog(self, self.dislayed_folder_cmisobject);
             dialog.open();
         });
     },
@@ -786,9 +791,6 @@ var CmisBackendMixin = {
             var tokenName = Object.keys(cmis_session._token)[0];
             var tokenValue = cmis_session.getToken()[tokenName];
             documentUrl += "&" + tokenName + "=" + tokenValue;
-        } else {
-            var hash = btoa("admin:admin");
-            headers["Authorization"] = "Basic " + hash;
         }
 
         var width="100%";
@@ -897,8 +899,8 @@ var CmisBackendMixin = {
         if(folderId){
             this.cmis_session.getObject(folderId, "latest", {
                 includeAllowableActions : true})
-                .ok(function(noderef){
-                    self.dislayed_folder_noderef = new CmisNoderefWrapper(noderef, self.cmis_session);
+                .ok(function(cmisobject){
+                    self.dislayed_folder_cmisobject = new CmisObjectWrapper(cmisobject, self.cmis_session);
                     self.render_folder_actions();
                 });
             this.display_folder_in_breadcrumb(folderId);
@@ -916,14 +918,14 @@ var CmisBackendMixin = {
             // Get properties of this object and add link to the breadcrumb
             this.cmis_session
                 .getObject(folderId, "latest", {includeAllowableActions : false})
-                .ok(function(noderef) {
-                    var wrapped_noderef =  new CmisNoderefWrapper(noderef, self.cmis_session);
-                    var name = (folderId == self.root_folder_id)? _t('Root') : wrapped_noderef.name;
+                .ok(function(cmisobject) {
+                    var wrapped_cmisobject =  new CmisObjectWrapper(cmisobject, self.cmis_session);
+                    var name = (folderId == self.root_folder_id)? _t('Root') : wrapped_cmisobject.name;
                     var link = $('<a>').attr('href', '#').attr('data-cmis-folder-id', folderId).append(name);
                     self.$breadcrumb.append($('<li>').append(link));
                     link.click(function(e) {
                       e.preventDefault();
-                      var current_id = self.dislayed_folder_noderef.objectId;
+                      var current_id = self.dislayed_folder_cmisobject.objectId;
                       var selectedForlderId = $(e.target).attr('data-cmis-folder-id');
                       if(selectedForlderId !== current_id){
                           $(e.target.parentNode).nextAll().remove();
@@ -936,7 +938,7 @@ var CmisBackendMixin = {
 
     render_folder_actions: function(){
         var ctx = {object: this};
-        _.map(this.dislayed_folder_noderef.allowableActions, function (value, actionName) {
+        _.map(this.dislayed_folder_cmisobject.allowableActions, function (value, actionName) {
             ctx[actionName] = value;
         });
         this.$el.find('.cmis-root-content-buttons').html(QWeb.render("CmisRootContentActions", ctx));
@@ -976,8 +978,8 @@ core.form_widget_registry
 
 return {
     CmisUpdateContentStreamDialog: CmisUpdateContentStreamDialog,
-    CmisNoderefWrapper: CmisNoderefWrapper,
-    CmisBackendMixin: CmisBackendMixin,
+    CmisObjectWrapper: CmisObjectWrapper,
+    CmisMixin: CmisMixin,
     CmisViewer: CmisViewer,
     CmisCreateFolderDialog: CmisCreateFolderDialog,
     CmisCreateDocumentDialog: CmisCreateDocumentDialog,
