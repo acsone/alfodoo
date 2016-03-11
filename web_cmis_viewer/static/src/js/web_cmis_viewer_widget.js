@@ -285,7 +285,81 @@
 
  });
  
- var CmisViewer = formWidget.FieldChar.extend({
+var CmisBackendMixin = {
+
+     init: function (){
+         this.cmis_session_initialized = $.Deferred();
+         this.cmis_config_loaded = $.Deferred();
+         this.cmis_location = null;
+         this.cmis_backend_id = null;
+     },
+     /**
+      * Load CMIS settings from Odoo server 
+      */
+     load_cmis_config: function() {
+         var ds = new data.DataSetSearch(this, 'cmis.backend', this.context, [
+             [1, '=', 1]]);
+         ds.read_slice(['id', 'location'], {}).done(this.on_cmis_config_loaded);
+     },
+
+     /**
+      * Parse the result of the call to the server to retrieve the CMIS settings
+      */
+     on_cmis_config_loaded: function(result) {
+         if (result.length != 1){
+             this.do_warn(_t("CMIS Config Error"), _t("One and only one CMIS backend must be configurerd"));
+             return;
+         }
+         this.cmis_location = result[0].location;
+         this.cmis_backend_id = result[0].id;
+         this.cmis_config_loaded.resolve();
+     },
+
+     /**
+      * Initialize the CmisJS session and register handlers for warnings and errors 
+      *  occuring when calling the CMIS DMS
+      */
+     init_cmis_session: function(){
+         var self = this;
+         $.when(this.cmis_config_loaded).done(function (){
+             self.cmis_session = cmis.createSession(self.cmis_location);
+             self.cmis_session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
+             self.cmis_session
+                 .loadRepositories()
+                 .ok(function(data) {
+                     self.cmis_session_initialized.resolve();
+                  });
+         });
+     },
+
+     /**
+      * Method called by the cmis session in case of error or warning
+      */
+     on_cmis_error: function(error){
+         framework.unblockUI();
+         if (error.type == 'application/json'){
+             error = JSON.parse(error.text);
+             new Dialog(this, {
+                 size: 'medium',
+                 title: _t("CMIS Error "),
+                 subtitle: error.message,
+                 $content: $('<div>').html(QWeb.render('CMISSessionr.warning', {error: error}))
+             }).open();
+         } else {
+             new Dialog(this, {
+                 size: 'medium',
+                 title: _t("CMIS Error"),
+                 subtitle: error.statusText,
+                 $content: $('<div>').html(error.text)
+             }).open();
+         }
+         
+         
+     },
+     
+};
+ 
+ var CmisViewer = formWidget.FieldChar.extend(CmisBackendMixin, {
     template: "CmisViewer",
 
     widget_class: 'cmis_viewer',
@@ -304,9 +378,8 @@
 
     init: function (field_manager, node) {
         this._super(field_manager, node);
+        CmisBackendMixin.init.call(this);
         this.id_for_table = _.uniqueId('cmis_viewer_widgets_table');
-        this.cmis_session_initialized = $.Deferred();
-        this.cmis_config_loaded = $.Deferred();
         this.table_rendered = $.Deferred();
         this.on('cmis_node_created', this, this.on_cmis_node_created);
         this.on('cmis_node_deleted', this, this.on_cmis_node_deleted);
@@ -788,71 +861,6 @@
           dropdown.css('top', dropDownTop + "px");
           dropdown.css('left', button.offset().left + "px");
     },
-
-    /**
-     * Load CMIS settings from Odoo server 
-     */
-    load_cmis_config: function() {
-        var ds = new data.DataSetSearch(this, 'cmis.backend', this.context, [
-            [1, '=', 1]]);
-        ds.read_slice(['id', 'location'], {}).done(this.on_cmis_config_loaded);
-    },
-
-    /**
-     * Parse the result of the call to the server to retrieve the CMIS settings
-     */
-    on_cmis_config_loaded: function(result) {
-        var self = this;
-        if (result.length != 1){
-            this.do_warn(_t("CMIS Config Error"), _t("One and only one CMIS backend must be configurerd"));
-            return;
-        }
-        this.cmis_location = result[0].location;
-        this.cmis_backend_id = result[0].id;
-        self.cmis_config_loaded.resolve();
-    },
-
-    /**
-     * Initialize the CmisJS session and register handlers for warnings and errors 
-     *  occuring when calling the CMIS DMS
-     */
-    init_cmis_session: function(){
-        var self = this;
-        $.when(this.cmis_config_loaded).done(function (){
-            self.cmis_session = cmis.createSession(self.cmis_location);
-            self.cmis_session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
-            self.cmis_session
-                .loadRepositories()
-                .ok(function(data) {
-                    self.cmis_session_initialized.resolve();
-                 });
-        });
-    },
-
-    /**
-     * Method called by the cmis session in case of error or warning
-     */
-    on_cmis_error: function(error){
-        framework.unblockUI();
-        if (error.type == 'application/json'){
-            error = JSON.parse(error.text);
-            new Dialog(this, {
-                size: 'medium',
-                title: _t("CMIS Error "),
-                subtitle: error.message,
-                $content: $('<div>').html(QWeb.render('CMISSessionr.warning', {error: error}))
-            }).open();
-        } else {
-            new Dialog(this, {
-                size: 'medium',
-                title: _t("CMIS Error"),
-                subtitle: error.statusText,
-                $content: $('<div>').html(error.text)
-            }).open();
-        }
-        
-        
-    },
     
     
     /**
@@ -969,6 +977,7 @@ core.form_widget_registry
 return {
     CmisUpdateContentStreamDialog: CmisUpdateContentStreamDialog,
     CmisNoderefWrapper: CmisNoderefWrapper,
+    CmisBackendMixin: CmisBackendMixin,
     CmisViewer: CmisViewer,
     CmisCreateFolderDialog: CmisCreateFolderDialog,
     CmisCreateDocumentDialog: CmisCreateDocumentDialog,
