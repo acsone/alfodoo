@@ -196,6 +196,7 @@
        this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
        this.url = this.cmis_session.getContentStreamURL(this.objectId, 'attachment');
        this.allowableActions = cmis_object.allowableActions;
+       this.renditions = cmis_object.renditions;
    },
 
    getSuccinctProperty: function(property, cmis_object){
