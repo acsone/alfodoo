@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend" name="web_cmis_viewer assets" inherit_id="web_cmis_viewer.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/web_cmis_reconcile/static/src/less/web_cmis_reconcile.less"/>
+                <script type="text/javascript" src="/web_cmis_reconcile/static/src/js/web_cmis_reconcile.js"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>
