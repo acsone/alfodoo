@@ -95,10 +95,10 @@ var CmisDocumentReconciliation =  Widget.extend(
         var self = this;
         self.doc_idx = 0;
         if (!this.$pager) {
-            this.$pager = $(QWeb.render("ViewPager", {'widget': self}));
+            this.$pager = $(QWeb.render("CmisDocumentReconcilePager", {'widget': self}));
             this.$el.find('.oe_list_pager').replaceWith(this.$pager);
             this.$pager
-                .on('click', 'a[data-pager-action]', function () {
+                .on('click', 'button[data-pager-action]', function () {
                     var $this = $(this);
                     
                     var max_page_index = self._get_remaining_documents_to_reconcile().length - 1;
