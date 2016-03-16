@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="CmisViewer">
-    <div t-att-class="'container oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
+    <div t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
         <input type='hidden'
                t-att-id="widget.id_for_label" 
                t-att-tabindex="widget.node.attrs.tabindex"
