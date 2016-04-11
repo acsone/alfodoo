@@ -256,7 +256,11 @@
     **/
    fName: function() {
        var cls = this._get_css_class();
-       return "<div class='" + cls + " cmis_content_icon'>"+ this.name +"</div>";
+       var val = "<div class='" + cls + " cmis_content_icon'>"+ this.name +"</div>";
+       if (this.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')) {
+           val = val + "<div class='fa fa-key cmis-checked-out-by'> " + _t('By:') + ' ' + this.getSuccinctProperty('cmis:versionSeriesCheckedOutBy') + '</div>';
+       }
+       return val;
    },
 
    /** fLastModificationDate
