@@ -267,6 +267,10 @@
        return this.format_cmis_timestamp(this.lastModificationDate);
    },
 
+   fDetails: function(){
+     return '<div class="fa fa-plus-circle"/>'  ;
+   },
+   
    format_cmis_timestamp: function(cmis_timestamp){
        if (cmis_timestamp) {
            var d = new Date(cmis_timestamp);
@@ -522,9 +526,9 @@ var CmisMixin = {
                 {
                     className:      'details-control',
                     orderable:      false,
-                    data:           null,
+                    data:           'fDetails()',
                     defaultContent: '',
-                    width:'20px'
+                    width:'12px'
                 },
                 { data: 'fName()'},
                 { 
@@ -992,15 +996,14 @@ var CmisMixin = {
      */
     display_row_details: function(row) {
         var tr = $(row.node());
+        tr.find('td.details-control div').toggleClass('fa-minus fa-plus-circle');
         if ( row.child.isShown() ) {
             // This row is already open - close it
             row.child.hide();
-            tr.removeClass('shown');
         }
         else {
             // Open this row
             row.child(QWeb.render("CmisContentDetails", {object: row.data()})).show();
-            tr.addClass('shown');
         }
     },
 });

@@ -84,7 +84,8 @@
             <t t-if="object.baseTypeId != 'cmis:folder'">
                 <tr>
                     <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Is Checked Out?</label></td>
-                    <td class="oe_form_group_cell"><input type="checkbox" t-att-checked="object.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')" disabled='true'/></td>
+                     <t t-set="checked" t-value="object.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')? 'checked' : null"/>
+                    <td class="oe_form_group_cell"><input type="checkbox" t-att-checked="checked" disabled='true'/></td>
                 </tr>
             </t>
         </table>
