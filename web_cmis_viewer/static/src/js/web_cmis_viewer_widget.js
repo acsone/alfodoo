@@ -733,6 +733,26 @@ var CmisMixin = {
      */
     register_content_events: function(){
          var self = this;
+         var datatable_container =this.$el.find('.dataTables_scrollBody');
+         datatable_container.off('dragleave dragend drop dragover dragenter drop');
+         if (self.dislayed_folder_cmisobject && self.dislayed_folder_cmisobject.allowableActions['canCreateDocument']){
+             datatable_container.on('dragover dragenter', function(e) {
+                 datatable_container.addClass('is-dragover');
+                 e.preventDefault();
+                 e.stopPropagation();
+             });
+             datatable_container.on('dragleave dragend drop', function(e) {
+                datatable_container.removeClass('is-dragover');
+                e.preventDefault();
+                e.stopPropagation();
+             });
+             datatable_container.on('drop', function(e){
+                 e.preventDefault();
+                 e.stopPropagation();
+                 self.upload_files(e.originalEvent.dataTransfer.files);
+                 
+             })
+         }
          /* some UI fixes */
          this.$el.find('.dropdown-toggle').off('click');
          this.$el.find('.dropdown-toggle').on('click', function (e){
@@ -781,6 +801,37 @@ var CmisMixin = {
              var row = self._get_event_row(e);
              self.on_click_delete_object(row);
          });
+    },
+
+    /**
+     * Upload files into the current cmis folder
+     */
+    upload_files: function(files){
+        var self = this;
+        var numFiles = files.length;
+        var processedFiles = [];
+        if (numFiles > 0) {
+            framework.blockUI();
+        }
+        var cmis_session = this.cmis_session;
+        _.each(files, function(file, index, list){
+            cmis_session
+            .createDocument(this.displayed_folder_id, file, {'cmis:name': file.name}, file.mimeType)
+            .ok(function(data) {
+                processedFiles.push(data);
+                // encoding is not properly handled into multipart.... 
+                // update the document name to work around this encooding issue
+                cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
+                    {'cmis:name': file.name})
+                    .ok(function(){
+                        if (processedFiles.length == numFiles){
+                            framework.unblockUI();
+                            self.trigger('cmis_node_created', [processedFiles]);
+                        }
+                    }
+                );
+             });
+        }, this);
     },
 
     _prevent_on_hashchange: function(e) {
