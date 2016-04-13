@@ -246,8 +246,8 @@ var CmisDocumentReconciliation =  Widget.extend(
         var r = $elPreview.get(0).getBoundingClientRect();
         var height = '' + (H - r.top) + 'px';
         // Create the previewer URL
-        var path = "/web_cmis_viewer/static/lib/viewerjs-0.5.8/ViewerJS/cmis_preview.html";
-        var _url = path + '#' + JSON.stringify(headers) + "||" + documentUrl + "&type=pdf&title=" + fileName;
+        var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/viewer.html";
+        var _url = path + '?file=' + encodeURIComponent(documentUrl) + "&httpHeaders=" + encodeURIComponent(JSON.stringify(headers)) + "&title=" + fileName;
         // Append the previewer
         $elPreview.empty();
         $elPreview.append("<iframe id='viewer' src = '" + _url + "' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen></iframe>")
