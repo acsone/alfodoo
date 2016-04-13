@@ -4,10 +4,10 @@
  *
  * To rebuild or modify this file with the latest versions of the included
  * software please visit:
- *   https://datatables.net/download/#bs/dt-1.10.10,af-2.1.0,b-1.1.0,b-colvis-1.1.0,b-html5-1.1.0,cr-1.3.0,fc-3.2.0,fh-3.1.0,kt-2.1.0,r-2.0.0,rr-1.1.0,sc-1.4.0,se-1.1.0
+ *   https://datatables.net/download/#bs/dt-1.10.11,af-2.1.1,b-1.1.2,b-colvis-1.1.2,b-html5-1.1.2,cr-1.3.1,fc-3.2.1,fh-3.1.1,kt-2.1.1,r-2.0.2,rr-1.1.1,sc-1.4.1,se-1.1.2
  *
  * Included libraries:
- *   DataTables 1.10.10, AutoFill 2.1.0, Buttons 1.1.0, Column visibility 1.1.0, HTML5 export 1.1.0, ColReorder 1.3.0, FixedColumns 3.2.0, FixedHeader 3.1.0, KeyTable 2.1.0, Responsive 2.0.0, RowReorder 1.1.0, Scroller 1.4.0, Select 1.1.0
+ *   DataTables 1.10.11, AutoFill 2.1.1, Buttons 1.1.2, Column visibility 1.1.2, HTML5 export 1.1.2, ColReorder 1.3.1, FixedColumns 3.2.1, FixedHeader 3.1.1, KeyTable 2.1.1, Responsive 2.0.2, RowReorder 1.1.1, Scroller 1.4.1, Select 1.1.2
  */
 
 table.dataTable {
@@ -306,7 +306,8 @@ div.dt-button-background {
 }
 
 
-table.DTCR_clonedTable {
+table.DTCR_clonedTable.dataTable {
+  position: absolute !important;
   background-color: rgba(255, 255, 255, 0.7);
   z-index: 202;
 }
@@ -422,6 +423,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
   border-radius: 16px;
   box-shadow: 0 0 3px #444;
   box-sizing: content-box;
+  text-align: left;
   font-family: 'Courier New', Courier, monospace;
   text-indent: 4px;
   line-height: 16px;
@@ -470,6 +472,7 @@ table.dataTable.dtr-column > tbody > tr > th.control:before {
   border-radius: 16px;
   box-shadow: 0 0 3px #444;
   box-sizing: content-box;
+  text-align: left;
   font-family: 'Courier New', Courier, monospace;
   text-indent: 4px;
   line-height: 16px;
@@ -597,12 +600,12 @@ table.dataTable td.reorder {
 }
 
 
+div.DTS {
+  display: block !important;
+}
 div.DTS tbody th,
 div.DTS tbody td {
   white-space: nowrap;
-}
-div.DTS tbody tr.even {
-  background-color: white;
 }
 div.DTS div.DTS_Loading {
   z-index: 1;
@@ -613,8 +616,13 @@ div.DTS div.dataTables_scrollBody {
 div.DTS div.dataTables_scrollBody table {
   z-index: 2;
 }
-div.DTS div.dataTables_paginate {
+div.DTS div.dataTables_paginate,
+div.DTS div.dataTables_length {
   display: none;
+}
+
+div.DTS tbody tr.even {
+  background-color: white;
 }
 
 
