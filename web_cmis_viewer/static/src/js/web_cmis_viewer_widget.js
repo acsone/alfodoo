@@ -836,8 +836,10 @@ var CmisMixin = {
         var width="100%";
         var height =  '' + this.$el.height() - 30 + 'px'; //' ' + (H - r.top) + 'px';
         // Create the previewer URL
-        var path = "/web_cmis_viewer/static/lib/viewerjs-0.5.8/ViewerJS/cmis_preview.html";
-        var _url = path + '#' + JSON.stringify(headers) + "||" + documentUrl + "&type=pdf&title=" + fileName;
+        //var path = "/web_cmis_viewer/static/lib/viewerjs-0.5.8/ViewerJS/cmis_preview.html";
+        //var _url = path + '#' + JSON.stringify(headers) + "||" + documentUrl + "&type=pdf&title=" + fileName;
+        var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/viewer.html";
+        var _url = path + '?file=' + encodeURIComponent(documentUrl) + "&httpHeaders=" + encodeURIComponent(JSON.stringify(headers)) + "&title=" + fileName;
         $document_preview.empty();
         $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': _url,
                                                                     'width': width,
