@@ -203,6 +203,7 @@
        this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmis_object);
        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
        this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
+       this.versionSeriesId = this.getSuccinctProperty('cmis:versionSeriesId', cmis_object);
        this.url = this.cmis_session.getContentStreamURL(this.objectId, 'attachment');
        this.allowableActions = cmis_object.allowableActions;
        this.renditions = cmis_object.renditions;
@@ -301,6 +302,16 @@
        return QWeb.render("CmisContentActions", ctx);
    },
 
+   get_preview_url : function(){
+       var rendition = _.findWhere(this.renditions, {mimeType: 'application/pdf'});
+       if (this.mimetype === 'application/pdf') {
+           return this.cmis_session.getContentStreamURL(this.objectId, 'inline');
+       } else if (rendition) {
+           return this.cmis_session.getContentStreamURL(rendition['streamId']);
+       }
+       return null;
+   },
+
  });
  
  /**
@@ -313,14 +324,16 @@ var CmisMixin = {
          this.cmis_config_loaded = $.Deferred();
          this.cmis_location = null;
          this.cmis_backend_id = null;
+         this.cmis_backend_fields = ['id', 'location'];
      },
+
      /**
       * Load CMIS settings from Odoo server 
       */
      load_cmis_config: function() {
          var ds = new data.DataSetSearch(this, 'cmis.backend', this.context, [
              [1, '=', 1]]);
-         ds.read_slice(['id', 'location'], {}).done(this.on_cmis_config_loaded);
+         ds.read_slice(this.cmis_backend_fields, {}).done(this.on_cmis_config_loaded);
      },
 
      /**
@@ -381,9 +394,34 @@ var CmisMixin = {
      /**
       * Wrap a 
       */
-     wrap_cmis_object: function(cmis_object) {
-         return new CmisObjectWrapper(cmis_object.object, this.cmis_session);
+     wrap_cmis_object: function(cmisObject) {
+         return new CmisObjectWrapper(cmisObject.object, this.cmis_session);
      },
+
+     /**
+      * Return the url used to launch the embeded document previewer
+      */
+     get_previewer_url: function(cmisObjectWrapped) {
+         var title = cmisObjectWrapped.name;
+         var preview_url = cmisObjectWrapped.get_preview_url();
+         var headers = {};
+         if ($.ajaxSettings.headers != null)
+             headers = JSON.parse(JSON.stringify($.ajaxSettings.headers));
+         var params = {
+           file: preview_url,
+           httpHeaders: JSON.stringify(headers),
+           title: title,
+         };
+         if (this.cmis_session._token != null) {
+             // Append the token at the document URL
+             var tokenName = Object.keys(cmis_session._token)[0];
+             var tokenValue = cmis_session.getToken()[tokenName];
+             params[tokenName] = tokenValue;
+         }
+         // Create the previewer URL
+         var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/viewer.html";
+         return path + '?' + $.param(params);
+     }
 };
  
  var CmisViewer = formWidget.FieldChar.extend(CmisMixin, {
@@ -646,6 +684,7 @@ var CmisMixin = {
         cmis_session
             .getChildren(self.displayed_folder_id, {
                 includeAllowableActions : true,
+                renditionFilter: 'application/pdf',
                 skipCount : start,
                 maxItems : max,
                 orderBy : orderBy,
@@ -797,51 +836,17 @@ var CmisMixin = {
     },
 
     on_click_preview: function(row){
-        var data = row.data();
-        var cmis_session = this.cmis_session;
-        var objectId = data.objectId;
-        var fileName = data.name;
-        var self = this;
-        if (data.mimetype === 'application/pdf') {
-            var documentUrl = cmis_session.getContentStreamURL(objectId, 'inline');
-            self.display_preview(documentUrl, fileName);
-        } else {
-            cmis_session.getRenditions(objectId).ok(function(renditions){
-                var rendition = _.findWhere(renditions, {mimeType: 'application/pdf'});
-                if (!rendition){
-                    self.do_warn(_t("CMIS Preview"), _t("No preview available for this document"));
-                    return;
-                }
-                var documentUrl = cmis_session.getContentStreamURL(rendition['streamId']);
-                self.display_preview(documentUrl, fileName);
-                
-            });
-        }
+        //http://localhost:8080/share/proxy/alfresco/api/node/workspace/SpacesStore/34a2e79c-9118-4d85-890c-32a720d70ad5/content/thumbnails/pdf?c=force&lastModified=pdf%3A146062
+        var previewer_url = this.get_previewer_url(row.data());
+        this.display_preview(previewer_url);
     },
 
-    display_preview: function(documentUrl, fileName){
-        var cmis_session = this.cmis_session;
-        var $document_preview = this.$el.find(".documentpreview");
-        // Compute the list of headers required by the previewer
-        var headers = {};
-        if ($.ajaxSettings.headers != null)
-            headers = JSON.parse(JSON.stringify($.ajaxSettings.headers));
-        if (cmis_session._token != null) {
-            // Append the token at the document URL
-            var tokenName = Object.keys(cmis_session._token)[0];
-            var tokenValue = cmis_session.getToken()[tokenName];
-            documentUrl += "&" + tokenName + "=" + tokenValue;
-        }
-
+    display_preview: function(previewerUrl){
         var width="100%";
         var height =  '' + this.$el.height() - 30 + 'px'; //' ' + (H - r.top) + 'px';
-        // Create the previewer URL
-        //var path = "/web_cmis_viewer/static/lib/viewerjs-0.5.8/ViewerJS/cmis_preview.html";
-        //var _url = path + '#' + JSON.stringify(headers) + "||" + documentUrl + "&type=pdf&title=" + fileName;
-        var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/viewer.html";
-        var _url = path + '?file=' + encodeURIComponent(documentUrl) + "&httpHeaders=" + encodeURIComponent(JSON.stringify(headers)) + "&title=" + fileName;
+        var $document_preview = this.$el.find(".documentpreview");
         $document_preview.empty();
-        $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': _url,
+        $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': previewerUrl,
                                                                     'width': width,
                                                                     'height': height,
                                                                     }));
