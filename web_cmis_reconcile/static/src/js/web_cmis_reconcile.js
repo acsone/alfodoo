@@ -213,44 +213,20 @@ var CmisDocumentReconciliation =  Widget.extend(
     },
 
     preview_doc: function(cmisObjectWrapped){
-        var self = this;
-        var objectId = cmisObjectWrapped.objectId;
-        var fileName = cmisObjectWrapped.name;
-        var mimetype = cmisObjectWrapped.mimetype;
-        var self = this;
-        if (mimetype === 'application/pdf') {
-            var documentUrl = this.cmis_session.getContentStreamURL(objectId, 'inline');
-            self.display_preview(documentUrl, fileName);
-        } else {
-            var documentUrl = self.cmis_session.getContentStreamURL(cmisObjectWrapped.renditions[0]['streamId']);
-            self.display_preview(documentUrl, fileName);
-        }
+        var previewer_url = this.get_previewer_url(cmisObjectWrapped);
+        this.display_preview(previewer_url);
     },
     
 
-    display_preview: function(documentUrl, fileName) {
-        var cmis_session = this.cmis_session;
+    display_preview: function(previewerUrl) {
         var $elPreview = this.$el.find(".documentpreview");
-        // Compute the list of headers required by the previewer
-        var headers = {};
-        if ($.ajaxSettings.headers != null)
-            headers = JSON.parse(JSON.stringify($.ajaxSettings.headers));
-        if (cmis_session._token != null) {
-            // Append the token at the document URL
-            var tokenName = Object.keys(cmis_session._token)[0];
-            var tokenValue = cmis_session.getToken()[tokenName];
-            documentUrl += "&" + tokenName + "=" + tokenValue;
-        }
         var width="100%";
         var H = $(window).height();
         var r = $elPreview.get(0).getBoundingClientRect();
         var height = '' + (H - r.top) + 'px';
-        // Create the previewer URL
-        var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/viewer.html";
-        var _url = path + '?file=' + encodeURIComponent(documentUrl) + "&httpHeaders=" + encodeURIComponent(JSON.stringify(headers)) + "&title=" + fileName;
         // Append the previewer
         $elPreview.empty();
-        $elPreview.append("<iframe id='viewer' src = '" + _url + "' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen></iframe>")
+        $elPreview.append("<iframe id='viewer' src = '" + previewerUrl + "' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen></iframe>")
     },
 
     _finalize_reconcile : function(model_id) {
