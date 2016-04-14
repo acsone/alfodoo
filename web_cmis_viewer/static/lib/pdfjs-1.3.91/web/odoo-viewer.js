@@ -452,7 +452,7 @@ var DEFAULT_PREFERENCES = {
   enableHandToolOnLoad: false,
   enableWebGL: false,
   pdfBugEnabled: false,
-  disableRange: false,
+  disableRange: true, // not supported by alfresco
   disableStream: false,
   disableAutoFetch: false,
   disableFontFace: false,
@@ -7154,9 +7154,7 @@ function validateFileURL(file) {
     // Removing of the following line will not guarantee that the viewer will
     // start accepting URLs from foreign origin -- CORS headers on the remote
     // server must be properly configured.
-    if (fileOrigin !== viewerOrigin) {
-      throw new Error('file origin does not match viewer\'s');
-    }
+    return;
   } catch (e) {
     var message = e && e.message;
     var loadingErrorMessage = mozL10n.get('loading_error', null,
@@ -7383,6 +7381,7 @@ function webViewerInitialized() {
     xhr.onload = function() {
       PDFViewerApplication.open(new Uint8Array(xhr.response));
     };
+    
     try {
       xhr.open('GET', file);
       xhr.responseType = 'arraybuffer';
@@ -7395,7 +7394,14 @@ function webViewerInitialized() {
   }
 
   if (file) {
-    PDFViewerApplication.open(file);
+    PDFViewerApplication.open(file, {
+           httpHeaders: JSON.parse(params.httpheaders),
+           withCredentials: true,
+       }
+    );
+    if (params.title) {
+        PDFViewerApplication.setTitle(params.title);
+     }
   }
 }
 

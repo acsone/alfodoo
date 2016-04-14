@@ -419,7 +419,7 @@ var CmisMixin = {
              params[tokenName] = tokenValue;
          }
          // Create the previewer URL
-         var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/viewer.html";
+         var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/odoo-viewer.html";
          return path + '?' + $.param(params);
      }
 };
