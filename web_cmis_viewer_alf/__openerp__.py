@@ -21,6 +21,7 @@
 
     # always loaded
     'data': [
+        'data/web_cmis_viewer_alf.xml',
         'views/web_cmis_viewer_alf.xml'
     ],
     'qweb': [

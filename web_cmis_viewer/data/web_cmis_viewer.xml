@@ -9,6 +9,7 @@
             <field name="password">admin</field>
             <field name="location">http://10.7.20.179:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser/</field>
             <field name="share_location">http://10.7.20.179:8080/share</field>
+            <field name="alfresco_api_location">http://10.7.20.179:8080/alfresco/s/api</field>
         </record>
 
     </data>
