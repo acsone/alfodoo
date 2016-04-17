@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-            <record id="aeroo_report_view" model="ir.ui.view">
+        <record id="act_report_xml_view" model="ir.ui.view">
             <field name="name">ir.actions.report.xml(report_aeroo_cmis)</field>
             <field name="model">ir.actions.report.xml</field>
-            <field name="inherit_id" ref="base.act_report_xml_view" />
+            <field name="inherit_id" ref="report_aeroo.act_report_xml_view" />
             <field name="arch" type="xml">
-
-                <page name='security' position="before">
-                    <page string="LibreOffice template" name="lo_template"
-                        attrs="{'invisible': [('report_type', '!=', 'aeroo')]}">
-
-                        <group>
-                            <field name="in_format" />
-                            <field name="out_format"/>
-                            <field name="parser_loc" />
-                            <field name="tml_source"/>
-                            <field name="report_rml" />
-                        </group>
-
-                    </page>
-                </page>
                 <page name="security" position="after">
                     <page name="cmis" string="Save in CMIS"  attrs="{'invisible':[('report_type','not in',['aeroo'])]}">
                       <group>
@@ -34,20 +19,5 @@
                 </page>
             </field>
         </record>
-
-        <record model="ir.ui.view" id="act_report_xml_view1">
-            <field name="name">ir.actions.report.xml.aeroo.form (report_aeroo_cmis)</field>
-            <field name="model">ir.actions.report.xml</field>
-            <field name="inherit_id" ref="report_aeroo.act_report_xml_view1"/>
-            <field name="arch" type="xml">
-                <field name="attachment_use" position="after">
-                    <field name="cmis_filename"/>
-                    <field name="backend_id"/>
-                    <field name="cmis_duplicate_handler"/>
-                </field>
-            </field>
-        </record>
-
     </data>
-
 </odoo>
