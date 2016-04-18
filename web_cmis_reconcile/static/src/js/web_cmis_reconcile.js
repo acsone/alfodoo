@@ -234,7 +234,7 @@ var CmisDocumentReconciliation =  Widget.extend(
         var ResModel = new Model(self.res_model);
         var wrapped_object = this.get_current_cmis_object();
         var context = this.build_context();
-        ResModel.call('read', [model_id, ['cmis_objectid', 'backend_id']],
+        ResModel.call('read', [model_id, ['cmis_objectid', 'cmis_backend_id']],
             {context: context}).then(function(vals){
                 if(vals.cmis_objectid){
                     self._move_object_to_folder(wrapped_object, vals.cmis_objectid).done($.proxy(self._on_current_doc_reconciled(), self));
