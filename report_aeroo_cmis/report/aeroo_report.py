@@ -38,7 +38,9 @@ class Aeroo_report(report_aeroo.Aeroo_report):
 
     def store_in_cmis(self, env, report_xml, obj, res):
         name = safe_eval(
-            report_xml.cmis_filename, {'object': obj, 'time': time})
+            report_xml.cmis_filename, {'object': obj,
+                                       'time': time,
+                                       '_': _})
         if not name:
             return
         pdf = res[0]
