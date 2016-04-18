@@ -16,8 +16,8 @@ class Reports(reports.Reports):
     def index(self, action, token):
         return super(Reports, self).index(action, token)
 
-    def redirect_to_cmis(self, cmis_objectid, backend_id, token):
-        backend = request.env['cmis.backend'].browse(int(backend_id))
+    def redirect_to_cmis(self, cmis_objectid, cmis_backend_id, token):
+        backend = request.env['cmis.backend'].browse(int(cmis_backend_id))
         url = backend.get_content_details_url(cmis_objectid)
         response = werkzeug.Response(json.dumps(
             {'url': url}),  mimetype='application/json')

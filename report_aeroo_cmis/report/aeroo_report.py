@@ -48,14 +48,14 @@ class Aeroo_report(report_aeroo.Aeroo_report):
         # will be saved as child of the repository
         if isinstance(obj, CmisFolder):
             if not obj.cmis_objectid:
-                if not report_xml.backend_id:
+                if not report_xml.cmis_backend_id:
                     raise UserError(_('Not able to store document into cmis\n'
                                       'No backend defined on the report'))
-                obj.create_in_cmis(report_xml.backend_id.id)
+                obj.create_in_cmis(report_xml.cmis_backend_id.id)
             cmis_parent_objectid = obj.cmis_objectid
-            backend = obj.backend_id
+            backend = obj.cmis_backend_id
         else:
-            backend = report_xml.backend_id
+            backend = report_xml.cmis_backend_id
         if not backend:
             raise Warning(_("No CMIS Backend configured"))
         path = os.path.dirname(name) or '/'

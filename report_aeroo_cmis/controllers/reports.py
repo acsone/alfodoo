@@ -82,8 +82,8 @@ class Reports(main.Reports):
                  ('Content-Length', len(report))],
             cookies={'fileToken': token})
 
-    def redirect_to_cmis(self, cmis_objectid, backend_id, token):
-        backend = request.env['cmis.backend'].browse(int(backend_id))
+    def redirect_to_cmis(self, cmis_objectid, cmis_backend_id, token):
+        backend = request.env['cmis.backend'].browse(int(cmis_backend_id))
         repo = backend.check_auth()
         url = "%s?objectId=%s&selector=content" % (
              repo.getRootFolderUrl(), cmis_objectid)

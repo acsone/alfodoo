@@ -24,9 +24,10 @@ class IrActionsReportXml(models.Model):
              'defined on the cmis.bakend if the related object is not a '
              'cmis.folder, otherwise as a subpath of the cmis folder linked'
              'to the associated object of the report.')
-    backend_id = fields.Many2one(
+    cmis_backend_id = fields.Many2one(
         comodel_name="cmis.backend",
         string="Backend",
+        oldname="bakend_id",
         help='The backend to use if your report is not linked to an object or'
              'the linked object is not a cmis folder')
     cmis_duplicate_handler = fields.Selection(
