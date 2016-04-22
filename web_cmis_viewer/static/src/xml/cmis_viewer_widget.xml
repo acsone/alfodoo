@@ -96,6 +96,8 @@
     <div class="cmis_viewer_root_content_actions btn-toolbar">
         <button type="button"
                 class="btn btn-default btn-sm root-content-action-refresh"
+                data-toggle="tooltip"
+                title="Refresh content table"
                 aria-label="Refresh content table">
              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
          </button>
@@ -103,11 +105,15 @@
        <div class="btn-group">
          <button type="button"
                  t-attf-class="btn btn-default btn-sm root-content-action-new-folder {{ (canCreateFolder)?'': 'disabled' }}"
+                 data-toggle="tooltip"
+                 title="Create folder"
                  aria-label="Create folder">
              <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
          </button>
          <button type="button"
                  t-attf-class="btn btn-default btn-sm root-content-action-new-doc {{ (canCreateDocument)?'': 'disabled' }}"
+                 data-toggle="tooltip"
+                 title="Create document"
                  aria-label="Create document">
              <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
          </button>
@@ -119,13 +125,21 @@
     <div class="cmis_viewer_content_actions">
     <div class="btn-group pull-right" role="group">
         <t t-if='canGetContentStream'>
-          <a type="button" class="btn btn-default btn-xs content-action-download" aria-label="Download"
+          <a type="button"
+             class="btn btn-default btn-xs content-action-download"
+             aria-label="Download"
+             data-toggle="tooltip"
+             title="Download"
              t-att-href='object.url'>
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
           </a>
         </t>
         <t t-if='canPreview'>
-          <button type="button" class="btn btn-default btn-xs content-action-preview" aria-label="Preview">
+          <button type="button"
+              class="btn btn-default btn-xs content-action-preview"
+              data-toggle="tooltip"
+              title="Preview"
+              aria-label="Preview">
               <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
           </button>
         </t>
@@ -134,6 +148,7 @@
                t-att-id="object.getSuccinctProperty('cmis:objectId')"
                aria-label="More actions"
                data-toggle="dropdown"
+               title="More actions"
                aria-haspopup="true"
                aria-expanded="true">
             </a>
