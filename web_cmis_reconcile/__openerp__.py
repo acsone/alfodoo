@@ -2,9 +2,9 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': "CMIS Document reconcile",
+    'name': "CMIS Mail indexer",
     'summary': """
-        Wizard to link CMIS document with Odoo model instance""",
+        Add mail in/out metadatas to CMIS documents""",
     'author': 'ACSONE SA/NV',
     'website': "http://acsone.eu",
     'category': 'Uncategorized',
@@ -15,7 +15,7 @@
         'web_cmis_viewer'
     ],
     'data': [
-        'views/web_cmis_reconcile.xml'
+        'views/brb_cmis_mail_indexer.xml'
     ],
     'qweb': [
         "static/src/xml/*.xml",
