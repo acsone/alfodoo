@@ -15,7 +15,7 @@
         'web_cmis_viewer'
     ],
     'data': [
-        'views/brb_cmis_mail_indexer.xml'
+        'views/web_cmis_reconcile.xml'
     ],
     'qweb': [
         "static/src/xml/*.xml",
