@@ -174,7 +174,7 @@ function parseQueryString(query) {
   for (var i = 0, ii = parts.length; i < ii; ++i) {
     var param = parts[i].split('=');
     var key = param[0].toLowerCase();
-    var value = param.length > 1 ? param[1] : null;
+    var value = param.length > 1 ? param[1].replace(/\+/g, '%20') : null;
     params[decodeURIComponent(key)] = decodeURIComponent(value);
   }
   return params;
@@ -7177,6 +7177,7 @@ function webViewerInitialized() {
   var params = parseQueryString(queryString);
   var file = 'file' in params ? params.file : DEFAULT_URL;
   validateFileURL(file);
+  document.getElementById('titleBar').innerText = params.title;
 
   var fileInput = document.createElement('input');
   fileInput.id = 'fileInput';
@@ -7589,7 +7590,6 @@ window.addEventListener('change', function webViewerChange(evt) {
   }
 
   PDFViewerApplication.setTitleUsingUrl(file.name);
-
   // URL does not reflect proper document location - hiding some icons.
   document.getElementById('viewBookmark').setAttribute('hidden', 'true');
   document.getElementById('secondaryViewBookmark').
