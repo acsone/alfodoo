@@ -1,6 +1,41 @@
+ .buttons-columnVisibility{
+    a {
+        background-color: initial !important;
+    }
+
+    a:before {
+        content:' ';
+        margin-left: 11px;
+    }
+
+    &.active{
+        a:before{
+            content:'\2714';
+            margin-top:-11px;
+            margin-left: 0px;
+            text-align:center;
+            &:empty{
+                content:'';
+            }
+        }
+    }
+
+    a:empty:before {
+        content:'';
+    }
+}
+
 div.cmis_viewer {
     margin-top: 15px;
     width: 100%;
+
+    .dt-buttons {
+        display: initial;
+
+        span.caret {
+            margin-left: 5px;
+        }
+    }
     
     .dataTables_wrapper {
         width: 100%;

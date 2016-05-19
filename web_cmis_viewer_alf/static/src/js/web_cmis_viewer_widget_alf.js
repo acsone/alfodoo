@@ -59,7 +59,7 @@ cmis_widgets.CmisViewer.include({
 
     get_datatable_config: function(){
         var config = this._super.apply(this, arguments);
-        config.columns[4].width='105px';
+        config.columns[config.columns.length -1].width='105px';
         return config;
     },
 

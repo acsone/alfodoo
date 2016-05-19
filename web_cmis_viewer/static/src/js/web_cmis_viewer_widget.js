@@ -200,6 +200,8 @@
        this.name = this.getSuccinctProperty('cmis:name', cmis_object);
        this.mimetype = this.getSuccinctProperty('cmis:contentStreamMimeType', cmis_object);
        this.baseTypeId = this.getSuccinctProperty('cmis:baseTypeId', cmis_object);
+       this.title = this.getSuccinctProperty('cmis:title', cmis_object) || '';
+       this.description = this.getSuccinctProperty('cmis:description', cmis_object);
        this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmis_object);
        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
        this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
@@ -563,7 +565,21 @@ var CmisMixin = {
             deferRender:    true,
             serverSide:     true,
             autoWidth:      false,
+            responsive:     true,
+            colReorder:     {
+                realtime: false,
+            },
+            stateSave:      true,
             ajax: $.proxy(self, 'datatable_query_cmis_data'),
+            buttons: [
+                  {
+            extend: 'collection',
+            text: _t('Columns') + '<span class="caret"/>',
+            buttons: [ 'columnsToggle' ],
+        }
+                 
+                
+            ],
             columns: [
                 {
                     className:      'details-control',
@@ -574,12 +590,18 @@ var CmisMixin = {
                 },
                 { data: 'fName()'},
                 { 
+                    data: 'title',
+                    visible: false
+                },
+                { data: 'description'},
+                { 
                     data:'fLastModificationDate()',
-                    width:'150px'
+                    width:'120px'
                 },
                 { 
                     data: 'lastModifiedBy',
-                     width:'60px'
+                    width:'60px',
+                    visible: false,
                 },
                 { 
                     data: 'fContentActions()',
@@ -612,7 +634,7 @@ var CmisMixin = {
                     "sortDescending": _t(": activate to sort column descending")
                 }
             },
-            dom: "<'row'<'col-sm-6 cmis-root-content-buttons'><'col-sm-6'lf>>" +
+            dom: "<'row'<'col-sm-6 cmis-root-content-buttons'><'col-sm-6'Blf>>" +
                  "<'row'<'col-sm-12'<'cmis-breadcrumb-container'>>>" +
                  "<'row'<'col-sm-12'tr>>" +
                  "<'row'<'col-sm-5'i><'col-sm-7'p>>",
@@ -627,6 +649,7 @@ var CmisMixin = {
             this.$datatable = $('#' + this.id_for_table);
             this.$datatable.on('preInit.dt', $.proxy(self, 'on_datatable_preinit'));
             this.$datatable.on('draw.dt', $.proxy(self, 'on_datatable_draw'));
+            this.$datatable.on('column-reorder.dt', $.proxy(self, 'on_datatable_column_reorder'));
             var config = this.get_datatable_config();
             this.datatable = this.$datatable.DataTable(config);
             this.table_rendered.resolve();
@@ -653,6 +676,13 @@ var CmisMixin = {
      * created elements.
      */
     on_datatable_draw: function(e, settings){
+        this.register_content_events();
+    },
+    
+    /**
+     * This event is triggered when a column is reordered.
+     */
+    on_datatable_column_reorder: function(e, settings){
         this.register_content_events();
     },
     
