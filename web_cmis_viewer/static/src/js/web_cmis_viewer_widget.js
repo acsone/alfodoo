@@ -407,14 +407,14 @@ var CmisMixin = {
          var title = cmisObjectWrapped.name;
          var preview_url = cmisObjectWrapped.get_preview_url();
          var headers = {};
-         if ($.ajaxSettings.headers != null)
+         if ($.ajaxSettings.headers !== null)
              headers = JSON.parse(JSON.stringify($.ajaxSettings.headers));
          var params = {
            file: preview_url,
            httpHeaders: JSON.stringify(headers),
            title: title,
          };
-         if (this.cmis_session._token != null) {
+         if (this.cmis_session._token !== null) {
              // Append the token at the document URL
              var tokenName = Object.keys(cmis_session._token)[0];
              var tokenValue = cmis_session.getToken()[tokenName];
@@ -781,7 +781,7 @@ var CmisMixin = {
                  e.stopPropagation();
                  self.upload_files(e.originalEvent.dataTransfer.files);
                  
-             })
+             });
          }
          /* some UI fixes */
          this.$el.find('.dropdown-toggle').off('click');
@@ -806,7 +806,7 @@ var CmisMixin = {
              var row = self._get_event_row(e);
              self.display_folder(0, row.data().objectId);
          });
-         var $el_actions = this.$el.find('.cmis_viewer_content_actions')
+         var $el_actions = this.$el.find('.cmis_viewer_content_actions');
          $el_actions.find('.content-action-download').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_download(row);
@@ -948,12 +948,12 @@ var CmisMixin = {
     },
 
     on_click_get_properties: function(row){
-        this.display_row_details(row)
+        this.display_row_details(row);
     },
 
     on_click_details_control: function(e){
         var row = this._get_event_row(e);
-        this.display_row_details(row)
+        this.display_row_details(row);
     },
 
     on_click_delete_object: function(row){
@@ -1006,7 +1006,7 @@ var CmisMixin = {
             var library = this;
             self.reset_breadcrumb();
             self.display_folder(0, folderId);
-        })
+        });
     },
 
     /**
