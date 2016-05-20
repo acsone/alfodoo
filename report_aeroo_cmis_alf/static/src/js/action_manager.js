@@ -35,7 +35,7 @@ ActionManager = ActionManager.include({
                     c.rpc_error.apply(c, arguments);
                 } else {
                     framework.unblockUI();
-                    window.open(result_data.url)
+                    window.open(result_data.url);
                }
             })
             .fail(function(result_data){
@@ -45,7 +45,6 @@ ActionManager = ActionManager.include({
                 var error_msg = $(doc.body.childNodes[2]).text();
                 c.rpc_error(JSON.parse(error_msg));
             });
-        return;
      },
 });
 
