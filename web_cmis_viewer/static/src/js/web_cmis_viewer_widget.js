@@ -407,14 +407,14 @@ var CmisMixin = {
          var title = cmisObjectWrapped.name;
          var preview_url = cmisObjectWrapped.get_preview_url();
          var headers = {};
-         if ($.ajaxSettings.headers !== null)
+         if ($.ajaxSettings.headers)
              headers = JSON.parse(JSON.stringify($.ajaxSettings.headers));
          var params = {
            file: preview_url,
            httpHeaders: JSON.stringify(headers),
            title: title,
          };
-         if (this.cmis_session._token !== null) {
+         if (this.cmis_session._token) {
              // Append the token at the document URL
              var tokenName = Object.keys(cmis_session._token)[0];
              var tokenValue = cmis_session.getToken()[tokenName];
