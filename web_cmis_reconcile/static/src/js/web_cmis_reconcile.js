@@ -153,13 +153,12 @@ var CmisDocumentReconciliation =  Widget.extend(
     get_cmis_prop_value: function(properties, key){
         if (key in properties){
             var property = properties[key]; 
-            var value = property['value']
+            var value = property['value'];
             switch (property['type']) {
                 case 'date':
                 case 'datetime':
                     var d = new Date(parseInt(value));
                     return d;
-                    break;
                 default:
                     return value;
             }
@@ -226,7 +225,7 @@ var CmisDocumentReconciliation =  Widget.extend(
         var height = '' + (H - r.top) + 'px';
         // Append the previewer
         $elPreview.empty();
-        $elPreview.append("<iframe id='viewer' src = '" + previewerUrl + "' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen></iframe>")
+        $elPreview.append("<iframe id='viewer' src = '" + previewerUrl + "' width='" + width + "' height='" + height + "' allowfullscreen webkitallowfullscreen></iframe>");
     },
 
     _finalize_reconcile : function(model_id) {
