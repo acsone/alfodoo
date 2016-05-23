@@ -38,6 +38,21 @@ class IrActionsReportXml(models.Model):
         ],
         string='Strategy in case of duplicate',
         default='error')
+    cmis_objectTypeId = fields.Char(
+        "CMIS content type",
+        default="cmis:document",
+        help='Only applied at creation')
+    cmis_properties = fields.Text(
+        "CMIS properties",
+        help="Use this field to put additiannal properties to apply to "
+             "content created in CMIS. If used, the text will be interpreted "
+             "as a python expression that must return a valid python "
+             "dictionary that will be passed as parameter to the cmislib. "
+             "The object and time are available as variable into the python "
+             "context i.e.:\n"
+             "{'cmis:secondaryObjectTypeIds': ['P:cm:titled'], \n "
+             " 'cmis:title': object.name,\n"
+             " 'cm:description': object.notes}\n")
 
     @api.model
     def register_report(self, name, model, tmpl_path, parser):

@@ -11,6 +11,8 @@
                       <group>
                           <group>
                               <field name="cmis_filename"/>
+                              <field name="cmis_objectTypeId"/>
+                              <field name="cmis_properties"/>
                               <field name="cmis_backend_id"/>
                               <field name="cmis_duplicate_handler"/>
                           </group>
