@@ -83,7 +83,7 @@ class Aeroo_report(report_aeroo.Aeroo_report):
                                              'time': time,
                                              '_': _}
             )
-            return {}
+        return {}
 
     def get_mimetype(self, env, file_name, cmis_parent_folder_obj,
                      report_xml, repo):
