@@ -60,7 +60,10 @@ class Aeroo_report(report_aeroo.Aeroo_report):
             backend = report_xml.cmis_backend_id
         if not backend:
             raise Warning(_("No CMIS Backend configured"))
+        # the generated name can contains sub directories
         path = os.path.dirname(name) or '/'
+
+        # get the target folder according to the path to the name
         target_folder_objectid = backend.get_folder_by_path(
             path, create_if_not_found=True,
             cmis_parent_objectid=cmis_parent_objectid)
