@@ -36,11 +36,23 @@ class Aeroo_report(report_aeroo.Aeroo_report):
                     env, report, env[obj._name].browse(obj.id), res)
         return res
 
+    def _get_eval_context(self, env, report_xml, obj):
+        return {'object': obj,
+                'time': time,
+                '_': _,
+                'user': env.user,
+                'context': env.context}
+
+    def _safe_eval(self, source, env, report_xml, obj):
+        return safe_eval(
+            source,
+            self._get_eval_context(env, report_xml, obj)
+            )
+
     def store_in_cmis(self, env, report_xml, obj, res):
-        name = safe_eval(
-            report_xml.cmis_filename, {'object': obj,
-                                       'time': time,
-                                       '_': _})
+        name = self._safe_eval(
+            report_xml.cmis_filename, env, report_xml, obj
+            )
         if not name:
             return
         pdf = res[0]
@@ -78,10 +90,8 @@ class Aeroo_report(report_aeroo.Aeroo_report):
 
     def _get_cmis_properties(self, env, report_xml, obj):
         if report_xml.cmis_properties:
-            return safe_eval(
-                report_xml.cmis_properties, {'object': obj,
-                                             'time': time,
-                                             '_': _}
+            return self._safe_eval(
+                report_xml.cmis_properties, env, report_xml, obj
             )
         return {}
 
