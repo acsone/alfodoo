@@ -10,7 +10,7 @@ import mimetypes
 from cStringIO import StringIO
 
 import openerp
-from openerp.exceptions import Warning, UserError
+from openerp.exceptions import UserError
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.cmis.models.cmis_folder import CmisFolder
@@ -23,7 +23,7 @@ class Aeroo_report(report_aeroo.Aeroo_report):
 
     def create_single_pdf(self, cr, uid, ids, data, report_xml, context=None):
         if len(ids) > 1:
-            raise Warning(
+            raise UserError(
                 "At this stage we should only have recieved 1 object")
         res = super(Aeroo_report, self).create_single_pdf(
             cr, uid, ids, data, report_xml, context=context)
@@ -71,7 +71,7 @@ class Aeroo_report(report_aeroo.Aeroo_report):
         else:
             backend = report_xml.cmis_backend_id
         if not backend:
-            raise Warning(_("No CMIS Backend configured"))
+            raise UserError(_("No CMIS Backend configured"))
         # the generated name can contains sub directories
         path = os.path.dirname(name) or '/'
 
