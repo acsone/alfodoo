@@ -20,6 +20,6 @@ class Reports(reports.Reports):
         backend = request.env['cmis.backend'].browse(int(cmis_backend_id))
         url = backend.get_content_details_url(cmis_objectid)
         response = werkzeug.Response(json.dumps(
-            {'url': url}),  mimetype='application/json')
+            {'url': url}), mimetype='application/json')
         response.set_cookie('fileToken', token)
         return response

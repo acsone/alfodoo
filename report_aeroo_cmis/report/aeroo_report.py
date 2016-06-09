@@ -19,13 +19,13 @@ from openerp.addons.report_aeroo import report_aeroo
 logger = logging.getLogger(__name__)
 
 
-class Aeroo_report(report_aeroo.Aeroo_report):
+class AerooReport(report_aeroo.Aeroo_report):
 
     def create_single_pdf(self, cr, uid, ids, data, report_xml, context=None):
         if len(ids) > 1:
             raise UserError(
                 _("At this stage we should only have recieved 1 object"))
-        res = super(Aeroo_report, self).create_single_pdf(
+        res = super(AerooReport, self).create_single_pdf(
             cr, uid, ids, data, report_xml, context=context)
         obj = self.getObjects(cr, uid, ids, context)[0]
         if report_xml.cmis_filename:
