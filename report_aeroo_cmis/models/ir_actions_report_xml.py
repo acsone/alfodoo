@@ -5,7 +5,7 @@ from openerp import api, fields, models
 from openerp.tools.translate import _
 from openerp.report import interface
 
-from ..report import Aeroo_report
+from ..report import AerooReport
 
 
 class IrActionsReportXml(models.Model):
@@ -59,5 +59,5 @@ class IrActionsReportXml(models.Model):
         name = 'report.%s' % name
         if name in interface.report_int._reports:
             del interface.report_int._reports[name]
-        res = Aeroo_report(self.env.cr, name, model, tmpl_path, parser=parser)
+        res = AerooReport(self.env.cr, name, model, tmpl_path, parser=parser)
         return res
