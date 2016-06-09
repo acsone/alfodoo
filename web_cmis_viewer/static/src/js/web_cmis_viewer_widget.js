@@ -786,13 +786,13 @@ var CmisMixin = {
          /* some UI fixes */
          this.$el.find('.dropdown-toggle').off('click');
          this.$el.find('.dropdown-toggle').on('click', function (e){
-        	 self.dropdown_fix_position($(e.target));
+             self.dropdown_fix_position($(e.target));
          });
          
          this.$el.find('.dropdown-menu').off('mouseleave');
          // hide the dropdown menu on mouseleave
          this.$el.find('.dropdown-menu').on('mouseleave', function(e){
-        	 $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
          });
          // hide the dropdown menu on link clicked
          this.$el.find('.dropdown-menu a').on('click', function(e){
@@ -886,7 +886,7 @@ var CmisMixin = {
         var self = this;
         this.$el.find('.root-content-action-refresh').on('click', function(e){
             if (self.datatable){
-            	self.datatable.ajax.reload();
+                self.datatable.ajax.reload();
             }
         });
         this.$el.find('.root-content-action-new-folder').on('click', function(e){
