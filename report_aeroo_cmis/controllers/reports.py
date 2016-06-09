@@ -77,16 +77,16 @@ class Reports(main.Reports):
         return request.make_response(
             report,
             headers=[
-                 ('Content-Disposition', main.content_disposition(file_name)),
-                 ('Content-Type', report_mimetype),
-                 ('Content-Length', len(report))],
+                ('Content-Disposition', main.content_disposition(file_name)),
+                ('Content-Type', report_mimetype),
+                ('Content-Length', len(report))],
             cookies={'fileToken': token})
 
     def redirect_to_cmis(self, cmis_objectid, cmis_backend_id, token):
         backend = request.env['cmis.backend'].browse(int(cmis_backend_id))
         repo = backend.check_auth()
         url = "%s?objectId=%s&selector=content" % (
-             repo.getRootFolderUrl(), cmis_objectid)
+            repo.getRootFolderUrl(), cmis_objectid)
         # here we don't use http.redirect_with_hash
         # since we need to return the token in the
         # redirect response to unlock the UI

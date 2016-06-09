@@ -135,7 +135,7 @@ class Aeroo_report(report_aeroo.Aeroo_report):
 
         raise UserError(
             _('Document "%s" already exists in CMIS at %s') % (
-             file_name, rs.getResults()[0].getPaths()[0]))
+                file_name, rs.getResults()[0].getPaths()[0]))
 
     def _create_cmis_document(self, env, file_name, cmis_parent_folder_obj,
                               content, mimetype, report_xml, repo, obj):
