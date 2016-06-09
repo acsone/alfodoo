@@ -32,9 +32,9 @@ class IrActionsReportXml(models.Model):
              'the linked object is not a cmis folder')
     cmis_duplicate_handler = fields.Selection(
         selection=[
-            ('error',       _('Raise exception')),
+            ('error', _('Raise exception')),
             ('new_version', _('Create a new version')),
-            ('increment',   _('Rename as file(X).pdf'))
+            ('increment', _('Rename as file(X).pdf'))
         ],
         string='Strategy in case of duplicate',
         default='error')
