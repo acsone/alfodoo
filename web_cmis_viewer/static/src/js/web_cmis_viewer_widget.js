@@ -335,7 +335,11 @@ var CmisMixin = {
      load_cmis_config: function() {
          var ds = new data.DataSetSearch(this, 'cmis.backend', this.context, [
              [1, '=', 1]]);
-         ds.read_slice(this.cmis_backend_fields, {}).done(this.on_cmis_config_loaded);
+         var self = this;
+         ds.read_slice(this.cmis_backend_fields, {}).done(function(records) {
+             self.on_cmis_config_loaded(records);
+             }
+         );
      },
 
      /**
