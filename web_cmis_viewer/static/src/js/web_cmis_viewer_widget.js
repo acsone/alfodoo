@@ -22,6 +22,18 @@
  var _t = core._t;
  var QWeb = core.qweb;
 
+ Dialog.include({
+     check_validity: function(){
+         if (this   .el.checkValidity()){
+             return true;
+         }
+         else {
+             // Use pseudo HMLT5 submit to display validation errors
+             $('<input type="submit">').hide().appendTo(this.$el).click().remove(); 
+         }
+     },
+ });
+
  var CmisCreateFolderDialog = Dialog.extend({
      template: 'CmisCreateFolderDialog',
      init: function(parent, parent_cmisobject) {
@@ -33,11 +45,8 @@
                  {text: _t("Create"),
                   classes: "btn-primary",
                   click: function () {
-                      if(self.el.checkValidity()){
+                      if(self.check_validity()){
                           self.on_click_create();
-                      } else {
-                          // Use pseudo HMLT5 submit to display validation errors
-                          $('<input type="submit">').hide().appendTo(self.$el).click().remove(); 
                       }
                   }
                }
@@ -88,12 +97,11 @@
                  {text: _t("Create"),
                   classes: "btn-primary",
                   click: function () {
-                  if(self.el.checkValidity()){
-                      self.on_click_create();
-                  } else {
-                      // Use pseudo HMLT5 submit to display validation errors
-                      $('<input type="submit">').hide().appendTo(self.$el).click().remove(); 
-                  } }}
+                      if(self.check_validity()){
+                          self.on_click_create();
+                      }
+                  }
+                }
              ],
              close: function () { self.close();}
          };
