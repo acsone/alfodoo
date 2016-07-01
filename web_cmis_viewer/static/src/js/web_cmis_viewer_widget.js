@@ -32,7 +32,15 @@
                   click: function () { self.$el.parents('.modal').modal('hide'); }},
                  {text: _t("Create"),
                   classes: "btn-primary",
-                  click: function () { self.on_click_create(); }}
+                  click: function () {
+                      if(self.el.checkValidity()){
+                          self.on_click_create();
+                      } else {
+                          // Use pseudo HMLT5 submit to display validation errors
+                          $('<input type="submit">').hide().appendTo(self.$el).click().remove(); 
+                      }
+                  }
+               }
              ],
              close: function () { self.close();}
          };
@@ -79,7 +87,13 @@
                   click: function () { self.$el.parents('.modal').modal('hide'); }},
                  {text: _t("Create"),
                   classes: "btn-primary",
-                  click: function () { self.on_click_create(); }}
+                  click: function () {
+                  if(self.el.checkValidity()){
+                      self.on_click_create();
+                  } else {
+                      // Use pseudo HMLT5 submit to display validation errors
+                      $('<input type="submit">').hide().appendTo(self.$el).click().remove(); 
+                  } }}
              ],
              close: function () { self.close();}
          };
