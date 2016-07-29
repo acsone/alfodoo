@@ -13,6 +13,36 @@ can link to an existing object in Odoo or create a new instance of a specific
 model. As result, the document will be moved from the scanned folder to
 the folder related to the Odoo object into CMIS.
 
+This module is a techincal module providing a new wizard. To use this new
+wizard you must register your own client action as follow
+
+.. code-block:: xml
+
+        <record id="action_my_model_reconcile" model="ir.actions.client">
+            <field name="name">Import documents related to my model</field>
+            <field name="res_model">my.model</field>
+            <field name="tag">cmis_document_reconciliation_view</field>
+            <field name="context">{"cmis_directory":'/test',
+                                   "cmis_fields_mapping": {
+                                        'cmis:creationDate': 'in_date',
+                                        'cmis:name': 'name',
+                                    },
+                                    "context": {
+                                    },
+                                   }</field>
+        </record>
+
+
+and create a menu entry for your new action
+
+.. code-block:: xml
+
+      <menuitem id="menu_cmis_reconcile_my_model"
+            name="Import CMIS My Model documents"
+            parent=""
+            action="action_my_model_reconcile" sequence="20"/>
+
+
 Installation
 ============
 
