@@ -13,9 +13,10 @@ from openerp.addons.web.controllers import main
 _logger = logging.getLogger(__name__)
 
 try:
-  import werkzeug
+    import werkzeug
 except ImportError:
-  _logger.debug('Cannot `import werkzeug`.')
+    _logger.debug('Cannot `import werkzeug`.')
+
 
 def cmis_proxy_security_wrapper(f):
     @functools.wraps(f)
@@ -33,15 +34,6 @@ class CmisProxy(http.Controller):
 
     def _get_cmis_backend(self):
         return request.env['cmis.backend'].search([(1, '=', 1)])
-
-    def _get_cmis_client(self):
-        cmis_backend = self._get_cmis_backend()
-        cmis_client = CmisClient(
-            cmis_backend.location,
-            cmis_backend.username,
-            cmis_backend.password,
-            binding=BrowserBinding())
-        return cmis_client
 
     @classmethod
     def _clean_url_in_dict(cls, values, original, new):
@@ -61,7 +53,7 @@ class CmisProxy(http.Controller):
         avoid to suck the server memory
         """
         cmis_backend = self._get_cmis_backend()
-        r =  requests.get(
+        r = requests.get(
             url, params=params,
             stream=True,
             auth=(cmis_backend.username, cmis_backend.password))
@@ -69,7 +61,6 @@ class CmisProxy(http.Controller):
         return werkzeug.Response(
             r, headers=dict(r.headers.items()),
             direct_passthrough=True)
-
 
     def _forward_get(self, url_path, params):
         cmis_backend = self._get_cmis_backend()
@@ -79,14 +70,14 @@ class CmisProxy(http.Controller):
         url = cmis_location + url_path
         if params.get('cmisselector') == 'content':
             return self._foward_get_file(url, params)
-        r =  requests.get(
+        r = requests.get(
             url, params=params,
             auth=(cmis_backend.username, cmis_backend.password))
         r.raise_for_status()
         if r.text:
             result = r.json()
             self._clean_url_in_dict(result, cmis_location,
-                                "/cmis/1.1/browser")
+                                    "/cmis/1.1/browser")
             response = werkzeug.Response(json.dumps(
                 result), mimetype='application/json',
                 headers=dict(r.headers.items()))
@@ -123,7 +114,7 @@ class CmisProxy(http.Controller):
         if r.text:
             result = r.json()
             self._clean_url_in_dict(result, cmis_location,
-                                "/cmis/1.1/browser")
+                                    "/cmis/1.1/browser")
             response = werkzeug.Response(json.dumps(
                 result), mimetype='application/json',
                 headers=dict(r.headers.items()))
