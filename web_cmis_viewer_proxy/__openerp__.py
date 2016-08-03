@@ -19,4 +19,7 @@
     ],
     'demo': [
     ],
+    'external_dependencies': {
+     'python': ['requests'],
+    },
 }
