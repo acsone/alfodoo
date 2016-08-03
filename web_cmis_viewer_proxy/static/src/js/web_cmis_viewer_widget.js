@@ -32,9 +32,12 @@ cmis_widgets.CmisViewer.include({
         });
     },
 
-    start: function(){
-        this.view.on('view_content_has_changed', this, this.set_cmis_session_token);
-        return this._super.apply(this, arguments);
+    set_root_folder_id: function() {
+        var self = this;
+        $.when(self.cmis_session_initialized).done(function() {
+            self.set_cmis_session_token();
+        });
+        this._super.apply(this, arguments);
     },
 
     bind_cmis_config: function(result){
