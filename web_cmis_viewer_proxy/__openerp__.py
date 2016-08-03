@@ -11,8 +11,11 @@
     'author': 'ACSONE SA/NV,Odoo Community Association (OCA)',
     'website': 'https://acsone.eu/',
     'depends': [
+        'web_cmis_viewer'
     ],
     'data': [
+        'views/cmis_backend.xml',
+         'views/web_cmis_viewer_proxy.xml'
     ],
     'demo': [
     ],

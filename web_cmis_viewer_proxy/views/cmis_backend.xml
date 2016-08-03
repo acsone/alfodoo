@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="cmis_backend_form_view">
+        <field name="name">cmis.backend.form (in web_cmis_viewer_proxy)</field>
+        <field name="model">cmis.backend</field>
+        <field name="inherit_id" ref="cmis.view_cmis_backend_form"/>
+        <field name="arch" type="xml">
+            <field name="location" position="after">
+                <field name="is_cmis_proxy"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
