@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="web_cmis_viewer assets" inherit_id="web_cmis_viewer.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/web_cmis_viewer_proxy/static/src/js/web_cmis_viewer_widget.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
