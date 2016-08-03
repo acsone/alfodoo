@@ -41,21 +41,17 @@ cmis_widgets.CmisViewer.include({
         this._super.apply(this, arguments);
         this.cmis_backend_fields.push('alfresco_api_location');
     },
-    
+
     wrap_cmis_object: function(cmisObject) {
         var obj = this._super.apply(this, arguments);
         obj.alfresco_api_location = this.alfresco_api_location;
         return obj;
     },
 
-   on_cmis_config_loaded: function(result) {
-         if (result.length != 1){
-             this.do_warn(_t("CMIS Config Error"), _t("One and only one CMIS backend must be configurerd"));
-             return;
-         }
-         this.alfresco_api_location = result[0].alfresco_api_location;
-         this._super.apply(this, arguments);
-   },
+    bind_cmis_config: function(result){
+        this._super.apply(this, arguments);
+        this.alfresco_api_location = result[0].alfresco_api_location;
+    },
 
     get_datatable_config: function(){
         var config = this._super.apply(this, arguments);

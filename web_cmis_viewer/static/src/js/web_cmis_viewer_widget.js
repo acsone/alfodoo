@@ -57,11 +57,6 @@
          this.parent_cmisobject = parent_cmisobject;
          this.set_title(_t("Create Folder "));
      },
-     start: function() {
-         var self = this;
-         this._super.apply(this, arguments);
-
-     },
 
      on_click_create: function() {
          var self = this;
@@ -176,11 +171,6 @@
         this.row = row;
         this.data = row.data();
         this.set_title(_t("Update content of ") + this.data.name);
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-
     },
 
     on_file_change: function(e){
@@ -359,6 +349,7 @@ var CmisMixin = {
              [1, '=', 1]]);
          var self = this;
          ds.read_slice(this.cmis_backend_fields, {}).done(function(records) {
+             self.bind_cmis_config(records);
              self.on_cmis_config_loaded(records);
              }
          );
@@ -367,13 +358,16 @@ var CmisMixin = {
      /**
       * Parse the result of the call to the server to retrieve the CMIS settings
       */
-     on_cmis_config_loaded: function(result) {
+     bind_cmis_config: function(result){
          if (result.length != 1){
              this.do_warn(_t("CMIS Config Error"), _t("One and only one CMIS backend must be configurerd"));
              return;
          }
          this.cmis_location = result[0].location;
          this.cmis_backend_id = result[0].id;
+     },
+
+     on_cmis_config_loaded: function(result) {
          this.cmis_config_loaded.resolve();
      },
 
@@ -1059,8 +1053,7 @@ var CmisMixin = {
                 });
             this.display_folder_in_breadcrumb(folderId);
         }
-        this.datatable.page(0);
-        this.datatable.ajax.reload();
+        this.datatable.ajax.reload(null, true);
     },
 
     /**
@@ -1097,15 +1090,6 @@ var CmisMixin = {
         });
         this.$el.find('.cmis-root-content-buttons').html(QWeb.render("CmisRootContentActions", ctx));
         this.register_root_content_events();    
-    },
-
-    /**
-     * Display a list of nodes
-     * 
-     * @folderId: ID of the folder that contains nodes
-     * @pageIndex: Index of the page to display
-     */
-    display_children: function(pageIndex, folderId) {
     },
 
     /**
