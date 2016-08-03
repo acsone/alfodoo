@@ -1,26 +1,35 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from cmislib.model import CmisClient
-import cmislib.exceptions
-from cmislib.net import RESTService as Rest
-from cmislib.browser.binding import BrowserBinding, encode_multipart_formdata
-
+import functools
 import json
-import time
-import base64
-import zlib
-import werkzeug
-import werkzeug.utils
+import requests
+import logging
+
 from openerp import http
 from openerp.http import request
 from openerp.addons.web.controllers import main
-import urllib
-from cStringIO import StringIO
-from openerp.loglevels import ustr
+
+_logger = logging.getLogger(__name__)
+
+try:
+  import werkzeug
+except ImportError:
+  _logger.debug('Cannot `import werkzeug`.')
+
+def cmis_proxy_security_wrapper(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        # TODO Check token
+        if 'token' in kwargs:
+            kwargs.pop('token')
+        res = f(*args, **kwargs)
+        # TODO filter response
+        return res
+    return wrapper
 
 
-class CmisProxy(main.Reports):
+class CmisProxy(http.Controller):
 
     def _get_cmis_backend(self):
         return request.env['cmis.backend'].search([(1, '=', 1)])
@@ -46,51 +55,103 @@ class CmisProxy(main.Reports):
             elif hasattr(v, 'replace'):
                 values[k] = v.replace(original, new)
 
-    @http.route('/cmis/1.1/browser', type='http', auth="user")
-    @main.serialize_exception
-    def call_cmis_services(self, *args, **kwargs):
-        """The base url to retrieve the repositories definition
+    def _foward_get_file(self, url, params):
+        """Method called to retrieved the content associated to a cmis object.
+        The content is streamed between the cmis container and the caller to
+        avoid to suck the server memory
         """
         cmis_backend = self._get_cmis_backend()
-        binding = BrowserBinding()
-        result = binding.get(
-            cmis_backend.location, cmis_backend.username, 
-            cmis_backend.password)
-        self._clean_url_in_dict(result, cmis_backend.location,
+        r =  requests.get(
+            url, params=params,
+            stream=True,
+            auth=(cmis_backend.username, cmis_backend.password))
+        r.raise_for_status()
+        return werkzeug.Response(
+            r, headers=dict(r.headers.items()),
+            direct_passthrough=True)
+
+
+    def _forward_get(self, url_path, params):
+        cmis_backend = self._get_cmis_backend()
+        cmis_location = cmis_backend.location
+        if cmis_location.endswith('/'):
+            cmis_location = cmis_location[:-1]
+        url = cmis_location + url_path
+        if params.get('cmisselector') == 'content':
+            return self._foward_get_file(url, params)
+        r =  requests.get(
+            url, params=params,
+            auth=(cmis_backend.username, cmis_backend.password))
+        r.raise_for_status()
+        if r.text:
+            result = r.json()
+            self._clean_url_in_dict(result, cmis_location,
                                 "/cmis/1.1/browser")
-        response = werkzeug.Response(json.dumps(
-            result), mimetype='application/json')
+            response = werkzeug.Response(json.dumps(
+                result), mimetype='application/json',
+                headers=dict(r.headers.items()))
+        else:
+            response = werkzeug.Response()
         return response
 
+    def _forward_post(self, url_path, params):
+        """The CMIS Browser binding is designed to be queried from the browser
+        Therefore, the parameters in a POST are expected to be submitted as
+        HTTP multipart forms. Therefore each parameter in the request is
+        forwarded as a part of a multipart/form-data.
+        """
+        files = {}
+        if 'content' in params:
+            # we are in a mulitpart form data'
+            content = params.pop('content')
+            files['content'] = (
+                content.filename,
+                content.stream,
+                content.mimetype
+            )
+        for k, v in params.iteritems():
+            # no filename for parts dedicated to HTTP Form data
+            files[k] = (None, v)
+        cmis_backend = self._get_cmis_backend()
+        cmis_location = cmis_backend.location
+        if cmis_location.endswith('/'):
+            cmis_location = cmis_location[:-1]
+        url = cmis_location + url_path
+        r = requests.post(url, files=files,
+                          auth=(cmis_backend.username, cmis_backend.password))
+        r.raise_for_status()
+        if r.text:
+            result = r.json()
+            self._clean_url_in_dict(result, cmis_location,
+                                "/cmis/1.1/browser")
+            response = werkzeug.Response(json.dumps(
+                result), mimetype='application/json',
+                headers=dict(r.headers.items()))
+        else:
+            response = werkzeug.Response()
+        return response
 
+    @cmis_proxy_security_wrapper
+    @http.route('/cmis/1.1/browser', type='http', auth="user", methods=['GET'])
+    @main.serialize_exception
+    def call_cmis_services(self, *args, **kwargs):
+        """Call at the root of the cmis repository. These calls are for
+        requesting the global services provided by the CMIS Container
+        """
+        return self._forward_get('', kwargs)
+
+    @cmis_proxy_security_wrapper
     @http.route('/cmis/1.1/browser/<root>', type='http', auth="user",
                 methods=['GET'])
     @main.serialize_exception
     def call_get_cmis_repository(self, *args, **kwargs):
-        """The base url to retrieve the repositories definition
+        """Call services provided by a specific repository. These calls are for
+        requestion services on cmis contents
         """
         root = kwargs.pop('root')
-        if 'token' in kwargs:
-            kwargs.pop('token')
-        cmis_backend = self._get_cmis_backend()
-        binding = BrowserBinding()
-        if kwargs.get('cmisselector') == 'content':
-            result, content = Rest().get(
-                cmis_backend.location + root, cmis_backend.username, 
-                cmis_backend.password, **kwargs)
-            if result['status'] != '200':
-                return werkzeug.Response(result.reason, status=result.status)
-            result['content-location'] = result['content-location'].replace(cmis_backend.location,'/cmis/1.1/browser/' ) 
-            return werkzeug.Response(content, headers=result)
-        result = binding.get(
-            cmis_backend.location + root, cmis_backend.username, 
-            cmis_backend.password, **kwargs)
-        self._clean_url_in_dict(result, cmis_backend.location,
-                                "/cmis/1.1/browser/")
-        response = werkzeug.Response(json.dumps(
-            result), mimetype='application/json')
-        return response
+        return self._forward_get("/" + root, kwargs)
 
+    @cmis_proxy_security_wrapper
     @http.route('/cmis/1.1/browser/<root>', type='http', auth="user",
                 methods=['POST'], csrf=False)
     @main.serialize_exception
@@ -98,114 +159,4 @@ class CmisProxy(main.Reports):
         """The base url to retrieve the repositories definition
         """
         root = kwargs.pop('root')
-        if 'token' in kwargs:
-            kwargs.pop('token')
-        contentType = request.httprequest.headers.get('Content-Type')
-        if 'content' in kwargs:
-            # we are in a mulitpart form data'
-            content = kwargs.pop('content')
-            fields = {}
-            # remove all unicode key and value. Everything must be utf-8
-            # encodede to avoid InicodeDecodeError when processing the request
-            for k, v in kwargs.iteritems():
-                fields[k.encode('utf-8')] = v.encode('utf-8')
-            fields['cmis:name'] = content.filename.encode('utf-8')
-            contentType, payload = encode_multipart_formdata(
-                fields, content.stream, contentType=content.mimetype.encode('utf-8'))
-        else:
-            payload = urllib.urlencode(kwargs)
-        cmis_backend = self._get_cmis_backend()
-        binding = BrowserBinding()
-        result = binding.post(
-            url=(cmis_backend.location + root).encode('utf-8'),
-            payload=payload,
-            contentType=contentType,
-            username=cmis_backend.username, 
-            password=cmis_backend.password)
-        if result:
-            self._clean_url_in_dict(result, cmis_backend.location,
-                                "/cmis/1.1/browser/")
-            response = werkzeug.Response(json.dumps(
-                result), mimetype='application/json')
-        else:
-            response = werkzeug.Response()
-        return response
-
-    def index(self, action, token):
-        """Override the base method to manage custom extension: 'cmis'
-        When a report is stored in CMIS the report generator return a tuple
-        as (cmis_objectid, cmis@backend.id)
-        If the extensiont part (the second one) of the tuple contains @cmis,
-        in place of returning the generated content, we redirect the user to
-        the report into the cmis container
-        """
-        action = json.loads(action)
-
-        report_srv = request.session.proxy("report")
-        context = dict(request.context)
-        context.update(action["context"])
-
-        report_data = {}
-        report_ids = context.get("active_ids", None)
-        if 'report_type' in action:
-            report_data['report_type'] = action['report_type']
-        if 'datas' in action:
-            if 'ids' in action['datas']:
-                report_ids = action['datas'].pop('ids')
-            report_data.update(action['datas'])
-
-        report_id = report_srv.report(
-            request.session.db, request.session.uid, request.session.password,
-            action["report_name"], report_ids,
-            report_data, context)
-
-        report_struct = None
-        while True:
-            report_struct = report_srv.report_get(
-                request.session.db, request.session.uid,
-                request.session.password, report_id)
-            if report_struct["state"]:
-                break
-
-            time.sleep(self.POLLING_DELAY)
-
-        report = base64.b64decode(report_struct['result'])
-        fmt = report_struct['format']
-        if 'cmis@' in fmt:
-            return self.redirect_to_cmis(
-                report, fmt.replace('cmis@', ''), token)
-        if report_struct.get('code') == 'zlib':
-            report = zlib.decompress(report)
-        report_mimetype = self.TYPES_MAPPING.get(
-            report_struct['format'], 'octet-stream')
-        file_name = action.get('name', 'report')
-        if 'name' not in action:
-            reports = request.session.model('ir.actions.report.xml')
-            res_id = reports.search(
-                [('report_name', '=', action['report_name'])],
-                context=context)
-            if len(res_id) > 0:
-                file_name = reports.read(res_id[0], ['name'], context)['name']
-            else:
-                file_name = action['report_name']
-        file_name = '%s.%s' % (file_name, report_struct['format'])
-
-        return request.make_response(
-            report,
-            headers=[
-                ('Content-Disposition', main.content_disposition(file_name)),
-                ('Content-Type', report_mimetype),
-                ('Content-Length', len(report))],
-            cookies={'fileToken': token})
-
-    def redirect_to_cmis(self, cmis_objectid, cmis_backend_id, token):
-        backend = request.env['cmis.backend'].browse(int(cmis_backend_id))
-        repo = backend.check_auth()
-        url = "%s?objectId=%s&selector=content" % (
-            repo.getRootFolderUrl(), cmis_objectid)
-        # here we don't use http.redirect_with_hash
-        # since we need to return the token in the
-        # redirect response to unlock the UI
-        response = werkzeug.utils.redirect(url, 303)
-        response.set_cookie('fileToken', token)
-        return response
+        return self._forward_post("/" + root, kwargs)
