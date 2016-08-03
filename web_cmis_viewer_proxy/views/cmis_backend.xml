@@ -10,7 +10,7 @@
         <field name="inherit_id" ref="cmis.view_cmis_backend_form"/>
         <field name="arch" type="xml">
             <field name="location" position="after">
-                <field name="is_cmis_proxy"/>
+                <field name="is_cmis_proxy" colspan="4"/>
             </field>
         </field>
     </record>
