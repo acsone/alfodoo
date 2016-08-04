@@ -5,9 +5,11 @@ import functools
 import json
 import requests
 import logging
+import urlparse
 
 from openerp import http
 from openerp.http import request
+from openerp.exceptions import AccessError
 from openerp.addons.web.controllers import main
 
 _logger = logging.getLogger(__name__)
@@ -36,6 +38,10 @@ class CmisProxy(http.Controller):
 
     def _get_cmis_backend(self):
         return request.env['cmis.backend'].search([(1, '=', 1)])
+
+    @property
+    def _cmis_proxy_base_url(self):
+        return urlparse.urljoin(request.httprequest.host_url,CMIS_PROXY_PATH)
 
     @classmethod
     def _clean_url_in_dict(cls, values, original, new):
@@ -67,9 +73,7 @@ class CmisProxy(http.Controller):
     def _forward_get(self, url_path, params):
         cmis_backend = self._get_cmis_backend()
         cmis_location = cmis_backend.location
-        if cmis_location.endswith('/'):
-            cmis_location = cmis_location[:-1]
-        url = cmis_location + url_path
+        url = urlparse.urljoin(cmis_location, url_path)
         if params.get('cmisselector') == 'content':
             return self._foward_get_file(url, params)
         r = requests.get(
@@ -78,11 +82,14 @@ class CmisProxy(http.Controller):
         r.raise_for_status()
         if r.text:
             result = r.json()
-            self._clean_url_in_dict(result, cmis_location,
-                                    "CMIS_PROXY_PATH")
+            self._clean_url_in_dict(result,
+                                    urlparse.urlparse(cmis_location).geturl(),
+                                    self._cmis_proxy_base_url)
+            headers = dict(r.headers.items())
+            headers['transfer-encoding'] = None
             response = werkzeug.Response(json.dumps(
                 result), mimetype='application/json',
-                headers=dict(r.headers.items()))
+                headers=headers)
         else:
             response = werkzeug.Response()
         return response
@@ -107,49 +114,38 @@ class CmisProxy(http.Controller):
             files[k] = (None, v)
         cmis_backend = self._get_cmis_backend()
         cmis_location = cmis_backend.location
-        if cmis_location.endswith('/'):
-            cmis_location = cmis_location[:-1]
-        url = cmis_location + url_path
+        url = urlparse.urljoin(cmis_location, url_path)
         r = requests.post(url, files=files,
                           auth=(cmis_backend.username, cmis_backend.password))
         r.raise_for_status()
         if r.text:
             result = r.json()
-            self._clean_url_in_dict(result, cmis_location,
-                                    CMIS_PROXY_PATH)
+            self._clean_url_in_dict(result,
+                                    urlparse.urlparse(cmis_location).geturl(),
+                                    self._cmis_proxy_base_url)
+            headers = dict(r.headers.items())
+            headers['transfer-encoding'] = None
             response = werkzeug.Response(json.dumps(
                 result), mimetype='application/json',
-                headers=dict(r.headers.items()))
+                headers=headers)
         else:
             response = werkzeug.Response()
         return response
 
     @cmis_proxy_security_wrapper
-    @http.route(CMIS_PROXY_PATH, type='http', auth="user", methods=['GET'])
+    @http.route([CMIS_PROXY_PATH,
+                 CMIS_PROXY_PATH + '/<path:cmis_path>'
+                 ], type='http', auth="user", csrf=False,
+                methods=['GET', 'POST'])
     @main.serialize_exception
-    def call_cmis_services(self, *args, **kwargs):
+    def call_cmis_services(self, cmis_path="", **kwargs):
         """Call at the root of the cmis repository. These calls are for
         requesting the global services provided by the CMIS Container
         """
-        return self._forward_get('', kwargs)
-
-    @cmis_proxy_security_wrapper
-    @http.route(CMIS_PROXY_PATH + '/<root>', type='http', auth="user",
-                methods=['GET'])
-    @main.serialize_exception
-    def call_get_cmis_repository(self, *args, **kwargs):
-        """Call services provided by a specific repository. These calls are for
-        requestion services on cmis contents
-        """
-        root = kwargs.pop('root')
-        return self._forward_get("/" + root, kwargs)
-
-    @cmis_proxy_security_wrapper
-    @http.route(CMIS_PROXY_PATH + '/<root>', type='http', auth="user",
-                methods=['POST'], csrf=False)
-    @main.serialize_exception
-    def call_post_cmis_repository(self, *args, **kwargs):
-        """The base url to retrieve the repositories definition
-        """
-        root = kwargs.pop('root')
-        return self._forward_post("/" + root, kwargs)
+        method = request.httprequest.method
+        if method == 'GET':
+            return self._forward_get(cmis_path, kwargs)
+        elif method == 'POST':
+            return self._forward_post(cmis_path, kwargs)
+        raise AccessError("The HTTP METHOD %s is not supported by CMIS" %
+                          method)
