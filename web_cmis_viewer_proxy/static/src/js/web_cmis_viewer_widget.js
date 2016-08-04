@@ -11,6 +11,7 @@
 var core = require('web.core');
 var cmis_widgets = require('web_cmis_viewer.cmis_viewer_widgets');
 var Model = require('web.Model');
+var $ = require('$');
 
 var _t = core._t;
 
@@ -27,9 +28,11 @@ cmis_widgets.CmisViewer.include({
 
     set_cmis_session_token: function(){
         var self = this;
-        $.when(self.cmis_session_initialized).done(function() {
-            self.cmis_session.setToken(self.gen_cmis_session_token());
-        });
+        if (this.is_cmis_proxy){
+            $.when(self.cmis_session_initialized).done(function() {
+                self.cmis_session.setToken(self.gen_cmis_session_token());
+            });
+        }
     },
 
     set_root_folder_id: function() {
@@ -43,6 +46,7 @@ cmis_widgets.CmisViewer.include({
     bind_cmis_config: function(result){
         this._super.apply(this, arguments);
         if (result[0].is_cmis_proxy) {
+            this.is_cmis_proxy = result[0].is_cmis_proxy;
             this.cmis_location = '/cmis/1.1/browser';
         }
     },
