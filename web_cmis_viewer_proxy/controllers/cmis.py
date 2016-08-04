@@ -17,6 +17,8 @@ try:
 except ImportError:
     _logger.debug('Cannot `import werkzeug`.')
 
+CMIS_PROXY_PATH = '/cmis/1.1/browser'
+
 
 def cmis_proxy_security_wrapper(f):
     @functools.wraps(f)
@@ -77,7 +79,7 @@ class CmisProxy(http.Controller):
         if r.text:
             result = r.json()
             self._clean_url_in_dict(result, cmis_location,
-                                    "/cmis/1.1/browser")
+                                    "CMIS_PROXY_PATH")
             response = werkzeug.Response(json.dumps(
                 result), mimetype='application/json',
                 headers=dict(r.headers.items()))
@@ -114,7 +116,7 @@ class CmisProxy(http.Controller):
         if r.text:
             result = r.json()
             self._clean_url_in_dict(result, cmis_location,
-                                    "/cmis/1.1/browser")
+                                    CMIS_PROXY_PATH)
             response = werkzeug.Response(json.dumps(
                 result), mimetype='application/json',
                 headers=dict(r.headers.items()))
@@ -123,7 +125,7 @@ class CmisProxy(http.Controller):
         return response
 
     @cmis_proxy_security_wrapper
-    @http.route('/cmis/1.1/browser', type='http', auth="user", methods=['GET'])
+    @http.route(CMIS_PROXY_PATH, type='http', auth="user", methods=['GET'])
     @main.serialize_exception
     def call_cmis_services(self, *args, **kwargs):
         """Call at the root of the cmis repository. These calls are for
@@ -132,7 +134,7 @@ class CmisProxy(http.Controller):
         return self._forward_get('', kwargs)
 
     @cmis_proxy_security_wrapper
-    @http.route('/cmis/1.1/browser/<root>', type='http', auth="user",
+    @http.route(CMIS_PROXY_PATH + '/<root>', type='http', auth="user",
                 methods=['GET'])
     @main.serialize_exception
     def call_get_cmis_repository(self, *args, **kwargs):
@@ -143,7 +145,7 @@ class CmisProxy(http.Controller):
         return self._forward_get("/" + root, kwargs)
 
     @cmis_proxy_security_wrapper
-    @http.route('/cmis/1.1/browser/<root>', type='http', auth="user",
+    @http.route(CMIS_PROXY_PATH + '/<root>', type='http', auth="user",
                 methods=['POST'], csrf=False)
     @main.serialize_exception
     def call_post_cmis_repository(self, *args, **kwargs):
