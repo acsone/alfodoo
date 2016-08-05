@@ -6,15 +6,13 @@ import time
 from cmislib import CmisClient
 from cmislib.browser.binding import BrowserBinding
 from cmislib.exceptions import \
-                          ObjectNotFoundException, \
-                          CmisException, \
-                          NotSupportedException
-                          
+    NotSupportedException
 import openerp.tests.common as common
 from ..controllers import cmis
 
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def isInResultSet(resultSet, targetDoc):
     """
@@ -35,10 +33,12 @@ def isInResultSet(resultSet, targetDoc):
 
 
 class BaseTestCmisProxy(common.HttpCase):
-   
+
     def setUp(self):
         super(BaseTestCmisProxy, self).setUp()
-        cmis_location = os.environ.get('CMIS_LOCATION') or 'http://10.7.20.179:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser/'
+        cmis_location = os.environ.get('CMIS_LOCATION') or \
+            ('http://10.7.20.179:8080/alfresco/api/-default-'
+             '/public/cmis/versions/1.1/browser/')
         cmis_user = os.environ.get('CMIS_USER') or 'admin'
         cmis_pwd = os.environ.get('CMIS_PWD') or 'admin'
         self.cmis_test_root_path = os.environ.get('CMIS_ROOT') or '/Odoo_proxy'
@@ -48,7 +48,7 @@ class BaseTestCmisProxy(common.HttpCase):
         cmis_backend = self.env['cmis.backend']
         cmis_backend.search([(1, '=', 1)]).unlink()
         cmis_backend.create({
-            'name' : 'TEST_CMIS_PROXY',
+            'name': 'TEST_CMIS_PROXY',
             'location': cmis_location,
             'is_cmis_proxy': True,
             'username': cmis_user,
@@ -56,8 +56,6 @@ class BaseTestCmisProxy(common.HttpCase):
             'version': '1.0'
         })
         self.authenticate('admin', 'admin')
-        url = 'http://%s:%d%s?db=%s' % (common.HOST, common.PORT,
-                                  cmis.CMIS_PROXY_PATH, common.get_db_name())
         self.cmis_url = 'http://%s:%d%s' % (common.HOST, common.PORT,
                                             cmis.CMIS_PROXY_PATH)
         self.headers = {'Cookie': 'session_id=%s' % self.session_id}
@@ -77,20 +75,18 @@ class BaseTestCmisClient(BaseTestCmisProxy):
                                      str(time.time())])
         self.test_folder = self.root_folder.createFolder(self.folder_name)
         self.test_doc1 = os.path.join(TEST_DIR, 'test_doc1.pdf')
-        self.test_doc2 = os.path.join(TEST_DIR, 'test_doc2.pdf') 
-        
+        self.test_doc2 = os.path.join(TEST_DIR, 'test_doc2.pdf')
 
     def tearDown(self):
         """ Clean up after the test. """
         try:
             self.test_folder.deleteTree()
         except NotSupportedException:
-            print "Couldn't delete test folder because deleteTree is not supported"
+            pass
         super(BaseTestCmisClient, self).tearDown()
 
 
 class TestCmisClient(BaseTestCmisProxy):
-
 
     def testGetRepositories(self):
         """Call getRepositories and make sure at least one comes back with
@@ -107,7 +103,7 @@ class TestCmisClient(BaseTestCmisProxy):
         repo = self.cmis_client.getDefaultRepository()
         self.assert_(repo is not None)
         self.assert_(repo.getRepositoryId() is not None)
-        self.assertEqual(repo.getRepositoryUrl(), 
+        self.assertEqual(repo.getRepositoryUrl(),
                          self.cmis_url)
 
 
@@ -118,7 +114,7 @@ class TestCmisQuery(BaseTestCmisClient):
         with open(self.test_doc1, 'rb') as test_file:
             self.filename = os.path.basename(test_file.name)
             self.cmis_content = self.test_folder.createDocument(
-                    self.filename, contentFile=test_file)
+                self.filename, contentFile=test_file)
 
     def testSimpleSelect(self):
         """Execute simple select from cmis:document"""
@@ -134,14 +130,14 @@ class TestRepository(BaseTestCmisClient):
         with open(self.test_doc1, 'rb') as test_file:
             filename = os.path.basename(test_file.name)
             cmis_content = self.test_folder.createDocument(
-                    filename, contentFile=test_file)
+                filename, contentFile=test_file)
             self.assertEqual(cmis_content.getName(), filename)
 
     def testCreateDocumentSpecialChar(self):
         with open(self.test_doc1, 'rb') as test_file:
             filename = u"éééà€ß.pdf"
             cmis_content = self.test_folder.createDocument(
-                    filename, contentFile=test_file)
+                filename, contentFile=test_file)
             self.assertEqual(cmis_content.getName(), filename)
 
     def testGetObject(self):
@@ -241,7 +237,7 @@ class TestFolder(BaseTestCmisClient):
 
 
 class TestDocument(BaseTestCmisClient):
-    
+
     def testCheckout(self):
         """Create a document in a test folder, then check it out"""
         new_doc = self.test_folder.createDocument('testDocument')
