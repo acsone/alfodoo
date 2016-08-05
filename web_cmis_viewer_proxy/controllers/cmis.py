@@ -111,7 +111,7 @@ class CmisProxy(http.Controller):
             )
         for k, v in params.iteritems():
             # no filename for parts dedicated to HTTP Form data
-            files[k] = (None, v)
+            files[k] = (None, v, 'text/plain;charset=utf-8')
         cmis_backend = self._get_cmis_backend()
         cmis_location = cmis_backend.location
         url = urlparse.urljoin(cmis_location, url_path)
