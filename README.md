@@ -1,6 +1,6 @@
-# AlfOfoo Modules
+# AlfOdoo Modules
 
-Alfodoo is a set of addons to seamless integrate an external Document
+AlfOdoo is a set of addons to seamlessly integrate an external Document
 Management System and Odoo
 
 Documentation:
