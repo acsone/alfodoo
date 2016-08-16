@@ -20,11 +20,102 @@ except ImportError:
 
 CMIS_PROXY_PATH = '/cmis/1.1/browser'
 
+READ_ACCESS_CMIS_ACTIONS = set([
+    "query",
+])
+
+WRITE_ACCESS_CMIS_ACTIONS = set([
+    "createRelationship",
+    # "createPolicy", method at repository level:  not supported 
+    # "createItem", method at repository level:  not supported
+    "bulkUpdate",
+    # "createType", method at repository level:  not supported
+    # "updateType", method at repository level:  not supported
+    "createDocument",
+    "createDocumentFromSource",
+    # "createPolicy", method at repository level:  not supported
+    "update",
+    "setContent",
+    "checkOut",
+    "cancelCheckOut",
+    "checkIn",
+    # "applyPolicy", method at repository level:  not supported
+    # "applyACL", method at repository level:  not supported
+])
+
+UNLINK_ACCESS_CMIS_ACTIONS  = set([
+    "delete",
+    "deleteContent",
+    "removeObjectFromFolder",
+    # "removePolicy", method at repository level:  not supported
+    # "deleteType", method at repository level:  not supported
+])
+
+READ_ACCESS_ALLOWABLE_ACTIONS = set([
+    "canGetDescendants",
+    "canGetChildren",
+    "canGetFolderParent",
+    "canGetObjectParents",
+    "canGetProperties",
+    "canGetContentStream",
+    "canGetAllVersions",
+    "canGetObjectRelationships",
+    "canGetAppliedPolicies",
+    "canGetACL",
+])
+
+WRITE_ACCESS_ALLOWABLE_ACTIONS = set([
+    "canCreateDocument",
+    "canCreateFolder",
+    #"canCreatePolicy",
+    "canCreateRelationship",
+    "canUpdateProperties",
+    "canMoveObject",
+    "canSetContentStream",
+    "canAddObjectToFolder",
+    "canCheckOut",
+    "canCancelCheckOut",
+    "canCheckIn",
+    #"canApplyPolicy",
+    #"canApplyACL",
+])
+
+UNLINK_ACCESS_ALLOWABLE_ACTIONS = set([
+    "canRemoveObjectFromFolder",
+    "canDeleteObject",
+    "canDeleteContentStream",
+    "canDeleteTree",
+    #"canRemovePolicy",
+])
+
+CMSI_ACTIONS_OPERATION_MAP = {}
+for a in READ_ACCESS_CMIS_ACTIONS: CMSI_ACTIONS_OPERATION_MAP[a] = 'read'
+for a in WRITE_ACCESS_CMIS_ACTIONS: CMSI_ACTIONS_OPERATION_MAP[a] = 'write'
+for a in UNLINK_ACCESS_CMIS_ACTIONS: CMSI_ACTIONS_OPERATION_MAP[a] = 'unlink'
+
+def gen_dict_extract(key, var):
+    """ This method is used to recusrively find into a json structure (dict)
+    all values of a given key
+    credits: http://stackoverflow.com/questions/9807634/
+    find-all-occurences-of-a-key-in-nested-python-dictionaries-and-lists
+    """
+    if hasattr(var,'iteritems'):
+        for k, v in var.iteritems():
+            if k == key:
+                yield v
+            if isinstance(v, dict):
+                for result in gen_dict_extract(key, v):
+                    yield result
+            elif isinstance(v, list):
+                for d in v:
+                    for result in gen_dict_extract(key, d):
+                        yield result
+
 
 class CmisProxy(http.Controller):
 
     def _get_cmis_backend(self):
-        return request.env['cmis.backend'].search([(1, '=', 1)])
+        return request.env['cmis.backend'].get_default_backend()
 
     @property
     def _cmis_proxy_base_url(self):
@@ -32,8 +123,8 @@ class CmisProxy(http.Controller):
 
     @classmethod
     def _clean_url_in_dict(cls, values, original, new):
-        """Replace all occurences of the cmis container url in the json
-        returned by a call to the cmis container by the one of the proxy"""
+        """Replace all occurences of the CMIS container url in the json
+        returned by a call to the CMIS container by the one of the proxy"""
         if original.endswith('/'):
             original = original[:-1]
         for k, v in values.iteritems():
@@ -42,12 +133,48 @@ class CmisProxy(http.Controller):
             elif hasattr(v, 'replace'):
                 values[k] = v.replace(original, new)
 
+    def _check_access_operation(self, model_inst, operation):
+        try:
+            model_inst.check_access_rights(operation)
+            model_inst.check_access_rule(operation)
+        except AccessError as ae:
+            return False
+        return True
+
+    def _apply_permissions_mapping(self, value, headers, cmis_backend,
+                               model_inst=None):
+        """This method modify the defined allowableActions returned by the
+        CMIS container to apply the Odoo operation policy defined of the
+        model instance
+        """
+        if not model_inst:
+            return
+        all_allowable_actions = [aa for aa in gen_dict_extract(
+            'allowableActions', value)]
+        if not all_allowable_actions:
+            return
+        can_read = self._check_access_operation(model_inst, 'read')
+        can_write = self._check_access_operation(model_inst, 'write')
+        can_unlink = self._check_access_operation(model_inst, 'unlink')
+        for allowable_actions in all_allowable_actions:
+            for action in allowable_actions.keys():
+                allowed = False
+                if action in READ_ACCESS_ALLOWABLE_ACTIONS:
+                    allowed = can_read
+                elif action in WRITE_ACCESS_ALLOWABLE_ACTIONS:
+                    allowed = can_write
+                elif action in UNLINK_ACCESS_ALLOWABLE_ACTIONS:
+                    allowed = can_unlink
+                allowable_actions[action] = allowed
+
     def _prepare_json_response(self, value, headers, cmis_backend,
                                model_inst=None):
         cmis_location = cmis_backend.location
         self._clean_url_in_dict(value,
                                 urlparse.urlparse(cmis_location).geturl(),
                                 self._cmis_proxy_base_url)
+        self._apply_permissions_mapping(
+            value, headers, cmis_backend, model_inst)
         headers['transfer-encoding'] = None
         response = werkzeug.Response(
             json.dumps(value), mimetype='application/json',
@@ -59,14 +186,13 @@ class CmisProxy(http.Controller):
         cmis_location = cmis_backend.location
         return urlparse.urljoin(cmis_location, url_path)
 
-    def _foward_get_file(self, url, params):
-        """Method called to retrieved the content associated to a cmis object.
-        The content is streamed between the cmis container and the caller to
+    def _foward_get_file(self, url, cmis_backend, params):
+        """Method called to retrieved the content associated to a CMIS object.
+        The content is streamed between the CMIS container and the caller to
         avoid to suck the server memory
         :return: :class:`Response <Response>` object
         :rtype: werkzeug.Response
         """
-        cmis_backend = self._get_cmis_backend()
         r = requests.get(
             url, params=params,
             stream=True,
@@ -76,15 +202,14 @@ class CmisProxy(http.Controller):
             r, headers=dict(r.headers.items()),
             direct_passthrough=True)
 
-    def _forward_get(self, url_path, params, model_inst):
+    def _forward_get(self, url_path, cmis_backend, model_inst, params):
         """
         :return: :class:`Response <Response>` object
         :rtype: werkzeug.Response
         """
-        cmis_backend = self._get_cmis_backend()
         url = self._get_redirect_url(cmis_backend, url_path)
         if params.get('cmisselector') == 'content':
-            return self._foward_get_file(url, params)
+            return self._foward_get_file(url, cmis_backend, params)
         r = requests.get(
             url, params=params,
             auth=(cmis_backend.username, cmis_backend.password))
@@ -96,7 +221,7 @@ class CmisProxy(http.Controller):
             response = werkzeug.Response()
         return response
 
-    def _forward_post(self, url_path, params, model_inst):
+    def _forward_post(self, url_path, cmis_backend, model_inst, params):
         """The CMIS Browser binding is designed to be queried from the browser
         Therefore, the parameters in a POST are expected to be submitted as
         HTTP multipart forms. Therefore each parameter in the request is
@@ -116,7 +241,6 @@ class CmisProxy(http.Controller):
         for k, v in params.iteritems():
             # no filename for parts dedicated to HTTP Form data
             files[k] = (None, v, 'text/plain;charset=utf-8')
-        cmis_backend = self._get_cmis_backend()
         url = self._get_redirect_url(cmis_backend, url_path)
         r = requests.post(url, files=files,
                           auth=(cmis_backend.username, cmis_backend.password))
@@ -128,11 +252,149 @@ class CmisProxy(http.Controller):
             response = werkzeug.Response()
         return response
 
-    def _check_access(self, cmis_path, params):
-        if 'token' in params:
-            params.pop('token')
-            #  TODO
-        return None
+    def _check_provided_tokens(self, cmis_path, cmis_backend, params):
+        """ Check that the token is present in the request and in the http
+        headers and both are equal. 
+        :return: the token value if checks are OF, False otherwise.
+        """
+        header_token = request.httprequest.headers.get('Authorization')
+        header_token = header_token.replace('Bearer', '').strip()
+        params_token= params.get('token').strip()
+        if not header_token or not params_token:
+            _logger.info("Tokens not provided in both headers and params")
+            return False
+        params.pop('token')
+        if header_token != params_token:
+            _logger.info("Token in the header is not the same as the one in "
+                         "the request %s <> %s", header_token, params_token)
+            return False
+        return header_token
+
+    def _get_model_inst_from_token(self, cmis_path, cmis_backend, params,
+                                   token):
+        """Return the Odoo object referenced by the token.
+        :return: Odoo model instance if exists and user has at least read
+        access or False
+        """
+        model_name, res_id = token.split('_')
+        if not model_name in request.env:
+            _logger.info("Invalid model name in token (%s)", model_name)
+            return False
+        model = request.env[model_name]
+        if not model.check_access_rights('read', raise_exception=False):
+            _logger.info("User has no read access on model %s", model_name)
+            return False
+        model_inst = model.browse(
+                res_id.isdigit() and int(res_id))
+        if not model_inst.exists():
+            _logger.info("The referenced model doesn't exist or the user has "
+                         "no read access (%s, %s)", model, res_id)
+            return False
+        return model_inst
+
+    def _check_cmis_content_access(self, cmis_path, cmis_backend, params,
+                                   model_inst):
+        """Check that the CMIS content referenced into the request is the
+        same as or a child of the one linked to the odoo model instance.
+        :return: True if check is Ok False otherwise 
+        """
+        token_cmis_objectid = model_inst.cmis_objectid
+        if not token_cmis_objectid:
+            _logger.info("The referenced model doesn't reference a CMIS "
+                         "content (%s, %s)", model, res_id)
+            return False
+        request_cmis_objectid = params.get('objectId')
+        repo = cmis_backend.check_auth()
+        if not request_cmis_objectid:
+            # get the CMIS object id from cmis_path
+            cmis_content = repo.getObjectByPath(cmis_path)
+            request_cmis_objectid = cmis_content.getObjectId()
+        if request_cmis_objectid == token_cmis_objectid:
+            # the operation is on the CMIS content linked to the Odoo model 
+            # instance
+            return True
+        cmis_object = repo.getObject(request_cmis_objectid)
+        # The can't use a CMIS query to check if a node is in the expected
+        # tree since the indexation is asynchronous. In place of a simple
+        # query we all check if one the paths of the node linked to the Odoo
+        # content instance is in on of the node paths of the the requested
+        # cmis_object
+        child_paths = cmis_object.getPaths()
+        parent_paths = repo.getObject(token_cmis_objectid).getPaths()
+        for p in parent_paths:
+            for cp in child_paths:
+                if p in cp:
+                    return True
+        _logger.info("%s is not a child of %s", request_cmis_objectid,
+                    token_cmis_objectid)
+        return False
+
+    def _check_content_action_access(self, cmis_path, cmis_backend, params,
+                                   model_inst):
+        """Check that the User has de required Permissioon on the Odoo model
+        instance to di the expected CMIS action
+        """
+        cmisaction = params.get('cmisaction')
+        if not cmisaction:
+            return True
+        operation = CMSI_ACTIONS_OPERATION_MAP.get(cmisaction)
+        if not operation:
+            _logger.info("CMIS action %s not supported", cmisaction)
+            return False
+        if not self._check_access_operation(model_inst, operation):
+            _logger.info("User don't have the access right for operation %s "
+                         "on %s to execute the CMIS action %s", operation,
+                         model_inst.name_get()[0][1], cmisaction)
+            return False
+        return True
+
+    def _check_access(self, cmis_path, cmis_backend, params):
+        """This method check that the user can access to the requested CMIS
+        content.
+        
+        Security checks applied  when the proxy mode is activated,:
+        
+        1. Requests from the client must provide a token (in the header and
+           as param of the request) if the method rely to specific content in
+           Odoo. (IOW if the method is called with a cmis_path or an objectId).
+           If no security token is provided in this case, the access is denied.
+
+        2. The Odoo object referenced by the token (the token is build as
+           'model.name' + '_' + 'instance_id') must exist.
+
+        3. The user must have read access to the object referenced by the token
+
+        4. If a cmis_path or object_id is provided by the request, the
+           referenced CMIS content must be child of or the node referenced by
+           the Odoo object from the token (or equal) 
+
+        5. If a cmisaction is provided by the request, a check is done to
+           ensure that the user has the required privileges in Odoo (ie 
+        """
+        if not cmis_backend.is_cmis_proxy:
+            return
+        if not cmis_path and not 'objectId' in params:
+            # The request is not for an identified content
+            return
+        
+        # check token conformity
+        token = self._check_provided_tokens(cmis_path, cmis_backend, params)
+        if not token:
+            raise AccessError("Bad request")
+        # check access to object from token 
+        model_inst = self._get_model_inst_from_token(
+            cmis_path, cmis_backend, params, token)
+        if not model_inst:
+            raise AccessError("Bad request")
+        # check if the CMIS object in the request is the the one referenced on
+        # model_inst or a child of this one
+        if not self._check_cmis_content_access(
+            cmis_path, cmis_backend, params, model_inst):
+            raise  AccessError("Bad request")
+        if not self._check_content_action_access(
+            cmis_path, cmis_backend, params, model_inst):
+            raise  AccessError("Bad request")
+        return model_inst
 
     @http.route([CMIS_PROXY_PATH,
                  CMIS_PROXY_PATH + '/<path:cmis_path>'
@@ -140,16 +402,18 @@ class CmisProxy(http.Controller):
                 methods=['GET', 'POST'])
     @main.serialize_exception
     def call_cmis_services(self, cmis_path="", **kwargs):
-        """Call at the root of the cmis repository. These calls are for
+        """Call at the root of the CMIS repository. These calls are for
         requesting the global services provided by the CMIS Container
         """
         method = request.httprequest.method
-        model_inst = self._check_access(cmis_path, kwargs)
+        cmis_backend = self._get_cmis_backend()
+        model_inst = self._check_access(cmis_path, cmis_backend, kwargs)
         if method not in ['GET', 'POST']:
             raise AccessError("The HTTP METHOD %s is not supported by CMIS" %
                               method)
         if method == 'GET':
-            response = self._forward_get(cmis_path, kwargs, model_inst)
+            method = self._forward_get
         elif method == 'POST':
-            response = self._forward_post(cmis_path, kwargs, model_inst)
+            method = self._forward_post
+        response = method(cmis_path, cmis_backend, model_inst, kwargs)
         return response
