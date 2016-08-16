@@ -51,6 +51,7 @@ class BaseTestCmisProxy(common.HttpCase):
             'name': 'TEST_CMIS_PROXY',
             'location': cmis_location,
             'is_cmis_proxy': True,
+            'apply_odoo_security': False,
             'username': cmis_user,
             'password': cmis_pwd,
             'version': '1.0'
