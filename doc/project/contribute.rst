@@ -4,7 +4,7 @@
 Contribute
 ##########
 
-We accept with pleasure all type of contributions:
+We would be more than happy to receive your contribution to the alfodoo project. All types of contributions are welcome:
 
 * bug reports
 * merge proposals
@@ -12,4 +12,4 @@ We accept with pleasure all type of contributions:
 * translations
 * ...
 
-The GitHub project is: https://github.com/OCA/connector-cmis
+The GitHub project is: https://github.com/acsone/alfodoo/
