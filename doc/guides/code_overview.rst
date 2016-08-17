@@ -5,9 +5,9 @@ Code Overview
 #############
 
 The main usage of theses addons is to lets you extend an existing Odoo model to 
-link instances of this model to a folder in a cmis container.
+link an instance of this model to a folder in a CMIS container.
 
-As an example, we'll see the steps to extend the Curstomer Claim object
+As an example, we'll see the steps to extend the Customer Claim object
 to store the documents related to a claim into a CMIS container
 
 .. code-block:: python
@@ -38,6 +38,8 @@ to store the documents related to a claim into a CMIS container
         </record>
     </odoo>
 
-And you are now able to see all the documents related to the claim on the claim itself, and do all your work into odoo even if your documents are stored into a cmis container
+The result is a new Document tab displayed on the Claim Odoo model.
+
+Then you are able to see all the documents related to the claim on the claim object itself, and do all your work into odoo (such as documents drag&drop, preview, ...) even if your documents are stored into a cmis container
 
 .. image:: ../_static/img/cmis_crm_claim.png
