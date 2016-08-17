@@ -15,8 +15,8 @@ displaying and managing content from a CMIS container linked to an Odoo model.
 This Odoo widget has a modular and generic core providing functionality based
 on the CMIS V1.1 protocol. This core can be extended by additional modules
 in order to propose additional features or customizations proper to a specific
-CMIS container. In the context of our demo, Alfresco is the Document
-Management system.
+CMIS container. At this stage, the existing customization is for the Alfresco Document
+Management System.
  
 With these addons, you are now able to enrich the user's experience and
 provide in Odoo great features that enable the users to easily store and
