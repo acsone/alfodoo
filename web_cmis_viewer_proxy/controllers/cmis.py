@@ -157,14 +157,14 @@ class CmisProxy(http.Controller):
         can_write = self._check_access_operation(model_inst, 'write')
         can_unlink = self._check_access_operation(model_inst, 'unlink')
         for allowable_actions in all_allowable_actions:
-            for action in allowable_actions.keys():
+            for action, value in allowable_actions.items():
                 allowed = False
                 if action in READ_ACCESS_ALLOWABLE_ACTIONS:
-                    allowed = can_read
+                    allowed = can_read and value
                 elif action in WRITE_ACCESS_ALLOWABLE_ACTIONS:
-                    allowed = can_write
+                    allowed = can_write and value
                 elif action in UNLINK_ACCESS_ALLOWABLE_ACTIONS:
-                    allowed = can_unlink
+                    allowed = can_unlink and value
                 allowable_actions[action] = allowed
 
     def _prepare_json_response(self, value, headers, cmis_backend,
@@ -173,8 +173,9 @@ class CmisProxy(http.Controller):
         self._clean_url_in_dict(value,
                                 urlparse.urlparse(cmis_location).geturl(),
                                 self._cmis_proxy_base_url)
-        self._apply_permissions_mapping(
-            value, headers, cmis_backend, model_inst)
+        if cmis_backend.apply_odoo_security:
+            self._apply_permissions_mapping(
+                value, headers, cmis_backend, model_inst)
         headers['transfer-encoding'] = None
         response = werkzeug.Response(
             json.dumps(value), mimetype='application/json',
@@ -198,8 +199,10 @@ class CmisProxy(http.Controller):
             stream=True,
             auth=(cmis_backend.username, cmis_backend.password))
         r.raise_for_status()
+        headers = dict(r.headers.items())
+        headers['transfer-encoding'] = None
         return werkzeug.Response(
-            r, headers=dict(r.headers.items()),
+            r, headers=headers,
             direct_passthrough=True)
 
     def _forward_get(self, url_path, cmis_backend, model_inst, params):
@@ -376,7 +379,6 @@ class CmisProxy(http.Controller):
         if not cmis_path and not 'objectId' in params:
             # The request is not for an identified content
             return
-        
         # check token conformity
         token = self._check_provided_tokens(cmis_path, cmis_backend, params)
         if not token:
@@ -386,6 +388,8 @@ class CmisProxy(http.Controller):
             cmis_path, cmis_backend, params, token)
         if not model_inst:
             raise AccessError("Bad request")
+        if cmis_backend.apply_odoo_security:
+            return model_inst
         # check if the CMIS object in the request is the the one referenced on
         # model_inst or a child of this one
         if not self._check_cmis_content_access(
