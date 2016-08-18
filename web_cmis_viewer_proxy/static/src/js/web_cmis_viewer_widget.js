@@ -50,6 +50,22 @@ cmis_widgets.CmisViewer.include({
             this.cmis_location = '/cmis/1.1/browser';
         }
     },
+
+    get_preview_url_headers: function(cmisObjectWrapped){
+        var headers = this._super.apply(this, arguments);
+        // add the token into the Authorization header
+        var token = this.gen_cmis_session_token();
+        headers['Authorization'] = 'Bearer ' + token;
+        return headers;
+    },
+
+    get_preview_url_params: function(cmisObjectWrapped){
+        var params = this._super.apply(this, arguments);
+        // add the token as parameter and into the http headers
+        var token = this.gen_cmis_session_token();
+        params['token'] = token;
+        return params;
+    },
  });
 
 });
