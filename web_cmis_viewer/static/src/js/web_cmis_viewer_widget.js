@@ -422,25 +422,34 @@ var CmisMixin = {
      },
 
      /**
-      * Return the url used to launch the embeded document previewer
+      * Return a dictionary of http headers to use to query the preview url
       */
-     get_previewer_url: function(cmisObjectWrapped) {
+     get_preview_url_headers: function(cmisObjectWrapped){
+         if ($.ajaxSettings.headers){
+             return JSON.parse(JSON.stringify($.ajaxSettings.headers));
+         }
+         return {};
+     },
+
+     /**
+      * Return a dictionary of parameters to use to query the preview url
+      */
+     get_preview_url_params: function(cmisObjectWrapped){
          var title = cmisObjectWrapped.name;
          var preview_url = cmisObjectWrapped.get_preview_url();
-         var headers = {};
-         if ($.ajaxSettings.headers)
-             headers = JSON.parse(JSON.stringify($.ajaxSettings.headers));
-         var params = {
+         var headers = this.get_preview_url_headers(cmisObjectWrapped);
+         return {
            file: preview_url,
            httpHeaders: JSON.stringify(headers),
            title: title,
          };
-         if (this.cmis_session._token) {
-             // Append the token at the document URL
-             var tokenName = Object.keys(cmis_session._token)[0];
-             var tokenValue = cmis_session.getToken()[tokenName];
-             params[tokenName] = tokenValue;
-         }
+     },
+
+     /**
+      * Return the url used to launch the embeded document previewer
+      */
+     get_previewer_url: function(cmisObjectWrapped) {
+         var params = this.get_preview_url_params(cmisObjectWrapped);
          // Create the previewer URL
          var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/odoo-viewer.html";
          return path + '?' + $.param(params);
