@@ -24,9 +24,7 @@ manage their documents in an external Document Management System through
 a seamless integration. 
 
 
-The development of Alfodoo has been founded by `ACSONE SA/NV`_ and
-is now maintained by `Odoo community Association (OCA)`_, and several
-:ref:`contributors`.
+The development of Alfodoo has been founded by `ACSONE SA/NV`_.
 
 *Learn how to* :ref:`contribute`
 
