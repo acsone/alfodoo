@@ -2,7 +2,7 @@
 ===================
 The Alfodoo project
 ===================
-The Alfodoo project has the objective to provide a collection of `addons`_ in order to integrate the odoo platform with a Document Management System supporting the CMIS V1.1 protocol.
+The Alfodoo project has the objective to provide a collection of 'addons' in order to integrate the odoo platform with a Document Management System supporting the CMIS V1.1 protocol.
 
 Currently, the project proposes integration between Odoo and the open-source ECM platform Alfresco.
 
