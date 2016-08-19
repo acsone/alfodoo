@@ -381,12 +381,38 @@ var CmisMixin = {
          $.when(this.cmis_config_loaded).done(function (){
              self.cmis_session = cmis.createSession(self.cmis_location);
              self.cmis_session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
+             self.cmis_session_initialized.resolve();
+         });
+     },
+
+     /**
+      * Load the default repository if required.
+      * token or credentils must already be set.
+      * At this stage the widget doesn't support multi repositories but
+      * if we want to get a chance to put a token based on the data from
+      * the odoo model, this method can only be called once the values
+      * are provided by the form controller ant we load the root folder for
+      *  exemple (set_root_folder_id).
+      * Loading the repositories is required before calling to others cmis
+      * methods
+      */
+     load_cmis_repositories: function(){
+         var dfd = $.Deferred();
+         var self = this;
+         if (this.cmis_session.repositories) {
+             return dfd.resolve();
+         } else {
              self.cmis_session
                  .loadRepositories()
                  .ok(function(data) {
-                     self.cmis_session_initialized.resolve();
-                  });
-         });
+                     dfd.resolve();
+                 })
+                 .notOk(function(error){
+                     self.on_cmis_error(error);
+                     dfd.reject(error);
+                 });
+         }
+         return dfd.promise();
      },
 
      /**
@@ -505,14 +531,12 @@ var CmisMixin = {
 
     render_value: function() {
         var self = this;
-        $.when(self.cmis_session_initialized, self.table_rendered).done(function() {
-            var value = self.get('value');
-            self.$el.find('button.cmis-create-root').addClass('hidden');
-            self.set_root_folder_id(value);
-            if (!value){
-                self.$el.find('button.cmis-create-root').removeClass('hidden');
-            }
-        });
+        var value = self.get('value');
+        self.$el.find('button.cmis-create-root').addClass('hidden');
+        self.set_root_folder_id(value);
+        if (!value){
+            self.$el.find('button.cmis-create-root').removeClass('hidden');
+        }
     },
 
     reload_record: function() {
@@ -1033,9 +1057,11 @@ var CmisMixin = {
         }
         self.root_folder_id = folderId;
         $.when(self.cmis_session_initialized, self.table_rendered).done(function(){
-            var library = this;
-            self.reset_breadcrumb();
-            self.display_folder(0, folderId);
+                self.load_cmis_repositories().done(function() {
+                var library = this;
+                self.reset_breadcrumb();
+                self.display_folder(0, folderId);
+            });
         });
     },
 
