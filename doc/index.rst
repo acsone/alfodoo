@@ -28,6 +28,12 @@ The development of Alfodoo has been founded by `ACSONE SA/NV`_.
 
 *Learn how to* :ref:`contribute`
 
+.. raw:: html
+
+  <div style="margin-top:10px;">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/TK49kl0Viyk" frameborder="0" allowfullscreen></iframe>
+  </div>
+
 *************
 Core Features
 *************
@@ -46,113 +52,96 @@ Core Features
 .. _`addons`: https://github.com/acsone/alfodoo
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
 
+**************************************
+Overview: Manage the documents in Odoo
+**************************************
 
-*************
-Prerequisites
-*************
+Visually the main part of the functionality is accessed through a "Document tab" configurable on each Odoo model providing a "real-time" view on the Alfresco content.
 
-Dependencies
-************
+From the user point of view, the Document tab gives a direct access to the items (documents lists, sub-folders, …) linked to the Odoo object and contained in the linked Alfresco folder.
 
-The Alfodoo framework requires the following:
+The first action is to let the user creates manually  (means "only when needed") the linked folder in Alfresco
 
-* The Odoo **cmis** addon: The Odoo  cmis addon provides the bases for Odoo 
-  modules implementing different integration scenario with a CMIS server. It allows
-  you to configure a CMIS backend in Odoo and provides mixins models to inherit
-  to add to Odoo objects the abilities to be linked/stored into a CMIS Backend.
-  At the time of writing *Alfodoo* only supports the branch *9.0-cmis-enhanced*
-  available into the `fork of ACSONE`_ of the OCA's `connector-cmis`_ repository and
-  currently under `review`_. 
-* `cmislib`_  the Apache Chemistry CMIS client library for Python: To be compliant
-  with the latest version of CMIS (1.1), the connector use the latest version of the
-  python cmislib library not yet released at this stage. The lib can be installed with:
+.. image:: ./_static/img/cmis_crm_claim_empty.png
 
-    .. code-block:: shell
-        
-        pip install git+ssh://git@github.com/lmignon/python-cmislib.git@6.0.dev#egg=cmislib
-
-* If you plan to use the viewer extension for Alfresco **'web_cmis_viewer_alf'**
-  you also need the **cmis_alf** addon. As for the **cmis** addon, this one is
-  available into a `dedicated branch of the fork of ACSONE`_ of the OCA's 
-  `connector-cmis`_ repository
-
-.. _`dedicated branch of the fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-alf
-.. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-enhanced
-.. _`connector-cmis`: https://github.com/OCA/connector-cmis
-.. _`review`: https://github.com/OCA/connector-cmis/pull/15
-.. _`cmislib`: http://chemistry.apache.org/python/cmislib.html
-
-Enable CORS in Alfresco 5.x
-****************************
-
-The CMIS Viewer widget will be loaded from a different web server than the Alfresco
-Platform is running on. So we need to tell the Alfresco server that any request that
-comes in from this custom web client should be allowed access to the Content Repository.
-This is done by enabling CORS.
-
-To enable CORS in the Alfresco Platform do the following:
-
-Modify tomcat/conf/web.xml and add the following sections to allow requests from
-http://localhost:8069. 
-When specifying the cors.allowOrigin URL make sure to use the URL that will be
-used by the web client.
-
-.. code-block:: xml
-
-  <!-- CORS Filter Begin -->
-  <filter>
-      <filter-name>CORS</filter-name>
-      <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-      <init-param>
-        <param-name>cors.allowed.origins</param-name>
-        <param-value>http://localhost:8069,http://my-odoo-server-name.eu</param-value>
-      </init-param>
-      <init-param>
-        <param-name>cors.allowed.methods</param-name>
-        <param-value>GET,POST,HEAD,OPTIONS,PUT,DELETE</param-value>
-      </init-param>
-      <init-param>
-        <param-name>cors.allowed.headers</param-name>
-        <param-value>origin, authorization, x-file-size, x-file-name, content-type, accept, x-file-type, DNT, x-customheader ,keep-alive ,user-agent ,x-requested-with ,if-modified-since, cache-control,accept-ranges,content-encoding,content-length</param-value>
-      </init-param>
-      <init-param>
-        <param-name>cors.exposed.headers</param-name>
-        <param-value>origin, authorization, x-file-size, x-file-name, content-type, accept, x-file-type, DNT, x-customheader ,keep-alive ,user-agent ,x-requested-with ,if-modified-since, cache-control,accept-ranges,content-encoding,content-length</param-value>
-      </init-param>
-      <init-param>
-        <param-name>cors.support.credentials</param-name>
-        <param-value>true</param-value>
-      </init-param>
-      <init-param>
-        <param-name>cors.preflight.maxage</param-name>
-        <param-value>3600</param-value>
-      </init-param>
-   </filter>
-   <!-- CORS Filter End -->
-
-   <!-- CORS Filter Mappings Begin -->
-   <filter-mapping>
-      <filter-name>CORS</filter-name>
-      <url-pattern>/api/*</url-pattern>
-      <url-pattern>/service/*</url-pattern>
-      <url-pattern>/s/*</url-pattern>
-      <url-pattern>/cmisbrowser/*</url-pattern>
-   </filter-mapping>
-
-********
-Overview
-********
+Then the Document tab shows a global menu providing the following functionality:
 
 .. raw:: html
 
-  <div style="margin-top:10px;">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/TK49kl0Viyk" frameborder="0" allowfullscreen></iframe>
-  </div>
+  <table class="table">
+    <tr>
+        <td> <span class="btn-odoo glyphicon glyphicon-refresh" aria-hidden="true"></span></td><td><strong>Refresh content table:</strong> This option refreshes the folder content</td>
+    </tr>
+    <tr>
+        <td> <span class="btn-odoo glyphicon glyphicon-folder-close" aria-hidden="true"></span></td><td><strong>Create folder:</strong> A (sub-)folder is created in the current folder. The user gives a name for the folder and selects "Create"</td>
+    </tr>
+    <tr>
+        <td> <span class="btn-odoo glyphicon glyphicon-file" aria-hidden="true"></span></td><td><strong>Create document:</strong> Upload a document in the current folder. The user selects a file and click on "Create" to upload the document</td>
+    </tr>
+    <tr>
+        <td> <div class="btn-odoo alf-ico"  aria-hidden="true"></div></span></td><td><strong>Show in Alfresco:</strong> This option opens Alfresco Share and shows the folder details page</td>
+    </tr>
+  </table>
 
+In the content table, the User can see the documents and folders list.
+
+.. image:: ./_static/img/cmis_crm_claim_new_folder.png
+
+The following information is displayed for each item:
+
+* An icon used to hide or unhide the item details (folder or document Alfresco metadata: cm:folder, cm:content, cm:title)
+* The item name
+* The item description
+* Last Modified date
+* A contextual menu: the options list for the a folder item or for a document item 
+
+.. image:: ./_static/img/cmis_crm_claim_doc_details.png
+
+For a "Document" item, the following options are available:
+
+.. raw:: html
+
+  <table class="table">
+    <tr>
+        <td> <span class="btn-odoo glyphicon glyphicon-download-alt" aria-hidden="true"></span></td>
+        <td colspan="2"><strong>Download:</strong> Download the document</td>
+    </tr>
+    <tr>
+        <td> <span class="btn-odoo glyphicon glyphicon-eye-open" aria-hidden="true"></span></td>
+        <td colspan="2"><strong>Preview:</strong> Preview the document</td>
+    </tr>
+    <tr>
+        <td> <span class="btn-odoo glyphicon glyphicon-align-justify" aria-hidden="true"></span></td>
+        <td colspan="2"><strong>More actions:</strong></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+        <td style="padding-left:5em"><strong>View details:</strong> this option shows some documents metadata (Alfresco cm:content).</td>
+   </tr>
+   <tr>
+        <td colspan="2">
+        <td style="padding-left:5em"><strong>Update:</strong> with this option the user can upload a new document in the folder. In case the document is associated with the Alfresco versionnable aspect Alfresco, the document version number (major) is automatically incremented.</td>
+   </tr>
+   <tr>
+        <td colspan="2">
+        <td style="padding-left:5em"><strong>Delete:</strong> delete the document.</td>
+   </tr>
+    <tr>
+        <td> <div class="btn-odoo alf-ico"  aria-hidden="true"></div></span></td>
+        <td colspan="2"><strong>Show in Alfresco:</strong> This option opens Alfresco share and shows the document details page.</td>
+    </tr>
+  </table>
 
 *******
 Project
 *******
+
+The Alfodoo project has the objective to provide a collection of 'addons' in order to integrate the odoo platform with a Document Management System supporting the CMIS V1.1 protocol.
+
+Currently, the project proposes integration between Odoo and the open-source ECM platform Alfresco.
+
+The aim is to offer to the odoo users a transparent and easy access to the documents stored in the appropriate location in Alfresco. 
+
 
 .. toctree::
    :maxdepth: 1
@@ -163,6 +152,7 @@ Project
    project/changes
    project/roadmap
 
+
 *****************
 Developer's guide
 *****************
@@ -170,7 +160,7 @@ Developer's guide
 .. toctree::
    :maxdepth: 2
 
-   guides/concepts.rst
+   guides/install.rst
    guides/code_overview.rst
 
 
