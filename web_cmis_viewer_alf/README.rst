@@ -6,28 +6,26 @@
 Alfresco extension to the Cmis viewer Widget
 ============================================
 
-This module was written to extend the functionality of ... to support ... and allow you to ...
+This module was written to extend the functionality of the web_cmis_viewer
+widget to provide functionalities specific to Alfresco.
+
+* On each item displayed into the widget, a new button let's you access to
+  the content directly into the Alfresco Share website.
+* In Alfresco, the preview of a document is generated on the first display of the document into the
+  Alfresco Share website. This generation is forced by calling a specific URL on the Alfresco repository.
+  This Url is not part of the CMIS-1.1 specification. This extension mimic the same logic to display 
+  the preview of a document. 
+
+Documentation: `alfodoo.org <http://alfodoo.org>`_ 
 
 Installation
 ============
 
-To install this module, you need to:
+The module requires the installation of a new extension to the **cmis** addon: **cmis_alf**.  
+At the time of writing the extension is available into the `fork of ACSONE`_ of the OCA's `connector-cmis`_ repository.
 
- * do this ...
-
-Configuration
-=============
-
-To configure this module, you need to:
-
- * go to ...
-
-Usage
-=====
-
-To use this module, you need to:
-
- * go to ...
+.. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-alf
+.. _`connector-cmis`: https://github.com/OCA/connector-cmis
 
 Credits
 =======

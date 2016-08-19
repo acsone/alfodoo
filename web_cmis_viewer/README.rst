@@ -9,26 +9,7 @@ Cmis viewer Widget
 This module provide a new widget that lets you browse a CMIS folder from an
 Odoo model
 
-Installation
-============
-
-To install this module, you need to:
-
- * do this ...
-
-Configuration
-=============
-
-To configure this module, you need to:
-
- * go to ...
-
-Usage
-=====
-
-To use this module, you need to:
-
- * go to ...
+Documentation: `alfodoo.org <http://alfodoo.org>`_ 
 
 Credits
 =======

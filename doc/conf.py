@@ -134,7 +134,7 @@ html_theme = 'bootstrap'
 # documentation.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "Odoo Web CMIS Viewer",
+    'navbar_title': "Alfodoo",
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Site",
@@ -171,6 +171,9 @@ html_theme_options = {
     #
     # Note that this is served off CDN, so won't be available offline.
     'bootswatch_theme': "sandstone",
+    # Choose Bootstrap version.
+    # Values: "3" (default) or "2" (in quotes)
+    'bootstrap_version': "3",
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -185,12 +188,12 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+#html_logo = '_static/img/acsone_logo.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-#html_favicon = None
+html_favicon = '_static/img/favicon.ico'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

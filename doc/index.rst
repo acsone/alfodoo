@@ -6,7 +6,7 @@
 Alfodoo
 #######
 
-Alfodoo is a set of addons to seamless integrate an external Document
+Alfodoo is a set of `addons`_ to seamless integrate an external Document
 Management System and `Odoo`_.
 
 Alfodoo provides a powerful widget (CMIS Viewer) and a set of addons for
@@ -42,7 +42,8 @@ Core Features
 .. _`Odoo`: http://www.odoo.com
 .. _`ACSONE SA/NV`: http://www.acsone.eu
 .. _`Odoo community Association (OCA)`: https://odoo-community.org/
-.. _`source code is available on GitHub`: https://github.com/OCA/connector-cmis
+.. _`source code is available on GitHub`: https://github.com/acsone/alfodoo
+.. _`addons`: https://github.com/acsone/alfodoo
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
 
 
@@ -70,7 +71,12 @@ The Alfodoo framework requires the following:
         
         pip install git+ssh://git@github.com/lmignon/python-cmislib.git@6.0.dev#egg=cmislib
 
+* If you plan to use the viewer extension for Alfresco **'web_cmis_viewer_alf'**
+  you also need the **cmis_alf** addon. As for the **cmis** addon, this one is
+  available into a `dedicated branch of the fork of ACSONE`_ of the OCA's 
+  `connector-cmis`_ repository
 
+.. _`dedicated branch of the fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-alf
 .. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-enhanced
 .. _`connector-cmis`: https://github.com/OCA/connector-cmis
 .. _`review`: https://github.com/OCA/connector-cmis/pull/15
