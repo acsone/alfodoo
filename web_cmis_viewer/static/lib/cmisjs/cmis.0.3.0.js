@@ -96,7 +96,11 @@
      * @return {CmisRequest} request
      */
     session.loadRepositories = function () {
-      var r = new CmisRequest(_get(url)).ok(function (data) {
+      var options = {};
+      if (_token) {
+          options['token'] = _token;
+      }
+      var r = new CmisRequest(_get(url).query(options)).ok(function (data) {
         for (var repo in data) {
           session.defaultRepository = data[repo];
           break;
