@@ -4,7 +4,7 @@
 Code Overview
 #############
 
-The main usage of theses addons is to lets you extend an existing Odoo model to 
+The main usage of theses addons is to let you extend an existing Odoo model to 
 link an instance of this model to a folder in a CMIS container.
 
 As an example, we'll see the steps to extend the Customer Claim object
