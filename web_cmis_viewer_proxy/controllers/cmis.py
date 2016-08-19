@@ -32,6 +32,7 @@ WRITE_ACCESS_CMIS_ACTIONS = set([
     # "createType", method at repository level:  not supported
     # "updateType", method at repository level:  not supported
     "createDocument",
+    "createFolder",
     "createDocumentFromSource",
     # "createPolicy", method at repository level:  not supported
     "update",
@@ -256,22 +257,21 @@ class CmisProxy(http.Controller):
         return response
 
     def _check_provided_tokens(self, cmis_path, cmis_backend, params):
-        """ Check that the token is present in the request and in the http
+        """ Check that a token is present in the request or in the http
         headers and both are equal. 
-        :return: the token value if checks are OF, False otherwise.
+        :return: the token value if checks are OK, False otherwise.
         """
-        header_token = request.httprequest.headers.get('Authorization')
-        header_token = header_token.replace('Bearer', '').strip()
-        params_token= params.get('token').strip()
-        if not header_token or not params_token:
-            _logger.info("Tokens not provided in both headers and params")
+        token = request.httprequest.headers.get('Authorization')
+        if token:
+            token = token.replace('Bearer', '').strip()
+        else:
+            token= params.get('token').strip()
+        if 'token' in params:
+            params.pop('token')
+        if not token:
+            _logger.info("Tokens not provided in headers or request params")
             return False
-        params.pop('token')
-        if header_token != params_token:
-            _logger.info("Token in the header is not the same as the one in "
-                         "the request %s <> %s", header_token, params_token)
-            return False
-        return header_token
+        return token
 
     def _get_model_inst_from_token(self, cmis_path, cmis_backend, params,
                                    token):
@@ -304,7 +304,7 @@ class CmisProxy(http.Controller):
         token_cmis_objectid = model_inst.cmis_objectid
         if not token_cmis_objectid:
             _logger.info("The referenced model doesn't reference a CMIS "
-                         "content (%s, %s)", model, res_id)
+                         "content (%s, %s)", model_inst._name, model_inst.id)
             return False
         request_cmis_objectid = params.get('objectId')
         repo = cmis_backend.check_auth()
@@ -357,9 +357,8 @@ class CmisProxy(http.Controller):
         
         Security checks applied  when the proxy mode is activated,:
         
-        1. Requests from the client must provide a token (in the header and
-           as param of the request) if the method rely to specific content in
-           Odoo. (IOW if the method is called with a cmis_path or an objectId).
+        1. Requests from the client must provide a token (in the header or
+           as param of the request).
            If no security token is provided in this case, the access is denied.
 
         2. The Odoo object referenced by the token (the token is build as
@@ -374,12 +373,8 @@ class CmisProxy(http.Controller):
         5. If a cmisaction is provided by the request, a check is done to
            ensure that the user has the required privileges in Odoo (ie 
         """
-        if not cmis_backend.is_cmis_proxy:
-            return
-        if not cmis_path and not 'objectId' in params:
-            # The request is not for an identified content
-            return
         # check token conformity
+        
         token = self._check_provided_tokens(cmis_path, cmis_backend, params)
         if not token:
             raise AccessError("Bad request")
@@ -388,10 +383,11 @@ class CmisProxy(http.Controller):
             cmis_path, cmis_backend, params, token)
         if not model_inst:
             raise AccessError("Bad request")
-        if cmis_backend.apply_odoo_security:
-            return model_inst
         # check if the CMIS object in the request is the the one referenced on
         # model_inst or a child of this one
+        if not cmis_path and not 'objectId' in params:
+            # The request is not for an identified content
+            return model_inst
         if not self._check_cmis_content_access(
             cmis_path, cmis_backend, params, model_inst):
             raise  AccessError("Bad request")
@@ -411,7 +407,9 @@ class CmisProxy(http.Controller):
         """
         method = request.httprequest.method
         cmis_backend = self._get_cmis_backend()
-        model_inst = self._check_access(cmis_path, cmis_backend, kwargs)
+        model_inst = False
+        if cmis_backend.apply_odoo_security:
+            model_inst = self._check_access(cmis_path, cmis_backend, kwargs)
         if method not in ['GET', 'POST']:
             raise AccessError("The HTTP METHOD %s is not supported by CMIS" %
                               method)
@@ -419,5 +417,4 @@ class CmisProxy(http.Controller):
             method = self._forward_get
         elif method == 'POST':
             method = self._forward_post
-        response = method(cmis_path, cmis_backend, model_inst, kwargs)
-        return response
+        return method(cmis_path, cmis_backend, model_inst, kwargs)
