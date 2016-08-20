@@ -852,8 +852,6 @@ var CmisMixin = {
          this.$el.find('.dropdown-menu a').on('click', function(e){
              $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
          });
-
-         /* bind content events */
          this.$el.find('.cmis-folder').on('click', function(e){
              e.preventDefault();
              e.stopPropagation();
@@ -1077,8 +1075,13 @@ var CmisMixin = {
      * Add a link to the folder in the breadcrumb and display children
      */
     display_folder: function(pageIndex, folderId){
+        if (this.displayed_folder_id === folderId &&
+                this.page_index === pageIndex) {
+            return;
+        }
         var self = this;
         this.displayed_folder_id  = folderId;
+        this.page_index = pageIndex;
         this.$el.find('.cmis-root-content-buttons').empty();
         if(folderId){
             this.cmis_session.getObject(folderId, "latest", {
@@ -1112,7 +1115,7 @@ var CmisMixin = {
                       var selectedForlderId = $(e.target).attr('data-cmis-folder-id');
                       if(selectedForlderId !== current_id){
                           $(e.target.parentNode).nextAll().remove();
-                          self.display_folder(null, selectedForlderId);
+                          self.display_folder(0, selectedForlderId);
                       }
                     });
                  });
