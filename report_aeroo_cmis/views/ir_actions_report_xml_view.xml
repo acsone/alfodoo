@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="act_report_xml_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.xml(report_aeroo_cmis)</field>
+            <field name="model">ir.actions.report.xml</field>
+            <field name="inherit_id" ref="report_aeroo.act_report_xml_view" />
+            <field name="arch" type="xml">
+                <page name="security" position="after">
+                    <page name="cmis" string="Save in CMIS"  attrs="{'invisible':[('report_type','not in',['aeroo'])]}">
+                      <group>
+                          <group>
+                              <field name="cmis_filename"/>
+                              <field name="cmis_objectTypeId"/>
+                              <field name="cmis_properties"/>
+                              <field name="cmis_backend_id"/>
+                              <field name="cmis_duplicate_handler"/>
+                          </group>
+                      </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+    </data>
+</odoo>
