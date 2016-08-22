@@ -20,6 +20,13 @@ class CmisBackend(models.Model):
         res.ensure_one()
         return res
 
+    @api.multi
+    def write(self, vals):
+        if 'is_cmis_proxy' in vals and \
+            vals['is_cmis_proxy'] == False:
+            vals['apply_odoo_security'] = False
+        return super(CmisBackend, self).write(vals)
+
     @api.onchange('is_cmis_proxy')
     def _onchange_is_cmis_proxy(self):
         self.apply_odoo_security = self.is_cmis_proxy

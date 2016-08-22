@@ -19,7 +19,8 @@ var _t = core._t;
 cmis_widgets.CmisViewer.include({
     init: function (){
         this._super.apply(this, arguments);
-        this.cmis_backend_fields.push('apply_odoo_security');
+        this.cmis_backend_fields.push('apply_odoo_security',
+                                            'is_cmis_proxy');
     },
 
     gen_cmis_session_token: function(){
@@ -46,20 +47,23 @@ cmis_widgets.CmisViewer.include({
 
     bind_cmis_config: function(result){
         this._super.apply(this, arguments);
+        if( result[0].is_cmis_proxy){
+            this.is_cmis_procxy = result[0].is_cmis_proxy;
+            this.cmis_location = '/cmis/1.1/browser';
+        }
         if (result[0].apply_odoo_security) {
             this.apply_odoo_security = result[0].apply_odoo_security;
-            this.cmis_location = '/cmis/1.1/browser';
         }
     },
 
     get_preview_url_params: function(cmisObjectWrapped){
+        var params = this._super.apply(this, arguments);
         if (this.apply_odoo_security){
-            var params = this._super.apply(this, arguments);
             // add the token as parameter and into the http headers
             var token = this.gen_cmis_session_token();
             params['token'] = token;
-            return params;
         }
+        return params;
     },
  });
 
