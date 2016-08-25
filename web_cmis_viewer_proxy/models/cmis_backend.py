@@ -9,11 +9,6 @@ class CmisBackend(models.Model):
 
     _inherit = 'cmis.backend'
 
-    @api.multi
-    def write(self, vals):
-        self.get_default_backend.clear_cache(self)
-        return super(CmisBackend, self).write(vals)
-
     @tools.cache()
     def get_default_backend(self):
         res = self.search([(1, '=', 1)])
@@ -22,6 +17,7 @@ class CmisBackend(models.Model):
 
     @api.multi
     def write(self, vals):
+        self.get_default_backend.clear_cache(self)
         if 'is_cmis_proxy' in vals and \
             vals['is_cmis_proxy'] == False:
             vals['apply_odoo_security'] = False
