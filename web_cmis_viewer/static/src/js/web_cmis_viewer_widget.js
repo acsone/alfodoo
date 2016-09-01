@@ -514,6 +514,9 @@ var CmisMixin = {
         var self = this;
         this.states = [];
         this._super.apply(this, arguments);
+        if (this.datatable){
+            return;
+        }
         // hook on form view content changed: recompute the states, because it may be related to the current stage
         this.getParent().on('view_content_has_changed', self, function () {
             self.render_value();
@@ -521,10 +524,10 @@ var CmisMixin = {
         // add a listener on parent tab if it exists in order to display the dataTable
         core.bus.on('DOM_updated', self.view.ViewManager.is_in_DOM, function () {
             self.add_tab_listener();
+            if (self.$el.is(':visible')){
+                self.render_datatable();
+            }
         });
-        if (self.$el.is(':visible')){
-            self.render_datatable();
-        }
         self.load_cmis_config();
         self.init_cmis_session();
     },
