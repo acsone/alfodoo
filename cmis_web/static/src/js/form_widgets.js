@@ -198,9 +198,8 @@
     close: function() {
         this._super();
     }
-});
- 
- 
+ });
+
  var CmisObjectWrapper = core.Class.extend({
 
    init: function(cmis_object, cmis_session){
@@ -426,8 +425,6 @@ var CmisMixin = {
                  $content: $('<div>').html(error.text)
              }).open();
          }
-         
-         
      },
 
      /**
@@ -569,7 +566,7 @@ var CmisMixin = {
     reload_record: function() {
         this.view.reload();
     },
-    
+
     _toggle_label: function() {//disabled
      },
 
@@ -652,15 +649,11 @@ var CmisMixin = {
             },
             stateSave:      true,
             ajax: $.proxy(self, 'datatable_query_cmis_data'),
-            buttons: [
-                  {
-            extend: 'collection',
-            text: _t('Columns') + '<span class="caret"/>',
-            buttons: [ 'columnsToggle' ],
-        }
-                 
-                
-            ],
+            buttons: [{
+                extend: 'collection',
+                text: _t('Columns') + '<span class="caret"/>',
+                buttons: [ 'columnsToggle' ],
+            }],
             columns: [
                 {
                     className:      'details-control',
@@ -723,7 +716,7 @@ var CmisMixin = {
         };
         return config;
     },
-    
+
     render_datatable: function() {
         if (_.isNull(this.datatable)){
             var self = this;
@@ -746,7 +739,6 @@ var CmisMixin = {
     on_datatable_preinit: function(e, settings){
         this.$breadcrumb = $('<ol class="breadcrumb"/>');
         this.$el.find('div.cmis-breadcrumb-container').append(this.$breadcrumb);
-        
     },
 
     /**
@@ -759,14 +751,14 @@ var CmisMixin = {
     on_datatable_draw: function(e, settings){
         this.register_content_events();
     },
-    
+
     /**
      * This event is triggered when a column is reordered.
      */
     on_datatable_column_reorder: function(e, settings){
         this.register_content_events();
     },
-    
+
     /** function called by datatablet to obtain the required data
      *
      * The function is given three parameters and no return is required. The
@@ -1048,7 +1040,7 @@ var CmisMixin = {
                 }
             });
     },
-    
+
     on_click_set_content_stream: function(row){
         var dialog = new CmisUpdateContentStreamDialog(this, row);
         dialog.open();
