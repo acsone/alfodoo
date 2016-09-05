@@ -525,14 +525,38 @@ var CmisMixin = {
         self.init_cmis_session();
     },
 
+    reset_widget: function(){
+        if (this.datatable){
+            this.table_rendered = $.Deferred();
+            this.datatable.destroy();
+            this.datatable = null;
+            this.root_folder_id = null;
+            this.displayed_folder_id = null;
+        }
+    },
+
+    destroy_content: function() {
+        this.reset_widget();
+        this._super.apply(this, arguments);
+    },
+
     on_mode_change: function() {
         if (this.$el.is(':visible')){
             this.render_datatable();
         }
-        this.$el.toggle(!this.invisible);
+        if (this.field_manager.get("actual_mode") !== "view"){
+            // hide the widget in edit mode
+            this.$el.hide()
+        } else {
+            this.$el.toggle(!this.invisible);    
+        }
     },
-    
+
     render_value: function() {
+        if (this.field_manager.get("actual_mode") !== "view"){
+            // hide the widget in edit mode
+            this.$el.hide()
+        }
         var self = this;
         var value = self.get('value');
         self.$el.find('button.cmis-create-root').addClass('hidden');
