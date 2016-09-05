@@ -1,11 +1,11 @@
 /*---------------------------------------------------------
- + * Odoo web_cmis_viewer
+ + * Odoo cmis_web
  + * Author  Laurent Mignon 2016 Acsone SA/NV
  + * License in __openerp__.py at root level of the module
  + *---------------------------------------------------------
  +*/
 
- odoo.define('web_cmis_viewer.cmis_viewer_widgets', function( require) {
+ odoo.define('cmis_web.form_widgets', function( require) {
 "use strict";
 
 
@@ -346,26 +346,16 @@ var CmisMixin = {
       * Load CMIS settings from Odoo server 
       */
      load_cmis_config: function() {
-         var ds = new data.DataSetSearch(this, 'cmis.backend', this.context, [
-             [1, '=', 1]]);
-         var self = this;
-         ds.read_slice(this.cmis_backend_fields, {}).done(function(records) {
-             self.bind_cmis_config(records);
-             self.on_cmis_config_loaded(records);
-             }
-         );
+         this.bind_cmis_config(this.backend);
+         this.on_cmis_config_loaded(this.backend);
      },
 
      /**
       * Parse the result of the call to the server to retrieve the CMIS settings
       */
      bind_cmis_config: function(result){
-         if (result.length != 1){
-             this.do_warn(_t("CMIS Config Error"), _t("One and only one CMIS backend must be configurerd"));
-             return;
-         }
-         this.cmis_location = result[0].location;
-         this.cmis_backend_id = result[0].id;
+         this.cmis_location = result.location;
+         this.cmis_backend_id = result.id;
      },
 
      on_cmis_config_loaded: function(result) {
@@ -477,15 +467,15 @@ var CmisMixin = {
      get_previewer_url: function(cmisObjectWrapped) {
          var params = this.get_preview_url_params(cmisObjectWrapped);
          // Create the previewer URL
-         var path = "/web_cmis_viewer/static/lib/pdfjs-1.3.91/web/odoo-viewer.html";
+         var path = "/cmis_web/static/lib/pdfjs-1.3.91/web/odoo-viewer.html";
          return path + '?' + $.param(params);
      }
 };
  
- var CmisViewer = formWidget.FieldChar.extend(CmisMixin, {
-    template: "CmisViewer",
+ var FieldCmisFolder = formWidget.FieldChar.extend(CmisMixin, {
+    template: "FieldCmisFolder",
 
-    widget_class: 'cmis_viewer',
+    widget_class: 'field_cmis_folder',
     datatable: null,
     displayed_folder_id: null,
 
@@ -502,12 +492,13 @@ var CmisMixin = {
     init: function (field_manager, node) {
         this._super(field_manager, node);
         CmisMixin.init.call(this);
-        this.id_for_table = _.uniqueId('cmis_viewer_widgets_table');
+        this.id_for_table = _.uniqueId('field_cmis_folder_widgets_table');
         this.table_rendered = $.Deferred();
         this.on('cmis_node_created', this, this.on_cmis_node_created);
         this.on('cmis_node_deleted', this, this.on_cmis_node_deleted);
         this.on('cmis_node_udated', this, this.on_cmis_node_updated);
         this.on('cmis_node_content_updated', this, this.on_cmis_node_content_updated);
+        this.backend = this.field_manager.get_field_desc(this.name).backend;
     },
 
     start: function () {
@@ -517,7 +508,8 @@ var CmisMixin = {
         if (this.datatable){
             return;
         }
-        // hook on form view content changed: recompute the states, because it may be related to the current stage
+        this.view.on("change:actual_mode", this, this.on_mode_change);
+        // hook on form view content changed:
         this.getParent().on('view_content_has_changed', self, function () {
             self.render_value();
         });
@@ -528,10 +520,18 @@ var CmisMixin = {
                 self.render_datatable();
             }
         });
+        
         self.load_cmis_config();
         self.init_cmis_session();
     },
 
+    on_mode_change: function() {
+        if (this.$el.is(':visible')){
+            this.render_datatable();
+        }
+        this.$el.toggle(!this.invisible);
+    },
+    
     render_value: function() {
         var self = this;
         var value = self.get('value');
@@ -584,11 +584,11 @@ var CmisMixin = {
         var self = this;
         $.when(this.cmis_config_loaded).done(function (){
             var view = self.view;
-            view.dataset._model.call('create_in_cmis', [
-                [view.datarecord.id],
-                self.cmis_backend_id,
-                view.dataset.get_context()
-            ]).done(function(vals) {
+            self.rpc('/web/cmis/field/create_value',{
+                'model_name': view.dataset.model,
+                'res_id': view.datarecord.id,
+                'field_name': self.name
+            }).done(function(vals) {
                 var cmis_objectid = vals[view.datarecord.id];
                 view.reload();
             });
@@ -861,7 +861,7 @@ var CmisMixin = {
              var row = self._get_event_row(e);
              self.display_folder(0, row.data().objectId);
          });
-         var $el_actions = this.$el.find('.cmis_viewer_content_actions');
+         var $el_actions = this.$el.find('.field_cmis_folder_content_actions');
          $el_actions.find('.content-action-download').on('click', function(e) {
              var row = self._get_event_row(e);
              self.on_click_download(row);
@@ -1153,13 +1153,13 @@ var CmisMixin = {
 });
 
 core.form_widget_registry
-    .add('cmis_viewer', CmisViewer);
+    .add('cmis_folder', FieldCmisFolder);
 
 return {
     CmisUpdateContentStreamDialog: CmisUpdateContentStreamDialog,
     CmisObjectWrapper: CmisObjectWrapper,
     CmisMixin: CmisMixin,
-    CmisViewer: CmisViewer,
+    FieldCmisFolder: FieldCmisFolder,
     CmisCreateFolderDialog: CmisCreateFolderDialog,
     CmisCreateDocumentDialog: CmisCreateDocumentDialog,
 };

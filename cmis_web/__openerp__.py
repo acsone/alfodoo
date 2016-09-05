@@ -2,9 +2,9 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': "CMIS Viewer Widget",
+    'name': "CMIS Web interface",
     'summary': """
-        Embeddable CMIS Viewer Widget""",
+        Embeddable CMIS Web components""",
     'author': 'ACSONE SA/NV',
     'website': "http://alfodoo.org",
     'category': 'Uncategorized',
@@ -18,7 +18,6 @@
         "static/src/xml/*.xml",
     ],
     'data': [
-        'data/web_cmis_viewer.xml',
-        'views/web_cmis_viewer.xml'
+        'views/cmis_web.xml'
     ],
 }

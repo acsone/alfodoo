@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="CmisViewer">
+<t t-name="FieldCmisFolder">
     <div t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
         <input type='hidden'
                t-att-id="widget.id_for_label" 
@@ -44,7 +44,7 @@
 </t>
 
 <t t-name="CmisContentDetails">
-    <div class="cmis_viewer_details" cellpadding="5">
+    <div class="field_cmis_folder_details" cellpadding="5">
         <table cellpadding="5" cellspacing="0" border="0">
             <tr>
                 <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Type Id</label></td>
@@ -105,7 +105,7 @@
 </t>
 
 <t t-name="CmisRootContentActions">
-    <div class="cmis_viewer_root_content_actions btn-toolbar">
+    <div class="field_cmis_folder_root_content_actions btn-toolbar">
         <button type="button"
                 class="btn btn-default btn-sm root-content-action-refresh"
                 data-toggle="tooltip"
@@ -134,7 +134,7 @@
 </t>
 
 <t t-name="CmisContentActions">
-    <div class="cmis_viewer_content_actions">
+    <div class="field_cmis_folder_content_actions">
     <div class="btn-group pull-right" role="group">
         <t t-if='canGetContentStream'>
           <a type="button"
