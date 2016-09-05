@@ -20,30 +20,30 @@ msgstr ""
 msgid "<?xml version=\"1.0\"?>\n"
 "<data name=\"web_cmis_viewer assets\" inherit_id=\"web_cmis_viewer.assets_backend\">\n"
 "            <xpath expr=\".\" position=\"inside\">\n"
-"                <link rel=\"stylesheet\" href=\"/web_cmis_viewer_alf/static/src/less/web_cmis_viewer_widget_alf.less\"/>\n"
-"                <script type=\"text/javascript\" src=\"/web_cmis_viewer_alf/static/src/js/web_cmis_viewer_widget_alf.js\"/>\n"
+"                <link rel=\"stylesheet\" href=\"/web_cmis_viewer_alf/static/src/less/form_widgets.less\"/>\n"
+"                <script type=\"text/javascript\" src=\"/web_cmis_viewer_alf/static/src/js/form_widgets.js\"/>\n"
 "            </xpath>\n"
 "        </data>\n"
 "    "
 msgstr "<?xml version=\"1.0\"?>\n"
 "<data name=\"web_cmis_viewer assets\" inherit_id=\"web_cmis_viewer.assets_backend\">\n"
 "            <xpath expr=\".\" position=\"inside\">\n"
-"                <link rel=\"stylesheet\" href=\"/web_cmis_viewer_alf/static/src/less/web_cmis_viewer_widget_alf.less\"/>\n"
-"                <script type=\"text/javascript\" src=\"/web_cmis_viewer_alf/static/src/js/web_cmis_viewer_widget_alf.js\"/>\n"
+"                <link rel=\"stylesheet\" href=\"/web_cmis_viewer_alf/static/src/less/form_widgets.less\"/>\n"
+"                <script type=\"text/javascript\" src=\"/web_cmis_viewer_alf/static/src/js/form_widgets.js\"/>\n"
 "            </xpath>\n"
 "        </data>\n"
 "    "
 
 #. module: web_cmis_viewer_alf
 #. openerp-web
-#: code:addons/web_cmis_viewer_alf/static/src/js/web_cmis_viewer_widget_alf.js:53
+#: code:addons/web_cmis_viewer_alf/static/src/js/form_widgets.js:53
 #, python-format
 msgid "CMIS Config Error"
 msgstr "Erreur de configuration CMIS"
 
 #. module: web_cmis_viewer_alf
 #. openerp-web
-#: code:addons/web_cmis_viewer_alf/static/src/js/web_cmis_viewer_widget_alf.js:53
+#: code:addons/web_cmis_viewer_alf/static/src/js/form_widgets.js:53
 #, python-format
 msgid "One and only one CMIS backend must be configurerd"
 msgstr "Un et un seul Backend CMIS ne peut être configuré"

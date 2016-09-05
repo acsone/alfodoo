@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
  <t t-extend="CmisRootContentActions">
-    <t t-jquery="div.cmis_viewer_root_content_actions" t-operation="append">
+    <t t-jquery="div.field_cmis_folder_root_content_actions" t-operation="append">
         <span class="btn-separator"></span>
         <button type="button"
                 class="btn btn-default btn-sm btn-alf root-content-action-open-alf"
@@ -15,7 +15,7 @@
 </t>
 
 <t t-extend="CmisContentActions">
-     <t t-jquery="div.cmis_viewer_content_actions > div.btn-group" t-operation="append">
+     <t t-jquery="div.field_cmis_folder_content_actions > div.btn-group" t-operation="append">
         <button type="button"
                 class="btn btn-default btn-xs btn-alf content-action-open-alf"
                 data-toggle="dropdown"

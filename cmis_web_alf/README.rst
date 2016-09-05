@@ -18,15 +18,6 @@ widget to provide functionalities specific to Alfresco.
 
 Documentation: `alfodoo.org <http://alfodoo.org>`_ 
 
-Installation
-============
-
-The module requires the installation of a new extension to the **cmis** addon: **cmis_alf**.  
-At the time of writing the extension is available into the `fork of ACSONE`_ of the OCA's `connector-cmis`_ repository.
-
-.. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-alf
-.. _`connector-cmis`: https://github.com/OCA/connector-cmis
-
 Credits
 =======
 

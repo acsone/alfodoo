@@ -5,17 +5,17 @@
  + *---------------------------------------------------------
  +*/
 
- odoo.define('web_cmis_viewer_alf.cmis_viewer_widgets_alf', function( require) {
+ odoo.define('cmis_web_alf.form_widgets', function( require) {
 "use strict";
 
 var core = require('web.core');
-var cmis_widgets = require('web_cmis_viewer.cmis_viewer_widgets');
+var form_widgets = require('cmis_web.form_widgets');
 var Model = require('web.Model');
 
 var _t = core._t;
 
 
-cmis_widgets.CmisObjectWrapper.include({
+form_widgets.CmisObjectWrapper.include({
 
     init: function(){
         this._super.apply(this, arguments);
@@ -35,12 +35,7 @@ cmis_widgets.CmisObjectWrapper.include({
 
 });
 
-cmis_widgets.CmisViewer.include({
-
-    init: function (){
-        this._super.apply(this, arguments);
-        this.cmis_backend_fields.push('alfresco_api_location');
-    },
+form_widgets.FieldCmisFolder.include({
 
     wrap_cmis_object: function(cmisObject) {
         var obj = this._super.apply(this, arguments);
@@ -48,9 +43,9 @@ cmis_widgets.CmisViewer.include({
         return obj;
     },
 
-    bind_cmis_config: function(result){
+    bind_cmis_config: function(backend){
         this._super.apply(this, arguments);
-        this.alfresco_api_location = result[0].alfresco_api_location;
+        this.alfresco_api_location = backend.alfresco_api_location;
     },
 
     get_datatable_config: function(){
@@ -80,7 +75,7 @@ cmis_widgets.CmisViewer.include({
     open_in_alf: function(objectid){
         new Model("cmis.backend")
         .call("get_content_details_url",  [
-             [this.cmis_backend_id],
+             [this.backend.id],
              objectid,
              this.view.dataset.get_context()
          ])

@@ -12,11 +12,10 @@
     'license': 'AGPL-3',
     'depends': [
         'cmis_alf',
-        'web_cmis_viewer'
+        'cmis_web'
     ],
     'data': [
-        'data/web_cmis_viewer_alf.xml',
-        'views/web_cmis_viewer_alf.xml'
+        'views/cmis_web_alf.xml'
     ],
     'qweb': [
         "static/src/xml/*.xml",
