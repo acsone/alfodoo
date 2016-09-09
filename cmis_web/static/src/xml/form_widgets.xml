@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="FieldCmisFolder">
+    <div t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
+        <input type='hidden'
+               t-att-id="widget.id_for_label" 
+               t-att-tabindex="widget.node.attrs.tabindex"
+               t-att-autofocus="widget.node.attrs.autofocus"
+               t-att-placeholder="widget.node.attrs.placeholder" />
+        <button type="button" class="btn btn-primary cmis-create-root hidden">Create folder in DMS</button>
+        <table
+            t-att-id="widget.id_for_table" 
+            class="table table-striped table-bordered"
+            cellspacing="0"
+            width="100%">
+          <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Modified</th>
+                <th>Modifier</th>
+                <th></th>
+            </tr>
+         </thead>
+         <tfoot>
+             <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Modified</th>
+                <th>Modifier</th>
+                <th></th>
+            </tr>
+          </tfoot>
+          <tbody>
+          </tbody>
+        </table>
+        <div class="documentpreview" style="display: none;"></div>
+    </div>
+</t>
+
+<t t-name="CmisContentDetails">
+    <div class="field_cmis_folder_details" cellpadding="5">
+        <table cellpadding="5" cellspacing="0" border="0">
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Type Id</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectTypeId')"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Id</label></td>
+                <t t-if="object.baseTypeId != 'cmis:folder'">
+                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:versionSeriesId')"/></td>
+                </t>
+                <t t-if="object.baseTypeId == 'cmis:folder'">
+                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectId')"/></td>
+                </t>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Name</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:name')"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_title">Title</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.title"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_description">Description</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.description"/></td>
+            </tr>
+            <t t-if="object.baseTypeId != 'cmis:folder'">
+                <tr>
+                    <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">MIME Type</label></td>
+                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:contentStreamMimeType')"/></td>
+                </tr>
+            </t>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Creation Date</label></td>
+                <td class="oe_form_group_cell date"><t t-esc="object.format_cmis_timestamp(object.getSuccinctProperty('cmis:creationDate'))"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Created By</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:createdBy')"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified Date</label></td>
+                <td class="oe_form_group_cell date"><t t-esc="object.fLastModificationDate()"/></td>
+            </tr>
+            <tr>
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified By</label></td>
+                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:lastModifiedBy')"/></td>
+            </tr>
+            <t t-if="object.baseTypeId != 'cmis:folder'">
+                <tr>
+                    <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Is Checked Out</label></td>
+                     <t t-set="checked" t-value="object.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')? 'checked' : null"/>
+                    <td class="oe_form_group_cell"><div><input type="checkbox" t-att-checked="checked" disabled='true' style="vertical-align: middle;"/><t t-if='checked'><span style="vertical-align: middle;"> <label>By:</label> <t t-esc="object.getSuccinctProperty('cmis:versionSeriesCheckedOutBy')"/></span></t></div></td>
+                </tr>
+            </t>
+        </table>
+    </div>
+</t>
+
+<t t-name="CmisRootContentActions">
+    <div class="field_cmis_folder_root_content_actions btn-toolbar">
+        <button type="button"
+                class="btn btn-default btn-sm root-content-action-refresh"
+                data-toggle="tooltip"
+                title="Refresh content table"
+                aria-label="Refresh content table">
+             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+         </button>
+         <span class="btn-separator"></span>
+       <div class="btn-group">
+         <button type="button"
+                 t-attf-class="btn btn-default btn-sm root-content-action-new-folder {{ (canCreateFolder)?'': 'disabled' }}"
+                 data-toggle="tooltip"
+                 title="Create folder"
+                 aria-label="Create folder">
+             <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
+         </button>
+         <button type="button"
+                 t-attf-class="btn btn-default btn-sm root-content-action-new-doc {{ (canCreateDocument)?'': 'disabled' }}"
+                 data-toggle="tooltip"
+                 title="Create document"
+                 aria-label="Create document">
+             <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+         </button>
+       </div>
+    </div>
+</t>
+
+<t t-name="CmisContentActions">
+    <div class="field_cmis_folder_content_actions">
+    <div class="btn-group pull-right" role="group">
+        <t t-if='canGetContentStream'>
+          <a type="button"
+             class="btn btn-default btn-xs content-action-download"
+             aria-label="Download"
+             data-toggle="tooltip"
+             title="Download"
+             t-att-href='object.url'>
+              <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+          </a>
+        </t>
+        <t t-if='canPreview'>
+          <button type="button"
+              class="btn btn-default btn-xs content-action-preview"
+              data-toggle="tooltip"
+              title="Preview"
+              aria-label="Preview">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+          </button>
+        </t>
+            <a type="button"
+               class="btn btn-default btn-xs dropdown-toggle glyphicon glyphicon-align-justify"
+               t-att-id="object.getSuccinctProperty('cmis:objectId')"
+               aria-label="More actions"
+               data-toggle="dropdown"
+               title="More actions"
+               aria-haspopup="true"
+               aria-expanded="true">
+            </a>
+            <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
+                <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
+                <li t-if='canSetContentStream'><a class='content-action-set-content-stream' href="#">Update</a></li>
+                <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li>
+                <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>
+                <li t-if='canCheckIn'><a class='content-action-check-in' href="#">Check-In</a></li>
+                <li t-if='canCancelCheckOut'><a class='content-action-cancel-checkout' href="#">Cancel Check-Out</a></li>
+                <li t-if='canCheckOut'><a class='content-action-checkout' href="#">Check-Out</a></li -->
+                <li role="separator" class="divider"></li>
+                <li t-if='canDeleteObject'><a class='content-action-delete-object' href="#">Delete</a></li>
+            </ul>
+        </div>
+    </div>
+    
+</t>
+
+<t t-name='CmisDocumentViewer'>
+    <div class="cmis_document_viewer">
+        <div class='cmis_document_viewer_toolbar pull-right'>
+            <button type="button" class="btn btn-primary btn-sm button-back-browser">
+                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&amp;nbsp;Back to documents list
+            </button>
+        </div>
+        <div class='cmis_document_viewer_iframe'>
+            <iframe id='viewer' 
+                    t-att-src='url'
+                    t-att-width='width'
+                    t-att-height='height'
+                    allowfullscreen='1'
+                    webkitallowfullscreen='1'></iframe>
+        </div>
+    </div>
+</t>
+
+<t t-name='CmisUpdateContentStreamView'>
+    <form class="form-horizontal cmis_update_content_stream" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse&amp;hellip; <input type="file" required="required"/>
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly='1'/>
+            </div>
+            </div>
+        </div>
+    </form>
+</t>
+
+<t t-name='CmisCreateDocumentDialog'>
+    <form class="form-horizontal cmis_create_document" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file" autofocus="autofocus">
+                        Browse&amp;hellip; <input type="file" required="required" multiple="true"/>
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly='1'/>
+            </div>
+            </div>
+        </div>
+    </form>
+</t>
+
+<t t-name='CmisCreateFolderDialog'>
+    <form class="form-horizontal" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <label for="page-name" class="col-sm-3 control-label">
+                Folder Name:
+            </label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" autofocus="autofocus" required="required"/>
+            </div>
+        </div>
+    </form>
+</t>
+<t t-name="CMISSession.warning">
+    <div class="o_dialog_warning">
+        <t t-raw="error.stacktrace"/>
+    </div>
+</t>
+
+</templates>

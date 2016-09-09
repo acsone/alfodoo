@@ -1,0 +1,139 @@
+ .buttons-columnVisibility{
+    a {
+        background-color: initial !important;
+    }
+
+    a:before {
+        content:' ';
+        margin-left: 11px;
+    }
+
+    &.active{
+        a:before{
+            content:'\2714';
+            margin-top:-11px;
+            margin-left: 0px;
+            text-align:center;
+            &:empty{
+                content:'';
+            }
+        }
+    }
+
+    a:empty:before {
+        content:'';
+    }
+}
+
+div.field_cmis_folder {
+    margin-top: 15px;
+    width: 100%;
+
+    .dt-buttons {
+        display: initial;
+
+        span.caret {
+            margin-left: 5px;
+        }
+    }
+    
+    .dataTables_wrapper {
+        width: 100%;
+        div.cmis-root-content-buttons {
+            height: 30px;
+        }
+        
+        div.cmis-checked-out-by {
+            font-style: italic;
+            margin-left: 10px;
+        }
+
+        div.dataTables_scrollBody {
+            min-height: 40vh;
+            &.is-dragover {
+                outline: 2px dashed #4F94C9;
+                outline-offset: +2px;
+            }
+        }
+
+        tr {
+            td.details-control {
+                cursor: pointer;
+             }
+            td {
+                div.cmis_content_icon:before {
+                    margin-right: 4px;
+                }
+
+                div.cmis-folder {
+                   cursor: pointer;
+                }
+            }
+        }
+
+        .dataTables_length {
+            float: right;
+            text-align: right;
+            select {
+                line-height: 18px;
+            }
+        }
+
+        ol.breadcrumb {
+            margin-top: 5px;
+            margin-bottom: 0px;
+        }
+
+    }
+}
+
+div.cmis_document_viewer_toolbar{
+   margin-bottom: 5px;
+}
+
+div.field_cmis_folder_content_actions {
+    a.dropdown-toggle.glyphicon.glyphicon-align-justify {
+        top: 0px;
+    }
+    ul.dropdown-menu {
+        width: 50px;
+        position: fixed;
+    }
+}
+
+form.cmis_update_content_stream,
+form.cmis_create_document {
+    .btn-file {
+        overflow: hidden;
+        position: relative;
+        input[type=file] {
+            background: red;
+            cursor: inherit;
+            display: block;
+            filter: alpha(opacity=0);
+            font-size: 100px;
+            min-height: 100%;
+            min-width: 100%;
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            text-align: right;
+            top: 0;
+        }
+    }
+    input[readonly] {
+        background-color: white !important;
+        cursor: text !important;
+    }
+}
+
+.form-control:invalid {
+  border-color: #135286;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.form-control:invalid {
+    background-image: linear-gradient(blank, red), linear-gradient(red, red);
+  }

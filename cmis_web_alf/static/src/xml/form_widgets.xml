@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+ <t t-extend="CmisRootContentActions">
+    <t t-jquery="div.field_cmis_folder_root_content_actions" t-operation="append">
+        <span class="btn-separator"></span>
+        <button type="button"
+                class="btn btn-default btn-sm btn-alf root-content-action-open-alf"
+                data-toggle="dropdown"
+                title="Show in Alfresco"
+                aria-label="Show in Alfresco">
+                <div class="alf-ico"  aria-hidden="true"></div>
+         </button>
+    </t>
+</t>
+
+<t t-extend="CmisContentActions">
+     <t t-jquery="div.field_cmis_folder_content_actions > div.btn-group" t-operation="append">
+        <button type="button"
+                class="btn btn-default btn-xs btn-alf content-action-open-alf"
+                data-toggle="dropdown"
+                title="Show in Alfresco"
+                aria-label="Show in Alfresco">
+              <div class="alf-ico"  aria-hidden="true"></div>
+        </button>
+    </t>
+</t>
+</templates>
