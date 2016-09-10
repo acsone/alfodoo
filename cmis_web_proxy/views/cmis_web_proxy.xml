@@ -3,7 +3,7 @@
     <data>
         <template id="assets_backend" name="web_cmis_viewer assets" inherit_id="web_cmis_viewer.assets_backend">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/web_cmis_viewer_proxy/static/src/js/web_cmis_viewer_widget.js"/>
+                <script type="text/javascript" src="/cmis_web_proxy/static/src/js/form_widget.js"/>
             </xpath>
         </template>
     </data>
