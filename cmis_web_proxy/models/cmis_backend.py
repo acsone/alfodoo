@@ -4,11 +4,15 @@
 
 from openerp import api, fields, models, _
 from openerp import tools
-from ..controllers import CMIS_PROXY_PATH
+from ..controllers import cmis
 
 class CmisBackend(models.Model):
 
     _inherit = 'cmis.backend'
+
+    def _clear_caches(self):
+        super(CmisBackend, self)._clear_caches()
+        self.get_by_id.clear_cache(self)
 
     @api.model
     @tools.cache('backend_id')
@@ -19,7 +23,6 @@ class CmisBackend(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.get_by_id.clear_cache()
         if 'is_cmis_proxy' in vals and \
             vals['is_cmis_proxy'] == False:
             vals['apply_odoo_security'] = False
@@ -28,6 +31,12 @@ class CmisBackend(models.Model):
     @api.onchange('is_cmis_proxy')
     def _onchange_is_cmis_proxy(self):
         self.apply_odoo_security = self.is_cmis_proxy
+
+    @api.depends('location')
+    @api.multi
+    def _compute_proxy_location(self):
+        for record in self:
+            record.proxy_location = cmis.CMIS_PROXY_PATH + '/%s' % record.id
 
     is_cmis_proxy = fields.Boolean(
         required=True, default=False,
@@ -41,6 +50,8 @@ class CmisBackend(models.Model):
         help=_("If checked, the Odoo security rules are applied to the "
                "content retrieved from the cmis container and the available "
                "actions on this content."))
+    proxy_location = fields.Char(
+        readonly=True, store=True, compute='_compute_proxy_location')
 
     @api.model
     def _get_web_description(self, record):
@@ -50,6 +61,6 @@ class CmisBackend(models.Model):
         descr = super(CmisBackend, self)._get_web_description(record)
         descr.update({
             'apply_odoo_security': record.apply_odoo_security,
-            'cmis_location': CMIS_PROXY_PATH + '/' + record.id,
+            'location': record.proxy_location,
         })
         return descr
