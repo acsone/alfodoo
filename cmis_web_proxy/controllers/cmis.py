@@ -170,7 +170,7 @@ class CmisProxy(http.Controller):
         cmis_location = cmis_backend.location
         self._clean_url_in_dict(value,
                                 urlparse.urlparse(cmis_location).geturl(),
-                                self._cmis_proxy_base_url)
+                                cmis_backend.proxy_location)
         if cmis_backend.apply_odoo_security:
             self._apply_permissions_mapping(
                 value, headers, cmis_backend, model_inst)
@@ -398,7 +398,7 @@ class CmisProxy(http.Controller):
         CMIS_PROXY_PATH + '/<int:backend_id>/<path:cmis_path>'
         ], type='http', auth="user", csrf=False, methods=['GET', 'POST'])
     @main.serialize_exception
-    def call_cmis_services(self, cmis_backend_id, cmis_path="", **kwargs):
+    def call_cmis_services(self, backend_id, cmis_path="", **kwargs):
         """Call at the root of the CMIS repository. These calls are for
         requesting the global services provided by the CMIS Container
         """

@@ -15,7 +15,7 @@ var $ = require('$');
 var _t = core._t;
 
 
-form_widgets.CmisViewer.include({
+form_widgets.FieldCmisFolder.include({
 
     gen_cmis_session_token: function(){
         return this.view.dataset.model + "_" + this.view.datarecord.id;
