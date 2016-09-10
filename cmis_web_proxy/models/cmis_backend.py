@@ -4,20 +4,22 @@
 
 from openerp import api, fields, models, _
 from openerp import tools
+from ..controllers import CMIS_PROXY_PATH
 
 class CmisBackend(models.Model):
 
     _inherit = 'cmis.backend'
 
-    @tools.cache()
-    def get_default_backend(self):
-        res = self.search([(1, '=', 1)])
-        res.ensure_one()
-        return res
+    @api.model
+    @tools.cache('backend_id')
+    def get_by_id(self, backend_id):
+        backend = self.browse(backend_id)
+        backend.ensure_one()
+        return backend
 
     @api.multi
     def write(self, vals):
-        self.get_default_backend.clear_cache(self)
+        self.get_by_id.clear_cache()
         if 'is_cmis_proxy' in vals and \
             vals['is_cmis_proxy'] == False:
             vals['apply_odoo_security'] = False
@@ -39,3 +41,15 @@ class CmisBackend(models.Model):
         help=_("If checked, the Odoo security rules are applied to the "
                "content retrieved from the cmis container and the available "
                "actions on this content."))
+
+    @api.model
+    def _get_web_description(self, record):
+        """ Return the desciption of backend record to be included into the
+        field description of cmis fields that reference the backend.
+        """
+        descr = super(CmisBackend, self)._get_web_description(record)
+        descr.update({
+            'apply_odoo_security': record.apply_odoo_security,
+            'cmis_location': CMIS_PROXY_PATH + '/' + record.id,
+        })
+        return descr

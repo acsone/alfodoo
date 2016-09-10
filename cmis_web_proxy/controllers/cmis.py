@@ -115,9 +115,6 @@ def gen_dict_extract(key, var):
 
 class CmisProxy(http.Controller):
 
-    def _get_cmis_backend(self):
-        return request.env['cmis.backend'].get_default_backend()
-
     @property
     def _cmis_proxy_base_url(self):
         return urlparse.urljoin(request.httprequest.host_url, CMIS_PROXY_PATH)
@@ -396,17 +393,18 @@ class CmisProxy(http.Controller):
             raise  AccessError("Bad request")
         return model_inst
 
-    @http.route([CMIS_PROXY_PATH,
-                 CMIS_PROXY_PATH + '/<path:cmis_path>'
-                 ], type='http', auth="user", csrf=False,
-                methods=['GET', 'POST'])
+    @http.route([
+        CMIS_PROXY_PATH + '/<int:backend_id>',
+        CMIS_PROXY_PATH + '/<int:backend_id>/<path:cmis_path>'
+        ], type='http', auth="user", csrf=False, methods=['GET', 'POST'])
     @main.serialize_exception
-    def call_cmis_services(self, cmis_path="", **kwargs):
+    def call_cmis_services(self, cmis_backend_id, cmis_path="", **kwargs):
         """Call at the root of the CMIS repository. These calls are for
         requesting the global services provided by the CMIS Container
         """
+        # use a dedicated cache to get the backend
+        cmis_backend = request.env['cmis.backend'].get_by_id(backend_id)
         method = request.httprequest.method
-        cmis_backend = self._get_cmis_backend()
         model_inst = False
         if cmis_backend.apply_odoo_security:
             model_inst = self._check_access(cmis_path, cmis_backend, kwargs)
