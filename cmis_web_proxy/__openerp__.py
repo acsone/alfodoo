@@ -11,7 +11,7 @@
     'author': 'ACSONE SA/NV',
     'website': 'https://acsone.eu/',
     'depends': [
-        'web_cmis_viewer'
+        'cmis_web'
     ],
     'data': [
         'views/cmis_backend.xml',
