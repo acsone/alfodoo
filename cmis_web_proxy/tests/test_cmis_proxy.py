@@ -47,7 +47,7 @@ class BaseTestCmisProxy(common.HttpCase):
                           "env var: CMIS_LOCATION, CMIS_USER, CMIS_PWD")
         cmis_backend = self.env['cmis.backend']
         cmis_backend.search([(1, '=', 1)]).unlink()
-        cmis_backend.create({
+        self.cmis_backend = cmis_backend.create({
             'name': 'TEST_CMIS_PROXY',
             'location': cmis_location,
             'is_cmis_proxy': True,
@@ -56,9 +56,12 @@ class BaseTestCmisProxy(common.HttpCase):
             'password': cmis_pwd,
             'version': '1.0'
         })
+        web_descr = self.cmis_backend.get_web_description()[
+            self.cmis_backend.id]
+        proxy_path = web_descr['cmis_location']
         self.authenticate('admin', 'admin')
         self.cmis_url = 'http://%s:%d%s' % (common.HOST, common.PORT,
-                                            cmis.CMIS_PROXY_PATH)
+                                            proxy_path)
         self.headers = {'Cookie': 'session_id=%s' % self.session_id}
         self.cmis_client = CmisClient(self.cmis_url, 'admin', 'admin',
                                       headers=self.headers)
@@ -71,7 +74,7 @@ class BaseTestCmisClient(BaseTestCmisProxy):
         super(BaseTestCmisClient, self).setUp()
         self.repo = self.cmis_client.getDefaultRepository()
         self.root_folder = self.repo.getRootFolder()
-        self.folder_name = " ".join(['web_cmis_viewer_proxy',
+        self.folder_name = " ".join(['cmis_web_proxy',
                                      self.__class__.__name__,
                                      str(time.time())])
         self.test_folder = self.root_folder.createFolder(self.folder_name)

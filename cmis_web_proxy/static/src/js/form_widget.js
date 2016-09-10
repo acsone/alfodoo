@@ -5,23 +5,17 @@
  + *---------------------------------------------------------
  +*/
 
- odoo.define('web_cmis_viewer_proxy.cmis_viewer_widgets', function( require) {
+ odoo.define('cmis_web_alf.form_widgets', function( require) {
 "use strict";
 
 var core = require('web.core');
-var cmis_widgets = require('web_cmis_viewer.cmis_viewer_widgets');
+var form_widgets = require('cmis_web.form_widgets');
 var Model = require('web.Model');
 var $ = require('$');
-
 var _t = core._t;
 
 
-cmis_widgets.CmisViewer.include({
-    init: function (){
-        this._super.apply(this, arguments);
-        this.cmis_backend_fields.push('apply_odoo_security',
-                                            'is_cmis_proxy');
-    },
+form_widgets.CmisViewer.include({
 
     gen_cmis_session_token: function(){
         return this.view.dataset.model + "_" + this.view.datarecord.id;
@@ -45,15 +39,9 @@ cmis_widgets.CmisViewer.include({
         this._super.apply(this, arguments);
     },
 
-    bind_cmis_config: function(result){
+    bind_cmis_config: function(backend){
         this._super.apply(this, arguments);
-        if( result[0].is_cmis_proxy){
-            this.is_cmis_procxy = result[0].is_cmis_proxy;
-            this.cmis_location = '/cmis/1.1/browser';
-        }
-        if (result[0].apply_odoo_security) {
-            this.apply_odoo_security = result[0].apply_odoo_security;
-        }
+        this.apply_odoo_security = backend.apply_odoo_security;
     },
 
     get_preview_url_params: function(cmisObjectWrapped){
