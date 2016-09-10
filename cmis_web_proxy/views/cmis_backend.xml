@@ -5,9 +5,9 @@
 <odoo>
 
     <record model="ir.ui.view" id="cmis_backend_form_view">
-        <field name="name">cmis.backend.form (in web_cmis_viewer_proxy)</field>
+        <field name="name">cmis.backend.form (in cmis_web_proxy)</field>
         <field name="model">cmis.backend</field>
-        <field name="inherit_id" ref="cmis.view_cmis_backend_form"/>
+        <field name="inherit_id" ref="cmis.cmis_backend_form_view"/>
         <field name="arch" type="xml">
             <field name="location" position="after">
                 <field name="is_cmis_proxy" colspan="4"/>
