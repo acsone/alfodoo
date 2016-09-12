@@ -18,7 +18,10 @@ var _t = core._t;
 form_widgets.FieldCmisFolder.include({
 
     gen_cmis_session_token: function(){
-        return this.view.dataset.model + "_" + this.view.datarecord.id;
+        return JSON.stringify({
+            'model': this.view.dataset.model,
+            'res_id': this.view.datarecord.id,
+            'field_name': this.name});
     },
 
     set_cmis_session_token: function(){

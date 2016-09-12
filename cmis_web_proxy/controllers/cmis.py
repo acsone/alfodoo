@@ -270,13 +270,16 @@ class CmisProxy(http.Controller):
             return False
         return token
 
-    def _get_model_inst_from_token(self, cmis_path, cmis_backend, params,
+    def _decode_token(self, cmis_path, cmis_backend, params,
                                    token):
-        """Return the Odoo object referenced by the token.
-        :return: Odoo model instance if exists and user has at least read
-        access or False
+        """Return the Odoo object referenced by the token and the field name
+        for which the query is done
+        :return: a tuple (Odoo model instance if exists and user has at least read
+        access or False, field_name)
         """
-        model_name, res_id = token.split('_')
+        token = json.loads(token)
+        model_name = token.get('model')
+        res_id = token.get('res_id')
         if not model_name in request.env:
             _logger.info("Invalid model name in token (%s)", model_name)
             return False
@@ -284,27 +287,26 @@ class CmisProxy(http.Controller):
         if not model.check_access_rights('read', raise_exception=False):
             _logger.info("User has no read access on model %s", model_name)
             return False
-        model_inst = model.browse(
-                res_id.isdigit() and int(res_id))
+        model_inst = model.browse(res_id)
         if not model_inst.exists():
             _logger.info("The referenced model doesn't exist or the user has "
                          "no read access (%s, %s)", model, res_id)
             return False
-        return model_inst
+        return model_inst, token.get('field_name')
 
     def _check_cmis_content_access(self, cmis_path, cmis_backend, params,
-                                   model_inst):
+                                   model_inst, field_name):
         """Check that the CMIS content referenced into the request is the
         same as or a child of the one linked to the odoo model instance.
         :return: True if check is Ok False otherwise 
         """
-        token_cmis_objectid = model_inst.cmis_objectid
+        token_cmis_objectid = getattr(model_inst, field_name)
         if not token_cmis_objectid:
             _logger.info("The referenced model doesn't reference a CMIS "
                          "content (%s, %s)", model_inst._name, model_inst.id)
             return False
         request_cmis_objectid = params.get('objectId')
-        repo = cmis_backend.check_auth()
+        repo = cmis_backend.get_cmis_repository()
         if not request_cmis_objectid:
             # get the CMIS object id from cmis_path
             cmis_content = repo.getObjectByPath(cmis_path)
@@ -376,7 +378,7 @@ class CmisProxy(http.Controller):
         if not token:
             raise AccessError("Bad request")
         # check access to object from token 
-        model_inst = self._get_model_inst_from_token(
+        model_inst, field_name = self._decode_token(
             cmis_path, cmis_backend, params, token)
         if not model_inst:
             raise AccessError("Bad request")
@@ -386,7 +388,7 @@ class CmisProxy(http.Controller):
             # The request is not for an identified content
             return model_inst
         if not self._check_cmis_content_access(
-            cmis_path, cmis_backend, params, model_inst):
+            cmis_path, cmis_backend, params, model_inst, field_name):
             raise  AccessError("Bad request")
         if not self._check_content_action_access(
             cmis_path, cmis_backend, params, model_inst):
