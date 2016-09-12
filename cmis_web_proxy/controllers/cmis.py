@@ -189,7 +189,7 @@ class CmisProxy(http.Controller):
         cmis_location = cmis_backend.location
         return urlparse.urljoin(cmis_location, url_path)
 
-    def _foward_get_file(self, url, cmis_backend, params):
+    def _forward_get_file(self, url, cmis_backend, params):
         """Method called to retrieved the content associated to a CMIS object.
         The content is streamed between the CMIS container and the caller to
         avoid to suck the server memory
@@ -214,7 +214,7 @@ class CmisProxy(http.Controller):
         """
         url = self._get_redirect_url(cmis_backend, url_path)
         if params.get('cmisselector') == 'content':
-            return self._foward_get_file(url, cmis_backend, params)
+            return self._forward_get_file(url, cmis_backend, params)
         r = requests.get(
             url, params=params,
             auth=(cmis_backend.username, cmis_backend.password))
@@ -257,7 +257,7 @@ class CmisProxy(http.Controller):
             response = werkzeug.Response()
         return response
 
-    def _check_provided_tokens(self, cmis_path, cmis_backend, params):
+    def _check_provided_token(self, cmis_path, cmis_backend, params):
         """ Check that a token is present in the request or in the http
         headers and both are equal.
         :return: the token value if checks are OK, False otherwise.
@@ -309,7 +309,14 @@ class CmisProxy(http.Controller):
             _logger.info("The referenced model doesn't reference a CMIS "
                          "content (%s, %s)", model_inst._name, model_inst.id)
             return False
-        request_cmis_objectid = params.get('objectId')
+        request_cmis_objectid = params.get('renderedObjectId')
+        if request_cmis_objectid:
+            # If the proxy is called to render a cmis content, we need to check
+            # the original objectId since the one provided by the rendition
+            # service has no paths
+            params.pop('renderedObjectId')
+        else:
+            request_cmis_objectid = params.get('objectId')
         repo = cmis_backend.get_cmis_repository()
         if not request_cmis_objectid:
             # get the CMIS object id from cmis_path
@@ -320,10 +327,10 @@ class CmisProxy(http.Controller):
             # instance
             return True
         cmis_object = repo.getObject(request_cmis_objectid)
-        # The can't use a CMIS query to check if a node is in the expected
+        # We can't use a CMIS query to check if a node is in the expected
         # tree since the indexation is asynchronous. In place of a simple
-        # query we all check if one the paths of the node linked to the Odoo
-        # content instance is in on of the node paths of the the requested
+        # query we check if one of the paths of the node linked to the Odoo
+        # content instance is in one of the node paths of the requested
         # cmis_object
         child_paths = cmis_object.getPaths()
         parent_paths = repo.getObject(token_cmis_objectid).getPaths()
@@ -377,7 +384,7 @@ class CmisProxy(http.Controller):
            ensure that the user has the required privileges in Odoo
         """
         # check token conformity
-        token = self._check_provided_tokens(cmis_path, cmis_backend, params)
+        token = self._check_provided_token(cmis_path, cmis_backend, params)
         if not token:
             raise AccessError("Bad request")
         # check access to object from token

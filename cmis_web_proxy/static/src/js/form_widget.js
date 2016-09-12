@@ -14,6 +14,21 @@ var Model = require('web.Model');
 var $ = require('$');
 var _t = core._t;
 
+form_widgets.CmisObjectWrapper.include({
+
+    get_preview_url : function(){
+      var _url =  this._super.apply(this, arguments);
+      if (_url) {
+          var prefix = "&";
+          if (_url.indexOf("?") < 0){
+              prefix = "?"
+          }
+          return _url + prefix + 'renderedObjectId=' + this.objectId;
+      }
+    },
+
+});
+
 
 form_widgets.FieldCmisFolder.include({
 
