@@ -2,9 +2,8 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from operator import attrgetter
-from openerp import fields
+from openerp import fields, _
 from openerp.exceptions import UserError
-from openerp.osv import fields as columns
 from .cmis_meta_field import CmisMetaField
 
 
@@ -87,14 +86,23 @@ class CmisFolder(fields.Field):
         return desc
 
     def _description_backend(self, env):
-        backend = self.get_backend(env)
+        backend = self.get_backend(env, raise_if_not_found=False)
+        if not backend:
+            if self.backend_name:
+                msg = (_('Backend named %s not found. '
+                         'Please check your configuration.') %
+                       self.backend_name)
+            else:
+                msg = _('No backend found. Please check your configuration.')
+            return {'backend_error': msg}
         return backend.get_web_description()[backend.id]
 
     _description_allow_create = property(attrgetter('allow_create'))
     _description_allow_delete = property(attrgetter('allow_delete'))
 
-    def get_backend(self, env):
-        return env['cmis.backend'].get_by_name(name=self.backend_name)
+    def get_backend(self, env, raise_if_not_found=True):
+        return env['cmis.backend'].get_by_name(
+            self.backend_name, raise_if_not_found)
 
     def create_value(self, records):
         """Create a new folder for each record into the cmis container and

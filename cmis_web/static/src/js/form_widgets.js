@@ -353,6 +353,13 @@ var CmisMixin = {
       * Parse the result of the call to the server to retrieve the CMIS settings
       */
      bind_cmis_config: function(result){
+         if (result.backend_error){
+             this.do_warn(
+                 _t("CMIS Backend Config Error"),
+                 result.backend_error,
+                 true);
+             return;
+         }
          this.cmis_location = result.location;
          this.cmis_backend_id = result.id;
      },

@@ -109,3 +109,8 @@ class TestCmisFields(common.BaseTestCmis):
         self.assertEquals(descr.get('type'), 'cmis_folder')
         self.assertEquals(descr.get('allow_create'), True)
         self.assertEquals(descr.get('allow_delete'), False)
+        # if no backend exists an error message is put into the desciption
+        self.cmis_backend.unlink()
+        descr = inst._fields['cmis_folder'].get_description(self.env)
+        backend_description = descr.get('backend')
+        self.assertTrue('backend_error' in descr.get('backend'))
