@@ -6,6 +6,7 @@ from openerp import api, fields, models, _
 from openerp import tools
 from ..controllers import cmis
 
+
 class CmisBackend(models.Model):
 
     _inherit = 'cmis.backend'
@@ -24,7 +25,7 @@ class CmisBackend(models.Model):
     @api.multi
     def write(self, vals):
         if 'is_cmis_proxy' in vals and \
-            vals['is_cmis_proxy'] == False:
+                vals['is_cmis_proxy'] is False:
             vals['apply_odoo_security'] = False
         return super(CmisBackend, self).write(vals)
 
@@ -46,7 +47,7 @@ class CmisBackend(models.Model):
                "between the widget and the cmis container and all the requets "
                "are done by using the configured account on the backend. "))
     apply_odoo_security = fields.Boolean(
-        required=True, default=False, 
+        required=True, default=False,
         help=_("If checked, the Odoo security rules are applied to the "
                "content retrieved from the cmis container and the available "
                "actions on this content."))
