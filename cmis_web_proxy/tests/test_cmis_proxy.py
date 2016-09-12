@@ -8,7 +8,6 @@ from cmislib.browser.binding import BrowserBinding
 from cmislib.exceptions import \
     NotSupportedException
 import openerp.tests.common as common
-from ..controllers import cmis
 
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
