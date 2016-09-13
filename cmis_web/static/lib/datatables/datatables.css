@@ -4,10 +4,10 @@
  *
  * To rebuild or modify this file with the latest versions of the included
  * software please visit:
- *   https://datatables.net/download/#bs/dt-1.10.11,af-2.1.1,b-1.1.2,b-colvis-1.1.2,b-html5-1.1.2,cr-1.3.1,fc-3.2.1,fh-3.1.1,kt-2.1.1,r-2.0.2,rr-1.1.1,sc-1.4.1,se-1.1.2
+ *   https://datatables.net/download/#bs/dt-1.10.12/af-2.1.2/b-1.2.2/b-colvis-1.2.2/b-html5-1.2.2/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.1.3/r-2.1.0/rr-1.1.2/sc-1.4.2/se-1.2.0
  *
  * Included libraries:
- *   DataTables 1.10.11, AutoFill 2.1.1, Buttons 1.1.2, Column visibility 1.1.2, HTML5 export 1.1.2, ColReorder 1.3.1, FixedColumns 3.2.1, FixedHeader 3.1.1, KeyTable 2.1.1, Responsive 2.0.2, RowReorder 1.1.1, Scroller 1.4.1, Select 1.1.2
+ *   DataTables 1.10.12, AutoFill 2.1.2, Buttons 1.2.2, Column visibility 1.2.2, HTML5 export 1.2.2, ColReorder 1.3.2, FixedColumns 3.2.2, FixedHeader 3.1.2, KeyTable 2.1.3, Responsive 2.1.0, RowReorder 1.1.2, Scroller 1.4.2, Select 1.2.0
  */
 
 table.dataTable {
@@ -15,6 +15,7 @@ table.dataTable {
   margin-top: 6px !important;
   margin-bottom: 6px !important;
   max-width: none !important;
+  border-collapse: separate !important;
 }
 table.dataTable td,
 table.dataTable th {
@@ -167,9 +168,6 @@ table.dataTable.table-condensed .sorting_desc:after {
   right: 6px;
 }
 
-table.table-bordered.dataTable {
-  border-collapse: separate !important;
-}
 table.table-bordered.dataTable th,
 table.table-bordered.dataTable td {
   border-left-width: 0;
@@ -319,7 +317,7 @@ div.DTCR_pointer {
 }
 
 
-table.DTFC_Cloned tr.even {
+table.DTFC_Cloned tr {
   background-color: white;
   margin-bottom: 0;
 }
@@ -412,21 +410,20 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {
 }
 table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before,
 table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
-  top: 8px;
+  top: 9px;
   left: 4px;
-  height: 16px;
-  width: 16px;
+  height: 14px;
+  width: 14px;
   display: block;
   position: absolute;
   color: white;
   border: 2px solid white;
-  border-radius: 16px;
+  border-radius: 14px;
   box-shadow: 0 0 3px #444;
   box-sizing: content-box;
-  text-align: left;
+  text-align: center;
   font-family: 'Courier New', Courier, monospace;
-  text-indent: 4px;
-  line-height: 16px;
+  line-height: 14px;
   content: '+';
   background-color: #337ab7;
 }
@@ -469,13 +466,12 @@ table.dataTable.dtr-column > tbody > tr > th.control:before {
   position: absolute;
   color: white;
   border: 2px solid white;
-  border-radius: 16px;
+  border-radius: 14px;
   box-shadow: 0 0 3px #444;
   box-sizing: content-box;
-  text-align: left;
+  text-align: center;
   font-family: 'Courier New', Courier, monospace;
-  text-indent: 4px;
-  line-height: 16px;
+  line-height: 14px;
   content: '+';
   background-color: #337ab7;
 }
@@ -574,12 +570,15 @@ div.dtr-modal div.dtr-modal-background {
     width: 95%;
   }
 }
+div.dtr-bs-modal table.table tr:first-child td {
+  border-top: none;
+}
 
 
 table.dt-rowReorder-float {
   position: absolute !important;
   opacity: 0.8;
-  table-layout: static;
+  table-layout: fixed;
   outline: 2px solid #337ab7;
   outline-offset: -2px;
   z-index: 2001;
@@ -736,5 +735,4 @@ table.dataTable tbody th.selected a,
 table.dataTable tbody td.selected a {
   color: #a2d4ed;
 }
-
 
