@@ -13,11 +13,14 @@ to store the documents related to a claim into a CMIS container
 .. code-block:: python
 
     from openerp import models
-    
+    from openerp.addons.cmis_field import fields
+
     
     class CrmClaim(models.Model):
-        _name = 'crm.claim'
-        _inherit = ['crm.claim', 'cmis.folder']
+        _inherit = 'crm.claim'
+
+        cmis_folder = fields.CmisFolder()
+
 
 .. code-block:: xml
 
@@ -30,8 +33,7 @@ to store the documents related to a claim into a CMIS container
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Documents" groups="base.group_user">
-                        <field name="cmis_objectid" readonly="1" widget="cmis_viewer"/>
-                        <field name="cmis_backend_id" readonly="1" invisible="1"/>
+                        <field name="cmis_folder"/>
                     </page>
                 </notebook>
             </field>

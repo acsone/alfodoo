@@ -9,10 +9,10 @@ Alfodoo
 Alfodoo is a set of `addons`_ to seamless integrate an external Document
 Management System and `Odoo`_.
 
-Alfodoo provides a powerful widget (CMIS Viewer) and a set of addons for
-displaying and managing content from a CMIS container linked to an Odoo model.
+Alfodoo provides a new kind of field *CmisFolder* and its powerful widget *FieldCmisFolder*.
+Alfodoo is a set of addons for displaying and managing content from a CMIS container linked to an Odoo model.
 
-This Odoo widget has a modular and generic core providing functionality based
+The Odoo widget has a modular and generic core providing functionality based
 on the CMIS V1.1 protocol. This core can be extended by additional modules
 in order to propose additional features or customizations proper to a specific
 CMIS container. At this stage, the existing customization is for the Alfresco Document
@@ -22,7 +22,6 @@ With these addons, you are now able to enrich the user's experience and
 provide in Odoo great features that enable the users to easily store and
 manage their documents in an external Document Management System through
 a seamless integration. 
-
 
 The development of Alfodoo has been founded by `ACSONE SA/NV`_.
 
@@ -162,6 +161,15 @@ Developer's guide
 
    guides/install.rst
    guides/code_overview.rst
+
+
+API Reference
+=============
+
+.. toctree::
+   :maxdepth: 1
+
+   api/api_cmis_field.rst
 
 
 ******************

@@ -7,11 +7,10 @@ Dependencies
 
 The Alfodoo framework requires the following:
 
-* The Odoo **cmis** addon: The Odoo  cmis addon provides the bases for Odoo 
+* The Odoo **cmis** addon: The Odoo *cmis* addon provides the minimal foundation for Odoo 
   modules implementing different integration scenario with a CMIS server. It allows
-  you to configure a CMIS backend in Odoo and provides mixins models to inherit
-  to add to Odoo objects the abilities to be linked/stored into a CMIS Backend.
-  At the time of writing *Alfodoo* only supports the branch *9.0-cmis-enhanced*
+  you to configure a CMIS backend.
+  At the time of writing *Alfodoo* only supports the branch *9.0-cmis-from-8.0*
   available into the `fork of ACSONE`_ of the OCA's `connector-cmis`_ repository and
   currently under `review`_. 
 * `cmislib`_  the Apache Chemistry CMIS client library for Python: To be compliant
@@ -20,17 +19,11 @@ The Alfodoo framework requires the following:
 
     .. code-block:: shell
         
-        pip install git+ssh://git@github.com/lmignon/python-cmislib.git@6.0.dev#egg=cmislib
+        pip install git+ssh://git@github.com/apache/chemistry-cmislib.git@trunk#egg=cmislib
 
-* If you plan to use the viewer extension for Alfresco **'web_cmis_viewer_alf'**
-  you also need the **cmis_alf** addon. As for the **cmis** addon, this one is
-  available into a `dedicated branch of the fork of ACSONE`_ of the OCA's 
-  `connector-cmis`_ repository
-
-.. _`dedicated branch of the fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-alf
-.. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-enhanced
+.. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-from-8.0
 .. _`connector-cmis`: https://github.com/OCA/connector-cmis
-.. _`review`: https://github.com/OCA/connector-cmis/pull/15
+.. _`review`: https://github.com/OCA/connector-cmis/pull/16
 .. _`cmislib`: http://chemistry.apache.org/python/cmislib.html
 
 Enable CORS in Alfresco 5.x
@@ -89,3 +82,15 @@ used by the web client.
       <url-pattern>/s/*</url-pattern>
       <url-pattern>/cmisbrowser/*</url-pattern>
    </filter-mapping>
+
+Launch Odoo
+***********
+
+The *cmis_field* addon defines a new field and a specific web controller providing
+some functionalities to the web. In order to get the new field desciption registered
+at the early stage in the statup process and to register the controller 
+you must start Odoo with:
+
+.. code-block:: shell
+
+  --load web,web_gantt,cmis_field

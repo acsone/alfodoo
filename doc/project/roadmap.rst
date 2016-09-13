@@ -11,6 +11,7 @@ Roadmap
 * Folder suppression: synchronization between the odoo record and the linked alfresco folder
 * Some sort of document type management.
 * Some sort of meta-data synchronization
-* Some sort of cmis-link widget to link to a specific cmis document/version in an Odoo form
+* A new field CmisDocument used to link to a specific CMIS document/version in an Odoo form (with its dedicated widget)
 * Some kind of integration between Odoo e-mailing and Alfresco
-* Fork/Replace cmislib. cmislib is a library managed by Apache Chemistry. Despite several attempts to contribute (https://issues.apache.org/jira/browse/CMIS-972, https://issues.apache.org/jira/browse/CMIS-979, https://issues.apache.org/jira/browse/CMIS-971), it seems very difficult to make it evolve even if the problems are blockers. This situation forces us to use our own fork of that library.
+* A new controller acting as a proxy between Odoo and CMIS to avoid to allow CORS requests and simplify the deployment.
+  This functionality is under development see https://github.com/acsone/alfodoo/pull/4
