@@ -1,7 +1,3 @@
-/*! CmisJS - v0.3.0 - 2016-01-25
-* a CMIS client library written in Javascript for node and the browser
-* http://github.com/agea/CmisJS
-* Copyright (c) 2016 Andrea Agili; Licensed  */
 ;
 (function (root, factory) {
   'use strict';
@@ -32,7 +28,9 @@
     module.exports = lib;
     request = require('superagent');
   } else {
-    request = window.superagent;
+    if (typeof superagent !== 'undefined'){
+      request = superagent;
+    }
   }
 
 
@@ -149,7 +147,12 @@
       options = _fill(options);
       options.cmisselector = 'object';
 
-      return new CmisRequest(_get(session.defaultRepository.rootFolderUrl + path)
+      var sp = path.split('/');
+      for (var i=sp.length-1; i>=0; i--){
+        sp[i] = encodeURIComponent(sp[i]);
+      }
+
+      return new CmisRequest(_get(session.defaultRepository.rootFolderUrl + sp.join('/'))
         .query(options));
     };
 
@@ -739,7 +742,7 @@
     };
 
     /**
-     * Gets document content, WARNING: will not work for binary files (images, documents, ecc..)
+     * Gets document content, WARNING: wi ll not work for binary files (images, documents, ecc..)
      * @param {String} objectId
      * @param {Boolean} download
      * @param {Object} options (possible options: streamId, token)
@@ -1166,7 +1169,7 @@
 
       req.on('error', callback_error)
         .end(function (err, res) {
-          if (res.ok) {
+          if (res && res.ok) {
             if (callback_ok.scope) {
               callback_ok.scope.$apply(function () {
                 if (text) {
