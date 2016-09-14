@@ -12,7 +12,7 @@
     'license': 'AGPL-3',
     'depends': [
         'web',
-        'cmis'
+        'cmis_field'
     ],
     'qweb': [
         "static/src/xml/*.xml",
