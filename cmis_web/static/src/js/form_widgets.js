@@ -550,16 +550,16 @@ var CmisMixin = {
         }
         if (this.field_manager.get("actual_mode") !== "view"){
             // hide the widget in edit mode
-            this.$el.hide()
+            this.$el.hide();
         } else {
-            this.$el.toggle(!this.invisible);    
+            this.$el.toggle(!this.invisible);
         }
     },
 
     render_value: function() {
         if (this.field_manager.get("actual_mode") !== "view"){
             // hide the widget in edit mode
-            this.$el.hide()
+            this.$el.hide();
         }
         var self = this;
         var value = self.get('value');
@@ -1082,9 +1082,8 @@ var CmisMixin = {
         self.root_folder_id = folderId;
         $.when(self.cmis_session_initialized, self.table_rendered).done(function(){
                 self.load_cmis_repositories().done(function() {
-                var library = this;
                 self.reset_breadcrumb();
-                self.display_folder(0, folderId);
+                self.display_folder(0, self.root_folder_id);
             });
         });
     },
@@ -1117,8 +1116,10 @@ var CmisMixin = {
                     self.render_folder_actions();
                 });
             this.display_folder_in_breadcrumb(folderId);
+            this.datatable.ajax.reload(null, true);
+        } else {
+            self.datatable.clear().draw();
         }
-        this.datatable.ajax.reload(null, true);
     },
 
     /**
