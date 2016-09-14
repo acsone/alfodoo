@@ -60,8 +60,9 @@ class CmisBackend(models.Model):
         field description of cmis fields that reference the backend.
         """
         descr = super(CmisBackend, self)._get_web_description(record)
-        descr.update({
-            'apply_odoo_security': record.apply_odoo_security,
-            'location': record.proxy_location,
-        })
+        if record.is_cmis_proxy:
+            descr.update({
+                'apply_odoo_security': record.apply_odoo_security,
+                'location': record.proxy_location,
+                })
         return descr
