@@ -12,22 +12,7 @@ class CmisBackend(models.Model):
     _inherit = 'cmis.backend'
 
     def _clear_caches(self):
-        super(CmisBackend, self)._clear_caches()
         self.get_by_id.clear_cache(self)
-
-    @api.model
-    @tools.cache('backend_id')
-    def get_by_id(self, backend_id):
-        backend = self.browse(backend_id)
-        backend.ensure_one()
-        return backend
-
-    @api.multi
-    def write(self, vals):
-        if 'is_cmis_proxy' in vals and \
-                vals['is_cmis_proxy'] is False:
-            vals['apply_odoo_security'] = False
-        return super(CmisBackend, self).write(vals)
 
     @api.onchange('is_cmis_proxy')
     def _onchange_is_cmis_proxy(self):
@@ -60,9 +45,36 @@ class CmisBackend(models.Model):
         field description of cmis fields that reference the backend.
         """
         descr = super(CmisBackend, self)._get_web_description(record)
-        if record.is_cmis_proxy:
-            descr.update({
-                'apply_odoo_security': record.apply_odoo_security,
-                'location': record.proxy_location,
-                })
+        descr.update({
+            'apply_odoo_security': record.apply_odoo_security,
+            'location': record.proxy_location,
+        })
         return descr
+
+    @api.model
+    @tools.cache('backend_id')
+    def get_proxy_info_by_id(self, backend_id):
+        backend = self.get_by_id(backend_id)
+        return {
+            'is_cmis_proxy': backend.is_cmis_proxy,
+            'apply_odoo_security': backend.apply_odoo_security,
+            'username': backend.username,
+            'password': backend.password,
+            'proxy_location': backend.proxy_location,
+            'location': backend.location,
+            'cmis_repository': backend.get_cmis_repository() 
+        }
+
+    @api.model
+    def get_by_id(self, backend_id):
+        backend = self.browse(backend_id)
+        backend.ensure_one()
+        return backend
+
+    @api.multi
+    def write(self, vals):
+        self.get_proxy_info_by_id.clear_cache()
+        if 'is_cmis_proxy' in vals and \
+                vals['is_cmis_proxy'] is False:
+            vals['apply_odoo_security'] = False
+        return super(CmisBackend, self).write(vals)
