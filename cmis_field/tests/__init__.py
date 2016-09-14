@@ -5,3 +5,4 @@
 from . import test_fields
 from . import test_controllers
 from . import test_ir_model_fields
+from . import test_cmis_backend
