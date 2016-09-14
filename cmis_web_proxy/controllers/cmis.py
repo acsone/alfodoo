@@ -143,7 +143,7 @@ class CmisProxy(http.Controller):
             return False
         return True
 
-    def _apply_permissions_mapping(self, value, headers, cmis_backend,
+    def _apply_permissions_mapping(self, value, headers, proxy_info,
                                    model_inst=None):
         """This method modify the defined allowableActions returned by the
         CMIS container to apply the Odoo operation policy defined of the
@@ -169,15 +169,15 @@ class CmisProxy(http.Controller):
                     allowed = can_unlink and value
                 allowable_actions[action] = allowed
 
-    def _prepare_json_response(self, value, headers, cmis_backend,
+    def _prepare_json_response(self, value, headers, proxy_info,
                                model_inst=None):
-        cmis_location = cmis_backend.location
+        cmis_location = proxy_info['location']
         self._clean_url_in_dict(value,
                                 urlparse.urlparse(cmis_location).geturl(),
-                                cmis_backend.proxy_location)
-        if cmis_backend.apply_odoo_security:
+                                proxy_info['proxy_location'])
+        if proxy_info['apply_odoo_security']:
             self._apply_permissions_mapping(
-                value, headers, cmis_backend, model_inst)
+                value, headers, proxy_info, model_inst)
         headers['transfer-encoding'] = None
         response = werkzeug.Response(
             json.dumps(value), mimetype='application/json',
@@ -185,11 +185,11 @@ class CmisProxy(http.Controller):
         return response
 
     @classmethod
-    def _get_redirect_url(cls, cmis_backend, url_path):
-        cmis_location = cmis_backend.location
+    def _get_redirect_url(cls, proxy_info, url_path):
+        cmis_location = proxy_info['location']
         return urlparse.urljoin(cmis_location, url_path)
 
-    def _forward_get_file(self, url, cmis_backend, params):
+    def _forward_get_file(self, url, proxy_info, params):
         """Method called to retrieved the content associated to a CMIS object.
         The content is streamed between the CMIS container and the caller to
         avoid to suck the server memory
@@ -199,7 +199,7 @@ class CmisProxy(http.Controller):
         r = requests.get(
             url, params=params,
             stream=True,
-            auth=(cmis_backend.username, cmis_backend.password))
+            auth=(proxy_info['username'], proxy_info['password']))
         r.raise_for_status()
         headers = dict(r.headers.items())
         headers['transfer-encoding'] = None
@@ -207,26 +207,26 @@ class CmisProxy(http.Controller):
             r, headers=headers,
             direct_passthrough=True)
 
-    def _forward_get(self, url_path, cmis_backend, model_inst, params):
+    def _forward_get(self, url_path, proxy_info, model_inst, params):
         """
         :return: :class:`Response <Response>` object
         :rtype: werkzeug.Response
         """
-        url = self._get_redirect_url(cmis_backend, url_path)
+        url = self._get_redirect_url(proxy_info, url_path)
         if params.get('cmisselector') == 'content':
-            return self._forward_get_file(url, cmis_backend, params)
+            return self._forward_get_file(url, proxy_info, params)
         r = requests.get(
             url, params=params,
-            auth=(cmis_backend.username, cmis_backend.password))
+            auth=(proxy_info['username'], proxy_info['password']))
         r.raise_for_status()
         if r.text:
             return self._prepare_json_response(
-                r.json(), dict(r.headers.items()), cmis_backend, model_inst)
+                r.json(), dict(r.headers.items()), proxy_info, model_inst)
         else:
             response = werkzeug.Response()
         return response
 
-    def _forward_post(self, url_path, cmis_backend, model_inst, params):
+    def _forward_post(self, url_path, proxy_info, model_inst, params):
         """The CMIS Browser binding is designed to be queried from the browser
         Therefore, the parameters in a POST are expected to be submitted as
         HTTP multipart forms. Therefore each parameter in the request is
@@ -246,34 +246,36 @@ class CmisProxy(http.Controller):
         for k, v in params.iteritems():
             # no filename for parts dedicated to HTTP Form data
             files[k] = (None, v, 'text/plain;charset=utf-8')
-        url = self._get_redirect_url(cmis_backend, url_path)
+        url = self._get_redirect_url(proxy_info, url_path)
         r = requests.post(url, files=files,
-                          auth=(cmis_backend.username, cmis_backend.password))
+                          auth=(
+                            proxy_info['username'], proxy_info['password']))
         r.raise_for_status()
         if r.text:
             return self._prepare_json_response(
-                r.json(), dict(r.headers.items()), cmis_backend, model_inst)
+                r.json(), dict(r.headers.items()), proxy_info, model_inst)
         else:
             response = werkzeug.Response()
         return response
 
-    def _check_provided_token(self, cmis_path, cmis_backend, params):
+    def _check_provided_token(self, cmis_path, proxy_info, params):
         """ Check that a token is present in the request or in the http
-        headers.
+        headers and both are equal.
         :return: the token value if checks are OK, False otherwise.
         """
-        if 'token' in params:
-            token = params.pop('token')
-            token = token and token.strip()
+        token = request.httprequest.headers.get('Authorization')
+        if token:
+            token = token.replace('Bearer', '').strip()
         else:
-            token = request.httprequest.headers.get('Authorization')
-            token = token and token.replace('Bearer', '').strip()
+            token = params.get('token').strip()
+        if 'token' in params:
+            params.pop('token')
         if not token:
             _logger.info("Tokens not provided in headers or request params")
             return False
         return token
 
-    def _decode_token(self, cmis_path, cmis_backend, params,
+    def _decode_token(self, cmis_path, proxy_info, params,
                       token):
         """Return the Odoo object referenced by the token and the field name
         for which the query is done
@@ -297,7 +299,7 @@ class CmisProxy(http.Controller):
             return False
         return model_inst, token.get('field_name')
 
-    def _check_cmis_content_access(self, cmis_path, cmis_backend, params,
+    def _check_cmis_content_access(self, cmis_path, proxy_info, params,
                                    model_inst, field_name):
         """Check that the CMIS content referenced into the request is the
         same as or a child of the one linked to the odoo model instance.
@@ -316,7 +318,7 @@ class CmisProxy(http.Controller):
             params.pop('renderedObjectId')
         else:
             request_cmis_objectid = params.get('objectId')
-        repo = cmis_backend.get_cmis_repository()
+        repo = proxy_info['cmis_repository']
         if not request_cmis_objectid:
             # get the CMIS object id from cmis_path
             cmis_content = repo.getObjectByPath(cmis_path)
@@ -341,7 +343,7 @@ class CmisProxy(http.Controller):
                      token_cmis_objectid)
         return False
 
-    def _check_content_action_access(self, cmis_path, cmis_backend, params,
+    def _check_content_action_access(self, cmis_path, proxy_info, params,
                                      model_inst):
         """Check that the User has de required Permissioon on the Odoo model
         instance to di the expected CMIS action
@@ -360,7 +362,7 @@ class CmisProxy(http.Controller):
             return False
         return True
 
-    def _check_access(self, cmis_path, cmis_backend, params):
+    def _check_access(self, cmis_path, proxy_info, params):
         """This method check that the user can access to the requested CMIS
         content.
 
@@ -383,12 +385,12 @@ class CmisProxy(http.Controller):
            ensure that the user has the required privileges in Odoo
         """
         # check token conformity
-        token = self._check_provided_token(cmis_path, cmis_backend, params)
+        token = self._check_provided_token(cmis_path, proxy_info, params)
         if not token:
             raise AccessError("Bad request")
         # check access to object from token
         model_inst, field_name = self._decode_token(
-            cmis_path, cmis_backend, params, token)
+            cmis_path, proxy_info, params, token)
         if not model_inst:
             raise AccessError("Bad request")
         # check if the CMIS object in the request is the the one referenced on
@@ -397,10 +399,10 @@ class CmisProxy(http.Controller):
             # The request is not for an identified content
             return model_inst
         if not self._check_cmis_content_access(
-                cmis_path, cmis_backend, params, model_inst, field_name):
+                cmis_path, proxy_info, params, model_inst, field_name):
             raise AccessError("Bad request")
         if not self._check_content_action_access(
-                cmis_path, cmis_backend, params, model_inst):
+                cmis_path, proxy_info, params, model_inst):
             raise AccessError("Bad request")
         return model_inst
 
@@ -413,12 +415,14 @@ class CmisProxy(http.Controller):
         """Call at the root of the CMIS repository. These calls are for
         requesting the global services provided by the CMIS Container
         """
-        # use a dedicated cache to get the backend
-        cmis_backend = request.env['cmis.backend'].get_by_id(backend_id)
+        # proxy_info are informations available into the cache without loading
+        # the cmis.backend from the database 
+        proxy_info = request.env['cmis.backend'].get_proxy_info_by_id(
+            backend_id)
         method = request.httprequest.method
         model_inst = False
-        if cmis_backend.apply_odoo_security:
-            model_inst = self._check_access(cmis_path, cmis_backend, kwargs)
+        if proxy_info.get('apply_odoo_security'):
+            model_inst = self._check_access(cmis_path, proxy_info, kwargs)
         if method not in ['GET', 'POST']:
             raise AccessError("The HTTP METHOD %s is not supported by CMIS" %
                               method)
@@ -426,4 +430,4 @@ class CmisProxy(http.Controller):
             method = self._forward_get
         elif method == 'POST':
             method = self._forward_post
-        return method(cmis_path, cmis_backend, model_inst, kwargs)
+        return method(cmis_path, proxy_info, model_inst, kwargs)
