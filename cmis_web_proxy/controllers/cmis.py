@@ -259,16 +259,15 @@ class CmisProxy(http.Controller):
 
     def _check_provided_token(self, cmis_path, cmis_backend, params):
         """ Check that a token is present in the request or in the http
-        headers and both are equal.
+        headers.
         :return: the token value if checks are OK, False otherwise.
         """
-        token = request.httprequest.headers.get('Authorization')
-        if token:
-            token = token.replace('Bearer', '').strip()
-        else:
-            token = params.get('token').strip()
         if 'token' in params:
-            params.pop('token')
+            token = params.pop('token')
+            token = token and token.strip()
+        else:
+            token = request.httprequest.headers.get('Authorization')
+            token = token and token.replace('Bearer', '').strip()
         if not token:
             _logger.info("Tokens not provided in headers or request params")
             return False
