@@ -7,7 +7,7 @@
     'version': '9.0.1.0.0',
     'category': 'Connector',
     'summary': 'Alfresco extension for the CMIS Connector',
-    'author': "ACSONE SA/NV Community Association (OCA)",
+    'author': "ACSONE SA/NV",
     'website': 'https://odoo-community.org/',
     'license': 'AGPL-3',
     'depends': [
