@@ -1,7 +1,29 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from openerp import fields
+from openerp import fields, models
+
+
+def _field_create(self, cr, context=None):
+    res = _field_create.origin(self, cr, context)
+    model_fields = filter(
+        lambda x: hasattr(x[1], 'ttype'), self._fields.items())
+    if not model_fields:
+        return res
+    # here we have field defining a ttype.
+    # update the field definition to use the value provided by ttype into
+    # the ir_model_fields table (by default odoo fill this column with type
+    cr.execute("select id from ir_model where model = %s", (self._name,))
+    model_id = cr.fetchone()[0]
+    for k, field in model_fields:
+        cr.execute("""
+            update ir_model_fields set ttype=%s
+            where model_id=%s and name=%s
+            """, (field.ttype, model_id, k))
+    return res
+
+
+models.BaseModel._patch_method('_field_create', _field_create)
 
 
 class CmisMetaField(fields.MetaField):

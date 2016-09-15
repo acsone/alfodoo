@@ -2,11 +2,33 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import mock
+from openerp import fields
 from openerp.exceptions import UserError
 from . import common
+from ..fields import CmisFolder
 
 
 class TestCmisFields(common.BaseTestCmis):
+
+    def test_field_definition(self):
+        """Check that the ttype registered in the ir_model_fields is the
+        one defined by the CmisFolder
+        """
+        self.env.cr.execute("""
+            select id, name from ir_model_fields
+            where model='cmis.test.model' and ttype='cmis_folder'
+            """)
+        self.assertEqual(
+            self.env.cr.rowcount, 3,
+            "Found %d fields with ttype='cmis_folder' (Expected 3): %s" %
+            (self.env.cr.rowcount, [r[1] for r in self.env.cr.fetchall()]))
+
+    def test_meta_class(self):
+        """Check that our new field is registered into the field's registery
+        under the key 'cmis_folder'
+        """
+        cmis_folder_cls = fields.Field.by_type.get('cmis_folder')
+        self.assertEqual(cmis_folder_cls, CmisFolder)
 
     def test_cmis_folder_default_create(self):
         inst = self.env['cmis.test.model'].create({'name': 'folder_name'})
