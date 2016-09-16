@@ -1,0 +1,51 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* cmis_field
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-16 10:28+0000\n"
+"PO-Revision-Date: 2016-09-16 10:28+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: cmis_field
+#: code:addons/cmis_field/fields/cmis_folder.py:92
+#, python-format
+msgid "Backend named %s not found. Please check your configuration."
+msgstr "Aucun backend nommé %s trouvé. Veuillez vérifier votre configuration."
+
+#. module: cmis_field
+#: model:ir.model,name:cmis_field.model_cmis_backend
+msgid "CMIS Backend"
+msgstr "Backend CMIS"
+
+#. module: cmis_field
+#: code:addons/cmis_field/models/cmis_backend.py:44
+#, python-format
+msgid "Expected 1 backend named %s, %s found"
+msgstr "Un seul backend nommé %s attendu; %s trouvé"
+
+#. module: cmis_field
+#: model:ir.model,name:cmis_field.model_ir_model_fields
+msgid "Fields"
+msgstr "Champs"
+
+#. module: cmis_field
+#: code:addons/cmis_field/models/cmis_backend.py:46
+#, python-format
+msgid "No backend found"
+msgstr "Aucun backend CMIS trouvé"
+
+#. module: cmis_field
+#: code:addons/cmis_field/fields/cmis_folder.py:96
+#, python-format
+msgid "No backend found. Please check your configuration."
+msgstr "Aucun backend CMIS trouvé. Veuillez vérifier votre configuration."
+

@@ -19,431 +19,398 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:187
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:187
 #, python-format
 msgid "&nbsp;Back to documents list"
 msgstr "&nbsp;Retour à la liste des documents"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:618
+#: code:addons/cmis_web/static/src/js/form_widgets.js:618
 #, python-format
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtré de _MAX_ éléments au total)"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:633
+#: code:addons/cmis_web/static/src/js/form_widgets.js:633
 #, python-format
 msgid ": activate to sort column ascending"
 msgstr ": activer pour trier la colonne par ordre croissant"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:634
+#: code:addons/cmis_web/static/src/js/form_widgets.js:634
 #, python-format
 msgid ": activate to sort column descending"
 msgstr ": activer pour trier la colonne par ordre décroissant"
 
 #. module: cmis_web
-#: model:ir.ui.view,arch_db:cmis_web.assets_backend
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<data name=\"cmis_web assets\" inherit_id=\"web.assets_backend\">\n"
-"            <xpath expr=\".\" position=\"inside\">\n"
-"                <link rel=\"stylesheet\" href=\"/cmis_web/static/lib/datatables/datatables.css\"/>\n"
-"                <link rel=\"stylesheet\" href=\"/cmis_web/static/src/less/cmis_web_widget.less\"/>\n"
-"                <link rel=\"stylesheet\" href=\"/cmis_web/static/src/css/bootstrap_fonts_fixes.css\"/>\n"
-"\n"
-"                <script type=\"text/javascript\" src=\"/cmis_web/static/lib/cmisjs/superagent.7.2.0.js\"/>\n"
-"                <script type=\"text/javascript\" src=\"/cmis_web/static/lib/cmisjs/cmis.0.3.0.js\"/>\n"
-"                <script type=\"text/javascript\" src=\"/cmis_web/static/lib/datatables/datatables.js\"/>\n"
-"                <script type=\"text/javascript\" src=\"/cmis_web/static/src/js/cmis_web_widget.js\"/>\n"
-"            </xpath>\n"
-"        </data>\n"
-"    "
-msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data name=\"cmis_web assets\" inherit_id=\"web.assets_backend\">\n"
-"            <xpath expr=\".\" position=\"inside\">\n"
-"                <link rel=\"stylesheet\" href=\"/cmis_web/static/lib/datatables/datatables.css\"/>\n"
-"                <link rel=\"stylesheet\" href=\"/cmis_web/static/src/less/cmis_web_widget.less\"/>\n"
-"                <link rel=\"stylesheet\" href=\"/cmis_web/static/src/css/bootstrap_fonts_fixes.css\"/>\n"
-"\n"
-"                <script type=\"text/javascript\" src=\"/cmis_web/static/lib/cmisjs/superagent.7.2.0.js\"/>\n"
-"                <script type=\"text/javascript\" src=\"/cmis_web/static/lib/cmisjs/cmis.0.3.0.js\"/>\n"
-"                <script type=\"text/javascript\" src=\"/cmis_web/static/lib/datatables/datatables.js\"/>\n"
-"                <script type=\"text/javascript\" src=\"/cmis_web/static/src/js/cmis_web_widget.js\"/>\n"
-"            </xpath>\n"
-"        </data>\n"
-"    "
-
-#. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:207
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:224
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:207
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:224
 #, python-format
 msgid "Browse&hellip;"
 msgstr "Parcourir&hellip;"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:264
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:100
+#: code:addons/cmis_web/static/src/js/form_widgets.js:264
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:100
 #, python-format
 msgid "By:"
 msgstr "Par:"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:346
+#: code:addons/cmis_web/static/src/js/form_widgets.js:346
 #, python-format
 msgid "CMIS Config Error"
 msgstr "Erreur de configuration CMIS"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:387
+#: code:addons/cmis_web/static/src/js/form_widgets.js:387
 #, python-format
 msgid "CMIS Error"
 msgstr "Erreur CMIS"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:380
+#: code:addons/cmis_web/static/src/js/form_widgets.js:380
 #, python-format
 msgid "CMIS Error "
 msgstr "Erreur CMIS"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:31
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:78
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:145
+#: code:addons/cmis_web/static/src/js/form_widgets.js:31
+#: code:addons/cmis_web/static/src/js/form_widgets.js:78
+#: code:addons/cmis_web/static/src/js/form_widgets.js:145
 #, python-format
 msgid "Close"
 msgstr "Fermer"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:577
+#: code:addons/cmis_web/static/src/js/form_widgets.js:577
 #, python-format
 msgid "Columns"
 msgstr "Colonnes"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:33
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:80
+#: code:addons/cmis_web/static/src/js/form_widgets.js:33
+#: code:addons/cmis_web/static/src/js/form_widgets.js:80
 #, python-format
 msgid "Create"
 msgstr "Créer"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:88
+#: code:addons/cmis_web/static/src/js/form_widgets.js:88
 #, python-format
 msgid "Create Documents "
 msgstr "Ajouter un/des documents"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:41
+#: code:addons/cmis_web/static/src/js/form_widgets.js:41
 #, python-format
 msgid "Create Folder "
 msgstr "Ajouter un répertoire"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:129
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:129
 #, python-format
 msgid "Create document"
 msgstr "Ajouter un document"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:122
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:122
 #, python-format
 msgid "Create folder"
 msgstr "Ajouter un répertoire"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:11
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:11
 #, python-format
 msgid "Create folder in DMS"
 msgstr "Créer le répertoire dans la GED"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:524
+#: code:addons/cmis_web/static/src/js/form_widgets.js:524
 #, python-format
 msgid "Create your object first"
 msgstr "Veuillez d'abord enregistrer votre objet une première fois."
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:85
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:85
 #, python-format
 msgid "Created By"
 msgstr "Créé par"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:81
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:81
 #, python-format
 msgid "Creation Date"
 msgstr "Date de création"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:176
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:176
 #, python-format
 msgid "Delete"
 msgstr "Supprimer"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:22
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:33
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:71
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:22
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:33
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:71
 #, python-format
 msgid "Description"
 msgstr "Description"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:145
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:145
 #, python-format
 msgid "Download"
 msgstr "Télécharger"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:627
+#: code:addons/cmis_web/static/src/js/form_widgets.js:627
 #, python-format
 msgid "First"
 msgstr "Premier"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:238
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:238
 #, python-format
 msgid "Folder Name:"
 msgstr "Nom du répertoire:"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:98
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:98
 #, python-format
 msgid "Is Checked Out"
 msgstr "Verrouillé"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:628
+#: code:addons/cmis_web/static/src/js/form_widgets.js:628
 #, python-format
 msgid "Last"
 msgstr "Dernier"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:93
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:93
 #, python-format
 msgid "Last Modified By"
 msgstr "Dernière modification par"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:89
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:89
 #, python-format
 msgid "Last Modified Date"
 msgstr "Date de dernière modification"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:622
+#: code:addons/cmis_web/static/src/js/form_widgets.js:622
 #, python-format
 msgid "Loading..."
 msgstr "Chargement en cours..."
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:76
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:76
 #, python-format
 msgid "MIME Type"
 msgstr "MIME Type"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:23
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:34
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:23
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:34
 #, python-format
 msgid "Modified"
 msgstr "Date de modification"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:24
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:35
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:24
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:35
 #, python-format
 msgid "Modifier"
 msgstr "Modifié par"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:165
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:165
 #, python-format
 msgid "More actions"
 msgstr "Actions supplémentaires"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:20
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:31
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:63
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:20
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:31
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:63
 #, python-format
 msgid "Name"
 msgstr "Nom"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:629
+#: code:addons/cmis_web/static/src/js/form_widgets.js:629
 #, python-format
 msgid "Next"
 msgstr "Suivant"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:615
+#: code:addons/cmis_web/static/src/js/form_widgets.js:615
 #, python-format
 msgid "No data available in table"
 msgstr "Aucun élément à afficher"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:625
+#: code:addons/cmis_web/static/src/js/form_widgets.js:625
 #, python-format
 msgid "No matching records found"
 msgstr "Aucune donnée disponible"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:54
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:54
 #, python-format
 msgid "Object Id"
 msgstr "Identifiant"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:50
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:50
 #, python-format
 msgid "Object Type Id"
 msgstr "Type de contenu"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:346
+#: code:addons/cmis_web/static/src/js/form_widgets.js:346
 #, python-format
 msgid "One and only one CMIS backend must be configurerd"
 msgstr "Un et un seul Backend CMIS ne peut être déclaré"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:154
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:154
 #, python-format
 msgid "Preview"
 msgstr "Preview"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:630
+#: code:addons/cmis_web/static/src/js/form_widgets.js:630
 #, python-format
 msgid "Previous"
 msgstr "Précédent"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:623
+#: code:addons/cmis_web/static/src/js/form_widgets.js:623
 #, python-format
 msgid "Processing..."
 msgstr "Traitement en cours..."
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:113
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:113
 #, python-format
 msgid "Refresh content table"
 msgstr "Rafraichir le contenu de la table"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:1051
+#: code:addons/cmis_web/static/src/js/form_widgets.js:1051
 #, python-format
 msgid "Root"
 msgstr "Racine"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:624
+#: code:addons/cmis_web/static/src/js/form_widgets.js:624
 #, python-format
 msgid "Search:"
 msgstr "Recherche:"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:621
+#: code:addons/cmis_web/static/src/js/form_widgets.js:621
 #, python-format
 msgid "Show _MENU_ entries"
 msgstr "Afficher _MENU_ éléments"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:617
+#: code:addons/cmis_web/static/src/js/form_widgets.js:617
 #, python-format
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Affichage de l'élément 0 à 0 sur 0 élément"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:616
+#: code:addons/cmis_web/static/src/js/form_widgets.js:616
 #, python-format
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:21
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:32
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:67
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:21
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:32
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:67
 #, python-format
 msgid "Title"
 msgstr "Titre"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:169
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:169
 #, python-format
 msgid "Update"
 msgstr "Mettre à jour"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:147
+#: code:addons/cmis_web/static/src/js/form_widgets.js:147
 #, python-format
 msgid "Update content"
 msgstr "Mettre à jour le contenu"
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/js/cmis_web_widget.js:156
+#: code:addons/cmis_web/static/src/js/form_widgets.js:156
 #, python-format
 msgid "Update content of "
 msgstr "Mise à jour du contenu de "
 
 #. module: cmis_web
 #. openerp-web
-#: code:addons/cmis_web/static/src/xml/cmis_viewer_widget.xml:168
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:168
 #, python-format
 msgid "View Details"
 msgstr "Afficher les détails"
