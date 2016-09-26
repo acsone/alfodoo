@@ -6,11 +6,11 @@
 Alfodoo
 #######
 
-Alfodoo is a set of `addons`_ to seamless integrate an external Document
-Management System and `Odoo`_.
+Alfodoo is a set of `addons`_ to seamlessly integrate an external Document
+Management System with `Odoo`_.
 
 Alfodoo provides a new kind of field *CmisFolder* and its powerful widget *FieldCmisFolder*.
-Alfodoo is a set of addons for displaying and managing content from a CMIS container linked to an Odoo model.
+Alfodoo is a set of addons to display and manage content from a CMIS container linked to an Odoo model.
 
 The Odoo widget has a modular and generic core providing functionality based
 on the CMIS V1.1 protocol. This core can be extended by additional modules
@@ -39,7 +39,7 @@ Core Features
 
 * **100% Open Source** (`AGPL version 3`_): the full `source code is available
   on GitHub`_
-* Full responsive HTML Widget that lets you view and managed content from a
+* Full responsive HTML Widget that enables you to view and manage content from a
   `cmis:folder`.
 * ...
 * See a :ref:`code-overview` with examples of code
@@ -55,15 +55,15 @@ Core Features
 Overview: Manage the documents in Odoo
 **************************************
 
-Visually the main part of the functionality is accessed through a "Document tab" configurable on each Odoo model providing a "real-time" view on the Alfresco content.
+Visually, the main part of the functionality is accessed through a "Documents tab" configurable on each Odoo model providing a "real-time" view on the Alfresco content.
 
-From the user point of view, the Document tab gives a direct access to the items (documents lists, sub-folders, …) linked to the Odoo object and contained in the linked Alfresco folder.
+From the user's point of view, the Documents tab gives a direct access to the items (documents lists, sub-folders, …) linked to the Odoo object and contained in the linked Alfresco folder.
 
-The first action is to let the user creates manually  (means "only when needed") the linked folder in Alfresco
+The first action is to let the user create manually  (means "only when needed") the linked folder in Alfresco
 
 .. image:: ./_static/img/cmis_crm_claim_empty.png
 
-Then the Document tab shows a global menu providing the following functionality:
+Then the Documents tab shows a global menu providing the following functionality:
 
 .. raw:: html
 
@@ -75,7 +75,7 @@ Then the Document tab shows a global menu providing the following functionality:
         <td> <span class="btn-odoo glyphicon glyphicon-folder-close" aria-hidden="true"></span></td><td><strong>Create folder:</strong> A (sub-)folder is created in the current folder. The user gives a name for the folder and selects "Create"</td>
     </tr>
     <tr>
-        <td> <span class="btn-odoo glyphicon glyphicon-file" aria-hidden="true"></span></td><td><strong>Create document:</strong> Upload a document in the current folder. The user selects a file and click on "Create" to upload the document</td>
+        <td> <span class="btn-odoo glyphicon glyphicon-file" aria-hidden="true"></span></td><td><strong>Create document:</strong> Upload a document in the current folder. The user selects a file and clicks on "Create" to upload the document</td>
     </tr>
     <tr>
         <td> <div class="btn-odoo alf-ico"  aria-hidden="true"></div></span></td><td><strong>Show in Alfresco:</strong> This option opens Alfresco Share and shows the folder details page</td>
@@ -92,7 +92,7 @@ The following information is displayed for each item:
 * The item name
 * The item description
 * Last Modified date
-* A contextual menu: the options list for the a folder item or for a document item 
+* A contextual menu: the options list for a folder item or for a document item 
 
 .. image:: ./_static/img/cmis_crm_claim_doc_details.png
 
@@ -137,7 +137,7 @@ Project
 
 The Alfodoo project has the objective to provide a collection of 'addons' in order to integrate the odoo platform with a Document Management System supporting the CMIS V1.1 protocol.
 
-Currently, the project proposes integration between Odoo and the open-source ECM platform Alfresco.
+Currently, the project proposes an integration between Odoo and the open-source ECM platform Alfresco.
 
 The aim is to offer to the odoo users a transparent and easy access to the documents stored in the appropriate location in Alfresco. 
 
