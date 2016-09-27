@@ -19,7 +19,8 @@ The Alfodoo framework requires the following:
 
     .. code-block:: shell
         
-        pip install git+ssh://git@github.com/apache/chemistry-cmislib.git@trunk#egg=cmislib
+        pip install git+git://github.com/apache/chemistry-cmislib.git@trunk#egg=cmislib
+
 
 .. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-from-8.0
 .. _`connector-cmis`: https://github.com/OCA/connector-cmis
