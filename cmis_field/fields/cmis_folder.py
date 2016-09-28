@@ -126,6 +126,7 @@ class CmisFolder(fields.Field):
         repo = backend.get_cmis_repository()
         for record in records:
             name = names[record.id]
+            backend.is_valid_cmis_name(name, raise_if_invalid=True)
             parent = parents[record.id]
             props = properties[record.id] or {}
             value = repo.createFolder(
@@ -135,7 +136,7 @@ class CmisFolder(fields.Field):
     def _check_null(self, record, raise_exception=True):
         val = self.__get__(record, record)
         if val and raise_exception:
-            raise UserError('A value is already assigned to %s' % self)
+            raise UserError(_('A value is already assigned to %s') % self)
         return val
 
     def get_create_names(self, records, backend):

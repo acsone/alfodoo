@@ -66,6 +66,24 @@ class TestCmisFields(common.BaseTestCmis):
             with self.assertRaises(UserError):
                 inst._fields['cmis_folder'].create_value(inst)
 
+    def test_cmis_folder_create_invalid_name(self):
+        inst = self.env['cmis.test.model'].create({'name': 'folder /'})
+        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+                        "CmisBackend.get_cmis_repository"
+                        ) as mocked_get_repository:
+            mocked_cmis_repository = mock.MagicMock()
+            mocked_get_repository.return_value = mocked_cmis_repository
+            new_mocked_cmis_folder = mock.MagicMock()
+            mocked_cmis_repository.createFolder.return_value = \
+                new_mocked_cmis_folder
+            mocked_cmis_repository.getObjectByPath.return_value = 'root_id'
+            new_mocked_cmis_folder.getObjectId.return_value = 'cmis_id'
+
+            # check the value initialization using the method defined on the
+            # field. As result the value must be set on the given record
+            with self.assertRaises(UserError):
+                inst._fields['cmis_folder'].create_value(inst)
+
     def test_cmis_folder_create_x_get(self):
         # Test the use of methods specified on the field to get the
         # parent, the name and the properties to use to create a folder in CMIS

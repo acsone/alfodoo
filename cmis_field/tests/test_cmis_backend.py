@@ -4,6 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp.tests import common
+from openerp.exceptions import UserError
 
 
 class TestCmisBackend(common.SavepointCase):
@@ -24,8 +25,16 @@ class TestCmisBackend(common.SavepointCase):
     def test_get_by_name(self):
         backend = self.cmis_backend.get_by_name(name=self.vals['name'])
         self.assertEquals(self.backend_instance, backend)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(UserError):
             self.cmis_backend.get_by_name('error')
         backend = self.cmis_backend.get_by_name(
             'error', raise_if_not_found=False)
         self.assertFalse(backend)
+
+    def test_is_valid_cmis_name(self):
+        backend = self.cmis_backend.get_by_name(name=self.vals['name'])
+        self.assertFalse(backend.is_valid_cmis_name('my\/:*?"<>| directory'))
+        self.assertTrue(backend.is_valid_cmis_name('my directory'))
+        with self.assertRaises(UserError):
+            backend.is_valid_cmis_name('my\/:*?"<>| directory',
+                                       raise_if_invalid=True)

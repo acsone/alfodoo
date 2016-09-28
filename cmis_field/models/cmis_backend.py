@@ -3,6 +3,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import api, models, _
+from openerp.exceptions import UserError
+
+
+CMIS_NAME_INVALID_CHARS = '\/:*?"<>|'
 
 
 class CmisBackend(models.Model):
@@ -44,5 +48,15 @@ class CmisBackend(models.Model):
                         (name, len(backend)))
             else:
                 msg = _('No backend found')
-            raise ValueError(msg)
+            raise UserError(msg)
         return backend
+
+    @api.model
+    def is_valid_cmis_name(self, name, raise_if_invalid=False):
+        if any(c in name for c in CMIS_NAME_INVALID_CHARS):
+            if not raise_if_invalid:
+                return False
+            raise UserError(_("%s is not a valid name.\n"
+                              "The following chars are not allowed %s") %
+                            (name, CMIS_NAME_INVALID_CHARS))
+        return True
