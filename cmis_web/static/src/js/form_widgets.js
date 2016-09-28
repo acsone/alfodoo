@@ -556,6 +556,11 @@ var CmisMixin = {
             this.$el.toggle(!this.invisible);
         }
     },
+    store_dom_value: function () {
+        if (this.root_folder_id) {
+            this.internal_set_value(this.root_folder_id);
+        }
+    },
 
     render_value: function() {
         var value = this.get('value');
