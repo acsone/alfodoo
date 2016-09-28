@@ -73,7 +73,7 @@ class CmisBackend(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.get_proxy_info_by_id.clear_cache()
+        self.get_proxy_info_by_id.clear_cache(self)
         if 'is_cmis_proxy' in vals and \
                 vals['is_cmis_proxy'] is False:
             vals['apply_odoo_security'] = False
