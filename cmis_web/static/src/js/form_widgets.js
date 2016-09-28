@@ -558,16 +558,18 @@ var CmisMixin = {
     },
 
     render_value: function() {
+        var value = this.get('value');
+        if (this.$input) {
+            this.$input.val(value);
+        }
         if (this.field_manager.get("actual_mode") !== "view"){
             // hide the widget in edit mode
             this.$el.hide();
         }
-        var self = this;
-        var value = self.get('value');
-        self.$el.find('button.cmis-create-root').addClass('hidden');
-        self.set_root_folder_id(value);
+        this.$el.find('button.cmis-create-root').addClass('hidden');
+        this.set_root_folder_id(value);
         if (!value){
-            self.$el.find('button.cmis-create-root').removeClass('hidden');
+            this.$el.find('button.cmis-create-root').removeClass('hidden');
         }
     },
 
