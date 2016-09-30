@@ -2,6 +2,7 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from cmislib.browser.binding import safe_urlencode
 from openerp import api, models
 
 
@@ -36,9 +37,17 @@ class CmisBackend(models.Model):
         self.ensure_one()
         details_type = 'document-details'
         if properties['cmis:baseTypeId'] == 'cmis:folder':
+            paths = properties['cmis:path']
+            if paths:
+                path = paths
+                if isinstance(paths, list):
+                    paths = paths[0]
+                params = {'filter': 'path|%s' % path}
+                url = ('%s/page/repository#' % self.share_location +
+                       safe_urlencode(params))
+                return url
             details_type = 'folder-details'
         noderef = properties['alfcmis:nodeRef']
-        # TODO cmis_alf
         url = "%s/page/%s?nodeRef=%s" % (self.share_location,
                                          details_type,
                                          noderef)
