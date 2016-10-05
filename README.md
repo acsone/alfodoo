@@ -1,6 +1,6 @@
-# AlfOdoo Modules
+# Alfodoo Modules
 
-AlfOdoo is a set of addons to seamlessly integrate an external Document
+Alfodoo is a set of addons to seamlessly integrate an external Document
 Management System with Odoo.
 
 Alfresco Enterprise Content Management System (from version 4.2) is supported.
