@@ -2,8 +2,8 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import mock
-from openerp import fields
-from openerp.exceptions import UserError
+from odoo import fields
+from odoo.exceptions import UserError
 from . import common
 from ..fields import CmisFolder
 
@@ -32,7 +32,7 @@ class TestCmisFields(common.BaseTestCmis):
 
     def test_cmis_folder_default_create(self):
         inst = self.env['cmis.test.model'].create({'name': 'folder_name'})
-        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository"
                         ) as mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
@@ -68,7 +68,7 @@ class TestCmisFields(common.BaseTestCmis):
 
     def test_cmis_folder_create_invalid_name(self):
         inst = self.env['cmis.test.model'].create({'name': 'folder /'})
-        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository"
                         ) as mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
@@ -88,7 +88,7 @@ class TestCmisFields(common.BaseTestCmis):
         # Test the use of methods specified on the field to get the
         # parent, the name and the properties to use to create a folder in CMIS
         inst = self.env['cmis.test.model'].create({'name': 'folder_name'})
-        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository"
                         ) as mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
@@ -108,7 +108,7 @@ class TestCmisFields(common.BaseTestCmis):
         # the create method can be called on a recordset
         inst1 = self.env['cmis.test.model'].create({'name': 'folder_name1'})
         inst2 = self.env['cmis.test.model'].create({'name': 'folder_name2'})
-        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository"
                         ) as mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()

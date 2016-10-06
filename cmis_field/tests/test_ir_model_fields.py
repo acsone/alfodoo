@@ -19,7 +19,7 @@ class TestIrModelFields(BaseTestCmis):
         ir_model_fields = self.env['ir.model.fields']
         self.assertFalse(x_field in res_company._fields)
         ir_model_fields.create({
-            'ttype': CmisFolder.ttype,
+            'ttype': CmisFolder.type,
             'name': x_field,
             'model': 'res.company',
             'model_id': model_id,

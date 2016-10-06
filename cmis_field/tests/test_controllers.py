@@ -4,7 +4,7 @@
 import mock
 from contextlib import contextmanager
 
-from openerp import http
+from odoo import http
 from . import common
 from ..controllers import main
 

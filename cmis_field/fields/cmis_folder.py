@@ -2,9 +2,9 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from operator import attrgetter
-from openerp import fields, _
-from openerp.exceptions import UserError
-from .cmis_meta_field import CmisMetaField
+from odoo import fields, _
+from odoo.exceptions import UserError
+from odoo.tools.sql import pg_varchar
 
 
 class CmisFolder(fields.Field):
@@ -58,11 +58,8 @@ class CmisFolder(fields.Field):
             {record.id: {'cmis:xxx': 'val1', ...}}
 
     """
-    type = 'char'  # Postgresl
-    # ttype is the type registered into the Field registry. The registry is
-    # used to instanciate the fields defined throughout the UI based
-    ttype = 'cmis_folder'
-    widget = 'cmis_folder'  # Web widget
+    type = 'cmis_folder'
+    column_type = ('varchar', pg_varchar())
     _slots = {
         'backend_name': None,
         'create_method': None,
@@ -73,17 +70,9 @@ class CmisFolder(fields.Field):
         'allow_delete': False
     }
 
-    __metaclass__ = CmisMetaField
-
     def __init__(self, backend_name=None, string=None, **kwargs):
         super(CmisFolder, self).__init__(
             backend_name=backend_name, string=string, **kwargs)
-
-    def get_description(self, env):
-        """ Return a dictionary that describes the field ``self``. """
-        desc = super(CmisFolder, self).get_description(env)
-        desc['type'] = self.widget
-        return desc
 
     def _description_backend(self, env):
         backend = self.get_backend(env, raise_if_not_found=False)

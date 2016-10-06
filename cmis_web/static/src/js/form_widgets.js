@@ -17,15 +17,13 @@
  var Registry = require('web.Registry');
  var Dialog = require('web.Dialog');
  var framework = require('web.framework');
- var _ = require('_');
- var $ = require('$');
  
  var _t = core._t;
  var QWeb = core.qweb;
 
  Dialog.include({
      check_validity: function(){
-         if (this   .el.checkValidity()){
+         if (this.el.checkValidity()){
              return true;
          }
          else {

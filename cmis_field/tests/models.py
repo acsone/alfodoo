@@ -5,7 +5,7 @@
 # DON'T IMPORT THIS MODULE IN INIT TO AVOID THE CREATION OF THE MODELS
 # DEFINED FOR TESTS INTO YOUR ODOO INSTANCE
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 from ..fields import CmisFolder
 
 

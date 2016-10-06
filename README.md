@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/acsone/alfodoo.svg?branch=9.0)](https://travis-ci.org/acsone/alfodoo)
-[![Coverage Status](https://coveralls.io/repos/acsone/alfodoo/badge.png?branch=9.0)](https://coveralls.io/r/acsone/alfodoo?branch=9.0)
+[![Build Status](https://travis-ci.org/acsone/alfodoo.svg?branch=10.0)](https://travis-ci.org/acsone/alfodoo)
+[![Coverage Status](https://coveralls.io/repos/acsone/alfodoo/badge.png?branch=10.0)](https://coveralls.io/r/acsone/alfodoo?branch=10.0)
 [![Code Climate](https://codeclimate.com/github/acsone/alfodoo/badges/gpa.svg)](https://codeclimate.com/github/acsone/alfodoo)
 # Alfodoo Modules
 
