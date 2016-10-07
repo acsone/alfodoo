@@ -33,8 +33,8 @@ class TestCmisBackend(common.SavepointCase):
 
     def test_is_valid_cmis_name(self):
         backend = self.cmis_backend.get_by_name(name=self.vals['name'])
-        self.assertFalse(backend.is_valid_cmis_name('my\/:*?"<>| directory'))
+        self.assertFalse(backend.is_valid_cmis_name(r'my\/:*?"<>| directory'))
         self.assertTrue(backend.is_valid_cmis_name('my directory'))
         with self.assertRaises(UserError):
-            backend.is_valid_cmis_name('my\/:*?"<>| directory',
+            backend.is_valid_cmis_name(r'my\/:*?"<>| directory',
                                        raise_if_invalid=True)
