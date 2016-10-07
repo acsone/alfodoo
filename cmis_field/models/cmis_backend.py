@@ -6,7 +6,7 @@ from openerp import api, models, _
 from openerp.exceptions import UserError
 
 
-CMIS_NAME_INVALID_CHARS = '\/:*?"<>|'
+CMIS_NAME_INVALID_CHARS = r'\/:*?"<>|'
 
 
 class CmisBackend(models.Model):
