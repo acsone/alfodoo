@@ -27,10 +27,5 @@ class BaseTestCmis(common.SavepointCase):
         # mock commit since it"s called in the _auto_init method
         cls.cr.commit = mock.MagicMock()
         cls.cmis_test_model = cls._init_test_model(models.CmisTestModel)
-        cls.cmis_backend = cls.env['cmis.backend'].create({
-            'name': "cmis.test",
-            'location': "http://localhost:8081/alfresco/s/cmis",
-            'username': 'admin',
-            'password': 'admin',
-            'initial_directory_write': '/odoo',
-        })
+        cls.cmis_backend = cls.env.ref('cmis.cmis_backend_alfresco')
+        cls.cmis_backend.initial_directory_write = '/odoo'
