@@ -16,6 +16,9 @@
     'data': [
         'views/cmis_backend_view.xml',
     ],
+    'demo': [
+        'demo/cmis_backend_demo.xml',
+    ],
     'installable': True,
     'auto_install': False,
 }
