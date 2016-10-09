@@ -11,19 +11,12 @@ class TestCmisBackend(common.SavepointCase):
 
     def setUp(self):
         super(TestCmisBackend, self).setUp()
-        self.vals = {
-            'name': "Test cmis",
-            'location': "http://localhost:8081/alfresco/s/cmis",
-            'username': 'admin',
-            'password': 'admin',
-            'initial_directory_write': '/',
-        }
         self.cmis_backend = self.env['cmis.backend']
-        self.backend_instance = self.cmis_backend.create(
-            self.vals)
+        self.backend_instance = self.env.ref('cmis.cmis_backend_alfresco')
 
     def test_get_by_name(self):
-        backend = self.cmis_backend.get_by_name(name=self.vals['name'])
+        backend = self.cmis_backend.get_by_name(
+            name=self.backend_instance.name)
         self.assertEquals(self.backend_instance, backend)
         with self.assertRaises(UserError):
             self.cmis_backend.get_by_name('error')
@@ -32,7 +25,8 @@ class TestCmisBackend(common.SavepointCase):
         self.assertFalse(backend)
 
     def test_is_valid_cmis_name(self):
-        backend = self.cmis_backend.get_by_name(name=self.vals['name'])
+        backend = self.cmis_backend.get_by_name(
+            name=self.backend_instance.name)
         self.assertFalse(backend.is_valid_cmis_name(r'my\/:*?"<>| directory'))
         self.assertTrue(backend.is_valid_cmis_name('my directory'))
         with self.assertRaises(UserError):

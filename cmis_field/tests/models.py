@@ -31,13 +31,13 @@ class CmisTestModel(models.Model):
 
     name = fields.Char(required=True)
     cmis_folder = CmisFolder(
-        backend_name='cmis.test')
+        backend_name='alfresco')
     cmis_folder1 = CmisFolder(
-        backend_name='cmis.test',
+        backend_name='alfresco',
         create_parent_get='_get_parent',
         create_name_get='_get_name',
         create_properties_get='_get_properties')
 
     cmis_folder2 = CmisFolder(
-        backend_name='cmis.test',
+        backend_name='alfresco',
         create_method='_cmis_create')
