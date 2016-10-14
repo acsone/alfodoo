@@ -7395,8 +7395,12 @@ function webViewerInitialized() {
   }
 
   if (file) {
+    var headers = {};
+    if (params.httpheaders){
+        headers = params.httpheaders;
+    }
     PDFViewerApplication.open(file, {
-           httpHeaders: JSON.parse(params.httpheaders),
+           httpHeaders: headers,
            withCredentials: true,
        }
     );
