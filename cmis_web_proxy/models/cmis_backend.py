@@ -62,7 +62,7 @@ class CmisBackend(models.Model):
             'password': backend.password,
             'proxy_location': backend.proxy_location,
             'location': backend.location,
-            'cmis_repository': backend.get_cmis_repository() 
+            'cmis_repository': backend.get_cmis_repository()
         }
 
     @api.model
