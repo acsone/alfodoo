@@ -249,7 +249,7 @@ class CmisProxy(http.Controller):
         url = self._get_redirect_url(proxy_info, url_path)
         r = requests.post(url, files=files,
                           auth=(
-                            proxy_info['username'], proxy_info['password']))
+                              proxy_info['username'], proxy_info['password']))
         r.raise_for_status()
         if r.text:
             return self._prepare_json_response(
@@ -417,7 +417,7 @@ class CmisProxy(http.Controller):
         requesting the global services provided by the CMIS Container
         """
         # proxy_info are informations available into the cache without loading
-        # the cmis.backend from the database 
+        # the cmis.backend from the database
         proxy_info = request.env['cmis.backend'].get_proxy_info_by_id(
             backend_id)
         method = request.httprequest.method
