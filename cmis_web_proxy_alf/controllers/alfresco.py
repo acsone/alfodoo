@@ -53,5 +53,4 @@ class AlfrescoProxy(cmis.CmisProxy):
             'c': kwargs['c'],
             'lastModified': kwargs['lastModified']
         }
-        print url
         return self._forward_get_file(url, cmis_backend, params)
