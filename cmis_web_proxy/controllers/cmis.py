@@ -284,19 +284,20 @@ class CmisProxy(http.Controller):
         """
         token = json.loads(token)
         model_name = token.get('model')
+        false_result = False, False
         res_id = token.get('res_id')
         if model_name not in request.env:
             _logger.info("Invalid model name in token (%s)", model_name)
-            return False
+            return false_result
         model = request.env[model_name]
         if not model.check_access_rights('read', raise_exception=False):
             _logger.info("User has no read access on model %s", model_name)
-            return False
+            return false_result
         model_inst = model.browse(res_id)
         if not model_inst.exists():
             _logger.info("The referenced model doesn't exist or the user has "
                          "no read access (%s, %s)", model, res_id)
-            return False
+            return false_result
         return model_inst, token.get('field_name')
 
     def _check_cmis_content_access(self, cmis_path, proxy_info, params,
