@@ -17,9 +17,7 @@
         'views/cmis_backend.xml',
         'views/cmis_web_proxy.xml'
     ],
-    'demo': [
-    ],
     'external_dependencies': {
-     'python': ['requests'],
+        'python': ['requests'],
     },
 }
