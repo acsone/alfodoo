@@ -46,6 +46,7 @@ class Report(models.Model):
                 vals = super(Report, self)._save_in_attachment(
                     cr, uid, attachment_vals, context=context)
         if report_xml.cmis_filename:
+            # pylint: disable=unexpected-keyword-arg
             self._save_in_cmis(
                 cr, uid, attachment_vals, report_xml, context=context)
         return vals
