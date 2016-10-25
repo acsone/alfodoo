@@ -831,16 +831,21 @@ var CmisMixin = {
             var col_idx = sort_info[0];
             var sort_order = sort_info[1].toUpperCase();
             switch (col_idx){
-                case 1:
-                    orders_by.push('cmis:baseTypeId DESC,cmis:name ' + sort_order);
-                    break;
-                case 2:
-                    orders_by.push('cmis:lastModificationDate ' + sort_order);
-                    break;
-                case 3:
-                    orders_by.push('cmis:lastModifiedBy ' + sort_order);
-                    break;
-                
+            case 1:
+                orders_by.push('cmis:baseTypeId DESC,cmis:name ' + sort_order);
+                break;
+            case 2:
+                orders_by.push('cmis:title ' + sort_order);
+                break;
+            case 3:
+                orders_by.push('cmis:description ' + sort_order);
+                break;
+            case 4:
+                orders_by.push('cmis:lastModificationDate ' + sort_order);
+                break;
+            case 5:
+                orders_by.push('cmis:lastModifiedBy ' + sort_order);
+                break;
             }
         });
         return orders_by.join();
