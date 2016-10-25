@@ -1,5 +1,11 @@
-9.0.1.0.0 (?)
+9.0.1.0.1 (?)
 ~~~~~~~~~~~~~
+
+* Fix JS error when trying to order by *last modification date.*
+
+
+9.0.1.0.0 (Oct. 05 2016)
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 * First release
 
