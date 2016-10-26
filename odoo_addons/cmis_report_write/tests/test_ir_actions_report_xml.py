@@ -33,17 +33,17 @@ class TestIrActionsReportXml(common.BaseTestCmis):
             vals.update({
                 "cmis_folder_field_id": False,
                 "cmis_parent_type": "folder_field",
-                })
+            })
             action_report.create(vals)
             vals.update({
                 "cmis_backend_id": False,
                 "cmis_parent_type": "backend",
-                })
+            })
             action_report.create(vals)
         vals.update({
             "cmis_folder_field_id": self.cmis_folder_field_id.id,
             "cmis_parent_type": "folder_field",
-            })
+        })
         report = action_report.create(vals)
         self.assertTrue(report)
 
@@ -57,7 +57,7 @@ class TestIrActionsReportXml(common.BaseTestCmis):
             "cmis_folder_field_id": self.cmis_folder_field_id.id,
             "cmis_parent_type": "folder_field",
             "cmis_backend_id": backend_id.id
-            })
+        })
         report = action_report.create(self.vals)
         self.assertFalse(report.cmis_backend_id)
         self.assertTrue(report.cmis_folder_field_id)

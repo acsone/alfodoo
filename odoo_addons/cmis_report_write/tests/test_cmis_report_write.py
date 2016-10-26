@@ -25,7 +25,7 @@ class TestCmisReportWrite(common.BaseTestCmis):
             "cmis_folder_field_id": cls.cmis_folder_field_id.id,
             "cmis_parent_type": "folder_field",
             "cmis_duplicate_handler": "error"
-            })
+        })
 
     @classmethod
     def setUpClass(cls):
