@@ -13,6 +13,7 @@
         'cmis'
     ],
     'data': [
+        'views/cmis_backend_view.xml'
     ],
     'installable': True,
 }
