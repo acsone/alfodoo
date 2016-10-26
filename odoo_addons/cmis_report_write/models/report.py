@@ -87,7 +87,7 @@ class Report(models.Model):
         return safe_eval(
             source,
             self._get_eval_context(report_xml, record)
-            )
+        )
 
     @api.model
     def _save_in_cmis(self, attachment_vals, report_xml):
@@ -207,7 +207,7 @@ class Report(models.Model):
             contentType=mimetype,
             major=False,
             properties=props
-            )
+        )
 
         return cmis_doc
 
