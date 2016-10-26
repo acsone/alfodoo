@@ -126,7 +126,10 @@ class CmisFolder(fields.Field):
         repo = backend.get_cmis_repository()
         for record in records:
             name = names[record.id]
-            backend.is_valid_cmis_name(name, raise_if_invalid=True)
+            if backend.enable_sanitize_cmis_name:
+                name = backend.sanitize_cmis_name(name)
+            else:
+                backend.is_valid_cmis_name(name, raise_if_invalid=True)
             parent = parents[record.id]
             props = properties[record.id] or {}
             value = repo.createFolder(
@@ -171,9 +174,9 @@ class CmisFolder(fields.Field):
             if not callable(fct):
                 fct = getattr(records, fct)
             return fct(self, backend)
-        path = self.get_default_parent_path(records, backend)
-        parent_cmis_object = backend.get_folder_by_path(
-            path, create_if_not_found=True)
+        path_parts = self.get_default_parent_path_parts(records, backend)
+        parent_cmis_object = backend.get_folder_by_path_parts(
+            path_parts, create_if_not_found=True)
         return dict.fromkeys(records.ids, parent_cmis_object)
 
     def get_create_properties(self, records, backend):
@@ -193,10 +196,11 @@ class CmisFolder(fields.Field):
             return fct(self, backend)
         return dict.fromkeys(records.ids, None)
 
-    def get_default_parent_path(self, records, backend):
-        """Return the default path into the cmis container to use as parent
-        on folder create. By default:
+    def get_default_parent_path_parts(self, records, backend):
+        """Return the default path parts into the cmis container to use as
+        parent on folder create. By default:
         backend.initial_directory_write / record._name
         """
-        return '/'.join([backend.initial_directory_write,
-                         records[0]._name.replace('.', '_')])
+        path_parts = backend.initial_directory_write.split('/')
+        path_parts.append(records[0]._name.replace('.', '_'))
+        return path_parts
