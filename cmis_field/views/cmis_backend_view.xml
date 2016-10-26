@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cmis_backend_form_view" model="ir.ui.view">
+      <field name="name">cmis.backend.form (cmis_field)</field>
+      <field name="model">cmis.backend</field>
+      <field name="inherit_id" ref="cmis.cmis_backend_form_view"/>
+      <field name="arch" type="xml">
+          <field name="location" position="after">
+              <field name="enable_sanitize_cmis_name" colspan="2"/>
+              <field name="sanitize_replace_char" colspan="2" attrs="{'invisible': [('enable_sanitize_cmis_name', '=', False)]}"/>
+          </field>
+      </field>
+    </record>
+
+</odoo>
