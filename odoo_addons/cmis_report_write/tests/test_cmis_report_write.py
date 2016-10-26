@@ -21,7 +21,8 @@ class TestCmisReportWrite(common.BaseTestCmis):
             "report_name": "cmis_report_write.cmis_test_model_report",
             "report_type": "qweb-pdf",
             "paperformat_id": cls.env.ref("report.paperformat_euro").id,
-            "cmis_filename": "object.name + '.pdf'",
+            "cmis_filename": "cmis_backend.sanitize_cmis_name(object.name)"
+                             " + '.pdf'",
             "cmis_folder_field_id": cls.cmis_folder_field_id.id,
             "cmis_parent_type": "folder_field",
             "cmis_duplicate_handler": "error"

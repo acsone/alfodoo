@@ -75,9 +75,18 @@ class Report(models.Model):
              ) for record in records if report_xml.cmis_filename)
 
     @api.model
+    def _get_backend(self, report_xml, record):
+        if report_xml.cmis_folder_field_id:
+            field = record._fields[report_xml.cmis_folder_field_id.name]
+            return field.get_backend(self.env)
+        else:
+            return report_xml.cmis_backend_id
+
+    @api.model
     def _get_eval_context(self, report_xml, record):
         return {'object': record,
                 'time': time,
+                'cmis_backend': self._get_backend(report_xml, record),
                 '_': _,
                 'user': self.env.user,
                 'context': self.env.context}
@@ -118,11 +127,11 @@ class Report(models.Model):
             field_name = report_xml.cmis_folder_field_id.name
             field = record._fields[field_name]
             cmis_backend = field.get_backend(self.env)
-            root_objectId = getattr(record, field_name)
+            root_objectId = record[field_name]
             if not root_objectId:
                 # the folder must be initialized on demand
                 field.create_value(record)
-                root_objectId = getattr(record, field_name)
+                root_objectId = record[field_name]
         else:
             root_objectId = report_xml.cmis_backend_id.initial_directory_write
             cmis_backend = report_xml.cmis_backend_id
