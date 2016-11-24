@@ -7397,7 +7397,7 @@ function webViewerInitialized() {
   if (file) {
     var headers = {};
     if (params.httpheaders){
-        headers = params.httpheaders;
+        headers = JSON.parse(params.httpheaders);
     }
     PDFViewerApplication.open(file, {
            httpHeaders: headers,
