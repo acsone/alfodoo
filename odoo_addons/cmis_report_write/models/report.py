@@ -228,4 +228,5 @@ class Report(models.Model):
             )
         return {}
 
+
 UniqueDocInfo = namedtuple('UniqueDoc', ['doc', 'is_new'])
