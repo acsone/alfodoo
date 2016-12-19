@@ -46,11 +46,9 @@ class TestCmisReportWrite(common.BaseTestCmis):
                 self.env.cr, self.env.uid, inst.ids, self.report_name)
             # check that the method is called
             self.assertEqual(mocked_save.call_count, 1)
-            attachment_vals = mocked_save.call_args[0][2]
-            self.assertEqual(attachment_vals['name'], 'folder_name.pdf')
-            self.assertEqual(attachment_vals['res_id'], inst.id)
-            self.assertEqual(attachment_vals['res_model'], inst._name)
-            self.assertTrue(attachment_vals['res_model'] is not None)
+            content, res_id, report_xml = mocked_save.call_args[0]
+            self.assertEqual(inst.id, res_id)
+            self.assertEqual(self.report, report_xml)
 
     def test_conditional_save(self):
         """If the cmis_filename is evaluated as False, the report is not saved
@@ -58,7 +56,8 @@ class TestCmisReportWrite(common.BaseTestCmis):
         """
         self.report.cmis_filename = 'False'
         with mock.patch('openerp.addons.cmis_report_write.models.'
-                        'report.Report._save_in_cmis') as mocked_save:
+                        'report.Report.'
+                        '_create_or_update_cmis_document') as mocked_save:
             # test the call the the create method inside our custom parser
             self.registry['report'].get_pdf(
                 self.env.cr, self.env.uid, self.inst.ids, self.report_name)
