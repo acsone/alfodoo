@@ -2,7 +2,6 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from collections import namedtuple
-from base64 import b64decode
 import os
 import time
 import mimetypes
@@ -31,41 +30,20 @@ class Report(models.Model):
         return super(Report, self).get_pdf(
             cr, uid, ids, report_name, html, data, context=ctx)
 
-    def _save_in_attachment(self, cr, uid, attachment_vals, context=None):
-        # Get the ir.actions.report.xml record we are working on.
-        report_name = context.get('report_name')
-        report_xml = self._get_report_from_name(cr, uid, report_name)
-        res_id = attachment_vals['res_id']
-        res_model = attachment_vals['res_model']
-        record = self.pool[res_model].browse(cr, uid, res_id)
-        vals = None
-        if report_xml.attachment:
-            file_name = self._attachment_filename(
-                cr, uid, [record], report_xml).get(record.id)
-            if file_name:
-                vals = super(Report, self)._save_in_attachment(
-                    cr, uid, attachment_vals, context=context)
+    @api.model
+    def _postprocess_report(self, content, res_id, save_in_attachment):
+        res = super(Report, self)._postprocess_report(
+            content, res_id, save_in_attachment)
+        report_name = self.env.context.get('report_name')
+        report_xml = self.env['ir.actions.report.xml'].search(
+            [('report_name', '=', report_name)])
+        if not report_xml or len(report_xml) > 1:
+            raise Exception("Report name should be unique (%s)" % report_name)
+
         if report_xml.cmis_filename:
             # pylint: disable=unexpected-keyword-arg
-            self._save_in_cmis(
-                cr, uid, attachment_vals, report_xml, context=context)
-        return vals
-
-    @api.v7
-    def _check_attachment_use(self, cr, uid, ids, report_xml):
-        records = self.pool[report_xml.model].browse(cr, uid, ids)
-        cmis_filenames = self._get_cmis_filename(cr, uid, records, report_xml)
-        save_in_attachment = super(Report, self)._check_attachment_use(
-            cr, uid, ids, report_xml)
-        for res_id in ids:
-            cmis_filename = cmis_filenames.get(res_id)
-            if res_id not in save_in_attachment and cmis_filename:
-                # insert the cmis_filename into the list even if we don't want
-                # to store the report_xml into an attachment but only into
-                # cmis. This is required to force the call to the
-                # _savie_in_attachment method
-                save_in_attachment[res_id] = cmis_filename
-        return save_in_attachment
+            self._save_in_cmis(content, res_id, report_xml)
+        return res
 
     @api.model
     def _get_cmis_filename(self, records, report_xml):
@@ -99,11 +77,9 @@ class Report(models.Model):
         )
 
     @api.model
-    def _save_in_cmis(self, attachment_vals, report_xml):
-        res_id = attachment_vals['res_id']
-        res_model = attachment_vals['res_model']
+    def _save_in_cmis(self, content, res_id, report_xml):
+        res_model = report_xml.model
         record = self.env[res_model].browse(res_id)
-        report_xml = self.env['ir.actions.report.xml'].browse(report_xml.id)
         cmis_filename = self._get_cmis_filename(
             [record], report_xml).get(record.id)
         if not cmis_filename:
@@ -113,7 +89,7 @@ class Report(models.Model):
             report_xml, record, cmis_filename)
         cmis_filename = os.path.basename(cmis_filename)
         doc_info = self._create_or_update_cmis_document(
-            attachment_vals, report_xml, record, cmis_filename,
+            content, report_xml, record, cmis_filename,
             cmis_parent_folder)
         someDoc = doc_info.doc
         cmis_objectId = someDoc.getObjectId()
@@ -145,7 +121,8 @@ class Report(models.Model):
         return mimetypes.guess_type(file_name)[0]
 
     @api.model
-    def _create_or_update_cmis_document(self, attachment_vals, report_xml,
+    def _create_or_update_cmis_document(self, content,
+                                        report_xml,
                                         record, file_name, cmis_parent_folder):
         """Create or update a cmis document according to
         cmis_duplicate_handler.
@@ -167,7 +144,7 @@ class Report(models.Model):
                     filter='cmis:name=%s' % testname)
                 file_name = name + '(%d)' % rs.getNumItems() + ext
             doc = self._create_cmis_document(
-                attachment_vals, report_xml, record, file_name,
+                content, report_xml, record, file_name,
                 cmis_parent_folder)
             return UniqueDocInfo(doc, is_new)
         if (num_found_items > 0 and
@@ -175,7 +152,7 @@ class Report(models.Model):
             doc = cmis_parent_folder.repository.getObject(
                 rs.getResults()[0].getObjectId())
             doc = self._update_cmis_document(
-                attachment_vals, report_xml, record, file_name,
+                content, report_xml, record, file_name,
                 doc)
             return UniqueDocInfo(doc, is_new)
 
@@ -183,7 +160,7 @@ class Report(models.Model):
             _('Document "%s" already exists in CMIS') % (file_name))
 
     @api.model
-    def _create_cmis_document(self, attachment_vals, report_xml, record,
+    def _create_cmis_document(self, content, report_xml, record,
                               file_name, cmis_parent_folder):
         props = {
             'cmis:name': file_name,
@@ -195,13 +172,13 @@ class Report(models.Model):
         doc = cmis_parent_folder.createDocument(
             file_name,
             properties=props,
-            contentFile=StringIO(b64decode(attachment_vals['datas'])),
+            contentFile=StringIO(content),
             contentType=mimetype
         )
         return doc
 
     @api.model
-    def _update_cmis_document(self, attachment_vals, report_xml, record,
+    def _update_cmis_document(self, content, report_xml, record,
                               file_name, cmis_doc):
         # increment version
         props = self._get_cmis_properties(report_xml, record)
@@ -212,7 +189,7 @@ class Report(models.Model):
         cmis_doc = cmis_doc.checkout()
         cmis_doc = cmis_doc.checkin(
             checkinComment=_("Generated by Odoo"),
-            contentFile=StringIO(b64decode(attachment_vals['datas'])),
+            contentFile=StringIO(content),
             contentType=mimetype,
             major=False,
             properties=props
