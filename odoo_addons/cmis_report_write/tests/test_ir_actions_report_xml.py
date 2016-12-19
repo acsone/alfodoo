@@ -26,7 +26,7 @@ class TestIrActionsReportXml(common.BaseTestCmis):
             "cmis_duplicate_handler": "error"
         }
 
-    def test_contrains(self):
+    def test_constrains(self):
         action_report = self.env['ir.actions.report.xml']
         with self.assertRaises(ValidationError):
             vals = self.vals.copy()
