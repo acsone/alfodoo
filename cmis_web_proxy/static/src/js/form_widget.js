@@ -40,18 +40,14 @@ form_widgets.FieldCmisFolder.include({
     },
 
     set_cmis_session_token: function(){
-        var self = this;
         if (this.apply_odoo_security){
-            self.cmis_session.setToken(self.gen_cmis_session_token());
+            this.cmis_session.setToken(this.gen_cmis_session_token());
         }
     },
 
     set_root_folder_id: function(folderId) {
         var self = this;
-        if (self.root_folder_id === folderId){
-            return;
-        }
-        $.when(self.cmis_session_initialized).done(function() {
+        $.when(self.cmis_session_initialized, self.table_rendered).done(function() {
             self.set_cmis_session_token();
         });
         this._super.apply(this, arguments);
