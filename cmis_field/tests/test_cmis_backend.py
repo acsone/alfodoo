@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp.tests import common
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 
 
 class TestCmisBackend(common.SavepointCase):
@@ -32,3 +32,22 @@ class TestCmisBackend(common.SavepointCase):
         with self.assertRaises(UserError):
             backend.is_valid_cmis_name(r'my\/:*?"<>| directory',
                                        raise_if_invalid=True)
+
+    def test_sanitize_cmis_name(self):
+        self.backend_instance.sanitize_replace_char = "_"
+        sanitized = self.backend_instance.sanitize_cmis_name('m/y dir*', '_')
+        self.assertEqual(sanitized, 'm_y dir_')
+        sanitized = self.backend_instance.sanitize_cmis_name('m/y dir*', None)
+        self.assertEqual(sanitized, 'm_y dir_')
+        sanitized = self.backend_instance.sanitize_cmis_name('m/y dir*', '')
+        self.assertEqual(sanitized, 'my dir')
+        sanitized = self.backend_instance.sanitize_cmis_name('m/y dir*', '-')
+        self.assertEqual(sanitized, 'm-y dir-')
+        sanitized = self.backend_instance.sanitize_cmis_name('/y dir*', ' ')
+        self.assertEqual(sanitized, 'y dir')
+        with self.assertRaises(ValidationError):
+            self.backend_instance.sanitize_replace_char = "/"
+
+        sanitized = self.backend_instance.sanitize_cmis_names(
+            ['/y dir*', 'sub/dir'], ' ')
+        self.assertEqual(sanitized, ['y dir', 'sub dir'])
