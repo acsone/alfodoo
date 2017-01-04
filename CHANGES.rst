@@ -1,6 +1,9 @@
 9.0.?.?.? (?)
 ~~~~~~~~~~~~~
 
+* Improvement: Display the CMIS widget in edit mode. In some cases it's useful
+  to have access to the preview of one document when filling the html form to
+  copy/paste information from document into the form.
 * Improvement: The name used to create the folder in CMIS is automatically sanitized.
   This feature can be deactivated by a flag on the backend configuration and it's also
   possible to specify the character to use as replacement to invalid characters.
