@@ -9,10 +9,8 @@ The Alfodoo framework requires the following:
 
 * The Odoo **cmis** addon: The Odoo *cmis* addon provides the minimal foundation for Odoo 
   modules implementing different integration scenario with a CMIS server. It allows
-  you to configure a CMIS backend.
-  Currently, *Alfodoo* only supports the branch *9.0-cmis-from-8.0*
-  available into the `fork of ACSONE`_ of the OCA's `connector-cmis`_ repository and
-  currently under `review`_. 
+  you to configure a CMIS backend. The addon is available in the OCA's
+  `connector-cmis`_ repository.
 * `cmislib`_  the Apache Chemistry CMIS client library for Python: To be compliant
   with the latest version of CMIS (1.1), the connector uses the latest version of the
   python cmislib library not yet released at this stage. The lib can be installed with:
@@ -21,10 +19,7 @@ The Alfodoo framework requires the following:
         
         pip install git+git://github.com/apache/chemistry-cmislib.git@trunk#egg=cmislib
 
-
-.. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-from-8.0
 .. _`connector-cmis`: https://github.com/OCA/connector-cmis
-.. _`review`: https://github.com/OCA/connector-cmis/pull/16
 .. _`cmislib`: http://chemistry.apache.org/python/cmislib.html
 
 Enable CORS in Alfresco 5.x
@@ -83,6 +78,47 @@ used by the web client.
       <url-pattern>/s/*</url-pattern>
       <url-pattern>/cmisbrowser/*</url-pattern>
    </filter-mapping>
+
+
+
+Alfresco Behind a a Proxy
+*************************
+
+The CMIS discovery document returns absolute template URLs that have to be
+used to navigate the repository and retrieve node information. This service
+is the first one called when a cmis session is initialized and the next
+calls will use the url received into the result. By default the hostname of
+the server is returned in the URLs, if the server is behind a proxy the
+hostname needs to be configured to return the publicly accessible hostname.
+If you are in this case you must add the following lines into the alfresco
+config file in <tomcat>/shared/classes/alfresco-global.properties
+
+.. code-block:: jproperties
+
+   # if true, the context path of OpenCMIS generated urls will be set to "opencmis.context.value", otherwise it will be taken from the request url
+   opencmis.context.override=true
+   opencmis.context.value=
+   # if true, the servlet path of OpenCMIS generated urls will be set to "opencmis.servletpath.value", otherwise it will be taken from the request url
+   opencmis.servletpath.override=true
+   opencmis.servletpath.value=
+   opencmis.server.override=true
+   opencmis.server.value=https://<my.public.alfresco.hostname>/alfresco/api
+
+
+Moreover if alfresco is available over SSL (HTTPS) you must also take care
+of trusting the SSL certificate in your Odoo instance. This can be done by
+adding the following lines in your custom odoo addon.
+
+.. code-block:: python
+
+   import httplib2
+   import functools
+
+   # Set system CA Certificates based SSL Certificate Validation by python code
+   httplib2.Http = functools.partial(
+       httplib2.Http,
+       ca_certs="/etc/ssl/certs/ca-certificates.crt"
+   )
 
 Launch Odoo
 ***********
