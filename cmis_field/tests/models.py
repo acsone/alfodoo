@@ -12,6 +12,7 @@ from ..fields import CmisFolder
 class CmisTestModel(models.Model):
     _name = 'cmis.test.model'
     _rec_name = 'name'
+    _abstract = True
 
     @api.multi
     def _get_name(self, field, backend):
