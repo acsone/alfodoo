@@ -31,18 +31,21 @@ class Report(models.Model):
             cr, uid, ids, report_name, html, data, context=ctx)
 
     @api.model
-    def _postprocess_report(self, content, res_id, save_in_attachment):
+    def _postprocess_report(self, report_path, res_id, save_in_attachment):
         res = super(Report, self)._postprocess_report(
-            content, res_id, save_in_attachment)
-        report_name = self.env.context.get('report_name')
-        report_xml = self.env['ir.actions.report.xml'].search(
-            [('report_name', '=', report_name)])
-        if not report_xml or len(report_xml) > 1:
-            raise Exception("Report name should be unique (%s)" % report_name)
-
-        if report_xml.cmis_filename:
-            # pylint: disable=unexpected-keyword-arg
-            self._save_in_cmis(content, res_id, report_xml)
+            report_path, res_id, save_in_attachment)
+        with open(report_path, 'rb') as pdfreport:
+            report_name = self.env.context.get('report_name')
+            report_xml = self.env['ir.actions.report.xml'].search(
+                [('report_name', '=', report_name)])
+            if not report_xml or len(report_xml) > 1:
+                raise Exception(
+                    'Report name should be unique (%s)' % report_name)
+            if report_xml.cmis_filename:
+                # pylint: disable=unexpected-keyword-arg
+                self._save_in_cmis(
+                    pdfreport.read(),
+                    res_id, report_xml)
         return res
 
     @api.model
