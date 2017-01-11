@@ -547,8 +547,8 @@ var CmisMixin = {
         if (this.$el.is(':visible')){
             this.render_datatable();
         }
-        if (this.field_manager.get("actual_mode") !== "view"){
-            // hide the widget in edit mode
+        if (!this.getParent().datarecord.id){
+            // hide the widget if the record is not yet created
             this.$el.hide();
         } else {
             this.$el.toggle(!this.invisible);
@@ -565,8 +565,8 @@ var CmisMixin = {
         if (this.$input) {
             this.$input.val(value);
         }
-        if (this.field_manager.get("actual_mode") !== "view"){
-            // hide the widget in edit mode
+        if (!this.getParent().datarecord.id){
+            // hide the widget if the record is not yet created
             this.$el.hide();
         }
         this.$el.find('button.cmis-create-root').addClass('hidden');
