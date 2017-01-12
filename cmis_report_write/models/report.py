@@ -123,6 +123,9 @@ class Report(models.Model):
     def get_mimetype(self, file_name):
         return mimetypes.guess_type(file_name)[0]
 
+    def _sanitize_query_arg(self, arg):
+        return arg.replace("'", r"\'") 
+
     @api.model
     def _create_or_update_cmis_document(self, content,
                                         report_xml,
@@ -131,9 +134,10 @@ class Report(models.Model):
         cmis_duplicate_handler.
         return the created or update cmis doc
         """
+        qfile_name = self._sanitize_query_arg(file_name)
         cmis_qry = ("SELECT cmis:objectId FROM cmis:document WHERE "
                     "IN_FOLDER('%s') AND cmis:name='%s'" %
-                    (cmis_parent_folder.getObjectId(), file_name))
+                    (cmis_parent_folder.getObjectId(), qfile_name))
         logger.debug("Query CMIS with %s", cmis_qry)
         rs = cmis_parent_folder.repository.query(cmis_qry)
         is_new = False
