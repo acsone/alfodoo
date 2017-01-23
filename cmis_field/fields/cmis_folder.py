@@ -193,3 +193,17 @@ class CmisFolder(fields.Field):
         path_parts = backend.initial_directory_write.split('/')
         path_parts.append(records[0]._name.replace('.', '_'))
         return path_parts
+
+    def get_cmis_object(self, record):
+        """Returns an instance of
+        :class:`cmislib.browser.binding.BrowserFolder`
+        This instance is a proxy object that can be used to perform action on
+        the folder into the cmis container
+        :param record:
+        """
+        val = self.__get__(record, record)
+        if not val:
+            return None
+        backend = self.get_backend(record.env)
+        repo = backend.get_cmis_repository()
+        return repo.getObject(val)

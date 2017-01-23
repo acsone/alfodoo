@@ -1,6 +1,8 @@
 10.0.?.?.? (?)
 ~~~~~~~~~~~~~~
 
+* Improvement: Add new method on the cmis_folder field to get a proxy object
+  that let's you perform CMIS actions on the forlder into the CMIS container.
 * Improvement: Display the CMIS widget in edit mode. In some cases it's useful
   to have access to the preview of one document when filling the html form to
   copy/paste information from document into the form.
