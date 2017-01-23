@@ -1049,7 +1049,7 @@ var CmisMixin = {
         var data = row.data();
         var self = this;
         Dialog.confirm(
-                self, _('Confirm deletion of ') + data.name ,
+                self, _t('Confirm deletion of ') + data.name ,
                 { confirm_callback: function(){
                     var all_versions = true;
                     self.cmis_session.deleteObject(data.objectId, all_versions).ok(function(){
