@@ -414,3 +414,10 @@ msgstr "Mise à jour du contenu de "
 #, python-format
 msgid "View Details"
 msgstr "Afficher les détails"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:1054
+#, python-format
+msgid "Confirm deletion of "
+msgstr "Veuillez confirmer la suppression de "
