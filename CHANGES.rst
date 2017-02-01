@@ -1,6 +1,7 @@
 9.0.?.?.? (?)
 ~~~~~~~~~~~~~
 
+* Fix: Improves the layout of the data grid widget with internet explorer.
 * Fix: Makes the delete confirmation message translatable.
 * Improvement: Add new method on the cmis_folder field to get a proxy object
   that let's you perform CMIS actions on the forlder into the CMIS container.
