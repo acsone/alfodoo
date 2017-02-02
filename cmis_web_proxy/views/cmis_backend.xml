@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="cmis_backend_form_view">
+        <field name="name">cmis.backend.form (in cmis_web_proxy)</field>
+        <field name="model">cmis.backend</field>
+        <field name="inherit_id" ref="cmis.cmis_backend_form_view"/>
+        <field name="arch" type="xml">
+            <field name="location" position="after">
+                <field name="is_cmis_proxy" colspan="4"/>
+                <field name="apply_odoo_security" colspan="4" attrs="{'invisible': [('is_cmis_proxy', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
