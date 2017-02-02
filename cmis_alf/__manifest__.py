@@ -19,6 +19,9 @@
     'images': [
         'static/description/main_icon.png',
     ],
+    'external_dependencies': {
+        'python': ['requests'],
+    },
     'installable': True,
     'auto_install': False,
 }
