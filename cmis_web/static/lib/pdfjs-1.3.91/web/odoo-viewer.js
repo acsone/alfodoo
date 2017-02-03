@@ -38,7 +38,7 @@ PDFJS.imageResourcesPath = './images/';
   PDFJS.workerSrc = '../build/pdf.worker.js';
   PDFJS.cMapUrl = '../web/cmaps/';
   PDFJS.cMapPacked = true;
-
+PDFJS.disableWorker = true; // WE use XHR with CORS
 var mozL10n = document.mozL10n || document.webL10n;
 
 
@@ -452,6 +452,7 @@ var DEFAULT_PREFERENCES = {
   enableHandToolOnLoad: false,
   enableWebGL: false,
   pdfBugEnabled: false,
+  disableWorker: true,
   disableRange: true, // not supported by alfresco
   disableStream: false,
   disableAutoFetch: false,

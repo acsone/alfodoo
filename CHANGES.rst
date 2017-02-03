@@ -1,6 +1,7 @@
 10.0.?.?.? (?)
 ~~~~~~~~~~~~~~
 
+* Fix: The document preview works also with IE.
 * Fix: Makes the file required into the update document dialog.
 * Fix: Improves the layout of the data grid widget with internet explorer.
 * Fix: Makes the delete confirmation message translatable.
