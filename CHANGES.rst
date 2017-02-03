@@ -1,6 +1,7 @@
 10.0.?.?.? (?)
 ~~~~~~~~~~~~~~
 
+* Fix: Makes the file required into the update document dialog.
 * Fix: Makes the delete confirmation message translatable.
 * Improvement: Add new method on the cmis_folder field to get a proxy object
   that let's you perform CMIS actions on the forlder into the CMIS container.
