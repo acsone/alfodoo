@@ -163,7 +163,11 @@
             buttons: [
                 {text: _t("Update content"),
                  classes: "btn-primary",
-                 click: function () { self.on_click_update_content(); }},
+                 click: function () {
+                    if(self.check_validity()){
+                        self.on_click_update_content();
+                    }
+                 }},
                  {text: _t("Close"),
                      click: function () { self.$el.parents('.modal').modal('hide'); }},
             ],
@@ -184,7 +188,12 @@
     
     on_click_update_content: function() {
         var self = this;
-        var file = this.$el.find("input[type='file']")[0].files[0];
+        var input = this.$el.find("input[type='file']")[0]
+        var numFiles = input.files ? input.files.length : 1;
+        if (numFiles == 0){
+            this.close();
+        }
+        var file = input.files[0];
         var fileName = file.name;
         framework.blockUI();
         this.data.cmis_session
