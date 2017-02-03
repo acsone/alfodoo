@@ -2,6 +2,8 @@
 ~~~~~~~~~~~~~~
 
 * Fix: The document preview works also with IE.
+* Fix: Makes the file required into the update document dialog.
+* Fix: Improves the layout of the data grid widget with internet explorer.
 * Fix: Makes the delete confirmation message translatable.
 * Improvement: Add new method on the cmis_folder field to get a proxy object
   that let's you perform CMIS actions on the forlder into the CMIS container.
