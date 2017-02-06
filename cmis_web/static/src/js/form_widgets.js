@@ -88,14 +88,19 @@
              buttons: [
                  {text: _t("Create"),
                   classes: "btn-primary",
-                  click: function () {
+                  click: function (e) {
+                      e.stopPropagation();
                       if(self.check_validity()){
                           self.on_click_create();
                       }
                   }
                  },
                  {text: _t("Close"),
-                     click: function () { self.$el.parents('.modal').modal('hide'); }},
+                  click: function (e) {
+                     e.stopPropagation();
+                     self.$el.parents('.modal').modal('hide');
+                   }
+                 },
                     
              ],
              close: function () { self.close();}
@@ -161,13 +166,18 @@
             buttons: [
                 {text: _t("Update content"),
                  classes: "btn-primary",
-                 click: function () {
+                 click: function (e) {
+                    e.stopPropagation();
                     if(self.check_validity()){
                         self.on_click_update_content();
                     }
                  }},
                  {text: _t("Close"),
-                     click: function () { self.$el.parents('.modal').modal('hide'); }},
+                  click: function (e) {
+                     e.stopPropagation();
+                     self.$el.parents('.modal').modal('hide');
+                   }
+                 },
             ],
             close: function () { self.close();}
         };
