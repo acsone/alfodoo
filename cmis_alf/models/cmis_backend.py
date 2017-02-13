@@ -90,5 +90,15 @@ class CmisBackend(models.Model):
         r = requests.post(self.alf_folder_template_url, json=payload,
                           auth=self._get_alf_api_auth_params())
         r.raise_for_status()
-        new_noderef = r.json()['persistedObject']
-        return self._get_cmis_objectid_from_noderef(new_noderef)
+        resp = r.json()
+        if 'persistedObject' in resp:
+            # alfresco >= 5.1
+            new_noderef = resp['persistedObject']
+            return self._get_cmis_objectid_from_noderef(new_noderef)
+        # alfresco < 5.1
+        # reload new object from path
+        cmis_object = self.get_folder_by_path(
+            name,
+            create_if_not_found=False,
+            cmis_parent_objectid=parent_objectid)
+        return cmis_object.getObjectId()
