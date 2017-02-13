@@ -115,10 +115,13 @@ class Report(models.Model):
             root_objectId = report_xml.cmis_backend_id.initial_directory_write
             cmis_backend = report_xml.cmis_backend_id
         # the generated name can contains sub directories
-        path = os.path.dirname(cmis_filename) or '/'
-        return cmis_backend.get_folder_by_path(
-            path, create_if_not_found=True,
-            cmis_parent_objectid=root_objectId)
+        path = os.path.dirname(cmis_filename) or ''
+        if path:
+            return cmis_backend.get_folder_by_path(
+                path, create_if_not_found=True,
+                cmis_parent_objectid=root_objectId)
+        else:
+            return cmis_backend.get_cmis_repository().getObject(root_objectId)
 
     def get_mimetype(self, file_name):
         return mimetypes.guess_type(file_name)[0]
