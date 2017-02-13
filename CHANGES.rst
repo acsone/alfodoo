@@ -1,6 +1,7 @@
 9.0.?.?.? (?)
 ~~~~~~~~~~~~~
 
+* Fix: JS error into Firefox on create/update document
 * Fix: The document preview works also with IE.
 * Fix: Makes the file required into the update document dialog.
 * Fix: Improves the layout of the data grid widget with internet explorer.
