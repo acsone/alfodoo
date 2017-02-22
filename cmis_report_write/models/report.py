@@ -115,7 +115,9 @@ class Report(models.Model):
             root_objectId = report_xml.cmis_backend_id.initial_directory_write
             cmis_backend = report_xml.cmis_backend_id
         # the generated name can contains sub directories
-        path = os.path.dirname(cmis_filename) or '/'
+        path = os.path.dirname(cmis_filename)
+        if not path:
+            return cmis_backend.get_cmis_repository().getObject(root_objectId)
         return cmis_backend.get_folder_by_path(
             path, create_if_not_found=True,
             cmis_parent_objectid=root_objectId)
