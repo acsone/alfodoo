@@ -77,11 +77,13 @@ class CmisBackend(models.Model):
     def is_valid_cmis_name(self, name, raise_if_invalid=False):
         if re.findall(CMIS_NAME_INVALID_CHARS_RX, name) or \
                 name.startswith(' ') or \
-                name.endswith(' '):
+                name.endswith(' ') or \
+                name.endswith('.'):
             if not raise_if_invalid:
                 return False
             raise UserError(_("%s is not a valid name.\n"
-                              "The following chars are not allowed %s") %
+                              "The following chars are not allowed %s and"
+                              "the name can not ends with a space or a '.'") %
                             (name, CMIS_NAME_INVALID_CHARS))
         return True
 
@@ -94,6 +96,8 @@ class CmisBackend(models.Model):
         self.ensure_one()
         if replace_char is None:
             replace_char = self.sanitize_replace_char or ''
+        while value.endswith('.'):
+            value = value[:-1]
         return re.sub(CMIS_NAME_INVALID_CHARS_RX, replace_char,
                       value.strip()).strip()
 
