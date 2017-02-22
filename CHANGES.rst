@@ -1,6 +1,10 @@
 9.0.?.?.? (?)
 ~~~~~~~~~~~~~
 
+* Fix: A name in CMIS can not ends with a dot. On the CMIS backend the
+  'sanitize_cmis_name' method removes this character if it's found at the
+  end of the string to sanitize and this case is detected by the method
+  'is_valid_cmis_name'.
 * Fix: JS error into Firefox on create/update document
 * Fix: The document preview works also with IE.
 * Fix: Makes the file required into the update document dialog.
