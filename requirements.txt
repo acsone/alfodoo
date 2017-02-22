@@ -1,3 +1,2 @@
 # odoo
 git+git://github.com/apache/chemistry-cmislib.git@trunk#egg=cmislib
-git+git://github.com/acsone/connector-cmis.git@10.0-cmis_from-9.0#egg=odoo10-addon-cmis&subdirectory=setup/cmis
