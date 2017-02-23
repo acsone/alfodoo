@@ -1,6 +1,6 @@
 10.0.?.?.? (?)
 ~~~~~~~~~~~~~~
-
+* Fix: Redraw the datatable widget on tab activate
 * Fix: JS error into Firefox on create/update document
 * Fix: The document preview works also with IE.
 * Fix: Makes the file required into the update document dialog.
