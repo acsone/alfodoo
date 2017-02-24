@@ -759,6 +759,8 @@ var CmisMixin = {
             var config = this.get_datatable_config();
             this.datatable = this.$datatable.DataTable(config);
             this.table_rendered.resolve();
+        } else {
+            this.datatable.draw();
         }
     },
 
