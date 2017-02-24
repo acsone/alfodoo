@@ -19,6 +19,9 @@
     'demo': [
         'demo/cmis_backend_demo.xml',
     ],
+    'external_dependencies': {
+        'python': ['requests'],
+    },
     'installable': True,
     'auto_install': False,
 }
