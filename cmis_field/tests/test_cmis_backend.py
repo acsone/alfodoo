@@ -28,6 +28,8 @@ class TestCmisBackend(common.SavepointCase):
         backend = self.cmis_backend.get_by_name(
             name=self.backend_instance.name)
         self.assertFalse(backend.is_valid_cmis_name(r'my\/:*?"<>| directory'))
+        self.assertFalse(backend.is_valid_cmis_name(r'abc.'))
+        self.assertFalse(backend.is_valid_cmis_name(r'abc '))
         self.assertTrue(backend.is_valid_cmis_name('my directory'))
         with self.assertRaises(UserError):
             backend.is_valid_cmis_name(r'my\/:*?"<>| directory',
@@ -45,6 +47,12 @@ class TestCmisBackend(common.SavepointCase):
         self.assertEqual(sanitized, 'm-y dir-')
         sanitized = self.backend_instance.sanitize_cmis_name('/y dir*', ' ')
         self.assertEqual(sanitized, 'y dir')
+        sanitized = self.backend_instance.sanitize_cmis_name('xyz.', ' ')
+        self.assertEqual(sanitized, 'xyz')
+        sanitized = self.backend_instance.sanitize_cmis_name('xyz.....', ' ')
+        self.assertEqual(sanitized, 'xyz')
+        sanitized = self.backend_instance.sanitize_cmis_name('.x.y.z..', ' ')
+        self.assertEqual(sanitized, '.x.y.z')
         with self.assertRaises(ValidationError):
             self.backend_instance.sanitize_replace_char = "/"
 
