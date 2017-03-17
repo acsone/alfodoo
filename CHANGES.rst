@@ -1,6 +1,7 @@
 10.0.?.?.? (?)
 ~~~~~~~~~~~~~~
 
+* Fix: On the import document dialog, rename 'Create' button into 'Add'
 * Fix: A name in CMIS can not ends with a dot. On the CMIS backend the
   'sanitize_cmis_name' method removes this character if it's found at the
   end of the string to sanitize and this case is detected by the method
