@@ -334,10 +334,21 @@
        return QWeb.render("CmisContentActions", ctx);
    },
 
-   get_preview_url : function(){
+   isImage: function(){
+      if (this.baseTypeId === 'cmis:folder') {
+           return false;
+       }
+       return this.mimetype.split('/')[0] === 'image';
+   },
+
+   get_content_url: function(){
+       return this.cmis_session.getContentStreamURL(this.objectId, 'inline');
+   },
+
+   get_preview_url: function(){
        var rendition = _.findWhere(this.renditions, {mimeType: 'application/pdf'});
        if (this.mimetype === 'application/pdf') {
-           return this.cmis_session.getContentStreamURL(this.objectId, 'inline');
+           return this.get_content_url();
        } else if (rendition) {
            return this.cmis_session.getContentStreamURL(rendition['streamId']);
        }
@@ -1027,19 +1038,45 @@ var CmisMixin = {
     },
 
     on_click_preview: function(row){
-        //http://localhost:8080/share/proxy/alfresco/api/node/workspace/SpacesStore/34a2e79c-9118-4d85-890c-32a720d70ad5/content/thumbnails/pdf?c=force&lastModified=pdf%3A146062
-        var previewer_url = this.get_previewer_url(row.data());
-        this.display_preview(previewer_url);
+        var cmisObjectWrapped = row.data();
+        if (cmisObjectWrapped.isImage()){
+            this.display_preview_image(cmisObjectWrapped);
+        } else {
+            this.display_preview_pdf(cmisObjectWrapped);
+        }
     },
 
-    display_preview: function(previewerUrl){
+    display_preview_image: function(cmisObjectWrapped){
+        var image_url = cmisObjectWrapped.get_content_url();
+        var image_viewer_el = QWeb.render("CmisImageViewer", {'url': image_url,
+                                                              'object': cmisObjectWrapped});
+        var $document_preview = this.$el.find(".documentpreview");
+        $document_preview.empty();
+        $document_preview.append(image_viewer_el);
+        // Show the previewer
+        var $tables_wrapper = this.$el.find(".dataTables_wrapper");
+        $tables_wrapper.fadeOut(400, function() {
+            $document_preview.fadeIn(400, function() {
+            });
+        });
+         // Attach an event to the "Back to document" icon
+        $document_preview.find(".button-back-browser").on('click', function() {
+            $document_preview.fadeOut(400, function() {
+                $tables_wrapper.fadeIn();
+            });
+        });
+    },
+
+    display_preview_pdf: function(cmisObjectWrapped){
+        var previewer_url = this.get_previewer_url(cmisObjectWrapped);
         var width="100%";
         var height =  '' + this.$el.height() - 30 + 'px'; //' ' + (H - r.top) + 'px';
         var $document_preview = this.$el.find(".documentpreview");
         $document_preview.empty();
-        $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': previewerUrl,
+        $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': previewer_url,
                                                                     'width': width,
                                                                     'height': height,
+
                                                                     }));
 
         // Show the previewer
