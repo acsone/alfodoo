@@ -230,7 +230,7 @@
        this.name = this.getSuccinctProperty('cmis:name', cmis_object);
        this.mimetype = this.getSuccinctProperty('cmis:contentStreamMimeType', cmis_object);
        this.baseTypeId = this.getSuccinctProperty('cmis:baseTypeId', cmis_object);
-       this.title = this.getSuccinctProperty('cmis:title', cmis_object) || '';
+       this.title = this.getSuccinctProperty('cm:title', cmis_object) || '';
        this.description = this.getSuccinctProperty('cmis:description', cmis_object);
        this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmis_object);
        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
@@ -854,7 +854,7 @@ var CmisMixin = {
                 orders_by.push('cmis:baseTypeId DESC,cmis:name ' + sort_order);
                 break;
             case 2:
-                orders_by.push('cmis:title ' + sort_order);
+                orders_by.push('cm:title ' + sort_order);
                 break;
             case 3:
                 orders_by.push('cmis:description ' + sort_order);

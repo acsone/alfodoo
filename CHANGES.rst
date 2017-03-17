@@ -1,6 +1,7 @@
 10.0.?.?.? (?)
 ~~~~~~~~~~~~~~
 
+* Fix: Display the node title if set into the CMIS container.
 * Fix: A name in CMIS can not ends with a dot. On the CMIS backend the
   'sanitize_cmis_name' method removes this character if it's found at the
   end of the string to sanitize and this case is detected by the method
