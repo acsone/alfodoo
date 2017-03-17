@@ -125,8 +125,8 @@
          <button type="button"
                  t-attf-class="btn btn-default btn-sm root-content-action-new-doc {{ (canCreateDocument)?'': 'disabled' }}"
                  data-toggle="tooltip"
-                 title="Create document"
-                 aria-label="Create document">
+                 title="Add document"
+                 aria-label="Add document">
              <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
          </button>
        </div>
