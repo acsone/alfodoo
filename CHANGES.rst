@@ -1,6 +1,7 @@
 9.0.?.?.? (?)
 ~~~~~~~~~~~~~
 
+* Fix: Display the node title if set into the CMIS container.
 * Fix: On the import document dialog, rename 'Create' button into 'Add'
 * Fix: For items displayed into the datatable, adjust the dropdown menu
   position based on page width.
