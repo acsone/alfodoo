@@ -1,6 +1,7 @@
 10.0.?.?.? (?)
 ~~~~~~~~~~~~~~
 
+* Fix: On the import document dialog, rename 'Create' button into 'Add'
 * Fix: For items displayed into the datatable, adjust the dropdown menu
   position based on page width.
 * Fix: A name in CMIS can not ends with a dot. On the CMIS backend the
