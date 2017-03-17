@@ -88,7 +88,7 @@
          var self = this;
          var options = {
              buttons: [
-                 {text: _t("Create"),
+                 {text: _t("Add"),
                   classes: "btn-primary",
                   click: function (e) {
                       e.stopPropagation();
