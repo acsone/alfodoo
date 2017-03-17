@@ -88,7 +88,7 @@
          var self = this;
          var options = {
              buttons: [
-                 {text: _t("Create"),
+                 {text: _t("Add"),
                   classes: "btn-primary",
                   click: function (e) {
                       e.stopPropagation();
@@ -1099,9 +1099,28 @@ var CmisMixin = {
      */
     dropdown_fix_position: function(button){
         var dropdown = $(button.parent()).find('.dropdown-menu');
-        var dropDownTop = button.offset().top + button.outerHeight();
-          dropdown.css('top', dropDownTop + "px");
-          dropdown.css('left', button.offset().left + "px");
+        var offset = button.offset();
+        var dropDownTop = offset.top + button.outerHeight();
+        dropdown.css('top', dropDownTop + "px");
+
+        // For the left position we need to take care of the available space
+        // on the right and the width of the dropdown to display according to
+        // its content.
+        // see http://codereview.stackexchange.com/questions/31501/adjust-bootstrap-dropdown-menu-based-on-page-width/39580
+        var offsetLeft = offset.left;
+        var dropdownWidth = dropdown.width();
+        var docWidth = $(window).width();
+        var subDropdown = dropdown.eq(1);
+        var subDropdownWidth = subDropdown.width();
+        var isDropdownVisible = (offsetLeft + dropdownWidth <= docWidth);
+        var isSubDropdownVisible = (offsetLeft + dropdownWidth + subDropdownWidth <= docWidth);
+        if (!isDropdownVisible || !isSubDropdownVisible) {
+            dropdown.addClass('pull-right');
+            dropdown.css('left', '');
+        } else {
+            dropdown.removeClass('pull-right');
+            dropdown.css('left', button.offset().left + "px");
+        }
     },
 
     
