@@ -19,16 +19,14 @@ class Report(models.Model):
 
     _inherit = 'report'
 
-    @api.v7
-    def get_pdf(self, cr, uid, ids, report_name, html=None, data=None,
-                context=None):
+    @api.model
+    def get_pdf(self, ids, report_name, html=None, data=None):
         """This method generates and returns pdf version of a report.
         """
         # put the report_name into the context to use it in method
         #  _save_in_attachment
-        ctx = dict(context or {}, report_name=report_name)
-        return super(Report, self).get_pdf(
-            cr, uid, ids, report_name, html, data, context=ctx)
+        self = self.with_context(report_name=report_name)
+        return super(Report, self).get_pdf(ids, report_name, html, data)
 
     @api.model
     def _postprocess_report(self, report_path, res_id, save_in_attachment):
@@ -126,7 +124,7 @@ class Report(models.Model):
         return mimetypes.guess_type(file_name)[0]
 
     def _sanitize_query_arg(self, arg):
-        return arg.replace("'", r"\'") 
+        return arg.replace("'", r"\'")
 
     @api.model
     def _create_or_update_cmis_document(self, content,

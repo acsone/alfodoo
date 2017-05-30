@@ -42,8 +42,7 @@ class TestCmisReportWrite(common.BaseTestCmis):
         with mock.patch('openerp.addons.cmis_report_write.models.'
                         'report.Report._save_in_cmis') as mocked_save:
             # test the call the the create method inside our custom parser
-            self.registry['report'].get_pdf(
-                self.env.cr, self.env.uid, inst.ids, self.report_name)
+            self.env['report'].get_pdf(inst.ids, self.report_name)
             # check that the method is called
             self.assertEqual(mocked_save.call_count, 1)
             content, res_id, report_xml = mocked_save.call_args[0]
@@ -59,8 +58,7 @@ class TestCmisReportWrite(common.BaseTestCmis):
                         'report.Report.'
                         '_create_or_update_cmis_document') as mocked_save:
             # test the call the the create method inside our custom parser
-            self.registry['report'].get_pdf(
-                self.env.cr, self.env.uid, self.inst.ids, self.report_name)
+            self.env['report'].get_pdf(self.inst.ids, self.report_name)
             # check that the method is called
             self.assertEqual(mocked_save.call_count, 0)
 
@@ -83,16 +81,14 @@ class TestCmisReportWrite(common.BaseTestCmis):
             rp.query.return_value = rs
             rs.getNumItems.return_value = 0
             # test the call the the create method inside our custom parser
-            self.registry['report'].get_pdf(
-                self.env.cr, self.env.uid, self.inst.ids, self.report_name)
+            self.env['report'].get_pdf(self.inst.ids, self.report_name)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 1)
 
             with self.assertRaises(UserError):
                 # a second call must fails
                 rs.getNumItems.return_value = 1
-                self.registry['report'].get_pdf(
-                    self.env.cr, self.env.uid, self.inst.ids, self.report_name)
+                self.env['report'].get_pdf(self.inst.ids, self.report_name)
 
     def test_duplicate_handle_new_version(self):
         self.report.cmis_duplicate_handler = 'new_version'
@@ -117,8 +113,7 @@ class TestCmisReportWrite(common.BaseTestCmis):
             rp.query.return_value = rs
             rs.getNumItems.return_value = 1
             # test the call the the create method inside our custom parser
-            self.registry['report'].get_pdf(
-                self.env.cr, self.env.uid, self.inst.ids, self.report_name)
+            self.env['report'].get_pdf(self.inst.ids, self.report_name)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 0)
             self.assertEqual(mocked_update.call_count, 1)
@@ -145,8 +140,7 @@ class TestCmisReportWrite(common.BaseTestCmis):
             cmis_parent_folder.getChildren.return_value = rs
             rs.getNumItems.return_value = 1
             # test the call the the create method inside our custom parser
-            self.registry['report'].get_pdf(
-                self.env.cr, self.env.uid, self.inst.ids, self.report_name)
+            self.env['report'].get_pdf(self.inst.ids, self.report_name)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 1)
             file_name = mocked_create.call_args[0][3]
