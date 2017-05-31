@@ -2,7 +2,8 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from cmislib.browser.binding import safe_urlencode
+from cmislib.browser.binding import (  # pylint: disable=W7935,W7936
+    safe_urlencode)
 from odoo import api, models
 
 
