@@ -29,7 +29,7 @@ class Report(models.Model):
             root_objectId = record[field_name]
             url = cmis_backend.get_content_details_url(res)
             bus_message = {
-                'cmis_objectid':root_objectId,
+                'cmis_objectid': root_objectId,
                 'backend_id': cmis_backend.id,
                 'url': url,
                 'action': 'open_url',
