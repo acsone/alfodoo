@@ -9,6 +9,7 @@ addons:
       - expect-dev  # provides unbuffer utility
       - python-lxml # because pip installation is slow
       - wkhtmltopdf
+      - python-pychart
 
 language: python
 
@@ -28,7 +29,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - git clone -b pip-install-sbi https://github.com/acsone/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - git clone -b pip-install-no-pychart-lmi https://github.com/acsone/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
 
