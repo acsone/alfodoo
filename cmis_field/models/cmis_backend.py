@@ -35,6 +35,15 @@ class CmisBackend(models.Model):
         help='Character used as replacement of invalid characters found in'
              'the value to use as cmis:name by the sanitize method',
         default='_')
+    folder_name_conflict_handler = fields.Selection(
+        selection=[
+            ('error', _('Raise exception')),
+            ('increment', _('Create as "name_(X)"'))
+        ],
+        string='Strategy in case of duplicate',
+        required=True,
+        default='error',
+    )
 
     @api.model
     def _get_web_description(self, record):
@@ -121,3 +130,41 @@ class CmisBackend(models.Model):
         path = "/".join(path_parts)
         return self.get_folder_by_path(
             path, create_if_not_found, cmis_parent_objectid)
+
+    @api.multi
+    def get_unique_folder_name(self, name, parent, conflict_handler=None):
+        """Return a unique name for a folder into its parent.
+
+        Check if the name already exists into the parent.
+        If the name already exists:
+         if bakend.folder_name_conflict_handler == 'error'
+            ValidationError is raised
+         if backend.folder_name_conflict_handler == 'increment'
+            return a new name with suffix '_X'
+        :return: a unique name
+        """
+        self.ensure_one()
+        conflict_handler = (conflict_handler or
+                            self.folder_name_conflict_handler)
+        cmis_qry = ("SELECT cmis:objectId FROM cmis:folder WHERE "
+                    "IN_FOLDER('%s') AND cmis:name='%s'" %
+                    (parent.getObjectId(), name))
+        rs = parent.repository.query(cmis_qry)
+        num_found_items = rs.getNumItems()
+        if num_found_items > 0:
+            if conflict_handler == 'error':
+                raise ValidationError(
+                    _('Folder "%s" already exists in CMIS') % (name))
+            if conflict_handler == 'increment':
+                testname = name + '_(%)'
+                cmis_qry = ("SELECT * FROM cmis:folder WHERE "
+                            "IN_FOLDER('%s') AND cmis:name like '%s'" %
+                            (parent.getObjectId(), testname))
+                rs = parent.repository.query(cmis_qry)
+                names = [r.name for r in rs]
+                max_num = 0
+                if names:
+                    max_num = max(
+                        [int(re.findall(r'_\((\d+)\)', n)[-1]) for n in names])
+                return name + '_(%d)' % (max_num + 1)
+        return name
