@@ -298,6 +298,19 @@ class CmisProxy(http.Controller):
             _logger.info("The referenced model doesn't exist or the user has "
                          "no read access (%s, %s)", model, res_id)
             return false_result
+        field_name = token.get('field_name')
+        field = model_inst._fields[field_name]
+        if field.groups:
+            # check if user is member of one of the restricted groups
+            allowed = False
+            for group in field.groups.split(','):
+                if request.env.user.has_group(group):
+                    allowed = True
+                    break
+            if not allowed:
+                _logger.info("The field %s on %s is only visible by members "
+                             "of %s", field_name, model_name, field.groups)
+                return false_result
         return model_inst, token.get('field_name')
 
     def _check_cmis_content_access(self, cmis_path, proxy_info, params,
