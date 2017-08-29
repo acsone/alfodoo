@@ -60,8 +60,7 @@ Images
 Contributors
 ------------
 
-* Firstname Lastname <email.address@example.org>
-* Second Person <second.person@example.org>
+* Sandip Mangukiya <smangukiya@ursainfosystems.com>
 
 Maintainer
 ----------

@@ -6,10 +6,10 @@ import werkzeug
 import logging
 import urlparse
 
-from openerp import http
-from openerp.http import request
-from openerp.exceptions import AccessError
-from openerp.addons.web.controllers import main
+from odoo import http
+from odoo.http import request
+from odoo.exceptions import AccessError
+from odoo.addons.web.controllers import main
 
 _logger = logging.getLogger(__name__)
 
