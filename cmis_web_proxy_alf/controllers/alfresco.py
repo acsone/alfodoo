@@ -2,12 +2,12 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import http
-from openerp.http import request
-from openerp.exceptions import AccessError
-from openerp.addons.web.controllers import main
+from odoo import http
+from odoo.http import request
+from odoo.exceptions import AccessError
+from odoo.addons.web.controllers import main
 
-from openerp.addons.cmis_web_proxy.controllers import cmis
+from odoo.addons.cmis_web_proxy.controllers import cmis
 
 ALFRESCO_API_PROXY_PATH = '/alfresco/s/api'
 
