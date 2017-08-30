@@ -118,7 +118,6 @@ def gen_dict_extract(key, var):
 
 
 class CmisProxy(http.Controller):
-
     @property
     def _cmis_proxy_base_url(self):
         return urlparse.urljoin(request.httprequest.host_url, CMIS_PROXY_PATH)
@@ -267,7 +266,8 @@ class CmisProxy(http.Controller):
         if token:
             token = token.replace('Bearer', '').strip()
         else:
-            token = params.get('token').strip()
+            token = params.has_key('token') and params.get(
+                'token') and params.get('token').strip() or ''
         if 'token' in params:
             params.pop('token')
         if not token:
@@ -410,7 +410,7 @@ class CmisProxy(http.Controller):
     @http.route([
         CMIS_PROXY_PATH + '/<int:backend_id>',
         CMIS_PROXY_PATH + '/<int:backend_id>/<path:cmis_path>'
-        ], type='http', auth="user", csrf=False, methods=['GET', 'POST'])
+    ], type='http', auth="user", csrf=False, methods=['GET', 'POST'])
     @main.serialize_exception
     def call_cmis_services(self, backend_id, cmis_path="", **kwargs):
         """Call at the root of the CMIS repository. These calls are for
