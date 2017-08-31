@@ -266,8 +266,7 @@ class CmisProxy(http.Controller):
         if token:
             token = token.replace('Bearer', '').strip()
         else:
-            token = params.has_key('token') and params.get(
-                'token') and params.get('token').strip() or ''
+            token = (params.get('token') or '').strip()
         if 'token' in params:
             params.pop('token')
         if not token:
