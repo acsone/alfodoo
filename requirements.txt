@@ -1,2 +1,0 @@
-# odoo
-git+git://github.com/apache/chemistry-cmislib.git@trunk#egg=cmislib
