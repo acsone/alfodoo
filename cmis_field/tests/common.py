@@ -23,6 +23,7 @@ class BaseTestCmis(common.SavepointCase):
         model._auto_end()
         return inst
 
+    # pylint:disable=missing-return
     @classmethod
     def setUpClass(cls):
         super(BaseTestCmis, cls).setUpClass()
