@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Most of the code copied from https://github.com/odoo/odoo/blob/c1fa3b8ab3dfa1306dbdd3b6dc910405a3357d16/addons/mail/static/src/xml/thread.xml
+-->
+<templates xml:space="preserve">
+    <t t-name="DocumentViewer.Content">
+        <div class="o_viewer_content">
+            <div class="o_viewer-header">
+                <h2 class="o_image_caption"><t t-esc="widget.activeDocument.name"/></h2>
+                <ul class="list-inline pull-right">
+                    <li t-if="widget.activeDocument.type == 'image'">
+                        <a class="o_print_btn" href="#">
+                            <i class="fa fa-2x fa-print"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="o_close_btn" href="#">
+                            <i class="fa fa-2x fa-times"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="o_viewer_img_wrapper">
+                <div class="o_viewer_zoomer">
+                    <div t-if="widget.activeDocument.type == 'image'" class="o_loading_img">
+                        <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"/>
+                    </div>
+                    <img t-if="widget.activeDocument.type == 'image'" class="o_viewer_img" t-attf-src="#{widget.activeDocument.viewer_url}"/>
+                    <iframe class="mb48 o_viewer_pdf" t-if="widget.activeDocument.type == 'pdf'" t-attf-src="#{widget.activeDocument.viewer_url}" allowfullscreen='1' webkitallowfullscreen='1'/>
+                    <video t-if="widget.activeDocument.type == 'video'" class="o_viewer_video" controls="controls">
+                        <source t-attf-src="#{widget.activeDocument.viewer_url}" t-att-data-type="widget.activeDocument.mimetype"/>
+                    </video>
+                </div>
+            </div>
+            <div t-if="widget.activeDocument.type == 'image'" class="o_viewer_toolbar">
+                <ul class="list-inline">
+                    <li>
+                        <a class="o_zoom_out" href="#">
+                            <i class="fa fa-2x fa-search-minus"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="o_zoom_in" href="#">
+                            <i class="fa fa-2x fa-search-plus"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="o_download_btn" href="#">
+                            <i class="fa fa-2x fa-download"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DocumentViewer">
+        <div class="modal o_modal_fullscreen" tabindex="-1" role="dialog" aria-hidden="true">
+            <t t-call="DocumentViewer.Content"/>
+
+            <t t-if="widget.documents.length != 1">
+                <a class="arrow arrow-left move_previous" href="#">
+                    <span class="fa fa-3x fa-chevron-left"/>
+                </a>
+                <a class="arrow arrow-right move_next" href="#">
+                    <span class="fa fa-3x fa-chevron-right"/>
+                </a>
+            </t>
+        </div>
+    </t>
+</templates>
