@@ -2,38 +2,44 @@ sudo: false
 cache: pip
 
 addons:
-  apt:
-   sources:
-      - pov-wkhtmltopdf
-   packages:
-      - expect-dev  # provides unbuffer utility
-      - python-lxml # because pip installation is slow
-      - wkhtmltopdf
+    apt:
+     packages:
+        - expect-dev  # provides unbuffer utility
 
 language: python
 
 python:
   - "2.7"
 
-env:
-  - VERSION="9.0" LINT_CHECK="1"
-  - VERSION="9.0" ODOO_REPO="odoo/odoo" LINT_CHECK="0"
-  - VERSION="9.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0"
-
-virtualenv:
-  system_site_packages: true
-
 before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
+  - pip install acsoo
+  - pip install codecov
+  - DB_NAME=${TRAVIS_JOB_ID}
+  - ADDONS_INST=$(acsoo addons list-depends)
+  - ADDONS_TEST=$(acsoo addons list)
+  - for addon in $(acsoo addons -s " " list); do echo "-e ./setup/$addon" >> requirements-test.txt; done
 
-install:
-  - git clone -b pip-install-sbi https://github.com/acsone/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
-  - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
-  - travis_install_nightly
+jobs:
+  include:
+    - stage: test
+      env: FLAKE8=1
+      script: 
+      - echo "Flake8 check $ADDONS_TEST"
+      - acsoo flake8
+    - stage: test
+      env: PYLINT=1
+      script:
+      - echo "Pylint check $ADDONS_TEST"
+      - acsoo pylint
+    - stage: test
+      env: ODOO=1
+      install:
+      - pip install -r requirements-test.txt
+      script:
+      - echo "Installing $ADDONS_INST"
+      - unbuffer ${VIRTUAL_ENV}/bin/openerp-server -d ${DB_NAME} --stop-after-init -i ${ADDONS_INST} | acsoo checklog
+      - echo "Testing $ADDONS_TEST"
+      - unbuffer coverage run ${VIRTUAL_ENV}/bin/openerp-server -d ${DB_NAME} --stop-after-init -i ${ADDONS_TEST} --test-enable | acsoo checklog
+      after_success:
+      - codecov
 
-script:
-  - travis_run_tests
-
-after_success:
-  - travis_after_tests_success

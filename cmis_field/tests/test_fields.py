@@ -4,6 +4,7 @@
 import mock
 from openerp import fields
 from openerp.exceptions import UserError
+
 from . import common
 from ..fields import CmisFolder
 

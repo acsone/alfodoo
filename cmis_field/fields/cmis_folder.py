@@ -7,6 +7,7 @@ from openerp.exceptions import UserError
 from .cmis_meta_field import CmisMetaField
 
 
+# pylint:disable=property-on-old-class
 class CmisFolder(fields.Field):
     """ A reference to a cmis:folder. (cmis:objectId)
 

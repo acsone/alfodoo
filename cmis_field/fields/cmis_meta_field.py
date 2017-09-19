@@ -6,8 +6,9 @@ from openerp import fields, models
 
 def _field_create(self, cr, context=None):
     res = _field_create.origin(self, cr, context)
-    model_fields = filter(
-        lambda x: hasattr(x[1], 'ttype'), self._fields.items())
+    model_fields = [
+        item for item in self._fields.items() if hasattr(item[1], 'ttype')
+    ]
     if not model_fields:
         return res
     # here we have field defining a ttype.
