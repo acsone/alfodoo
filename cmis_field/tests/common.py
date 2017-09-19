@@ -21,6 +21,7 @@ class BaseTestCmis(common.SavepointCase):
         inst._auto_init(cr, {'module': __name__})
         return inst
 
+    # pylint:disable=missing-return
     @classmethod
     def setUpClass(cls):
         super(BaseTestCmis, cls).setUpClass()

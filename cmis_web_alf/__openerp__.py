@@ -20,4 +20,7 @@
     'qweb': [
         "static/src/xml/*.xml",
     ],
+    'external_dependencies': {
+        'python': ['cmislib'],
+    },
 }
