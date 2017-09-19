@@ -35,8 +35,8 @@ class TestCmisFields(common.BaseTestCmis):
     def test_cmis_folder_default_create(self):
         inst = self.env['cmis.test.model'].create({'name': 'folder_name'})
         with mock.patch("odoo.addons.cmis.models.cmis_backend."
-                        "CmisBackend.get_cmis_repository"
-                        ) as mocked_get_repository:
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
             mocked_get_repository.return_value = mocked_cmis_repository
             new_mocked_cmis_folder = mock.MagicMock()
@@ -71,9 +71,9 @@ class TestCmisFields(common.BaseTestCmis):
     def test_cmis_folder_create_invalid_name(self):
         inst = self.env['cmis.test.model'].create({'name': 'folder /'})
         self.cmis_backend.enable_sanitize_cmis_name = False
-        with mock.patch(
-                "odoo.addons.cmis.models.cmis_backend."
-                "CmisBackend.get_cmis_repository") as mocked_get_repository:
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
             mocked_get_repository.return_value = mocked_cmis_repository
             new_mocked_cmis_folder = mock.MagicMock()
@@ -93,8 +93,8 @@ class TestCmisFields(common.BaseTestCmis):
     def test_cmis_folder_create_sanitize_name(self):
         inst = self.env['cmis.test.model'].create({'name': ' /folder/'})
         with mock.patch("openerp.addons.cmis.models.cmis_backend."
-                        "CmisBackend.get_cmis_repository"
-                        ) as mocked_get_repository:
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
             mocked_get_repository.return_value = mocked_cmis_repository
             new_mocked_cmis_folder = mock.MagicMock()
@@ -114,8 +114,8 @@ class TestCmisFields(common.BaseTestCmis):
         # parent, the name and the properties to use to create a folder in CMIS
         inst = self.env['cmis.test.model'].create({'name': 'folder_name'})
         with mock.patch("odoo.addons.cmis.models.cmis_backend."
-                        "CmisBackend.get_cmis_repository"
-                        ) as mocked_get_repository:
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
             mocked_get_repository.return_value = mocked_cmis_repository
             new_mocked_cmis_folder = mock.MagicMock()
@@ -134,8 +134,8 @@ class TestCmisFields(common.BaseTestCmis):
         inst1 = self.env['cmis.test.model'].create({'name': 'folder_name1'})
         inst2 = self.env['cmis.test.model'].create({'name': 'folder_name2'})
         with mock.patch("odoo.addons.cmis.models.cmis_backend."
-                        "CmisBackend.get_cmis_repository"
-                        ) as mocked_get_repository:
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
             mocked_get_repository.return_value = mocked_cmis_repository
 
