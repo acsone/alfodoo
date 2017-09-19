@@ -17,8 +17,8 @@ class TestCmisBackend(common.SavepointCase):
 
     def test_get_content_details_url(self):
         with mock.patch("openerp.addons.cmis.models.cmis_backend."
-                        "CmisBackend.get_cmis_repository"
-                        ) as mocked_get_repository:
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
             mocked_get_repository.return_value = mocked_cmis_repository
             mocked_cmis_object = mock.MagicMock()
