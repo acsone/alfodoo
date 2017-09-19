@@ -2,7 +2,7 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import http
+from odoo import _, http
 from odoo.http import request
 from odoo.exceptions import AccessError
 from odoo.addons.web.controllers import main
@@ -17,15 +17,15 @@ class AlfrescoProxy(cmis.CmisProxy):
     def _check_alfresco_access(self, cmis_backend, params):
         token = self._check_provided_token("/", cmis_backend, params)
         if not token:
-            raise AccessError("Bad request")
+            raise AccessError(_("Bad request"))
         # check access to object from token
         model_inst, field_name = self._decode_token(
             "/", cmis_backend, params, token)
         if not self._check_cmis_content_access(
                 "/", cmis_backend, params, model_inst, field_name):
-            raise AccessError("Bad request")
+            raise AccessError(_("Bad request"))
         if not self._check_access_operation(model_inst, "read"):
-            raise AccessError("Bad request")
+            raise AccessError(_("Bad request"))
         return True
 
     @http.route([
