@@ -18,6 +18,7 @@
         'views/cmis_web_proxy.xml'
     ],
     'external_dependencies': {
-        'python': ['requests'],
+        'python': ['requests',
+                   'cmislib'],
     },
 }

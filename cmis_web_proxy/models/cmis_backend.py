@@ -25,17 +25,17 @@ class CmisBackend(models.Model):
             record.proxy_location = cmis.CMIS_PROXY_PATH + '/%s' % record.id
 
     is_cmis_proxy = fields.Boolean(
-        required=True, default=False,
-        help=_("If checked, all the CMIS requests from the client will be "
-               "done to the Odoo server in place of to a direct call to the"
-               "CMIS Container. In such a case, Odoo act as a proxy server "
-               "between the widget and the cmis container and all the requets "
-               "are done by using the configured account on the backend. "))
+        default=False,
+        help="If checked, all the CMIS requests from the client will be "
+             "done to the Odoo server in place of to a direct call to the"
+             "CMIS Container. In such a case, Odoo act as a proxy server "
+             "between the widget and the cmis container and all the requets "
+             "are done by using the configured account on the backend. ")
     apply_odoo_security = fields.Boolean(
-        required=True, default=False,
-        help=_("If checked, the Odoo security rules are applied to the "
-               "content retrieved from the cmis container and the available "
-               "actions on this content."))
+        default=False,
+        help="If checked, the Odoo security rules are applied to the "
+             "content retrieved from the cmis container and the available "
+             "actions on this content.")
     proxy_location = fields.Char(
         readonly=True, store=True, compute='_compute_proxy_location')
 

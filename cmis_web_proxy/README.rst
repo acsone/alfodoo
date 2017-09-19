@@ -8,71 +8,23 @@ Web Cmis Viewer Proxy
 
 Odoo as proxy server for your cmis requests from the web to the cmis container.
 
-Installation
-============
-
-To install this module, you need to:
-
-#. Do this ...
-
-Configuration
-=============
-
-To configure this module, you need to:
-
-#. Go to ...
-
-Usage
-=====
-
-To use this module, you need to:
-
-#. Go to ...
-
-.. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
-   :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/{repo_id}/{branch}
-
-.. repo_id is available in https://github.com/OCA/maintainer-tools/blob/master/tools/repos_with_ids.txt
-.. branch is "8.0" for example
-
-Known issues / Roadmap
-======================
-
-* ...
-
-Bug Tracker
-===========
-
-Bugs are tracked on `GitHub Issues
-<https://github.com/OCA/{project_repo}/issues>`_. In case of trouble, please
-check there if your issue has already been reported. If you spotted it first,
-help us smashing it by providing a detailed and welcomed feedback.
+Documentation: `alfodoo.org <http://alfodoo.org>`_
 
 Credits
 =======
 
-Images
-------
-
-* Odoo Community Association: `Icon <https://github.com/OCA/maintainer-tools/blob/master/template/module/static/description/icon.svg>`_.
-
 Contributors
 ------------
 
+* Laurent Mignon <laurent.mignon@acsone.eu>
 * Sandip Mangukiya <smangukiya@ursainfosystems.com>
+* Maxime Chambreuil <mchambreuil@ursainfosystems.com>
 
 Maintainer
 ----------
 
-.. image:: https://odoo-community.org/logo.png
-   :alt: Odoo Community Association
-   :target: https://odoo-community.org
+.. image:: https://www.acsone.eu/logo.png
+   :alt: ACSONE SA/NV
+   :target: http://www.acsone.eu
 
-This module is maintained by the OCA.
-
-OCA, or the Odoo Community Association, is a nonprofit organization whose
-mission is to support the collaborative development of Odoo features and
-promote its widespread use.
-
-To contribute to this module, please visit https://odoo-community.org.
+This module is maintained by ACSONE SA/NV.

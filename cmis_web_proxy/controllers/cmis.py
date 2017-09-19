@@ -2,11 +2,11 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import json
-import werkzeug
 import logging
 import urlparse
+import werkzeug
 
-from odoo import http
+from odoo import _, http
 from odoo.http import request
 from odoo.exceptions import AccessError
 from odoo.addons.web.controllers import main
@@ -387,12 +387,12 @@ class CmisProxy(http.Controller):
         # check token conformity
         token = self._check_provided_token(cmis_path, proxy_info, params)
         if not token:
-            raise AccessError("Bad request")
+            raise AccessError(_("Bad request"))
         # check access to object from token
         model_inst, field_name = self._decode_token(
             cmis_path, proxy_info, params, token)
         if not model_inst:
-            raise AccessError("Bad request")
+            raise AccessError(_("Bad request"))
         # check if the CMIS object in the request is the the one referenced on
         # model_inst or a child of this one
         if not cmis_path and 'objectId' not in params:
@@ -400,10 +400,10 @@ class CmisProxy(http.Controller):
             return model_inst
         if not self._check_cmis_content_access(
                 cmis_path, proxy_info, params, model_inst, field_name):
-            raise AccessError("Bad request")
+            raise AccessError(_("Bad request"))
         if not self._check_content_action_access(
                 cmis_path, proxy_info, params, model_inst):
-            raise AccessError("Bad request")
+            raise AccessError(_("Bad request"))
         return model_inst
 
     @http.route([
@@ -424,7 +424,7 @@ class CmisProxy(http.Controller):
         if proxy_info.get('apply_odoo_security'):
             model_inst = self._check_access(cmis_path, proxy_info, kwargs)
         if method not in ['GET', 'POST']:
-            raise AccessError("The HTTP METHOD %s is not supported by CMIS" %
+            raise AccessError(_("The HTTP METHOD %s is not supported by CMIS") %
                               method)
         if method == 'GET':
             method = self._forward_get
