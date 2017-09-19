@@ -103,7 +103,7 @@ var DocumentViewer = Widget.extend({
      get_pdf_preview_url: function(cmisObjectWrapped) {
          var params = this.get_pdf_preview_url_params(cmisObjectWrapped);
          // Create the previewer URL
-         var path = "/cmis_web/static/lib/pdfjs-1.3.91/web/odoo-viewer.html";
+         var path = "/cmis_web/static/lib/pdfjs-1.9.426/web/odoo-viewer.html";
          return path + '?' + $.param(params);
      },
 
