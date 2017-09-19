@@ -1,0 +1,8 @@
+--find-links https://wheelhouse.acsone.eu/manylinux1
+--extra-index-url https://wheelhouse.odoo-community.org/oca-simple
+
+# odoo
+odoo-autodiscover>=2.0.0b1
+-r https://raw.githubusercontent.com/odoo/odoo/10.0/requirements.txt
+https://nightly.odoo.com/10.0/nightly/src/odoo_10.0.latest.zip
+
