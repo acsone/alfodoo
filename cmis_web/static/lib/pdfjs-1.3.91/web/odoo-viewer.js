@@ -7178,7 +7178,6 @@ function webViewerInitialized() {
   var params = parseQueryString(queryString);
   var file = 'file' in params ? params.file : DEFAULT_URL;
   validateFileURL(file);
-  document.getElementById('titleBar').innerText = params.title;
 
   var fileInput = document.createElement('input');
   fileInput.id = 'fileInput';
