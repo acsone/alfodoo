@@ -11,7 +11,6 @@
 var core = require('web.core');
 var form_widgets = require('cmis_web.form_widgets');
 var Model = require('web.Model');
-var $ = require('$');
 var _t = core._t;
 
 form_widgets.CmisObjectWrapper.include({
