@@ -177,7 +177,7 @@ class CmisProxy(http.Controller):
         if proxy_info['apply_odoo_security']:
             self._apply_permissions_mapping(
                 value, headers, proxy_info, model_inst)
-        headers['transfer-encoding'] = None
+        headers['Transfer-Encoding'] = None
         response = werkzeug.Response(
             json.dumps(value), mimetype='application/json',
             headers=headers)
@@ -201,7 +201,7 @@ class CmisProxy(http.Controller):
             auth=(proxy_info['username'], proxy_info['password']))
         r.raise_for_status()
         headers = dict(r.headers.items())
-        headers['transfer-encoding'] = None
+        headers['Transfer-Encoding'] = None
         return werkzeug.Response(
             r, headers=headers,
             direct_passthrough=True)
