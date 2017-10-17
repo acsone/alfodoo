@@ -1,6 +1,8 @@
-9.0.?.?.? (?)
-~~~~~~~~~~~~~
 
+9.0.2.0.0 (Oct, 17, 2017)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Improvement: New document viewer.
 * Improvement: Allow the preview of image files.
 * Fix: Display the node title if set into the CMIS container.
 * Fix: On the import document dialog, rename 'Create' button into 'Add'
