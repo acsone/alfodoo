@@ -1,5 +1,5 @@
-10.0.?.?.? (?)
-~~~~~~~~~~~~~~
+10.0.2.0.0 (Oct, 17, 2017)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Improvement: New document viewer.
 * Improvement: Allow the preview of image files.
@@ -24,8 +24,8 @@
   copy/paste information from document into the form.
 
 
-10.0.1.0.0 (Jan, 4, 20016)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+10.0.1.0.0 (Jan, 4, 2016)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * First release
 
