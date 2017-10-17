@@ -9,22 +9,18 @@ The Alfodoo framework requires the following:
 
 * The Odoo **cmis** addon: The Odoo *cmis* addon provides the minimal foundation for Odoo 
   modules implementing different integration scenario with a CMIS server. It allows
-  you to configure a CMIS backend.
-  Currently, *Alfodoo* only supports the branch *9.0-cmis-from-8.0*
-  available into the `fork of ACSONE`_ of the OCA's `connector-cmis`_ repository and
-  currently under `review`_. 
+  you to configure a CMIS backend. The addon is available into the  the OCA's `connector-cmis`_
+  repository.
 * `cmislib`_  the Apache Chemistry CMIS client library for Python: To be compliant
   with the latest version of CMIS (1.1), the connector uses the latest version of the
-  python cmislib library not yet released at this stage. The lib can be installed with:
+  python cmislib>=0.6. The lib can be installed with:
 
     .. code-block:: shell
         
-        pip install git+git://github.com/apache/chemistry-cmislib.git@trunk#egg=cmislib
+        pip install 'cmislib>=0.6'
 
 
-.. _`fork of ACSONE`: https://github.com/acsone/connector-cmis/tree/9.0-cmis-from-8.0
 .. _`connector-cmis`: https://github.com/OCA/connector-cmis
-.. _`review`: https://github.com/OCA/connector-cmis/pull/16
 .. _`cmislib`: http://chemistry.apache.org/python/cmislib.html
 
 Enable CORS in Alfresco 5.x
