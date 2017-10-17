@@ -23,7 +23,6 @@ def mock_http_request_env(env):
 
 class TestCmisController(common.BaseTestCmis):
 
-    # pylint:disable=missing-return
     @classmethod
     def setUpClass(cls):
         super(TestCmisController, cls).setUpClass()
