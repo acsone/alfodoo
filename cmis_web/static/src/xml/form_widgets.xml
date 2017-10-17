@@ -39,7 +39,6 @@
           <tbody>
           </tbody>
         </table>
-        <div class="documentpreview" style="display: none;"></div>
     </div>
 </t>
 
@@ -178,37 +177,6 @@
         </div>
     </div>
     
-</t>
-
-<t t-name='CmisImageViewer'>
-    <div class="cmis_viewer_image cmis_document_viewer">
-        <div class='cmis_document_viewer_toolbar pull-right'>
-            <button type="button" class="btn btn-primary btn-sm button-back-browser">
-                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&amp;nbsp;Back to documents list
-            </button>
-        </div>
-        <div class='cmis_image_container'>
-            <img t-att-src='url' width='100%' allowfullscreen='1' webkitallowfullscreen='1'></img>
-        </div>
-    </div>
-</t>
-
-<t t-name='CmisDocumentViewer'>
-    <div class="cmis_viewer_pdf cmis_document_viewer">
-        <div class='cmis_document_viewer_toolbar pull-right'>
-            <button type="button" class="btn btn-primary btn-sm button-back-browser">
-                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&amp;nbsp;Back to documents list
-            </button>
-        </div>
-        <div class='cmis_document_viewer_iframe'>
-            <iframe id='viewer'
-                    t-att-src='url'
-                    t-att-width='width'
-                    t-att-height='height'
-                    allowfullscreen='1'
-                    webkitallowfullscreen='1'></iframe>
-        </div>
-    </div>
 </t>
 
 <t t-name='CmisUpdateContentStreamView'>
