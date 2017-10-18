@@ -14,15 +14,15 @@ ALFRESCO_API_PROXY_PATH = '/alfresco/s/api'
 
 class AlfrescoProxy(cmis.CmisProxy):
 
-    def _check_alfresco_access(self, cmis_backend, params):
-        token = self._check_provided_token("/", cmis_backend, params)
+    def _check_alfresco_access(self, proxy_info, params):
+        token = self._check_provided_token("/", proxy_info, params)
         if not token:
             raise AccessError("Bad request")
         # check access to object from token
         model_inst, field_name = self._decode_token(
-            "/", cmis_backend, params, token)
+            "/", proxy_info, params, token)
         if not self._check_cmis_content_access(
-                "/", cmis_backend, params, model_inst, field_name):
+                "/", proxy_info, params, model_inst, field_name):
             raise AccessError("Bad request")
         if not self._check_access_operation(model_inst, "read"):
             raise AccessError("Bad request")
@@ -30,7 +30,7 @@ class AlfrescoProxy(cmis.CmisProxy):
 
     @http.route([
         ALFRESCO_API_PROXY_PATH +
-        '/<string:backend_id>'
+        '/<int:backend_id>'
         '/content/thumbnails/pdf/' +
         '<string:cmis_name>',
         ], type='http', auth="user", csrf=False, methods=['GET'])
@@ -40,11 +40,13 @@ class AlfrescoProxy(cmis.CmisProxy):
         """Call at the root of the CMIS repository. These calls are for
         requesting the global services provided by the CMIS Container
         """
-        # use a dedicated cache to get the backend
-        cmis_backend = request.env['cmis.backend'].get_by_id(backend_id)
-        if cmis_backend.apply_odoo_security:
-            self._check_alfresco_access(cmis_backend, kwargs)
-        url = (cmis_backend.alfresco_api_location +
+        # proxy_info are information available into the cache without loading
+        # the cmis.backend from the database
+        proxy_info = request.env['cmis.backend'].get_proxy_info_by_id(
+            backend_id)
+        if proxy_info['apply_odoo_security']:
+            self._check_alfresco_access(proxy_info, kwargs)
+        url = (proxy_info['alfresco_api_location'] +
                '/node/workspace/SpacesStore/' +
                kwargs['versionSeriesId'] +
                '/content/thumbnails/pdf/' +
@@ -53,4 +55,4 @@ class AlfrescoProxy(cmis.CmisProxy):
             'c': kwargs['c'],
             'lastModified': kwargs['lastModified']
         }
-        return self._forward_get_file(url, cmis_backend, params)
+        return self._forward_get_file(url, proxy_info, params)

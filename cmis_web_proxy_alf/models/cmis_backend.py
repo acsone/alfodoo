@@ -23,6 +23,14 @@ class CmisBackend(models.Model):
     proxy_api_location = fields.Char(
         readonly=True, compute='_compute_proxy_api_location')
 
+
+    @api.model
+    def get_proxy_info_by_id(self, backend_id):
+        backend = self.get_by_id(backend_id)
+        info = super(CmisBackend, self).get_proxy_info_by_id(backend_id)
+        info['alfresco_api_location'] = backend.alfresco_api_location
+        return info
+
     @api.model
     def _get_web_description(self, record):
         """ Return the desciption of backend record to be included into the
