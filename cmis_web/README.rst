@@ -14,16 +14,15 @@ Documentation: `alfodoo.org <http://alfodoo.org>`_
 Credits
 =======
 
-Most of the code of the DocumentViewer widget is copied from https://github
-.com/odoo/odoo/blob/c1fa3b8ab3dfa1306dbdd3b6dc910405a3357d16/addons/mail/static/src/js/document_viewer.js
-
-
-
 Contributors
 ------------
 
 * Laurent Mignon <laurent.mignon@acsone.eu>
-* Odoo SA <https://www.odoo.com>
+
+Most of the code of the DocumentViewer widget is copied from `Odoo
+<https://github.com/odoo/odoo/blob/c1fa3b8ab3dfa1306dbdd3b6dc910405a3357d16
+/addons/mail/static/src/js/document_viewer.js>`_
+
 
 Maintainer
 ----------
