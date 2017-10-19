@@ -3,13 +3,16 @@
     <template id="assets_backend" name="cmis_web assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/cmis_web/static/lib/datatables/datatables.css"/>
+            <link rel="stylesheet" href="/cmis_web/static/src/less/document_viewer.less"/>
             <link rel="stylesheet" href="/cmis_web/static/src/less/form_widgets.less"/>
             <link rel="stylesheet" href="/cmis_web/static/src/css/bootstrap_fonts_fixes.css"/>
 
             <script type="text/javascript" src="/cmis_web/static/lib/cmisjs/superagent.7.2.0.js"/>
             <script type="text/javascript" src="/cmis_web/static/lib/cmisjs/cmis.0.3.1.js"/>
             <script type="text/javascript" src="/cmis_web/static/lib/datatables/datatables.js"/>
+            <script type="text/javascript" src="/cmis_web/static/src/js/document_viewer.js"/>
             <script type="text/javascript" src="/cmis_web/static/src/js/form_widgets.js"/>
         </xpath>
     </template>
+
 </odoo>

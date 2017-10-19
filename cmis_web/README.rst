@@ -19,6 +19,11 @@ Contributors
 
 * Laurent Mignon <laurent.mignon@acsone.eu>
 
+Most of the code of the DocumentViewer widget is copied from `Odoo
+<https://github.com/odoo/odoo/blob/c1fa3b8ab3dfa1306dbdd3b6dc910405a3357d16
+/addons/mail/static/src/js/document_viewer.js>`_
+
+
 Maintainer
 ----------
 

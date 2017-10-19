@@ -19,7 +19,8 @@
  var framework = require('web.framework');
  var _ = require('_');
  var $ = require('$');
- 
+ var DocumentViewer = require('cmis_web.DocumentViewer')
+
  var _t = core._t;
  var QWeb = core.qweb;
 
@@ -336,13 +337,6 @@
        return QWeb.render("CmisContentActions", ctx);
    },
 
-   isImage: function(){
-      if (this.baseTypeId === 'cmis:folder') {
-           return false;
-       }
-       return this.mimetype.split('/')[0] === 'image';
-   },
-
    get_content_url: function(){
        return this.cmis_session.getContentStreamURL(this.objectId, 'inline');
    },
@@ -356,6 +350,20 @@
        }
        return null;
    },
+
+    get_preview_type: function(){
+        if (this.baseTypeId === 'cmis:folder') {
+            return undefined;
+        }
+        if (this.mimetype.match("(image)")){
+            return 'image';
+        }
+        if (this.mimetype.match("(video)")){
+            return 'video';
+        }
+        // here we hope that alfresco is able to render the document as pdf
+        return "pdf";
+    },
 
  });
  
@@ -471,40 +479,6 @@ var CmisMixin = {
      wrap_cmis_object: function(cmisObject) {
          return new CmisObjectWrapper(cmisObject.object, this.cmis_session);
      },
-
-     /**
-      * Return a dictionary of http headers to use to query the preview url
-      */
-     get_preview_url_headers: function(cmisObjectWrapped){
-         if ($.ajaxSettings.headers){
-             return JSON.parse(JSON.stringify($.ajaxSettings.headers));
-         }
-         return {};
-     },
-
-     /**
-      * Return a dictionary of parameters to use to query the preview url
-      */
-     get_preview_url_params: function(cmisObjectWrapped){
-         var title = cmisObjectWrapped.name;
-         var preview_url = cmisObjectWrapped.get_preview_url();
-         var headers = this.get_preview_url_headers(cmisObjectWrapped);
-         return {
-           file: preview_url,
-           httpHeaders: JSON.stringify(headers),
-           title: title,
-         };
-     },
-
-     /**
-      * Return the url used to launch the embeded document previewer
-      */
-     get_previewer_url: function(cmisObjectWrapped) {
-         var params = this.get_preview_url_params(cmisObjectWrapped);
-         // Create the previewer URL
-         var path = "/cmis_web/static/lib/pdfjs-1.3.91/web/odoo-viewer.html";
-         return path + '?' + $.param(params);
-     }
 };
  
  var FieldCmisFolder = formWidget.FieldChar.extend(CmisMixin, {
@@ -1041,59 +1015,8 @@ var CmisMixin = {
 
     on_click_preview: function(row){
         var cmisObjectWrapped = row.data();
-        if (cmisObjectWrapped.isImage()){
-            this.display_preview_image(cmisObjectWrapped);
-        } else {
-            this.display_preview_pdf(cmisObjectWrapped);
-        }
-    },
-
-    display_preview_image: function(cmisObjectWrapped){
-        var image_url = cmisObjectWrapped.get_content_url();
-        var image_viewer_el = QWeb.render("CmisImageViewer", {'url': image_url,
-                                                              'object': cmisObjectWrapped});
-        var $document_preview = this.$el.find(".documentpreview");
-        $document_preview.empty();
-        $document_preview.append(image_viewer_el);
-        // Show the previewer
-        var $tables_wrapper = this.$el.find(".dataTables_wrapper");
-        $tables_wrapper.fadeOut(400, function() {
-            $document_preview.fadeIn(400, function() {
-            });
-        });
-         // Attach an event to the "Back to document" icon
-        $document_preview.find(".button-back-browser").on('click', function() {
-            $document_preview.fadeOut(400, function() {
-                $tables_wrapper.fadeIn();
-            });
-        });
-    },
-
-    display_preview_pdf: function(cmisObjectWrapped){
-        var previewer_url = this.get_previewer_url(cmisObjectWrapped);
-        var width="100%";
-        var height =  '' + this.$el.height() - 30 + 'px'; //' ' + (H - r.top) + 'px';
-        var $document_preview = this.$el.find(".documentpreview");
-        $document_preview.empty();
-        $document_preview.append(QWeb.render("CmisDocumentViewer", {'url': previewer_url,
-                                                                    'width': width,
-                                                                    'height': height,
-
-                                                                    }));
-
-        // Show the previewer
-        var $tables_wrapper = this.$el.find(".dataTables_wrapper"); 
-        $tables_wrapper.fadeOut(400, function() {
-            $document_preview.fadeIn(400, function() {
-            });
-        });
-
-        // Attach an event to the "Back to document" icon
-        $document_preview.find(".button-back-browser").on('click', function() {
-            $document_preview.fadeOut(400, function() {
-                $tables_wrapper.fadeIn();
-            });
-        });
+        var documentViewer = new DocumentViewer(this, cmisObjectWrapped, this.datatable.data());
+        documentViewer.appendTo($('body'));
     },
 
     on_click_get_properties: function(row){
