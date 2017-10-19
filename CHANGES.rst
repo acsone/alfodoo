@@ -1,3 +1,9 @@
+10.?.?.?.? (?)
+~~~~~~~~~~~~~~
+
+* Fix: JS error when multiple documents are uploaded at once.
+
+
 10.0.2.0.0 (Oct, 17, 2017)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

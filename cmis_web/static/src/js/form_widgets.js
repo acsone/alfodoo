@@ -128,26 +128,27 @@
          if (numFiles > 0) {
              framework.blockUI();
          }
-         var cmis_session = this.getParent().cmis_session;
+         var parent = this.getParent();
+         var cmis_session = parent.cmis_session;
          _.each(input.files, function(file, index, list){
              cmis_session
              .createDocument(this.parent_cmisobject.objectId, file, {'cmis:name': file.name}, file.mimeType)
              .ok(function(data) {
-                 processedFiles.push(data);
-                 // encoding is not properly handled into multipart.... 
-                 // update the document name to work around this encooding issue
+                 // encoding is not properly handled into multipart....
+                 // update the document name to work around this encoding issue
                  cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
                      {'cmis:name': file.name})
                      .ok(function(){
+                         processedFiles.push(data);
                          if (processedFiles.length == numFiles){
                              framework.unblockUI();
-                             self.getParent().trigger('cmis_node_created', [processedFiles]);
-                             self.$el.parents('.modal').modal('hide');
+                             parent.trigger('cmis_node_created',[processedFiles]);
                          }
                      }
                  );
               });
          }, self);
+         self.$el.parents('.modal').modal('hide');
      },
      
      close: function() {
@@ -943,12 +944,12 @@ var CmisMixin = {
             cmis_session
             .createDocument(this.displayed_folder_id, file, {'cmis:name': file.name}, file.mimeType)
             .ok(function(data) {
-                processedFiles.push(data);
                 // encoding is not properly handled into multipart.... 
                 // update the document name to work around this encooding issue
                 cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
                     {'cmis:name': file.name})
                     .ok(function(){
+                        processedFiles.push(data);
                         if (processedFiles.length == numFiles){
                             framework.unblockUI();
                             self.trigger('cmis_node_created', [processedFiles]);
