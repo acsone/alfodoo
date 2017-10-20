@@ -115,14 +115,16 @@
          <span class="btn-separator"></span>
        <div class="btn-group">
          <button type="button"
-                 t-attf-class="btn btn-default btn-sm root-content-action-new-folder {{ (canCreateFolder)?'': 'disabled' }}"
+                 t-if="canCreateFolder"
+                 t-attf-class="btn btn-default btn-sm root-content-action-new-folder"
                  data-toggle="tooltip"
                  title="Create folder"
                  aria-label="Create folder">
              <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
          </button>
          <button type="button"
-                 t-attf-class="btn btn-default btn-sm root-content-action-new-doc {{ (canCreateDocument)?'': 'disabled' }}"
+                 t-if="canCreateDocument"
+                 t-attf-class="btn btn-default btn-sm root-content-action-new-doc"
                  data-toggle="tooltip"
                  title="Add document"
                  aria-label="Add document">

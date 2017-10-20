@@ -1,6 +1,8 @@
 10.?.?.?.? (?)
 ~~~~~~~~~~~~~~
 
+* Fix: Display only the buttons in the main toolbar for which the user has the
+  appropriate permissions.
 * Fix: JS error when multiple documents are uploaded at once.
 
 
