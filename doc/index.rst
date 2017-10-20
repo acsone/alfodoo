@@ -23,10 +23,6 @@ provide in Odoo great features that enable the users to easily store and
 manage their documents in an external Document Management System through
 a seamless integration. 
 
-The development of Alfodoo has been founded by `ACSONE SA/NV`_.
-
-*Learn how to* :ref:`contribute`
-
 .. raw:: html
 
   <div style="margin-top:10px;">
@@ -50,6 +46,32 @@ Core Features
 .. _`source code is available on GitHub`: https://github.com/acsone/alfodoo
 .. _`addons`: https://github.com/acsone/alfodoo
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
+
+***************************
+Support Alfodoo development
+***************************
+
+Alfodoo is open source, there are many ways to :ref:`contribute` in different areas
+(eg testing, documentation, reporting issues, fixing bugs).
+
+The development of Alfodoo has been funded by `ACSONE SA/NV`_.
+
+.. image:: https://www.acsone.eu/logo.png
+   :alt: ACSONE SA/NV
+   :target: https://www.acsone.eu
+
+You can also donate to support the continued development of Alfodoo. Collected funds
+will be dedicated to the improvement of Alfodoo (support of new Odoo and Alfresco versions
+development of new features).
+
+.. raw:: html
+
+  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+  <input type="hidden" name="cmd" value="_s-xclick">
+  <input type="hidden" name="hosted_button_id" value="XP2F8CTB34STJ">
+  <input type="image" src="https://www.paypalobjects.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+  <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+  </form>
 
 **************************************
 Overview: Manage the documents in Odoo
