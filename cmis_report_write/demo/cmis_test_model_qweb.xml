@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="cmis_test_model_report">
+      <t t-call="report.html_container"> 
+        <t t-foreach="docs" t-as="o">
+          <t t-call="report.internal_layout">
+            <div class="page">
+              <div class="silog_budget_commitment_tbody">
+                <p><t t-esc="o.name" /></p>
+              </div>
+            </div>
+          </t>
+        </t>
+      </t>
+    </template>
+
+</odoo>
