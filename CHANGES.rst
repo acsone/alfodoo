@@ -1,6 +1,8 @@
 10.?.?.?.? (?)
 ~~~~~~~~~~~~~~
 
+* Fix: Refresh the document before downloading or opening it into alfresco
+  to always get the latest version. (issue #83)
 * Fix: Display only the buttons in the main toolbar for which the user has the
   appropriate permissions.
 * Fix: JS error when multiple documents are uploaded at once.
