@@ -53,9 +53,9 @@ jobs:
       env: BUILD_DOC=1
       install:
         - pip install -r requirements-test.txt
-        - pip install travis-sphinx
+        - pip install https://github.com/Syntaf/travis-sphinx/archive/master.tar.gz
         - pip install sphinx-bootstrap-theme
       script:
-        - travis-sphinx --source=doc -b 10.0 build
+        - travis-sphinx build -s doc/
       after_success:
-        - travis-sphinx -b 10.0 deploy
+        - travis-sphinx deploy -b 10.0 -c alfodoo.org
