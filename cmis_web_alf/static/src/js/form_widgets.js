@@ -60,7 +60,11 @@ form_widgets.FieldCmisFolder.include({
         /* bind content events */
         this.$el.find('.content-action-open-alf').on('click', function(e){
             var row = self._get_event_row(e);
-            self.open_in_alf(row.data().objectId);
+            row.data().refresh().done(
+                function(data){
+                    self.open_in_alf(data.objectId);
+                }
+            );
         });
     },
 

@@ -142,8 +142,7 @@
              class="btn btn-default btn-xs content-action-download"
              aria-label="Download"
              data-toggle="tooltip"
-             title="Download"
-             t-att-href='object.url'>
+             title="Download">
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
           </a>
         </t>

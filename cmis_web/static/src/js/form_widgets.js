@@ -245,7 +245,7 @@
 
    getSuccinctProperty: function(property, cmis_object){
        cmis_object = cmis_object || this.cmis_object;
-       return this.cmis_object.succinctProperties[property];
+       return cmis_object.succinctProperties[property];
    },
    
    _get_css_class: function(){
@@ -364,6 +364,26 @@
         return "pdf";
     },
 
+
+    /**
+     * Refresh the information by reloading data from the server
+     * The method return a deferred called once the information are up to date
+     */
+    refresh: function(){
+        var self = this;
+        var dfd = $.Deferred()
+        this.cmis_session.getObject(
+            this.objectId,
+            'latest', {
+                includeAllowableActions : true,
+                renditionFilter: 'application/pdf'
+            }).ok(function (data){
+            self.parse_object(data);
+            dfd.resolve(self);
+        });
+        return dfd.promise();
+    },
+
  });
  
  /**
@@ -454,21 +474,23 @@ var CmisMixin = {
       */
      on_cmis_error: function(error){
          framework.unblockUI();
-         if (error.type == 'application/json'){
-             error = JSON.parse(error.text);
-             new Dialog(this, {
-                 size: 'medium',
-                 title: _t("CMIS Error "),
-                 subtitle: error.message,
-                 $content: $('<div>').html(QWeb.render('CMISSession.warning', {error: error}))
-             }).open();
-         } else {
-             new Dialog(this, {
-                 size: 'medium',
-                 title: _t("CMIS Error"),
-                 subtitle: error.statusText,
-                 $content: $('<div>').html(error.text)
-             }).open();
+         if (error){
+             if (error.type == 'application/json'){
+                 error = JSON.parse(error.text);
+                 new Dialog(this, {
+                     size: 'medium',
+                     title: _t("CMIS Error "),
+                     subtitle: error.message,
+                     $content: $('<div>').html(QWeb.render('CMISSession.warning', {error: error}))
+                 }).open();
+             } else {
+                 new Dialog(this, {
+                     size: 'medium',
+                     title: _t("CMIS Error"),
+                     subtitle: error.statusText,
+                     $content: $('<div>').html(error.text)
+                 }).open();
+             }
          }
      },
 
@@ -1004,12 +1026,13 @@ var CmisMixin = {
     },
 
     on_click_download: function(row){
-        var $form = $('<form>', {
-            action: row.data().url,
-            method: 'GET'
-        }).appendTo(document.body);
-        $form.submit();
-        $form.remove();
+        row.data().refresh().done(
+            $.proxy(this.do_download, this)
+        );
+    },
+
+    do_download: function(cmisObjectWrapped){
+        window.open(cmisObjectWrapped.url);
     },
 
     on_click_preview: function(row){
