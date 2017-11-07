@@ -178,4 +178,4 @@ class TestCmisFields(common.BaseTestCmis):
         self.cmis_backend.unlink()
         descr = inst._fields['cmis_folder'].get_description(self.env)
         backend_description = descr.get('backend')
-        self.assertTrue('backend_error' in descr.get('backend'))
+        self.assertTrue('backend_error' in backend_description)
