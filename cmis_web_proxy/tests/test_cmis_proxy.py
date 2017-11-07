@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+import logging
 import os
 import time
+
+import odoo.tests.common as common
 from cmislib import CmisClient
 from cmislib.browser.binding import BrowserBinding
 from cmislib.exceptions import \
     NotSupportedException
-import odoo.tests.common as common
+
+_logger = logging.getLogger(__name__)
 
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -85,7 +89,7 @@ class BaseTestCmisClient(BaseTestCmisProxy):
         try:
             self.test_folder.deleteTree()
         except NotSupportedException:
-            pass
+            _logger.info('Delete tree failed', exc_info=1)
         super(BaseTestCmisClient, self).tearDown()
 
 
@@ -280,7 +284,7 @@ class TestDocument(BaseTestCmisClient):
         private_working_copy = new_doc.checkout()
         try:
             self.assertTrue(new_doc.isCheckedOut())
-        except:
+        finally:
             private_working_copy.delete()
         new_doc.cancelCheckout()
         self.assertFalse(new_doc.isCheckedOut())

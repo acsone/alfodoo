@@ -429,8 +429,8 @@ class CmisProxy(http.Controller):
         if proxy_info.get('apply_odoo_security'):
             model_inst = self._check_access(cmis_path, proxy_info, kwargs)
         if method not in ['GET', 'POST']:
-            raise AccessError(_("The HTTP METHOD %s is not supported by CMIS") %
-                              method)
+            raise AccessError(
+                _("The HTTP METHOD %s is not supported by CMIS") % method)
         if method == 'GET':
             method = self._forward_get
         elif method == 'POST':
