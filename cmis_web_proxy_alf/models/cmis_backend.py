@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-from odoo.addons.cmis_web_proxy_alf.controllers import alfresco
+from ..controllers import alfresco
 
 
 class CmisBackend(models.Model):
@@ -22,7 +22,6 @@ class CmisBackend(models.Model):
         required=True)
     proxy_api_location = fields.Char(
         readonly=True, compute='_compute_proxy_api_location')
-
 
     @api.model
     def get_proxy_info_by_id(self, backend_id):
