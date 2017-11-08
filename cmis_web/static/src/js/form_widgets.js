@@ -1185,13 +1185,15 @@ var CmisMixin = {
     },
 
     on_click_checkout: function(row) {
-        var cmisObjectWrapped = row.data();
         var self = this;
-        this.cmis_session.checkOut(cmisObjectWrapped.objectId)
-            .ok(function (data) {
-                self.refresh_datatable();
-                self.do_download(self.wrap_cmis_object(data));
-             });
+        row.data().refresh().done(
+            function(data){
+                self.cmis_session.checkOut(data.objectId)
+                    .ok(function (data) {
+                        self.refresh_datatable();
+                        self.do_download(self.wrap_cmis_object(data));
+                     });
+              });
     },
 
     on_click_cancel_checkout: function(row){
