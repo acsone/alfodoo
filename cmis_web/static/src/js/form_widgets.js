@@ -299,6 +299,7 @@
        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
        this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
        this.versionSeriesId = this.getSuccinctProperty('cmis:versionSeriesId', cmis_object);
+       this.versionLabel = this.getSuccinctProperty('cmis:versionLabel');
        this.url = this.cmis_session.getContentStreamURL(this.objectId, 'attachment');
        this.allowableActions = cmis_object.allowableActions;
        this.renditions = cmis_object.renditions;
@@ -352,7 +353,11 @@
     **/
    fName: function() {
        var cls = this._get_css_class();
-       var val = "<div class='" + cls + " cmis_content_icon'>"+ this.name +"</div>";
+       var val = "<div class='" + cls + " cmis_content_icon'>"+ this.name;
+       if (this.versionLabel) {
+            val = val + "<span class='cmis-version-label'> (" + this.versionLabel + ") </span>";
+       }
+       val = val +"</div>";
        if (this.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')) {
            val = val + "<div class='fa fa-key cmis-checked-out-by'> " + _t('By:') + ' ' + this.getSuccinctProperty('cmis:versionSeriesCheckedOutBy') + '</div>';
        }
