@@ -134,19 +134,12 @@
              cmis_session
              .createDocument(this.parent_cmisobject.objectId, file, {'cmis:name': file.name}, file.mimeType)
              .ok(function(data) {
-                 // encoding is not properly handled into multipart....
-                 // update the document name to work around this encoding issue
-                 cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
-                     {'cmis:name': file.name})
-                     .ok(function(){
-                         processedFiles.push(data);
-                         if (processedFiles.length == numFiles){
-                             framework.unblockUI();
-                             parent.trigger('cmis_node_created',[processedFiles]);
-                         }
-                     }
-                 );
-              });
+                 processedFiles.push(data);
+                 if (processedFiles.length == numFiles){
+                     framework.unblockUI();
+                     parent.trigger('cmis_node_created',[processedFiles]);
+                 }
+             });
          }, self);
          self.$el.parents('.modal').modal('hide');
      },
@@ -436,6 +429,7 @@ var CmisMixin = {
              self.cmis_session = cmis.createSession(self.cmis_location);
              self.cmis_session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
              self.cmis_session_initialized.resolve();
+             self.cmis_session.setCharacterSet(document.characterSet);
          });
      },
 
@@ -966,18 +960,11 @@ var CmisMixin = {
             cmis_session
             .createDocument(this.displayed_folder_id, file, {'cmis:name': file.name}, file.mimeType)
             .ok(function(data) {
-                // encoding is not properly handled into multipart.... 
-                // update the document name to work around this encooding issue
-                cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
-                    {'cmis:name': file.name})
-                    .ok(function(){
-                        processedFiles.push(data);
-                        if (processedFiles.length == numFiles){
-                            framework.unblockUI();
-                            self.trigger('cmis_node_created', [processedFiles]);
-                        }
-                    }
-                );
+                processedFiles.push(data);
+                if (processedFiles.length == numFiles){
+                    framework.unblockUI();
+                    self.trigger('cmis_node_created', [processedFiles]);
+                }
              });
         }, this);
     },
