@@ -16,6 +16,9 @@
     'data': [
         'views/cmis_backend_view.xml',
     ],
+    'external_dependencies': {
+        'python': ['requests'],
+    },
     'installable': True,
     'auto_install': False,
 }
