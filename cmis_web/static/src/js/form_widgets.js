@@ -906,11 +906,15 @@ var CmisMixin = {
          this.$el.find('.dropdown-menu').off('mouseleave');
          // hide the dropdown menu on mouseleave
          this.$el.find('.dropdown-menu').on('mouseleave', function(e){
-             $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             if($(e.target).is(':visible')){
+                 $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             }
          });
          // hide the dropdown menu on link clicked
          this.$el.find('.dropdown-menu a').on('click', function(e){
-             $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             if($(e.target).is(':visible')){
+                 $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             }
          });
          this.$el.find('.cmis-folder').on('click', function(e){
              e.preventDefault();
