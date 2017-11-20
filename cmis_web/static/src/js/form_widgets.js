@@ -354,9 +354,6 @@
    fName: function() {
        var cls = this._get_css_class();
        var val = "<div class='" + cls + " cmis_content_icon'>"+ this.name;
-       if (this.versionLabel) {
-            val = val + "<span class='cmis-version-label'> (" + this.versionLabel + ") </span>";
-       }
        val = val +"</div>";
        if (this.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')) {
            val = val + "<div class='fa fa-key cmis-checked-out-by'> " + _t('By:') + ' ' + this.getSuccinctProperty('cmis:versionSeriesCheckedOutBy') + '</div>';
