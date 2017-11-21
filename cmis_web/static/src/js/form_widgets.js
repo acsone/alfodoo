@@ -134,19 +134,12 @@
              cmis_session
              .createDocument(this.parent_cmisobject.objectId, file, {'cmis:name': file.name}, file.mimeType)
              .ok(function(data) {
-                 // encoding is not properly handled into multipart....
-                 // update the document name to work around this encoding issue
-                 cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
-                     {'cmis:name': file.name})
-                     .ok(function(){
-                         processedFiles.push(data);
-                         if (processedFiles.length == numFiles){
-                             framework.unblockUI();
-                             parent.trigger('cmis_node_created',[processedFiles]);
-                         }
-                     }
-                 );
-              });
+                 processedFiles.push(data);
+                 if (processedFiles.length == numFiles){
+                     framework.unblockUI();
+                     parent.trigger('cmis_node_created',[processedFiles]);
+                 }
+             });
          }, self);
          self.$el.parents('.modal').modal('hide');
      },
@@ -245,7 +238,7 @@
 
    getSuccinctProperty: function(property, cmis_object){
        cmis_object = cmis_object || this.cmis_object;
-       return this.cmis_object.succinctProperties[property];
+       return cmis_object.succinctProperties[property];
    },
    
    _get_css_class: function(){
@@ -364,6 +357,26 @@
         return "pdf";
     },
 
+
+    /**
+     * Refresh the information by reloading data from the server
+     * The method return a deferred called once the information are up to date
+     */
+    refresh: function(){
+        var self = this;
+        var dfd = $.Deferred()
+        this.cmis_session.getObject(
+            this.objectId,
+            'latest', {
+                includeAllowableActions : true,
+                renditionFilter: 'application/pdf'
+            }).ok(function (data){
+            self.parse_object(data);
+            dfd.resolve(self);
+        });
+        return dfd.promise();
+    },
+
  });
  
  /**
@@ -416,6 +429,7 @@ var CmisMixin = {
              self.cmis_session = cmis.createSession(self.cmis_location);
              self.cmis_session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
              self.cmis_session_initialized.resolve();
+             self.cmis_session.setCharacterSet(document.characterSet);
          });
      },
 
@@ -454,21 +468,22 @@ var CmisMixin = {
       */
      on_cmis_error: function(error){
          framework.unblockUI();
-         if (error.type == 'application/json'){
-             error = JSON.parse(error.text);
-             new Dialog(this, {
-                 size: 'medium',
-                 title: _t("CMIS Error "),
-                 subtitle: error.message,
-                 $content: $('<div>').html(QWeb.render('CMISSession.warning', {error: error}))
-             }).open();
-         } else {
-             new Dialog(this, {
-                 size: 'medium',
-                 title: _t("CMIS Error"),
-                 subtitle: error.statusText,
-                 $content: $('<div>').html(error.text)
-             }).open();
+         if (error){
+             if (error.type == 'application/json'){
+                 error = JSON.parse(error.text);
+                 new Dialog(this, {
+                     size: 'medium',
+                     title: _t("CMIS Error "),
+                     $content: $('<div>').html(QWeb.render('CMISSession.warning', {error: error}))
+                 }).open();
+             } else {
+                 new Dialog(this, {
+                     size: 'medium',
+                     title: _t("CMIS Error"),
+                     subtitle: error.statusText,
+                     $content: $('<div>').html(error.text)
+                 }).open();
+             }
          }
      },
 
@@ -890,11 +905,15 @@ var CmisMixin = {
          this.$el.find('.dropdown-menu').off('mouseleave');
          // hide the dropdown menu on mouseleave
          this.$el.find('.dropdown-menu').on('mouseleave', function(e){
-             $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             if($(e.target).is(':visible')){
+                 $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             }
          });
          // hide the dropdown menu on link clicked
          this.$el.find('.dropdown-menu a').on('click', function(e){
-             $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             if($(e.target).is(':visible')){
+                 $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             }
          });
          this.$el.find('.cmis-folder').on('click', function(e){
              e.preventDefault();
@@ -944,18 +963,11 @@ var CmisMixin = {
             cmis_session
             .createDocument(this.displayed_folder_id, file, {'cmis:name': file.name}, file.mimeType)
             .ok(function(data) {
-                // encoding is not properly handled into multipart.... 
-                // update the document name to work around this encooding issue
-                cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
-                    {'cmis:name': file.name})
-                    .ok(function(){
-                        processedFiles.push(data);
-                        if (processedFiles.length == numFiles){
-                            framework.unblockUI();
-                            self.trigger('cmis_node_created', [processedFiles]);
-                        }
-                    }
-                );
+                processedFiles.push(data);
+                if (processedFiles.length == numFiles){
+                    framework.unblockUI();
+                    self.trigger('cmis_node_created', [processedFiles]);
+                }
              });
         }, this);
     },
@@ -1004,12 +1016,13 @@ var CmisMixin = {
     },
 
     on_click_download: function(row){
-        var $form = $('<form>', {
-            action: row.data().url,
-            method: 'GET'
-        }).appendTo(document.body);
-        $form.submit();
-        $form.remove();
+        row.data().refresh().done(
+            $.proxy(this.do_download, this)
+        );
+    },
+
+    do_download: function(cmisObjectWrapped){
+        window.open(cmisObjectWrapped.url);
     },
 
     on_click_preview: function(row){

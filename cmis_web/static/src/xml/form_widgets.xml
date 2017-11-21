@@ -142,8 +142,7 @@
              class="btn btn-default btn-xs content-action-download"
              aria-label="Download"
              data-toggle="tooltip"
-             title="Download"
-             t-att-href='object.url'>
+             title="Download">
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
           </a>
         </t>
@@ -229,7 +228,15 @@
 </t>
 <t t-name="CMISSession.warning">
     <div class="o_dialog_warning">
-        <t t-raw="error.stacktrace"/>
+        <p><t t-esc="error.message"/></p>
+        <t t-if="error.stacktrace">
+            <h6><a data-toggle="collapse" data-parent="#accordion" href="#stacktrace">Click here to see more technical info</a></h6>
+            <div id="stacktrace" class="col-md-12 panel-collapse collapse">
+                <div>
+                    <t t-raw="error.stacktrace"/>
+                </div>
+            </div>
+        </t>
     </div>
 </t>
 
