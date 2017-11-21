@@ -96,6 +96,13 @@ msgstr "Erreur CMIS"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:233
+#, python-format
+msgid "Click here to see more technical info"
+msgstr "Cliquez ici pour voir les détails techniques"
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:52
 #: code:addons/cmis_web/static/src/js/form_widgets.js:100
 #: code:addons/cmis_web/static/src/js/form_widgets.js:177

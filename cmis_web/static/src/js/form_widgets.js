@@ -474,7 +474,6 @@ var CmisMixin = {
                  new Dialog(this, {
                      size: 'medium',
                      title: _t("CMIS Error "),
-                     subtitle: error.message,
                      $content: $('<div>').html(QWeb.render('CMISSession.warning', {error: error}))
                  }).open();
              } else {
