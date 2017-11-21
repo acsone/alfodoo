@@ -174,7 +174,7 @@
             </a>
             <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
                 <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
-                <li t-if='canSetContentStream'><a class='content-action-set-content-stream' href="#">Update</a></li>
+                <li t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></li>
                 <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li -->
                 <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>
                 <li t-if='canCheckIn'><a class='content-action-checkin' href="#">Import new version</a></li>
