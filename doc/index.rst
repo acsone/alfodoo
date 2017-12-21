@@ -34,7 +34,7 @@ Key Features
 *************
 
 * Easy to create Alfresco space folders for any Odoo business object
-* Drag&Drop of content (office document, image, mail, ….) in Alfresco from Odoo. Your content is immediately ranked in the right location
+* Drag&Drop of content (office document, image, mail, ….) in Alfresco from Odoo. Your content is immediately filed in the right location
 * Update your document (versioning) without leaving  Odoo
 * Easy content preview and browsing (PDF, Image, Media preview)
 * Easy connector configuration – Everything can be done directly from the Odoo interface
