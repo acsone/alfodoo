@@ -9,7 +9,7 @@
     'version': '10.0.1.0.0',
     'license': 'AGPL-3',
     'author': 'ACSONE SA/NV',
-    'website': 'https://alfodoo.org/',
+    'website': 'http://alfodoo.org/',
     'depends': [
         'cmis_web'
     ],

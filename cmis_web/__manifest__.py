@@ -6,18 +6,19 @@
     'summary': """
         Embeddable CMIS Web components""",
     'author': 'ACSONE SA/NV',
-    'website': "http://alfodoo.org",
-    'category': 'Uncategorized',
+    'website': "http://alfodoo.org/",
     'version': '10.0.2.0.0',
     'license': 'AGPL-3',
+    'price': 500,
+    'currency': 'EUR',
     'depends': [
         'web',
-        'cmis_field'
+        'cmis_field',
     ],
     'qweb': [
         "static/src/xml/*.xml",
     ],
     'data': [
-        'views/cmis_web.xml'
+        'views/cmis_web.xml',
     ],
 }

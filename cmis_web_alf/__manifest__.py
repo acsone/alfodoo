@@ -6,8 +6,7 @@
     'summary': """
         Alfresco extension for the CMIS web widgets""",
     'author': 'ACSONE SA/NV',
-    'website': "http://alfodoo.org",
-    'category': 'Uncategorized',
+    'website': "http://alfodoo.org/",
     'version': '10.0.2.0.0',
     'license': 'AGPL-3',
     'depends': [
