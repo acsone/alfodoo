@@ -30,15 +30,28 @@ a seamless integration.
   </div>
 
 *************
-Core Features
+Key Features
 *************
 
-* **100% Open Source** (`AGPL version 3`_): the full `source code is available
+* Easy to create Alfresco space folders for any Odoo business object
+* Drag&Drop of content (office document, image, mail, ….) in Alfresco from Odoo. Your content is immediately ranked in the right location
+* Update your document (versioning) without leaving  Odoo
+* Easy content preview and browsing (PDF, Image, Media preview)
+* Easy connector configuration – Everything can be done directly from the Odoo interface
+
+In addition to these features, extensions can be implemented to add more advanced functionality such as:
+
+* **Space template**:  possibility to create a dedicated structured space template linked to a type of Odoo object (project, …).
+* **Reporting**:  from an Odoo object, possibility to generate any kind of reports in most common formats (PDF, MS office, ..). The generated document is automatically classified in the appropriate folder and enriched with appropriate metadata
+* **Proxy mode**:  with this mode, instead of using the actual user credentials for submitting Odoo widget requests (CMIS) to Alfresco, a proxy user is used.
+
+Alfodoo is **100% Open Source** (`AGPL version 3`_): the full `source code is available 
   on GitHub`_
-* Full responsive HTML Widget that enables you to view and manage content from a
+  
+Full responsive HTML Widget that enables you to view and manage content from a
   `cmis:folder`.
-* ...
-* See a :ref:`code-overview` with examples of code
+  
+See a :ref:`code-overview` with examples of code
 
 .. _`Odoo`: http://www.odoo.com
 .. _`ACSONE SA/NV`: http://www.acsone.eu
