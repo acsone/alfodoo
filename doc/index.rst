@@ -161,7 +161,7 @@ The Alfodoo project has the objective to provide a collection of 'addons' in ord
 
 Currently, the project proposes an integration between Odoo and the open-source ECM platform Alfresco.
 
-The aim is to offer to the odoo users a transparent and easy access to the documents stored in the appropriate location in Alfresco. 
+The aim is to offer Odoo users a transparent and easy access to the documents stored in the appropriate location in Alfresco.
 
 
 .. toctree::
