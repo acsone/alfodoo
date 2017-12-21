@@ -77,15 +77,15 @@ development of new features).
 Overview: Manage the documents in Odoo
 **************************************
 
-Visually, the main part of the functionality is accessed through a "Documents tab" configurable on each Odoo model providing a "real-time" view on the Alfresco content.
+The main part of the functionality is accessed through a "Documents" tab configurable on each Odoo model providing a "real-time" view on the Alfresco content.
 
-From the user's point of view, the Documents tab gives a direct access to the items (documents lists, sub-folders, …) linked to the Odoo object and contained in the linked Alfresco folder.
+The "Documents" tab gives direct access to the items (documents list, sub-folders, …) linked to the Odoo object. The items are stored in the related Alfresco folder.
 
-The first action is to let the user create manually  (means "only when needed") the linked folder in Alfresco
+First the user triggers the creation (button "Create folder in DMS") of the related Alfresco folder.
 
 .. image:: ./_static/img/cmis_crm_claim_empty.png
 
-Then the Documents tab shows a global menu providing the following functionality:
+Then the following functionality becomes available:
 
 .. raw:: html
 
@@ -104,16 +104,16 @@ Then the Documents tab shows a global menu providing the following functionality
     </tr>
   </table>
 
-In the content table, the User can see the documents and folders list.
+In the content table, the user can see the documents and folders list.
 
 .. image:: ./_static/img/cmis_crm_claim_new_folder.png
 
 The following information is displayed for each item:
 
-* An icon used to hide or unhide the item details (folder or document Alfresco metadata: cm:folder, cm:content, cm:title)
 * The item name
 * The item description
-* Last Modified date
+* Last Modification date
+* An icon used to hide or unhide the item details (folder or document Alfresco metadata: cm:folder, cm:content, cm:title)
 * A contextual menu: the options list for a folder item or for a document item 
 
 .. image:: ./_static/img/cmis_crm_claim_doc_details.png
