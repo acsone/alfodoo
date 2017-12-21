@@ -194,8 +194,7 @@ Developer's guide
 .. toctree::
    :maxdepth: 2
 
-   guides/install.rst
-   guides/code_overview.rst
+   guides/short_guide.rst
 
 
 API Reference
