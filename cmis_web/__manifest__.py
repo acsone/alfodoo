@@ -9,7 +9,7 @@
     'website': "http://alfodoo.org",
     'version': '10.0.3.0.0',
     'license': 'AGPL-3',
-    'price': 500,
+    'price': 400,
     'currency': 'EUR',
     'depends': [
         'web',
