@@ -5,6 +5,7 @@
     'name': "Alfodoo Web interface",
     'summary': """
         CMIS Web browser widget""",
+    'category': 'Document Management',
     'author': 'ACSONE SA/NV',
     'website': "http://alfodoo.org",
     'version': '10.0.3.0.0',

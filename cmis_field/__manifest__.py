@@ -6,6 +6,7 @@
     'name': 'Alfodoo CMIS Fields',
     'version': '10.0.3.0.0',
     'summary': 'Specialized field to work with a CMIS server',
+    'category': 'Document Management',
     'author': "ACSONE SA/NV ",
     'website': 'http://alfodoo.org/',
     'license': 'AGPL-3',

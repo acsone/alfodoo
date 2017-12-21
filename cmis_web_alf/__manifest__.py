@@ -5,6 +5,7 @@
     'name': "Alfodoo Alfresco Web interface",
     'summary': """
         Extentions to the Alfodoo web widgets for Alfresco""",
+    'category': 'Document Management',
     'author': 'ACSONE SA/NV',
     'website': "http://alfodoo.org",
     'version': '10.0.3.0.0',
