@@ -88,6 +88,18 @@
     };
 
     /**
+     * sets character set used for non file fields in posted
+     * multipart/form-data resource
+     * @param {string} characterSet
+     * @return {CmisSession}
+     */
+    session.setCharacterSet = function (characterSet) {
+      _characterSet = characterSet;
+      return session;
+    };
+
+
+    /**
      * Connects to a cmis server and retrieves repositories,
      * token or credentils must already be set
      *
@@ -1276,6 +1288,7 @@
     var _token = null;
     var _username = null;
     var _password = null;
+    var _characterSet;
     var _afterlogin;
 
     var _proxyUrl = null;
@@ -1321,6 +1334,12 @@
 
     var _postMultipart = function (url, options, content, filename) {
       var req = _http('POST', url);
+      if (_characterSet !== undefined && Object.keys(options).length > 0){
+        // IN HTML5, the character set to use for non-file fields can
+        // be specified in a multipart by using a __charset__ field.
+        // https://dev.w3.org/html5/spec-preview/attributes-common-to-form-controls.html#attr-fe-name-charset
+        req.field('_charset_', _characterSet);
+      }
       filename = filename || 'undefined';
       for (var k in options) {
         if (options[k] == 'cmis:name') {

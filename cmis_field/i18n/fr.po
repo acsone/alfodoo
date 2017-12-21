@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0e\n"
+"Project-Id-Version: Odoo Server 10.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-16 10:28+0000\n"
-"PO-Revision-Date: 2016-09-16 10:28+0000\n"
+"POT-Creation-Date: 2017-11-09 17:01+0000\n"
+"PO-Revision-Date: 2017-11-09 17:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,21 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: cmis_field
-#: code:addons/cmis_field/fields/cmis_folder.py:92
+#: code:addons/cmis_field/models/cmis_backend.py:84
+#, python-format
+msgid "%s is not a valid name.\n"
+"The following chars are not allowed %s andthe name can not ends with a space or a '.'"
+msgstr "%s n'est pas un nom valide.\n"
+"Les charactères suivants ne sont pas autorisés '%s'. De plus, le nom ne peut pas se terminer par une espace ou un point"
+
+#. module: cmis_field
+#: code:addons/cmis_field/fields/cmis_folder.py:132
+#, python-format
+msgid "A value is already assigned to %s"
+msgstr "Une valeur est déjà assignée à %s"
+
+#. module: cmis_field
+#: code:addons/cmis_field/fields/cmis_folder.py:82
 #, python-format
 msgid "Backend named %s not found. Please check your configuration."
 msgstr "Aucun backend nommé %s trouvé. Veuillez vérifier votre configuration."
@@ -27,25 +41,45 @@ msgid "CMIS Backend"
 msgstr "Backend CMIS"
 
 #. module: cmis_field
-#: code:addons/cmis_field/models/cmis_backend.py:44
+#: model:ir.model.fields,help:cmis_field.field_cmis_backend_sanitize_replace_char
+msgid "Character used as replacement of invalid characters found inthe value to use as cmis:name by the sanitize method"
+msgstr "Caractères à utiliser pour remplacer les caractères invalides présents dans la valeur à utiliser comme nom dans le repository."
+
+#. module: cmis_field
+#: code:addons/cmis_field/models/cmis_backend.py:70
 #, python-format
 msgid "Expected 1 backend named %s, %s found"
 msgstr "Un seul backend nommé %s attendu; %s trouvé"
 
 #. module: cmis_field
-#: model:ir.model,name:cmis_field.model_ir_model_fields
-msgid "Fields"
-msgstr "Champs"
+#: model:ir.model.fields,help:cmis_field.field_cmis_backend_enable_sanitize_cmis_name
+msgid "If checked, the name of the CMIS content created by the CMIS fields will be sanitized by replacing the characters not supported in a cmis:name with the one specified."
+msgstr "Si coché la valeur à utiliser comme nom dans le repository est nettoyée en remplaçant les caractères invalides par celui spécifié comme valeur de remplacement."
 
 #. module: cmis_field
-#: code:addons/cmis_field/models/cmis_backend.py:46
+#: code:addons/cmis_field/models/cmis_backend.py:72
 #, python-format
 msgid "No backend found"
 msgstr "Aucun backend CMIS trouvé"
 
 #. module: cmis_field
-#: code:addons/cmis_field/fields/cmis_folder.py:96
+#: code:addons/cmis_field/fields/cmis_folder.py:86
 #, python-format
 msgid "No backend found. Please check your configuration."
 msgstr "Aucun backend CMIS trouvé. Veuillez vérifier votre configuration."
 
+#. module: cmis_field
+#: model:ir.model.fields,field_description:cmis_field.field_cmis_backend_sanitize_replace_char
+msgid "Replacement char"
+msgstr "Caractère de remplacement"
+
+#. module: cmis_field
+#: model:ir.model.fields,field_description:cmis_field.field_cmis_backend_enable_sanitize_cmis_name
+msgid "Sanitize name on content creation?"
+msgstr "Nettoyer le nom à la création?"
+
+#. module: cmis_field
+#: code:addons/cmis_field/models/cmis_backend.py:22
+#, python-format
+msgid "The character to use as replacement can not be one of'%s'"
+msgstr "Le caractère de remplacement ne peut pas être une des valeurs suivantes '%s'"
