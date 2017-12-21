@@ -15,6 +15,9 @@
     'data': [
         'views/cmis_backend_view.xml',
     ],
+    'images': [
+        'static/description/main_icon.png',
+    ],
     'installable': True,
     'auto_install': False,
 }
