@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Alfodoo Cmis Web Proxy for Alfresco',
+    'name': 'Alfodoo CMIS Web Proxy for Alfresco',
     'category': 'Document Management',
     'version': '10.0.3.0.0',
     'license': 'AGPL-3',

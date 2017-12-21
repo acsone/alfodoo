@@ -2,7 +2,7 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': "Alfodoo Web interface",
+    'name': "Alfodoo CMIS Web interface",
     'summary': """
         CMIS Web browser widget""",
     'category': 'Document Management',
