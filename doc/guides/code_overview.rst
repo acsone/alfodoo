@@ -1,10 +1,10 @@
 .. _code-overview:
 
-#############
-Code Overview
-#############
+####################################################
+How to link a CMIS documents folder to an Odoo model
+####################################################
 
-The main usage of theses addons is to let you extend an existing Odoo model to 
+The main usage of theses addons is to let you extend an existing Odoo model to
 link an instance of this model to a folder in a CMIS container.
 
 As an example, we'll see the steps to extend the Customer Claim object
@@ -15,7 +15,7 @@ to store the documents related to a claim into a CMIS container
     from openerp import models
     from openerp.addons.cmis_field import fields
 
-    
+
     class CrmClaim(models.Model):
         _inherit = 'crm.claim'
 

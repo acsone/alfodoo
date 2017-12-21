@@ -1,23 +1,36 @@
-*******
-Install
-*******
+##########################
+Alfodoo Installation guide
+##########################
+
+To install the Alfodoo addons, there are several important steps:
+
+1. Install the dependencies (the Odoo cmis addon and the Python cmislib library).
+2. Make sure Alfresco is properly configured to accept AJAX requests.
+   from your Odoo domain
+3. If your Alfresco is behind a reverse proxy, make sure all it's components are
+   properly configured.
+4. Launch Odoo with the adequate options.
+5. Configure the Alfresco URL and credentials in your Odoo instance.
+
+Please read the following sections carefully to ensure a smooth experience with Alfodoo.
 
 Dependencies
 ************
 
 The Alfodoo framework requires the following:
 
-* The Odoo **cmis** addon: The Odoo *cmis* addon provides the minimal foundation for Odoo 
+* The Odoo **cmis** addon: provides the foundation for Odoo
   modules implementing different integration scenario with a CMIS server. It allows
-  you to configure a CMIS backend. The addon is available into the  the OCA's `connector-cmis`_
-  repository.
+  you to configure a CMIS backend. This addon is maintained by the OCA and is
+  on the `Odoo app store <https://www.odoo.com/apps/modules/10.0/cmis/>`_ as well as
+  on github as part of the `connector-cmis`_ repository.
 * `cmislib`_  the Apache Chemistry CMIS client library for Python: To be compliant
   with the latest version of CMIS (1.1), the connector uses the latest version of the
-  python cmislib>=0.6. The lib can be installed with:
+  python cmislib>=0.6. The library can be installed with:
 
-    .. code-block:: shell
-        
-        pip install 'cmislib>=0.6'
+.. code-block:: shell
+
+   pip install 'cmislib>=0.6'
 
 .. _`connector-cmis`: https://github.com/OCA/connector-cmis
 .. _`cmislib`: http://chemistry.apache.org/python/cmislib.html
@@ -33,7 +46,7 @@ This is done by enabling CORS.
 To enable CORS in the Alfresco Platform, you should do the following:
 
 Modify tomcat/conf/web.xml and add the following sections to allow requests from
-http://localhost:8069. 
+http://localhost:8069 in addition to http://my.public.alfresco.hostname.
 When specifying the cors.allowOrigin URL make sure to use the URL that will be
 used by the web client.
 
@@ -45,7 +58,7 @@ used by the web client.
       <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
       <init-param>
         <param-name>cors.allowed.origins</param-name>
-        <param-value>http://localhost:8069,http://my-odoo-server-name.eu</param-value>
+        <param-value>http://localhost:8069,https://my.public.alfresco.hostname</param-value>
       </init-param>
       <init-param>
         <param-name>cors.allowed.methods</param-name>
@@ -80,7 +93,6 @@ used by the web client.
    </filter-mapping>
 
 
-
 Alfresco Behind a a Proxy
 *************************
 
@@ -102,8 +114,10 @@ config file in <tomcat>/shared/classes/alfresco-global.properties
    opencmis.servletpath.override=true
    opencmis.servletpath.value=
    opencmis.server.override=true
-   opencmis.server.value=https://<my.public.alfresco.hostname>/alfresco/api
+   opencmis.server.value=https://my.public.alfresco.hostname/alfresco/api
 
+Configure python SSL certificates
+*********************************
 
 Moreover if alfresco is available over SSL (HTTPS) you must also take care
 of trusting the SSL certificate in your Odoo instance. This can be done by
@@ -125,9 +139,23 @@ Launch Odoo
 
 The *cmis_field* addon defines a new field and a specific web controller providing
 some functionalities to the web. In order to get the new field desciption registered
-at the early stage in the statup process and to register the controller 
+at the early stage in the statup process and to register the controller
 you must start Odoo with:
 
 .. code-block:: shell
 
   --load web,web_gantt,cmis_field
+
+Configure the CMIS connector
+****************************
+
+In Odoo, go to Settings > CMIS > Backends and create a new backend.
+
+Populate the following fields:
+
+* **Location**: the CMIS root URL, example ``https://my.public.alfresco.hostname/alfresco/api/-default-/public/cmis/versions/1.1/browser/``
+* **Username**, **Password**: the Alfresco credentials that Odoo will use to create new folders and associate their object reference
+  to the Odoo record. It is recommanded to create a dedicated Alfresco user for this.
+* **Inital directory for writing**: the base Alfresco directory where Odoo will create folders and store documents (eg /odoo).
+* **Alfresco Api Url**: usually ``https://my.public.alfresco.hostname/alfresco/s/api``.
+* **Alfresco Share Url**: usually ``https://my.public.alfresco.hostname/share``.
