@@ -45,8 +45,7 @@ In addition to these features, extensions can be implemented to add more advance
 * **Reporting**:  from an Odoo object, possibility to generate any kind of reports in most common formats (PDF, MS office, ..). The generated document is automatically classified in the appropriate folder and enriched with appropriate metadata
 * **Proxy mode**:  with this mode, instead of using the actual user credentials for submitting Odoo widget requests (CMIS) to Alfresco, a proxy user is used.
 
-Alfodoo is **100% Open Source** (`AGPL version 3`_): the full `source code is available 
-  on GitHub`_
+Alfodoo is **100% Open Source** (`AGPL version 3`_): the full `source code is available on GitHub`_
   
 Full responsive HTML Widget that enables you to view and manage content from a
   `cmis:folder`.

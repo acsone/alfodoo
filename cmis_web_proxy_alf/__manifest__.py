@@ -3,10 +3,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Cmis Web Proxy Alf',
+    'name': 'Alfodoo Cmis Web Proxy for Alfresco',
     'description': """
         """,
-    'version': '10.0.1.0.0',
+    'version': '10.0.3.0.0',
     'license': 'AGPL-3',
     'author': 'ACSONE SA/NV',
     'website': 'http://alfodoo.org/',
@@ -18,5 +18,8 @@
         'views/cmis_web_proxy_alf.xml'
     ],
     'demo': [
+    ],
+    'images': [
+        'static/description/main_icon.png',
     ],
 }

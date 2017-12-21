@@ -3,10 +3,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Cmis Web Proxy',
+    'name': 'Alfodoo Cmis Web Proxy',
     'summary': """
         Odoo as proxy server for your cmis requests.""",
-    'version': '10.0.1.0.0',
+    'version': '10.0.3.0.0',
     'license': 'AGPL-3',
     'author': 'ACSONE SA/NV',
     'website': 'http://alfodoo.org/',
@@ -21,4 +21,7 @@
         'python': ['requests',
                    'cmislib'],
     },
+    'images': [
+        'static/description/main_icon.png',
+    ],
 }

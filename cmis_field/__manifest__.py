@@ -3,9 +3,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    'name': 'CMIS Fields',
-    'version': '10.0.2.0.0',
-    'summary': 'Specialized field sto work with a CMIS server',
+    'name': 'Alfodoo CMIS Fields',
+    'version': '10.0.3.0.0',
+    'summary': 'Specialized field to work with a CMIS server',
     'author': "ACSONE SA/NV ",
     'website': 'http://alfodoo.org/',
     'license': 'AGPL-3',
@@ -16,4 +16,7 @@
         'views/cmis_backend_view.xml'
     ],
     'installable': True,
+    'images': [
+        'static/description/main_icon.png',
+    ],
 }

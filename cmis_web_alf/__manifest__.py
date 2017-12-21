@@ -2,12 +2,12 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    'name': "Alfresco CMIS Web interface",
+    'name': "Alfodoo Alfresco Web interface",
     'summary': """
-        Alfresco extension for the CMIS web widgets""",
+        Extentions to the Alfodoo web widgets for Alfresco""",
     'author': 'ACSONE SA/NV',
-    'website': "http://alfodoo.org/",
-    'version': '10.0.2.0.0',
+    'website': "http://alfodoo.org",
+    'version': '10.0.3.0.0',
     'license': 'AGPL-3',
     'depends': [
         'cmis_alf',
@@ -22,4 +22,7 @@
     'external_dependencies': {
         'python': ['cmislib'],
     },
+    'images': [
+        'static/description/main_icon.png',
+    ],
 }
