@@ -59,6 +59,14 @@ See a :ref:`code-overview` with examples of code
 .. _`addons`: https://github.com/acsone/alfodoo
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
 
+*****************************************
+Last minute information regarding Odoo 11
+*****************************************
+
+* A crowdfunding campaign is currently running to finance the migration of Alfodoo to make it compatible with Odoo 11. **Be part of this project now!** `More info here`_
+
+.. _`More info here`: https://www.indiegogo.com/projects/alfodoo-for-odoo-11-software#/
+
 ***************************
 Support Alfodoo development
 ***************************
