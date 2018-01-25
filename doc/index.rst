@@ -2,6 +2,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. important:: **Alfofoo for Odoo 11**
+
+  A crowdfunding campaign is currently running to finance the migration of Alfodoo to make it compatible with Odoo 11. **Be part of this project now!** `More info here`_ https://www.indiegogo.com/projects/alfodoo-for-odoo-11-software#/
+
+.. _`More info here`: https://www.indiegogo.com/projects/alfodoo-for-odoo-11-software#/
+
 #######
 Alfodoo
 #######
@@ -58,14 +64,6 @@ See a :ref:`code-overview` with examples of code
 .. _`source code is available on GitHub`: https://github.com/acsone/alfodoo
 .. _`addons`: https://github.com/acsone/alfodoo
 .. _`AGPL version 3`: http://www.gnu.org/licenses/agpl-3.0.html
-
-*****************************************
-Last minute information regarding Odoo 11
-*****************************************
-
-* A crowdfunding campaign is currently running to finance the migration of Alfodoo to make it compatible with Odoo 11. **Be part of this project now!** `More info here`_
-
-.. _`More info here`: https://www.indiegogo.com/projects/alfodoo-for-odoo-11-software#/
 
 ***************************
 Support Alfodoo development
