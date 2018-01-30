@@ -2,6 +2,7 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+
 from cmislib.browser.binding import safe_urlencode
 from openerp import api, models
 
