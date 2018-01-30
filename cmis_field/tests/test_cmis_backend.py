@@ -3,8 +3,9 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests import common
+import mock
 from openerp.exceptions import UserError, ValidationError
+from openerp.tests import common
 
 
 class TestCmisBackend(common.SavepointCase):
@@ -59,3 +60,46 @@ class TestCmisBackend(common.SavepointCase):
         sanitized = self.backend_instance.sanitize_cmis_names(
             ['/y dir*', 'sub/dir'], ' ')
         self.assertEqual(sanitized, ['y dir', 'sub dir'])
+
+    def test_get_unique_folder_name(self):
+        mocked_parent = mock.MagicMock()
+        # if no name found, the method return the same name
+        repository = mock.MagicMock()
+        mocked_parent.repository = repository
+        query_result = mock.MagicMock()
+        repository.query.side_effect = lambda *a: query_result
+        query_result.getNumItems.side_effect = lambda *a: 0
+        self.assertEqual('test', self.backend_instance.get_unique_folder_name(
+            'test', mocked_parent))
+        # if the same name is found and the folder_name_conflict_handler ==
+        # 'error' a ValidationError is raised
+        query_result.getNumItems.side_effect = lambda *a: 1
+        self.backend_instance.folder_name_conflict_handler = 'error'
+        with self.assertRaises(ValidationError):
+            self.backend_instance.get_unique_folder_name('test', mocked_parent)
+
+        self.cpt = 0
+
+        def query(q):
+            if self.cpt == 0:
+                self.cpt += 1
+                query_result.getNumItems.side_effect = lambda *a: 1
+                return query_result
+            if self.cpt == 1:
+                test = mock.Mock()
+                test.configure_mock()
+                ret = []
+                for v in ['test_(1)', 'test_(3)']:
+                    m = mock.Mock()
+                    m.configure_mock(name=v)
+                    ret.append(m)
+                query_result.__iter__.return_value = ret
+                return query_result
+        # if the same name is found and the folder_name_conflict_handler ==
+        # 'increment' the method must return a new name with a suffix _(X)
+        # where X is the value max found as X for the same name + 1
+        self.backend_instance.folder_name_conflict_handler = 'increment'
+        repository.query.side_effect = query
+        name = self.backend_instance.get_unique_folder_name(
+            'test', mocked_parent)
+        self.assertEqual('test_(4)', name)

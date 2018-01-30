@@ -178,4 +178,25 @@ class TestCmisFields(common.BaseTestCmis):
         self.cmis_backend.unlink()
         descr = inst._fields['cmis_folder'].get_description(self.env)
         backend_description = descr.get('backend')
-        self.assertTrue('backend_error' in descr.get('backend'))
+        self.assertTrue('backend_error' in backend_description)
+
+    def test_cmis_folder_copy_false(self):
+        # By default the cmis_folder value must not be copied.
+        inst1 = self.env['cmis.test.model'].create({'name': 'folder_name1'})
+        self.assertFalse(inst1._fields['cmis_folder'].copy)
+        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
+            mocked_cmis_repository = mock.MagicMock()
+            mocked_get_repository.return_value = mocked_cmis_repository
+
+            def my_side_effect(parent, name, prop=None):
+                new_object_mock = mock.MagicMock()
+                new_object_mock.getObjectId.return_value = "id1"
+                return new_object_mock
+
+            mocked_cmis_repository.createFolder.side_effect = my_side_effect
+            inst1._fields['cmis_folder'].create_value(inst1)
+            self.assertEquals(inst1.cmis_folder, "id1")
+            copy_inst1 = inst1.copy()
+            self.assertFalse(copy_inst1.cmis_folder)

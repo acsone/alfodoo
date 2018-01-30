@@ -29,3 +29,20 @@ class BaseTestCmis(common.SavepointCase):
         cls.cmis_test_model = cls._init_test_model(models.CmisTestModel)
         cls.cmis_backend = cls.env.ref('cmis.cmis_backend_alfresco')
         cls.cmis_backend.initial_directory_write = '/odoo'
+
+    def setUp(self):
+        super(BaseTestCmis, self).setUp()
+
+        # global patch
+
+        def get_unique_folder_name(name, parent):
+            return name
+        self.patched_get_unique_folder_name = mock.patch.object(
+            self.cmis_backend.__class__, 'get_unique_folder_name',
+            side_effect=get_unique_folder_name
+        )
+        self.patched_get_unique_folder_name.start()
+
+    def tearDown(self):
+        super(BaseTestCmis, self).tearDown()
+        self.patched_get_unique_folder_name.stop()

@@ -136,19 +136,12 @@
              cmis_session
              .createDocument(this.parent_cmisobject.objectId, file, {'cmis:name': file.name}, file.mimeType)
              .ok(function(data) {
-                 // encoding is not properly handled into multipart....
-                 // update the document name to work around this encoding issue
-                 cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
-                     {'cmis:name': file.name})
-                     .ok(function(){
-                         processedFiles.push(data);
-                         if (processedFiles.length == numFiles){
-                             framework.unblockUI();
-                             parent.trigger('cmis_node_created',[processedFiles]);
-                         }
-                     }
-                 );
-              });
+                 processedFiles.push(data);
+                 if (processedFiles.length == numFiles){
+                     framework.unblockUI();
+                     parent.trigger('cmis_node_created',[processedFiles]);
+                 }
+             });
          }, self);
          self.$el.parents('.modal').modal('hide');
      },
@@ -157,23 +150,26 @@
          this._super();
      }
  });
- 
- var CmisUpdateContentStreamDialog = Dialog.extend({
-    template: 'CmisUpdateContentStreamView',
+
+ var SingleFileUpload = Dialog.extend({
     events: {
         'change .btn-file :file' : 'on_file_change'
     },
 
-    init: function(parent, row) {
+    init: function(parent, cmisObjectWrapped, options) {
         var self = this;
-        var options = {
+        var btnOkTitle = _t('OK');
+        if (!_.isUndefined(options) && _.has(options, 'btnOkTitle')){
+            btnOkTitle = options.btnOkTitle;
+        }
+        options = _.defaults(options || {}, {
             buttons: [
-                {text: _t("Update content"),
+                {text:btnOkTitle,
                  classes: "btn-primary",
                  click: function (e) {
                     e.stopPropagation();
                     if(self.check_validity()){
-                        self.on_click_update_content();
+                        self.on_click_ok();
                     }
                  }},
                  {text: _t("Close"),
@@ -184,11 +180,9 @@
                  },
             ],
             close: function () { self.close();}
-        };
+        });
         this._super(parent, options);
-        this.row = row;
-        this.data = row.data();
-        this.set_title(_t("Update content of ") + this.data.name);
+        this.data = cmisObjectWrapped;
     },
 
     on_file_change: function(e){
@@ -197,8 +191,8 @@
         input_text = input.closest('.input-group').find(':text');
         input_text.val(label);
     },
-    
-    on_click_update_content: function() {
+
+    on_click_ok: function() {
         var self = this;
         var input = this.$el.find("input[type='file']")[0]
         var numFiles = input.files ? input.files.length : 1;
@@ -208,26 +202,93 @@
         var file = input.files[0];
         var fileName = file.name;
         framework.blockUI();
-        this.data.cmis_session
-            .setContentStream(this.data.objectId, file, true, fileName)
-            .ok(function(data) {
-                framework.unblockUI();
+        this._do_upload(file, fileName).then(function(data) {
+            framework.unblockUI();
+            if (!_.isUndefined(data)) {
                 self.getParent().trigger('cmis_node_content_updated', [data]);
-                self.$el.parents('.modal').modal('hide');
-             });
+            }
+            self.$el.parents('.modal').modal('hide');
+         });
     },
-    
+
+    /**
+     * This method must be implemented into concrete dialog an return a promise
+     * The promise must be resolved with updated cmisObject
+     */
+    _do_upload: function(file, filename){
+    },
+
     close: function() {
         this._super();
     }
  });
 
+ var CmisUpdateContentStreamDialog = SingleFileUpload.extend({
+    template: 'CmisUpdateContentStreamView',
+
+    init: function(parent, cmisObjectWrapped) {
+        var self = this;
+        var options = {
+            btnOkTitle: _t("Update content"),
+            title: _t("Update content of ") + cmisObjectWrapped.name,
+        };
+        this._super(parent, cmisObjectWrapped, options);
+        //this.set_title(_t("Update content of ") + this.data.name);
+    },
+
+  _do_upload: function(file, fileName){
+        var dfd = $.Deferred();
+        this.data.cmis_session
+            .setContentStream(this.data.objectId, file, true, fileName)
+            .ok(function(data) {
+                dfd.resolve(data);
+             });
+         return dfd.promise();
+    },
+ });
+
+ var CmisCheckinDialog = SingleFileUpload.extend({
+    template: 'CmisCheckinView',
+
+    init: function(parent, cmisObjectWrapped) {
+        var self = this;
+        var options = {
+            btnOkTitle: _t("Import new version"),
+            title: _t("Import new version of ") + cmisObjectWrapped.name,
+        };
+        this._super(parent, cmisObjectWrapped, options);
+        //this.set_title(_t("Update content of ") + this.data.name);
+    },
+
+  _do_upload: function(file, fileName){
+        var self = this;
+        var dfd = $.Deferred();
+        var major = this.$el.find("input:radio[name='version-radios']:checked").val() === "major";
+        var comment = this.$el.find('#comment').val();
+        this.data.cmis_session
+            .checkIn(this.data.objectId, major, fileName, file, comment)
+            .ok(function(data) {
+                // after checkin the working copy must be deleted (self.data)
+                // the date received into the response is the new version
+                // created
+                self.getParent().trigger('cmis_node_deleted', [self.data.cmis_object]);
+                dfd.resolve(data);
+             });
+         return dfd.promise();
+    },
+ });
+
  var CmisObjectWrapper = core.Class.extend({
 
-   init: function(cmis_object, cmis_session){
+   init: function(parent, cmis_object, cmis_session){
+     this.parent = parent;
      this.cmis_object = cmis_object;
      this.cmis_session = cmis_session;
      this.parse_object(cmis_object);
+   },
+
+   _clone: function(){
+       return new CmisObjectWrapper(this.parent, this.cmis_object, this.cmis_session);
    },
 
    parse_object: function(cmis_object){
@@ -240,6 +301,7 @@
        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
        this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
        this.versionSeriesId = this.getSuccinctProperty('cmis:versionSeriesId', cmis_object);
+       this.versionLabel = this.getSuccinctProperty('cmis:versionLabel');
        this.url = this.cmis_session.getContentStreamURL(this.objectId, 'attachment');
        this.allowableActions = cmis_object.allowableActions;
        this.renditions = cmis_object.renditions;
@@ -247,7 +309,7 @@
 
    getSuccinctProperty: function(property, cmis_object){
        cmis_object = cmis_object || this.cmis_object;
-       return this.cmis_object.succinctProperties[property];
+       return cmis_object.succinctProperties[property];
    },
    
    _get_css_class: function(){
@@ -293,7 +355,8 @@
     **/
    fName: function() {
        var cls = this._get_css_class();
-       var val = "<div class='" + cls + " cmis_content_icon'>"+ this.name +"</div>";
+       var val = "<div class='" + cls + " cmis_content_icon'>"+ this.name;
+       val = val +"</div>";
        if (this.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')) {
            val = val + "<div class='fa fa-key cmis-checked-out-by'> " + _t('By:') + ' ' + this.getSuccinctProperty('cmis:versionSeriesCheckedOutBy') + '</div>';
        }
@@ -366,8 +429,33 @@
         return "pdf";
     },
 
+
+    /**
+     * Refresh the information by reloading data from the server
+     * The method return a deferred called once the information are up to date
+     */
+    refresh: function(){
+        var self = this;
+        var dfd = $.Deferred()
+        var options =  DEFAULT_CMIS_OPTIONS;
+        var oldValue = this._clone();
+        this.cmis_session.getObject(
+            this.objectId,
+            'latest', options).ok(function (data){
+            self.parse_object(data);
+            self.parent.trigger('wrapped_cmis_node_reloaded', oldValue, self);
+            dfd.resolve(self);
+        });
+        return dfd.promise();
+    },
+
  });
- 
+
+ var DEFAULT_CMIS_OPTIONS = {
+     includeAllowableActions : true,
+     renditionFilter: 'application/pdf',
+}
+
  /**
   * A Mixin class defining common methods used by Cmis widgets
   */
@@ -418,6 +506,7 @@ var CmisMixin = {
              self.cmis_session = cmis.createSession(self.cmis_location);
              self.cmis_session.setGlobalHandlers(self.on_cmis_error, self.on_cmis_error);
              self.cmis_session_initialized.resolve();
+             self.cmis_session.setCharacterSet(document.characterSet);
          });
      },
 
@@ -456,21 +545,22 @@ var CmisMixin = {
       */
      on_cmis_error: function(error){
          framework.unblockUI();
-         if (error.type == 'application/json'){
-             error = JSON.parse(error.text);
-             new Dialog(this, {
-                 size: 'medium',
-                 title: _t("CMIS Error "),
-                 subtitle: error.message,
-                 $content: $('<div>').html(QWeb.render('CMISSession.warning', {error: error}))
-             }).open();
-         } else {
-             new Dialog(this, {
-                 size: 'medium',
-                 title: _t("CMIS Error"),
-                 subtitle: error.statusText,
-                 $content: $('<div>').html(error.text)
-             }).open();
+         if (error){
+             if (error.type == 'application/json'){
+                 error = JSON.parse(error.text);
+                 new Dialog(this, {
+                     size: 'medium',
+                     title: _t("CMIS Error "),
+                     $content: $('<div>').html(QWeb.render('CMISSession.warning', {error: error}))
+                 }).open();
+             } else {
+                 new Dialog(this, {
+                     size: 'medium',
+                     title: _t("CMIS Error"),
+                     subtitle: error.statusText,
+                     $content: $('<div>').html(error.text)
+                 }).open();
+             }
          }
      },
 
@@ -478,7 +568,18 @@ var CmisMixin = {
       * Wrap a 
       */
      wrap_cmis_object: function(cmisObject) {
-         return new CmisObjectWrapper(cmisObject.object, this.cmis_session);
+         if (_.has(cmisObject, 'object')){
+             cmisObject = cmisObject.object;
+         }
+         return new CmisObjectWrapper(this, cmisObject, this.cmis_session);
+     },
+
+     wrap_cmis_objects: function(cmisObjects) {
+        var self = this;
+        return _.chain(cmisObjects)
+            .map(function(item){return self.wrap_cmis_object(item)})
+            .uniq(function(wrapped){return wrapped.objectId})
+            .value()
      },
 };
  
@@ -506,8 +607,9 @@ var CmisMixin = {
         this.table_rendered = $.Deferred();
         this.on('cmis_node_created', this, this.on_cmis_node_created);
         this.on('cmis_node_deleted', this, this.on_cmis_node_deleted);
-        this.on('cmis_node_udated', this, this.on_cmis_node_updated);
+        this.on('cmis_node_updated', this, this.on_cmis_node_updated);
         this.on('cmis_node_content_updated', this, this.on_cmis_node_content_updated);
+        this.on('wrapped_cmis_node_reloaded', this, this.on_wrapped_cmis_node_reloaded);
         this.backend = this.field_manager.get_field_desc(this.name).backend;
     },
 
@@ -593,22 +695,25 @@ var CmisMixin = {
     /*
      * Cmis content events 
      */
-    on_cmis_node_created: function(new_cmisobject){
-        this.datatable.ajax.reload();
+    on_cmis_node_created: function(cmisobjects){
+        this.refresh_datatable();
     },
 
-    on_cmis_node_deleted: function(deleted_cmisobject){
-        this.datatable.ajax.reload();
+    on_cmis_node_deleted: function(cmisobjects){
+        this.refresh_datatable();
     },
 
-    on_cmis_node_updated: function(updated_cmisobject){
-        this.datatable.ajax.reload();
+    on_cmis_node_updated: function(cmisobjects){
+        this.refresh_datatable();
     },
 
-    on_cmis_node_content_updated: function(updated_cmisobject){
-        this.datatable.ajax.reload();
+    on_wrapped_cmis_node_reloaded: function(oldValue, newValue){
+        this.refresh_datatable();
     },
 
+    on_cmis_node_content_updated: function(cmisobjects){
+        this.on_cmis_node_updated(cmisobjects);
+    },
     
     /*
      * Specific methods 
@@ -704,6 +809,8 @@ var CmisMixin = {
                     width: "80px",
                 },
             ],
+            select: false,
+            rowId: 'objectId',
             language: {
                 "decimal":        l10n.decimal_point,
                 "emptyTable":     _t("No data available in table"),
@@ -806,14 +913,13 @@ var CmisMixin = {
         var start = settings._iDisplayStart;
         var max   = settings._iDisplayLength;
         var orderBy = this.prepare_order_by(settings.aaSorting);
+        var options = _.defaults({
+            skipCount : start,
+            maxItems : max,
+            orderBy : orderBy,
+        }, DEFAULT_CMIS_OPTIONS);
         cmis_session
-            .getChildren(self.displayed_folder_id, {
-                includeAllowableActions : true,
-                renditionFilter: 'application/pdf',
-                skipCount : start,
-                maxItems : max,
-                orderBy : orderBy,
-                })
+            .getChildren(self.displayed_folder_id, options)
             .ok(function(data){
                 callback({'data': _.map(data.objects, self.wrap_cmis_object, self),
                           'recordsTotal': data.numItems,
@@ -892,11 +998,15 @@ var CmisMixin = {
          this.$el.find('.dropdown-menu').off('mouseleave');
          // hide the dropdown menu on mouseleave
          this.$el.find('.dropdown-menu').on('mouseleave', function(e){
-             $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             if($(e.target).is(':visible')){
+                 $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             }
          });
          // hide the dropdown menu on link clicked
          this.$el.find('.dropdown-menu a').on('click', function(e){
-             $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             if($(e.target).is(':visible')){
+                 $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+             }
          });
          this.$el.find('.cmis-folder').on('click', function(e){
              e.preventDefault();
@@ -929,6 +1039,21 @@ var CmisMixin = {
              var row = self._get_event_row(e);
              self.on_click_delete_object(row);
          });
+         $el_actions.find('.content-action-checkin').on('click', function(e) {
+             self._prevent_on_hashchange(e);
+             var row = self._get_event_row(e);
+             self.on_click_checkin(row);
+         });
+         $el_actions.find('.content-action-checkout').on('click', function(e) {
+             self._prevent_on_hashchange(e);
+             var row = self._get_event_row(e);
+             self.on_click_checkout(row);
+         });
+         $el_actions.find('.content-action-cancel-checkout').on('click', function(e) {
+             self._prevent_on_hashchange(e);
+             var row = self._get_event_row(e);
+             self.on_click_cancel_checkout(row);
+         });
     },
 
     /**
@@ -946,18 +1071,11 @@ var CmisMixin = {
             cmis_session
             .createDocument(this.displayed_folder_id, file, {'cmis:name': file.name}, file.mimeType)
             .ok(function(data) {
-                // encoding is not properly handled into multipart.... 
-                // update the document name to work around this encooding issue
-                cmis_session.updateProperties(data.succinctProperties['cmis:objectId'],
-                    {'cmis:name': file.name})
-                    .ok(function(){
-                        processedFiles.push(data);
-                        if (processedFiles.length == numFiles){
-                            framework.unblockUI();
-                            self.trigger('cmis_node_created', [processedFiles]);
-                        }
-                    }
-                );
+                processedFiles.push(data);
+                if (processedFiles.length == numFiles){
+                    framework.unblockUI();
+                    self.trigger('cmis_node_created', [processedFiles]);
+                }
              });
         }, this);
     },
@@ -976,7 +1094,26 @@ var CmisMixin = {
          e.stopPropagation();
     },
 
-    
+
+    /**
+     * Reload and redraw the DataTables in the current context, optionally
+     * updating ordering, searching and paging as required.
+     *
+     * @param {string} paging: This parameter is used to determine what kind
+     * of draw DataTables will perform. There are three options available:
+     * - paging (default): ordering and search will not be updated and the
+     *                     paging position held where is was
+     * - full-reset: the ordering and search will be recalculated and the rows
+     *               redrawn in their new positions. The paging will be reset
+     *               back to the first page.
+     * - full-hold: the ordering and search will be recalculated and the rows
+     *              redrawn in their new positions. The paging will not be
+     *              reset - i.e. the current page will still be shown.
+     */
+    refresh_datatable: function(paging) {
+        this.datatable.draw(paging || 'page');
+    },
+
     /**
      * Method called when a root folder is initialized
      */
@@ -984,7 +1121,7 @@ var CmisMixin = {
         var self = this;
         this.$el.find('.root-content-action-refresh').on('click', function(e){
             if (self.datatable){
-                self.datatable.ajax.reload();
+                self.refresh_datatable();
             }
         });
         this.$el.find('.root-content-action-new-folder').on('click', function(e){
@@ -1006,12 +1143,13 @@ var CmisMixin = {
     },
 
     on_click_download: function(row){
-        var $form = $('<form>', {
-            action: row.data().url,
-            method: 'GET'
-        }).appendTo(document.body);
-        $form.submit();
-        $form.remove();
+        row.data().refresh().done(
+            $.proxy(this.do_download, this)
+        );
+    },
+
+    do_download: function(cmisObjectWrapped){
+        window.open(cmisObjectWrapped.url);
     },
 
     on_click_preview: function(row){
@@ -1044,8 +1182,34 @@ var CmisMixin = {
     },
 
     on_click_set_content_stream: function(row){
-        var dialog = new CmisUpdateContentStreamDialog(this, row);
+        var dialog = new CmisUpdateContentStreamDialog(this, row.data());
         dialog.open();
+    },
+
+    on_click_checkin: function(row){
+        var dialog = new CmisCheckinDialog(this, row.data());
+        dialog.open();
+    },
+
+    on_click_checkout: function(row) {
+        var self = this;
+        row.data().refresh().done(
+            function(data){
+                self.cmis_session.checkOut(data.objectId)
+                    .ok(function (data) {
+                        self.refresh_datatable();
+                        self.do_download(self.wrap_cmis_object(data));
+                     });
+              });
+    },
+
+    on_click_cancel_checkout: function(row){
+        var cmisObjectWrapped = row.data();
+        var self = this;
+        this.cmis_session.cancelCheckOut(cmisObjectWrapped.objectId)
+        .ok(function (data) {
+            self.refresh_datatable();
+         });
     },
 
     /**
@@ -1126,7 +1290,7 @@ var CmisMixin = {
             this.cmis_session.getObject(folderId, "latest", {
                 includeAllowableActions : true})
                 .ok(function(cmisobject){
-                    self.dislayed_folder_cmisobject = new CmisObjectWrapper(cmisobject, self.cmis_session);
+                    self.dislayed_folder_cmisobject = new CmisObjectWrapper(this, cmisobject, self.cmis_session);
                     self.render_folder_actions();
                 });
             this.display_folder_in_breadcrumb(folderId);
@@ -1146,7 +1310,7 @@ var CmisMixin = {
             this.cmis_session
                 .getObject(folderId, "latest", {includeAllowableActions : false})
                 .ok(function(cmisobject) {
-                    var wrapped_cmisobject =  new CmisObjectWrapper(cmisobject, self.cmis_session);
+                    var wrapped_cmisobject =  new CmisObjectWrapper(this, cmisobject, self.cmis_session);
                     var name = (folderId == self.root_folder_id)? _t('Root') : wrapped_cmisobject.name;
                     var link = $('<a>').attr('href', '#').attr('data-cmis-folder-id', folderId).append(name);
                     self.$breadcrumb.append($('<li>').append(link));
@@ -1195,11 +1359,13 @@ core.form_widget_registry
 
 return {
     CmisUpdateContentStreamDialog: CmisUpdateContentStreamDialog,
+    CmisCheckinDialog: CmisCheckinDialog,
     CmisObjectWrapper: CmisObjectWrapper,
     CmisMixin: CmisMixin,
     FieldCmisFolder: FieldCmisFolder,
     CmisCreateFolderDialog: CmisCreateFolderDialog,
     CmisCreateDocumentDialog: CmisCreateDocumentDialog,
+    DEFAULT_CMIS_OPTIONS: DEFAULT_CMIS_OPTIONS,
 };
 
 });

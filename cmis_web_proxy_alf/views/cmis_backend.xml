@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="cmis_backend_form_view">
+        <field name="name">cmis.backend.form (in cmis_web_proxy_alf)</field>
+        <field name="model">cmis.backend</field>
+        <field name="inherit_id" ref="cmis_web_proxy.cmis_backend_form_view"/>
+        <field name="arch" type="xml">
+          <field name="location" position="after">
+              <field name="alfresco_api_location" placeholder="e.g. http://localhost:8080/alfresco/s/api" colspan="4"/>
+          </field>
+      </field>
+    </record>
+
+</odoo>
