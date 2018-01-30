@@ -1,3 +1,8 @@
+10.0.3.0.1 (Jan, 30, 2018)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Fix: copy=False is now the default on CmisFolder fields.
+
 10.0.3.0.0 (Dec, 21, 2017)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
