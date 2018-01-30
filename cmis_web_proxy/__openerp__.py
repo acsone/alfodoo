@@ -7,7 +7,7 @@
     'summary': """
         Odoo as proxy server for your cmis requests.""",
     'category': 'Document Management',
-    'version': '10.0.3.0.0',
+    'version': '9.0.3.0.0',
     'license': 'AGPL-3',
     'author': 'ACSONE SA/NV',
     'website': 'http://alfodoo.org/',

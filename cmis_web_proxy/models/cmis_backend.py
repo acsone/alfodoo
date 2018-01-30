@@ -2,8 +2,8 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
-from odoo import tools
+from openerp import api, fields, models
+from openerp import tools
 from ..controllers import cmis
 
 
