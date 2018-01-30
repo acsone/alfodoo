@@ -184,7 +184,7 @@ class TestCmisFields(common.BaseTestCmis):
         # By default the cmis_folder value must not be copied.
         inst1 = self.env['cmis.test.model'].create({'name': 'folder_name1'})
         self.assertFalse(inst1._fields['cmis_folder'].copy)
-        with mock.patch("odoo.addons.cmis.models.cmis_backend."
+        with mock.patch("openerp.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository") as \
                 mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
