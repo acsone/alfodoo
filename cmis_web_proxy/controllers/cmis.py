@@ -136,7 +136,31 @@ class CmisProxy(http.Controller):
                 values[k] = v.replace(original, new)
 
     def _check_access_operation(self, model_inst, operation):
+        """
+        Check if the user has the appropriate rights to perform the operation.
+        The default is to check the access rights and access rules on the
+        model instance. This behaviour can be adapted by defining the method
+        ''_check_cmis_access_operation'' on the model.
+        ::
+            @api.multi
+            def _check_cmis_access_operation(self, operation, field_name=None):
+                if my_true_condition:
+                    return True
+                if my_false_condition:
+                     return False
+                return None
+
+        The expected result must be in (True, False, None).
+        * True: Access granted
+        * False: Access Denied
+        * None: The current method will check the access rights and access
+                rules
+        """
         try:
+            if hasattr(model_inst, '_check_cmis_access_operation'):
+                res = model_inst._check_cmis_access_operation(operation, None)
+                if res is not None:
+                    return res
             model_inst.check_access_rights(operation)
             model_inst.check_access_rule(operation)
         except AccessError:
