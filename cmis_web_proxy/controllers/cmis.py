@@ -145,16 +145,16 @@ class CmisProxy(http.Controller):
             @api.multi
             def _check_cmis_access_operation(self, operation, field_name=None):
                 if my_true_condition:
-                    return True
+                    return 'allow'
                 if my_false_condition:
-                     return False
-                return None
+                     return 'deny'
+                return 'default'
 
-        The expected result must be in ('allow', 'deny', 'default'.
+        The expected result must be in ('allow', 'deny', 'default').
         * allow: Access granted
         * deny: Access Denied
         * default: The current method will check the access rights and access
-                rules
+                   rules
         """
         try:
             if hasattr(model_inst, '_check_cmis_access_operation'):
