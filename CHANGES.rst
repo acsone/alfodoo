@@ -6,10 +6,21 @@
 * Fix: JS error when multiple documents are uploaded at once.
 
 
+9.?.?.?.? (?)
+~~~~~~~~~~~~~
+
+* Improvement: New document viewer.
+
+
 9.0.2.0.0 (Oct, 17, 2017)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* Improvement: New document viewer.
+* Improvement: Handle name conflict on folder create.
+  A new parameter on the backend let's you choice between 2 strategies:
+  'error' or 'increment. If a folder already exists with the same name, the
+  system will raise an error if 'error' is specified as strategy (default)
+  otherwise a suffix is added to the name to make it unique.
+>>>>>>> [IMP] Handle name conflict on folder create.
 * Improvement: Allow the preview of image files.
 * Fix: Display the node title if set into the CMIS container.
 * Fix: On the import document dialog, rename 'Create' button into 'Add'
