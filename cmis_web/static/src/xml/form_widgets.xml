@@ -45,58 +45,66 @@
 <t t-name="CmisContentDetails">
     <div class="field_cmis_folder_details" cellpadding="5">
         <table cellpadding="5" cellspacing="0" border="0">
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Type Id</label></td>
-                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectTypeId')"/></td>
+            <tr name="object_type_id">
+                <td name="object_type_id_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Type Id</label></td>
+                <td name="object_type_id_value" class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectTypeId')"/></td>
             </tr>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Id</label></td>
+            <tr name="object_id">
+                <td name="object_id_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Object Id</label></td>
                 <t t-if="object.baseTypeId != 'cmis:folder'">
-                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:versionSeriesId')"/></td>
+                    <td name="object_version_id_value" class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:versionSeriesId')"/></td>
                 </t>
                 <t t-if="object.baseTypeId == 'cmis:folder'">
-                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectId')"/></td>
+                    <td name="object_id_value" class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:objectId')"/></td>
                 </t>
             </tr>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Name</label></td>
-                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:name')"/></td>
+            <tr name="name">
+                <td name="name_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Name</label></td>
+                <td name="name_value" class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:name')"/></td>
             </tr>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_title">Title</label></td>
-                <td class="oe_form_group_cell"><t t-esc="object.title"/></td>
+            <tr name="title">
+                <td name="title_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_title">Title</label></td>
+                <td name="title_value" class="oe_form_group_cell"><t t-esc="object.title"/></td>
             </tr>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_description">Description</label></td>
-                <td class="oe_form_group_cell"><t t-esc="object.description"/></td>
+            <tr name="description">
+                <td name="description_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_description">Description</label></td>
+                <td name="description_value" class="oe_form_group_cell"><t t-esc="object.description"/></td>
             </tr>
             <t t-if="object.baseTypeId != 'cmis:folder'">
-                <tr>
-                    <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">MIME Type</label></td>
-                    <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:contentStreamMimeType')"/></td>
+                <tr name="mimetype">
+                    <td name="mimetype_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">MIME Type</label></td>
+                    <td name="mimetype_value" class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:contentStreamMimeType')"/></td>
                 </tr>
             </t>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Creation Date</label></td>
-                <td class="oe_form_group_cell date"><t t-esc="object.format_cmis_timestamp(object.getSuccinctProperty('cmis:creationDate'))"/></td>
+            <t t-if="object.versionLabel">
+                <tr name="version_label">
+                    <td name="version_label_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Version</label></td>
+                    <td name="version_label_value" class="oe_form_group_cell date"><t t-esc="object.versionLabel"/></td>
+                </tr>
+            </t>
+            <tr name="creation_date">
+                <td name="creation_date_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Creation Date</label></td>
+                <td name="creation_date_value" class="oe_form_group_cell date"><t t-esc="object.format_cmis_timestamp(object.getSuccinctProperty('cmis:creationDate'))"/></td>
             </tr>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Created By</label></td>
-                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:createdBy')"/></td>
+            <tr name="created_by">
+                <td name="created_by_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Created By</label></td>
+                <td name="created_by_value" class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:createdBy')"/></td>
             </tr>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified Date</label></td>
-                <td class="oe_form_group_cell date"><t t-esc="object.fLastModificationDate()"/></td>
+            <tr name="last_modified_date">
+                <td name="last_modified_date_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified Date</label></td>
+                <td name="last_modified_date_value" class="oe_form_group_cell date"><t t-esc="object.fLastModificationDate()"/></td>
             </tr>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified By</label></td>
-                <td class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:lastModifiedBy')"/></td>
+            <tr name="last_modified_by">
+                <td name="last_modified_by_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Last Modified By</label></td>
+                <td name="last_modified_by_value" class="oe_form_group_cell"><t t-esc="object.getSuccinctProperty('cmis:lastModifiedBy')"/></td>
             </tr>
             <t t-if="object.baseTypeId != 'cmis:folder'">
-                <tr>
-                    <td class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Is Checked Out</label></td>
+                <tr name="is_checked_out">
+                    <td name="is_checked_out_label" class="oe_form_group_cell oe_form_group_cell_label"><label class="oe_form_label">Is Checked Out</label></td>
                      <t t-set="checked" t-value="object.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')? 'checked' : null"/>
-                    <td class="oe_form_group_cell"><div><input type="checkbox" t-att-checked="checked" disabled='true' style="vertical-align: middle;"/><t t-if='checked'><span style="vertical-align: middle;"> <label>By:</label> <t t-esc="object.getSuccinctProperty('cmis:versionSeriesCheckedOutBy')"/></span></t></div></td>
+                    <td name="is_checked_out_value" class="oe_form_group_cell"><div><input type="checkbox" t-att-checked="checked" disabled='true' style="vertical-align: middle;"/><t t-if='checked'><span style="vertical-align: middle;"> <label>By:</label>
+                        <t t-esc="object.getSuccinctProperty('cmis:versionSeriesCheckedOutBy')"/></span></t></div>
+                    </td>
                 </tr>
             </t>
         </table>
@@ -142,8 +150,7 @@
              class="btn btn-default btn-xs content-action-download"
              aria-label="Download"
              data-toggle="tooltip"
-             title="Download"
-             t-att-href='object.url'>
+             title="Download">
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
           </a>
         </t>
@@ -167,14 +174,16 @@
             </a>
             <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
                 <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
-                <li t-if='canSetContentStream'><a class='content-action-set-content-stream' href="#">Update</a></li>
-                <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li>
+                <li t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></li>
+                <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li -->
                 <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>
-                <li t-if='canCheckIn'><a class='content-action-check-in' href="#">Check-In</a></li>
-                <li t-if='canCancelCheckOut'><a class='content-action-cancel-checkout' href="#">Cancel Check-Out</a></li>
-                <li t-if='canCheckOut'><a class='content-action-checkout' href="#">Check-Out</a></li -->
-                <li role="separator" class="divider"></li>
-                <li t-if='canDeleteObject'><a class='content-action-delete-object' href="#">Delete</a></li>
+                <li t-if='canCheckIn'><a class='content-action-checkin' href="#">Import new version</a></li>
+                <li t-if='canCancelCheckOut'><a class='content-action-cancel-checkout' href="#">Cancel Edit</a></li>
+                <li t-if='canCheckOut'><a class='content-action-checkout' href="#">Offline Edit</a></li>
+                <t t-if='canDeleteObject'>
+                    <li role="separator" class="divider"></li>
+                    <li><a class='content-action-delete-object' href="#">Delete</a></li>
+                </t>
             </ul>
         </div>
     </div>
@@ -193,6 +202,45 @@
                 </span>
                 <input type="text" class="form-control" readonly='1'/>
             </div>
+            </div>
+        </div>
+    </form>
+</t>
+
+<t t-name='CmisCheckinView'>
+    <form class="form-horizontal cmis_update_content_stream" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <span class="btn btn-primary btn-file">
+                            Browse&amp;hellip; <input type="file" required="required"/>
+                        </span>
+                    </span>
+                    <input type="text" class="form-control" readonly='1'/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="version-radios" id="minor-radio" value="minor" checked="1"/>
+                      <span id="minor-label">Create new minor version</span>
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="version-radios" id="major-radio" value="major"/>
+                    <span id="major-label">Create a new major version</span>
+                  </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+                <label for="comment">Comment</label>
+                <textarea class="form-control" id="comment" rows="3"/>
             </div>
         </div>
     </form>
@@ -229,7 +277,15 @@
 </t>
 <t t-name="CMISSession.warning">
     <div class="o_dialog_warning">
-        <t t-raw="error.stacktrace"/>
+        <p><t t-esc="error.message"/></p>
+        <t t-if="error.stacktrace">
+            <h6><a data-toggle="collapse" data-parent="#accordion" href="#stacktrace">Click here to see more technical info</a></h6>
+            <div id="stacktrace" class="col-md-12 panel-collapse collapse">
+                <div>
+                    <t t-raw="error.stacktrace"/>
+                </div>
+            </div>
+        </t>
     </div>
 </t>
 

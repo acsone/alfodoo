@@ -2,6 +2,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. important:: **Alfofoo for Odoo 11**
+
+  A crowdfunding campaign is currently running to finance the migration of Alfodoo to make it compatible with Odoo 11. **Be part of this project now!** `More info here`_ https://www.indiegogo.com/projects/alfodoo-for-odoo-11-software#/
+
+.. _`More info here`: https://www.indiegogo.com/projects/alfodoo-for-odoo-11-software#/
+
 #######
 Alfodoo
 #######
@@ -30,15 +36,27 @@ a seamless integration.
   </div>
 
 *************
-Core Features
+Key Features
 *************
 
-* **100% Open Source** (`AGPL version 3`_): the full `source code is available
-  on GitHub`_
-* Full responsive HTML Widget that enables you to view and manage content from a
+* Easy to create Alfresco space folders for any Odoo business object
+* Drag&Drop of content (office document, image, mail, ….) in Alfresco from Odoo. Your content is immediately filed in the right location
+* Update your document (versioning) without leaving  Odoo
+* Easy content preview and browsing (PDF, Image, Media preview)
+* Easy connector configuration – Everything can be done directly from the Odoo interface
+
+In addition to these features, extensions can be implemented to add more advanced functionality such as:
+
+* **Space template**:  possibility to create a dedicated structured space template linked to a type of Odoo object (project, …).
+* **Reporting**:  from an Odoo object, possibility to generate any kind of reports in most common formats (PDF, MS office, ..). The generated document is automatically classified in the appropriate folder and enriched with appropriate metadata
+* **Proxy mode**:  with this mode, instead of using the actual user credentials for submitting Odoo widget requests (CMIS) to Alfresco, a proxy user is used.
+
+Alfodoo is **100% Open Source** (`AGPL version 3`_): the full `source code is available on GitHub`_
+  
+Full responsive HTML Widget that enables you to view and manage content from a
   `cmis:folder`.
-* ...
-* See a :ref:`code-overview` with examples of code
+  
+See a :ref:`code-overview` with examples of code
 
 .. _`Odoo`: http://www.odoo.com
 .. _`ACSONE SA/NV`: http://www.acsone.eu
@@ -77,15 +95,15 @@ development of new features).
 Overview: Manage the documents in Odoo
 **************************************
 
-Visually, the main part of the functionality is accessed through a "Documents tab" configurable on each Odoo model providing a "real-time" view on the Alfresco content.
+The main part of the functionality is accessed through a "Documents" tab configurable on each Odoo model providing a "real-time" view on the Alfresco content.
 
-From the user's point of view, the Documents tab gives a direct access to the items (documents lists, sub-folders, …) linked to the Odoo object and contained in the linked Alfresco folder.
+The "Documents" tab gives direct access to the items (documents list, sub-folders, …) linked to the Odoo object. The items are stored in the related Alfresco folder.
 
-The first action is to let the user create manually  (means "only when needed") the linked folder in Alfresco
+First the user triggers the creation (button "Create folder in DMS") of the related Alfresco folder.
 
 .. image:: ./_static/img/cmis_crm_claim_empty.png
 
-Then the Documents tab shows a global menu providing the following functionality:
+Then the following functionality becomes available:
 
 .. raw:: html
 
@@ -104,16 +122,16 @@ Then the Documents tab shows a global menu providing the following functionality
     </tr>
   </table>
 
-In the content table, the User can see the documents and folders list.
+In the content table, the user can see the documents and folders list.
 
 .. image:: ./_static/img/cmis_crm_claim_new_folder.png
 
 The following information is displayed for each item:
 
-* An icon used to hide or unhide the item details (folder or document Alfresco metadata: cm:folder, cm:content, cm:title)
 * The item name
 * The item description
-* Last Modified date
+* Last Modification date
+* An icon used to hide or unhide the item details (folder or document Alfresco metadata: cm:folder, cm:content, cm:title)
 * A contextual menu: the options list for a folder item or for a document item 
 
 .. image:: ./_static/img/cmis_crm_claim_doc_details.png
@@ -161,7 +179,7 @@ The Alfodoo project has the objective to provide a collection of 'addons' in ord
 
 Currently, the project proposes an integration between Odoo and the open-source ECM platform Alfresco.
 
-The aim is to offer to the odoo users a transparent and easy access to the documents stored in the appropriate location in Alfresco. 
+The aim is to offer Odoo users a transparent and easy access to the documents stored in the appropriate location in Alfresco.
 
 
 .. toctree::
@@ -181,8 +199,7 @@ Developer's guide
 .. toctree::
    :maxdepth: 2
 
-   guides/install.rst
-   guides/code_overview.rst
+   guides/short_guide.rst
 
 
 API Reference
