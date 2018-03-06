@@ -71,7 +71,8 @@ class CmisFolder(fields.Field):
         'create_parent_get': None,
         'create_properties_get': None,
         'allow_create': True,
-        'allow_delete': False
+        'allow_delete': False,
+        'copy': False,  # noderef are not copied by default
     }
 
     __metaclass__ = CmisMetaField
@@ -132,6 +133,7 @@ class CmisFolder(fields.Field):
             else:
                 backend.is_valid_cmis_name(name, raise_if_invalid=True)
             parent = parents[record.id]
+            name = backend.get_unique_folder_name(name, parent)
             props = properties[record.id] or {}
             value = repo.createFolder(
                 parent, name, props)

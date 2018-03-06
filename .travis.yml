@@ -1,15 +1,21 @@
 sudo: false
+
 cache: pip
 
 addons:
-    apt:
-     packages:
-        - expect-dev  # provides unbuffer utility
+  apt:
+    packages:
+    - expect-dev
 
 language: python
 
 python:
-  - "2.7"
+  - '2.7'
+
+env:
+  global:
+    # travis for docs build
+    - secure: 1r8MhN8yvgC982brnDvNvxNpP5XAQjebBeX2lQBTCP2TFK1FXC1tBTlP7DIqgbFkO7UvVmyFb56S1UwyP2nz/dASvvVmIJtMBUpZPG21o5JLyHkfCK9EimbilVcxaQkJWTFD67GfaKYe3RNg7F+i36ymyWE6HrosnxbQFqIAVsOjPbGZPrNNVruIOToR6RVVpwC3A1qN6V777C5gwi+1CcI94FgBiQNzQhq9ghp87hq7ixzxbB+Ec0ucNFTr3jho4rdpy0r9EeWV/V+TZjFNrcYDmyYJ6nP8eP4QIvP5c8D2P0MLob+oH2EAjanUgKR5j0/fI/VbGhQy0NXjBp6918CLDru6fxQMYS8nCYTZ8/ZjsTPPp/e8Ts+cS09yFbSP3+sxGcFFmo3nE3P40KsT6e36BGpHQIZVbzjJ6gpBfN04H/5gqJbRwmkfjQQ36I4RCzs1fWdBA8EdNqLjxIDAgcg5hlA3xfIBRADs7y7Ak5mmwNfpDnn+yPKMnpnLTVnoWNWDBaLhRLCyBNTBEKljuic0J2KQdCXmgSDTroZ6QQ4OzmbMltujk6zao9WbQbx5U5j9HxVUQ6segCoU3PJgDWtmkbLrHuKkOmhk3vnlMjFdhVZZfDj3Lmp6t+lo1/XM7tKjOhjjdUDKD/bZX3vIacDrcUw1gqjxGm5pbU4s2Os=
 
 before_install:
   - pip install acsoo
@@ -23,23 +29,33 @@ jobs:
   include:
     - stage: test
       env: FLAKE8=1
-      script: 
-      - echo "Flake8 check $ADDONS_TEST"
-      - acsoo flake8
+      script:
+        - echo "Flake8 check $ADDONS_TEST"
+        - acsoo flake8
     - stage: test
       env: PYLINT=1
       script:
-      - echo "Pylint check $ADDONS_TEST"
-      - acsoo pylint
+        - echo "Pylint check $ADDONS_TEST"
+        - acsoo pylint
     - stage: test
       env: ODOO=1
       install:
-      - pip install -r requirements-test.txt
+        - pip install -r requirements-test.txt
       script:
-      - echo "Installing $ADDONS_INST"
-      - unbuffer ${VIRTUAL_ENV}/bin/openerp-server -d ${DB_NAME} --stop-after-init -i ${ADDONS_INST} | acsoo checklog
-      - echo "Testing $ADDONS_TEST"
-      - unbuffer coverage run ${VIRTUAL_ENV}/bin/openerp-server -d ${DB_NAME} --stop-after-init -i ${ADDONS_TEST} --test-enable | acsoo checklog
+        - echo "Installing $ADDONS_INST"
+        - unbuffer ${VIRTUAL_ENV}/bin/openerp-server -d ${DB_NAME} --stop-after-init -i ${ADDONS_INST} | acsoo checklog
+        - echo "Testing $ADDONS_TEST"
+        - unbuffer coverage run ${VIRTUAL_ENV}/bin/openerp-server -d ${DB_NAME} --stop-after-init -i ${ADDONS_TEST} --test-enable | acsoo checklog
       after_success:
-      - codecov
-
+        - codecov
+    - stage: deploy
+      if: branch = 10.0
+      env: BUILD_DOC=1
+      install:
+        - pip install -r requirements-test.txt
+        - pip install https://github.com/Syntaf/travis-sphinx/archive/master.tar.gz
+        - pip install sphinx-bootstrap-theme
+      script:
+        - travis-sphinx build -s doc/
+      after_success:
+        - travis-sphinx deploy -b 10.0 -c alfodoo.org

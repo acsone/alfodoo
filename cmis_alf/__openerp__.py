@@ -5,16 +5,19 @@
 {
     'name': 'CMIS for Alfresco',
     'version': '9.0.2.0.0',
-    'category': 'Connector',
     'summary': 'Alfresco extension for the CMIS Connector',
+    'category': 'Document Management',
     'author': "ACSONE SA/NV",
-    'website': 'https://odoo-community.org/',
+    'website': 'http://alfodoo.org/',
     'license': 'AGPL-3',
     'depends': [
         'cmis',
     ],
     'data': [
         'views/cmis_backend_view.xml',
+    ],
+    'images': [
+        'static/description/main_icon.png',
     ],
     'installable': True,
     'auto_install': False,
