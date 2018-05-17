@@ -1301,6 +1301,7 @@ var CmisMixin = {
                     self.render_folder_actions();
                 });
             this.display_folder_in_breadcrumb(folderId);
+            this.datatable.rows().clear();
             this.datatable.ajax.reload(null, true);
         } else {
             self.datatable.clear().draw();
