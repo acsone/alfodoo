@@ -619,10 +619,10 @@ var CmisMixin = {
             return;
         }
         this.view.on("change:actual_mode", this, this.on_mode_change);
-        // hook on form view content changed:
-        this.getParent().on('view_content_has_changed', self, function () {
-            self.render_value();
-        });
+
+        // refresh the displayed forlder on reload.
+        this.getParent().on('load_record', this, this.reload_displayed_folder);
+
         // add a listener on parent tab if it exists in order to display the dataTable
         core.bus.on('DOM_updated', self.view.ViewManager.is_in_DOM, function () {
             self.add_tab_listener();
@@ -1271,6 +1271,15 @@ var CmisMixin = {
         this.$breadcrumb.empty();
     },
 
+    reload_displayed_folder: function(){
+      if(! this.displayed_folder_id){
+          return;
+      }
+      var page_index = this.page_index;
+      this.page_index = -1; // force reload
+      this.display_folder(page_index, this.displayed_folder_id);
+    },
+
     /**
      * Display folder content. 
      * Add a link to the folder in the breadcrumb and display children
@@ -1292,6 +1301,7 @@ var CmisMixin = {
                     self.render_folder_actions();
                 });
             this.display_folder_in_breadcrumb(folderId);
+            this.datatable.rows().clear();
             this.datatable.ajax.reload(null, true);
         } else {
             self.datatable.clear().draw();
