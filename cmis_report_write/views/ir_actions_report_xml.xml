@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+<data>
+
+    <record model="ir.ui.view" id="act_report_xml_view">
+        <field name="name">ir.actions.report.xml.form (in cmis_report_write)</field>
+        <field name="model">ir.actions.report.xml</field>
+        <field name="inherit_id" ref="base.act_report_xml_view"/>
+        <field name="arch" type="xml">
+            <page name="security" position="after">
+                    <page name="cmis_reoprt_write" string="Save in CMIS">
+                      <group>
+                          <group>
+                              <field name="cmis_filename"/>
+                              <field name="cmis_parent_type" widget="radio"  options="{'horizontal': true}" nolabel="1" colspan="2" class="oe_edit_only"/>
+                              <field name="cmis_backend_id" attrs="{'invisible':[('cmis_parent_type','!=','backend')]}"/>
+                              <field name="cmis_folder_field_id"
+                                    domain="[('model', '=', model), ('ttype', '=', 'cmis_folder')]"
+                                    attrs="{'invisible':[('cmis_parent_type','=','backend')]}"/>
+                              <field name="cmis_duplicate_handler"/>
+                              <field name="cmis_objectTypeId"/>
+                              <field name="cmis_properties"/>
+                          </group>
+                      </group>
+                    </page>
+                </page>
+        </field>
+    </record>
+
+
+
+
+</data>
+</odoo>
