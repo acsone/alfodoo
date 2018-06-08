@@ -143,7 +143,7 @@
              self.cmis_session.checkOut(self.original_objectId)
                  .ok(function(checkedOutNode) {
                      self.cmis_session
-                         .checkIn(checkedOutNode.succinctProperties['cmis:objectId'], major, self.file.name, self.file, comment)
+                         .checkIn(checkedOutNode.succinctProperties['cmis:objectId'], major, {}, self.file, comment)
                          .ok(function (data) {
                              // after checkin the working copy must be deleted (self.data)
                              // the date received into the response is the new version
@@ -386,7 +386,7 @@
         var major = this.$el.find("input:radio[name='version-radios']:checked").val() === "major";
         var comment = this.$el.find('#comment').val();
         this.data.cmis_session
-            .checkIn(this.data.objectId, major, fileName, file, comment)
+            .checkIn(this.data.objectId, major, {}, file, comment)
             .ok(function(data) {
                 // after checkin the working copy must be deleted (self.data)
                 // the date received into the response is the new version
