@@ -376,6 +376,13 @@ msgstr "Nom"
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:950
 #, python-format
+msgid "New name"
+msgstr "Nouveau nom"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:950
+#, python-format
 msgid "Next"
 msgstr "Suivant"
 
@@ -462,6 +469,13 @@ msgstr "Rafraichir le contenu de la table"
 #, python-format
 msgid "Rename as"
 msgstr "Renommer en"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:257
+#, python-format
+msgid "Rename"
+msgstr "Renommer"
 
 #. module: cmis_web
 #. openerp-web

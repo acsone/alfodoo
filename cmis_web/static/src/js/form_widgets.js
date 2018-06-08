@@ -34,6 +34,61 @@
      },
  });
 
+ var CmisRenameContentDialog = Dialog.extend({
+     template: 'CmisRenameContentDialog',
+     init: function(parent, cmisObject) {
+         var self = this;
+         var options = {
+             buttons: [
+                 {text: _t("Rename"),
+                  classes: "btn-primary",
+                  click: function (e) {
+                      e.stopPropagation();
+                      if(self.check_validity()){
+                          self.on_click_process();
+                      }
+                  }
+                 },
+                 {text: _t("Cancel"),
+                  click: function (e) {
+                     e.stopPropagation();
+                     self.$el.parents('.modal').modal('hide');
+                   }
+                 },
+
+             ],
+             close: function () { self.close();}
+         };
+         this._super(parent, options);
+         this.cmisObject = cmisObject;
+         this.cmisSession = parent.cmis_session;
+         this.set_title(_t('Rename') + ' ' + cmisObject.name);
+     },
+
+     renderElement: function() {
+         this._super();
+         this.$newName = this.$el.find('#new-name');
+     },
+
+     open: function() {
+         this._super();
+         this.$newName.val(this.cmisObject.name);
+         this.$newName.select();
+     },
+     on_click_process: function() {
+         var self = this;
+         var newName = this.$newName.val()
+         if (newName !== this.cmisObject.name && this.check_validity()) {
+             this.cmisSession
+                 .updateProperties(this.cmisObject.objectId, {'cmis:name': newName})
+                 .ok(function (cmisObject) {
+                     self.getParent().trigger('cmis_node_updated', [cmisObject]);
+                     self.$el.parents('.modal').modal('hide');
+                 });
+         }
+      }
+ });
+
  var CmisDuplicateDocumentResolver = Dialog.extend({
      template: 'CmisDuplicateDocumentResolver',
      init: function(parent, parent_cmisobject, file) {
@@ -193,7 +248,7 @@
                  self.$el.parents('.modal').modal('hide');
               });
      },
-     
+
      close: function() {
          this._super();
      }
@@ -224,7 +279,7 @@
                      self.$el.parents('.modal').modal('hide');
                    }
                  },
-                    
+
              ],
              close: function () { self.close();}
          };
@@ -241,7 +296,7 @@
          var input_text = input.closest('.input-group').find(':text');
          input_text.val(log);
      },
-     
+
      on_click_create: function() {
          var self = this,
          input = this.$el.find("input[type='file']")[0],
@@ -265,7 +320,7 @@
          }, self);
          self.$el.parents('.modal').modal('hide');
      },
-     
+
      close: function() {
          this._super();
      }
@@ -431,7 +486,7 @@
        cmis_object = cmis_object || this.cmis_object;
        return cmis_object.succinctProperties[property];
    },
-   
+
    _get_css_class: function(){
        if (this.baseTypeId === 'cmis:folder') {
            return 'fa fa-folder cmis-folder';
@@ -471,7 +526,7 @@
 
    /** fName
     * return the cmis:name formatted to be rendered in ta datatable cell
-    * 
+    *
     **/
    fName: function() {
        var cls = this._get_css_class();
@@ -485,7 +540,7 @@
 
    /** fLastModificationDate
     * return the cmis:mastModificationDate formatted to be rendered in ta datatable cell
-    * 
+    *
     **/
    fLastModificationDate: function() {
        return this.format_cmis_timestamp(this.lastModificationDate);
@@ -494,7 +549,7 @@
    fDetails: function(){
      return '<div class="fa fa-plus-circle"/>'  ;
    },
-   
+
    format_cmis_timestamp: function(cmis_timestamp){
        if (cmis_timestamp) {
            var d = new Date(cmis_timestamp);
@@ -509,7 +564,7 @@
 
    /**
     * Content actions
-    * 
+    *
     * render the list of available actions
     */
    fContentActions: function(){
@@ -590,7 +645,7 @@ var CmisMixin = {
      },
 
      /**
-      * Load CMIS settings from Odoo server 
+      * Load CMIS settings from Odoo server
       */
      load_cmis_config: function() {
          this.bind_cmis_config(this.backend);
@@ -617,7 +672,7 @@ var CmisMixin = {
      },
 
      /**
-      * Initialize the CmisJS session and register handlers for warnings and errors 
+      * Initialize the CmisJS session and register handlers for warnings and errors
       *  occuring when calling the CMIS DMS
       */
      init_cmis_session: function(){
@@ -685,7 +740,7 @@ var CmisMixin = {
      },
 
      /**
-      * Wrap a 
+      * Wrap a
       */
      wrap_cmis_object: function(cmisObject) {
          if (_.has(cmisObject, 'object')){
@@ -702,7 +757,7 @@ var CmisMixin = {
             .value()
      },
 };
- 
+
  var FieldCmisFolder = formWidget.FieldChar.extend(CmisMixin, {
     template: "FieldCmisFolder",
 
@@ -717,7 +772,7 @@ var CmisMixin = {
     },
 
     /*
-     * Override base methods 
+     * Override base methods
      */
 
     init: function (field_manager, node) {
@@ -752,7 +807,7 @@ var CmisMixin = {
                 self.render_datatable();
             }
         });
-        
+
         self.load_cmis_config();
         self.init_cmis_session();
     },
@@ -813,7 +868,7 @@ var CmisMixin = {
      },
 
     /*
-     * Cmis content events 
+     * Cmis content events
      */
     on_cmis_node_created: function(cmisobjects){
         this.refresh_datatable();
@@ -834,9 +889,9 @@ var CmisMixin = {
     on_cmis_node_content_updated: function(cmisobjects){
         this.on_cmis_node_updated(cmisobjects);
     },
-    
+
     /*
-     * Specific methods 
+     * Specific methods
      */
 
     /**
@@ -908,21 +963,21 @@ var CmisMixin = {
                     width:'12px'
                 },
                 { data: 'fName()'},
-                { 
+                {
                     data: 'title',
                     visible: false
                 },
                 { data: 'description'},
-                { 
+                {
                     data:'fLastModificationDate()',
                     width:'120px'
                 },
-                { 
+                {
                     data: 'lastModifiedBy',
                     width:'60px',
                     visible: false,
                 },
-                { 
+                {
                     data: 'fContentActions()',
                     defaultContent: '',
                     orderable: false,
@@ -980,7 +1035,7 @@ var CmisMixin = {
     },
 
     /**
-     * This method is called by DataTables when a table is being initialised 
+     * This method is called by DataTables when a table is being initialised
      * and is about to request data. At the point of being called the table will
      * have its columns and features initialised, but no data will have been
      * loaded (either by Ajax, or reading from the DOM).
@@ -1051,12 +1106,12 @@ var CmisMixin = {
     /**
      * Function called be fore calling cmis to build the oderBy parameters
      * from settings given by datatable aaSorting info
-     * 
-     *  _aaSorting_ - aaSorting is an array of array for each column to be sorted 
-     *  initially containing the column's index and a direction string 
+     *
+     *  _aaSorting_ - aaSorting is an array of array for each column to be sorted
+     *  initially containing the column's index and a direction string
      *  ('asc' or 'desc').
-     *  
-     *  The function return a cmis order_by string. 
+     *
+     *  The function return a cmis order_by string.
      */
     prepare_order_by: function(aaSorting){
         var orders_by = [];
@@ -1106,7 +1161,7 @@ var CmisMixin = {
                  e.preventDefault();
                  e.stopPropagation();
                  self.upload_files(e.originalEvent.dataTransfer.files);
-                 
+
              });
          }
          /* some UI fixes */
@@ -1114,7 +1169,7 @@ var CmisMixin = {
          this.$el.find('.dropdown-toggle').on('click', function (e){
              self.dropdown_fix_position($(e.target));
          });
-         
+
          this.$el.find('.dropdown-menu').off('mouseleave');
          // hide the dropdown menu on mouseleave
          this.$el.find('.dropdown-menu').on('mouseleave', function(e){
@@ -1143,11 +1198,16 @@ var CmisMixin = {
              var row = self._get_event_row(e);
              self.on_click_preview(row);
          });
-         
+
          $el_actions.find('.content-action-get-properties').on('click', function(e) {
              self._prevent_on_hashchange(e);
              var row = self._get_event_row(e);
              self.on_click_get_properties(row);
+         });
+         $el_actions.find('.content-action-rename').on('click', function(e) {
+             self._prevent_on_hashchange(e);
+             var row = self._get_event_row(e);
+             self.on_click_rename(row);
          });
          $el_actions.find('.content-action-set-content-stream').on('click', function(e) {
              self._prevent_on_hashchange(e);
@@ -1221,7 +1281,7 @@ var CmisMixin = {
          * $(window).bind('hashchange', self.on_hashchange);
          * To avoid thah events triggered by a click on items into a dropdown-menu
          * are handled by the main handler we must stop the propagations.
-         * This is required since dropdown menu designed with bootstrat are 
+         * This is required since dropdown menu designed with bootstrat are
          * a list of '<a href' elements and this trigger a 'hashchange' event
          * when clicked
          */
@@ -1262,7 +1322,7 @@ var CmisMixin = {
         this.$el.find('.root-content-action-new-folder').on('click', function(e){
             var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_cmisobject);
             dialog.open();
-            
+
         });
         this.$el.find('.root-content-action-new-doc').on('click', function(e){
             var dialog = new CmisCreateDocumentDialog(self, self.dislayed_folder_cmisobject);
@@ -1295,6 +1355,11 @@ var CmisMixin = {
 
     on_click_get_properties: function(row){
         this.display_row_details(row);
+    },
+
+    on_click_rename: function(row){
+        var dialog = new CmisRenameContentDialog(this, row.data());
+        dialog.open();
     },
 
     on_click_details_control: function(e){
@@ -1353,7 +1418,7 @@ var CmisMixin = {
      * on top of the table without scrolling. Without this fix, the menu will
      * appears into the table container but at the same time, scrollbars will
      * appear for the parts of the menu thaht overflows the initial div
-     * container 
+     * container
      * see also http://www.datatables.net/forums/discussion/18529/bootstrap-dropdown-issue-with-datatables
      * and https://github.com/twbs/bootstrap/issues/7160#issuecomment-28180085
      */
@@ -1383,9 +1448,9 @@ var CmisMixin = {
         }
     },
 
-    
+
     /**
-     * Set a new Root 
+     * Set a new Root
      */
     set_root_folder_id: function(folderId){
         var self = this;
@@ -1418,7 +1483,7 @@ var CmisMixin = {
     },
 
     /**
-     * Display folder content. 
+     * Display folder content.
      * Add a link to the folder in the breadcrumb and display children
      */
     display_folder: function(pageIndex, folderId){
@@ -1469,7 +1534,7 @@ var CmisMixin = {
                       }
                     });
                  });
-        }  
+        }
     },
 
     render_folder_actions: function(){
@@ -1478,12 +1543,12 @@ var CmisMixin = {
             ctx[actionName] = value;
         });
         this.$el.find('.cmis-root-content-buttons').html(QWeb.render("CmisRootContentActions", ctx));
-        this.register_root_content_events();    
+        this.register_root_content_events();
     },
 
     /**
      *  Display the details of the selected row
-     *  This method is triggered when the user click on the details icon 
+     *  This method is triggered when the user click on the details icon
      */
     display_row_details: function(row) {
         var tr = $(row.node());
