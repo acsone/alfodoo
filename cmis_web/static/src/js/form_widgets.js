@@ -34,6 +34,128 @@
      },
  });
 
+ var CmisDuplicateDocumentResolver = Dialog.extend({
+     template: 'CmisDuplicateDocumentResolver',
+     init: function(parent, parent_cmisobject, file) {
+         var self = this;
+         var options = {
+             buttons: [
+                 {text: _t("Process"),
+                  classes: "btn-primary",
+                  click: function (e) {
+                      e.stopPropagation();
+                      if(self.check_validity()){
+                          self.on_click_process();
+                      }
+                  }
+                 },
+                 {text: _t("Cancel"),
+                  click: function (e) {
+                     e.stopPropagation();
+                     self.$el.parents('.modal').modal('hide');
+                   }
+                 },
+
+             ],
+             close: function () { self.close();}
+         };
+         this._super(parent, options);
+         this.parent_cmisobject = parent_cmisobject;
+         this.cmis_session = parent.cmis_session;
+         this.file = file;
+         this.new_filename = '';
+         this.original_objectId = '';
+         this.set_title(file.name + _t(" already exists"));
+     },
+
+     renderElement: function() {
+         this._super();
+         this.$new_filename = this.$el.find('#new-filename');
+         this.$new_filename.val(this.new_filename);
+     },
+
+     /**
+        * Method called between @see init and @see start. Performs asynchronous
+        * calls required by the rendering and the start method.
+      */
+     willStart: function () {
+         var self = this;
+         var re = /(?:\.([^.]+))?$/;
+         var parts = re.exec(this.file.name);
+         var name_without_ext = this.file.name.slice(0, -parts[1].length - 1);
+         var ext = parts[1];
+         // looks for an alternate filename
+         var dfd1 = $.Deferred();
+         this.cmis_session.query('' +
+             "SELECT cmis:name FROM cmis:document WHERE " +
+             "IN_FOLDER('" +  this.parent_cmisobject.objectId +
+             "') AND cmis:name like '" + name_without_ext + "-%." + ext + "'")
+             .ok(function(data){
+                 var cpt = data.results.length;
+                 var filenames = _.map(
+                     data.results,
+                     function(item){return item.succinctProperties['cmis:name'][0];});
+                 while (true) {
+                     self.new_filename = name_without_ext +'-' +
+                        cpt + '.' + ext;
+                     if (_.contains(filenames, self.new_filename)) {
+                         cpt+=1;
+                     } else {
+                         break;
+                     }
+                 }
+                 dfd1.resolve();
+             })
+            .notOk(function(error){
+                     self.getParent().on_cmis_error(error);
+                     dfd1.reject(error);
+            });
+         // get original document
+         var dfd2 = $.Deferred();
+         this.cmis_session.query('' +
+             "SELECT cmis:objectId FROM cmis:document WHERE " +
+             "IN_FOLDER('" +  this.parent_cmisobject.objectId +
+             "') AND cmis:name = '" + this.file.name + "'")
+             .ok(function(data){
+                 self.original_objectId = data.results[0].succinctProperties['cmis:objectId'];
+                 dfd2.resolve();
+             })
+            .notOk(function(error){
+                 self.getParent().on_cmis_error(error);
+                 dfd2.reject(error);
+            });
+         return $.when(this._super.apply(this, arguments),  dfd1.promise(), dfd2.promise());
+     },
+
+     on_click_process: function() {
+         var self = this;
+         var rename = this.$el.find("input:radio[name='duplicate-radios']:checked").val() === "rename";
+         if (rename){
+             this.cmis_session
+                 .createDocument(this.parent_cmisobject.objectId, this.file, {'cmis:name': this.$new_filename.val()}, this.file.mimeType)
+                 .ok(function(new_cmisobject) {
+                     self.getParent().trigger('cmis_node_created', [new_cmisobject]);
+                     self.$el.parents('.modal').modal('hide');
+                 });
+         } else {
+             var major = this.$el.find("#new-version-type").val() === "major";
+             var comment = this.$el.find('#comment').val();
+             self.cmis_session.checkOut(self.original_objectId)
+                 .ok(function(checkedOutNode) {
+                     self.cmis_session
+                         .checkIn(checkedOutNode.succinctProperties['cmis:objectId'], major, {}, self.file, comment)
+                         .ok(function (data) {
+                             // after checkin the working copy must be deleted (self.data)
+                             // the date received into the response is the new version
+                             // created
+                             self.getParent().trigger('cmis_node_deleted', [self.original_objectId]);
+                             self.$el.parents('.modal').modal('hide');
+                         });
+                 });
+         }
+     }
+ });
+
  var CmisCreateFolderDialog = Dialog.extend({
      template: 'CmisCreateFolderDialog',
      init: function(parent, parent_cmisobject) {
@@ -264,7 +386,7 @@
         var major = this.$el.find("input:radio[name='version-radios']:checked").val() === "major";
         var comment = this.$el.find('#comment').val();
         this.data.cmis_session
-            .checkIn(this.data.objectId, major, fileName, file, comment)
+            .checkIn(this.data.objectId, major, {}, file, comment)
             .ok(function(data) {
                 // after checkin the working copy must be deleted (self.data)
                 // the date received into the response is the new version
@@ -1074,6 +1196,21 @@ var CmisMixin = {
                     framework.unblockUI();
                     self.trigger('cmis_node_created', [processedFiles]);
                 }
+            })
+            .notOk(function(error){
+                if (error){
+                    console.error(error.text);
+                    if (error.type == 'application/json') {
+                        var jerror = JSON.parse(error.text);
+                        if (jerror.exception === 'contentAlreadyExists'){
+                            var dialog = new CmisDuplicateDocumentResolver(self, self.dislayed_folder_cmisobject, file);
+                            dialog.open();
+                            framework.unblockUI();
+                            return;
+                        }
+                    }
+                 }
+                 self.on_cmis_error(error);
              });
         }, this);
     },
@@ -1373,6 +1510,7 @@ return {
     FieldCmisFolder: FieldCmisFolder,
     CmisCreateFolderDialog: CmisCreateFolderDialog,
     CmisCreateDocumentDialog: CmisCreateDocumentDialog,
+    CmisDuplicateDocumentResolver: CmisDuplicateDocumentResolver,
     DEFAULT_CMIS_OPTIONS: DEFAULT_CMIS_OPTIONS,
 };
 
