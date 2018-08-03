@@ -136,7 +136,7 @@ class TestCmisFields(common.BaseTestCmis):
         # are property called.
         inst = self.env['cmis.test.model.inherits'].create(
             {'name': 'folder_name'})
-        with mock.patch("odoo.addons.cmis.models.cmis_backend."
+        with mock.patch("openerp.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository") as \
                 mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
@@ -168,7 +168,7 @@ class TestCmisFields(common.BaseTestCmis):
             'name': 'folder_name',
             'cmis_test_model_id': parent.id
         })
-        with mock.patch("odoo.addons.cmis.models.cmis_backend."
+        with mock.patch("openerp.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository") as \
                 mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()
