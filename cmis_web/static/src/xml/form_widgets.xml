@@ -174,6 +174,7 @@
             </a>
             <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
                 <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
+                <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
                 <li t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></li>
                 <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li -->
                 <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>
@@ -241,6 +242,63 @@
             <div class="col-sm-12">
                 <label for="comment">Comment</label>
                 <textarea class="form-control" id="comment" rows="3"/>
+            </div>
+        </div>
+    </form>
+</t>
+
+<t t-name='CmisDuplicateDocumentResolver'>
+    <form class="form-horizontal cmis_duplicate_document_resolver" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+                <div class="form-group row mb0">
+                    <div class="form-check col-sm-3">
+                        <input checked="1"  class="form-check-input" id="rename-radios" name="duplicate-radios" value="rename" type="radio"
+                            data-toggle="collapse" data-target=".collaps_comment.in"/>
+                        <label class="form-check-label" for="rename-radio">
+                           Rename as
+                        </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="o_form_input" type="text" id="new-filename"/>
+                    </div>
+                </div>
+                <div class="form-group row mb0">
+                    <div class="form-check col-sm-3">
+                        <input class="form-check-input" id="new-version-radio" name="duplicate-radios" value="new-version" type="radio"
+                               data-toggle="collapse" data-target=".collaps_comment:not(.in)"/>
+                        <label class="form-check-label" for="new-version-radios">
+                           Create a new version
+                        </label>
+
+                    </div>
+                    <div class="col-sm-3">
+                        <select class="o_form_input" id="new-version-type">
+                            <option value="minor">Minor</option>
+                            <option value="major">Major</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row mb0 collaps_comment collapse">
+                    <div class="col-sm-12">
+                        <label for="comment">Comment</label>
+                        <textarea class="form-control" id="comment" rows="3"/>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</t>
+
+<t t-name='CmisRenameContentDialog'>
+    <form class="form-horizontal cmis_rename_context" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <label for="page-name" class="col-sm-3 control-label">
+                New name:
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="new-name" class="form-control" autofocus="autofocus" required="required"/>
             </div>
         </div>
     </form>
