@@ -144,9 +144,8 @@ class TestCmisFields(common.BaseTestCmis):
                 if name == "folder_name1":
                     new_object_mock.getObjectId.return_value = "id1"
                     return new_object_mock
-                else:
-                    new_object_mock.getObjectId.return_value = "id2"
-                    return new_object_mock
+                new_object_mock.getObjectId.return_value = "id2"
+                return new_object_mock
             mocked_cmis_repository.createFolder.side_effect = my_side_effect
             inst1._fields['cmis_folder'].create_value(inst1 + inst2)
             self.assertEquals(inst1.cmis_folder, "id1")
