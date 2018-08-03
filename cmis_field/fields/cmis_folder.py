@@ -112,6 +112,12 @@ class CmisFolder(fields.Field):
         """
         for record in records:
             self._check_null(record)
+        if self.related:
+            self._create_value_related(records)
+        else:
+            self._create_value(records)
+
+    def _create_value(self, records):
         backend = self.get_backend(records.env)
         if self.create_method:
             fct = self.create_method
@@ -120,6 +126,16 @@ class CmisFolder(fields.Field):
             fct(self, backend)
             return
         self._create_in_cmis(records, backend)
+
+    def _create_value_related(self, records):
+        others = records.sudo() if self.related_sudo else records
+        for record, other in zip(records, others):
+            if not record.id and record.env != other.env:
+                # draft records: copy record's cache to other's cache first
+                fields.copy_cache(record, other.env)
+            other, field = self.traverse_related(other)
+            field.create_value(other)
+            record[self.name] = other[field.name]
 
     def _create_in_cmis(self, records, backend):
         names = self.get_create_names(records, backend)
