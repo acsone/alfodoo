@@ -129,6 +129,67 @@ class TestCmisFields(common.BaseTestCmis):
                 {'cmis:propkey': 'custom value'})
             mocked_cmis_repository.reset_mock()
 
+    def test_delegated_cmis_folder(self):
+        # On a model with cmis_folders inherited by delegation:
+        # Test that the methods specified on the inherited field to get the
+        # parent, the name and the properties to use to create a folder in CMIS
+        # are property called.
+        inst = self.env['cmis.test.model.inherits'].create(
+            {'name': 'folder_name'})
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
+            mocked_cmis_repository = mock.MagicMock()
+            mocked_get_repository.return_value = mocked_cmis_repository
+            new_mocked_cmis_folder = mock.MagicMock()
+            mocked_cmis_repository.createFolder.return_value = \
+                new_mocked_cmis_folder
+            new_mocked_cmis_folder.getObjectId.return_value = 'cmis_id'
+
+            inst._fields['cmis_folder1'].create_value(inst)
+            mocked_cmis_repository.createFolder.assert_called_once_with(
+                "custom_parent", "custom_name",
+                {'cmis:propkey': 'custom value'})
+            mocked_cmis_repository.reset_mock()
+
+        # check that the value is on the parent and the child instances.
+        inst._fields['cmis_folder2'].create_value(inst)
+        self.assertEquals(inst.cmis_folder2, '_create_method')
+        self.assertEquals(inst.cmis_test_model_id.cmis_folder2,
+                          '_create_method')
+
+    def test_related_cmis_folder(self):
+        # On a model with related cmis_folders:
+        # Test that the methods specified on the inherited field to get the
+        # parent, the name and the properties to use to create a folder in CMIS
+        # are property called.
+        parent = self.env['cmis.test.model'].create({'name': 'folder_parent'})
+        inst = self.env['cmis.test.model.related'].create({
+            'name': 'folder_name',
+            'cmis_test_model_id': parent.id
+        })
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
+            mocked_cmis_repository = mock.MagicMock()
+            mocked_get_repository.return_value = mocked_cmis_repository
+            new_mocked_cmis_folder = mock.MagicMock()
+            mocked_cmis_repository.createFolder.return_value = \
+                new_mocked_cmis_folder
+            new_mocked_cmis_folder.getObjectId.return_value = 'cmis_id'
+
+            inst._fields['cmis_folder1'].create_value(inst)
+            mocked_cmis_repository.createFolder.assert_called_once_with(
+                "custom_parent", "custom_name",
+                {'cmis:propkey': 'custom value'})
+            mocked_cmis_repository.reset_mock()
+
+        # check that the value is on the parent and the child instances.
+        inst._fields['cmis_folder2'].create_value(inst)
+        self.assertEquals(inst.cmis_folder2, '_create_method')
+        self.assertEquals(inst.cmis_test_model_id.cmis_folder2,
+                          '_create_method')
+
     def test_cmis_folder_create_multi(self):
         # the create method can be called on a recordset
         inst1 = self.env['cmis.test.model'].create({'name': 'folder_name1'})
