@@ -7,7 +7,7 @@ from openerp.exceptions import UserError
 from .cmis_meta_field import CmisMetaField
 
 
-# pylint:disable=property-on-old-class
+# pylint:disable=property-on-old-class,invalid-metaclass
 class CmisFolder(fields.Field):
     """ A reference to a cmis:folder. (cmis:objectId)
 
@@ -129,10 +129,9 @@ class CmisFolder(fields.Field):
 
     def _create_value_related(self, records):
         others = records.sudo() if self.related_sudo else records
+        if records.env != others.env:
+            fields.copy_cache(records - records.filtered('id'), others.env)
         for record, other in zip(records, others):
-            if not record.id and record.env != other.env:
-                # draft records: copy record's cache to other's cache first
-                fields.copy_cache(record, other.env)
             other, field = self.traverse_related(other)
             field.create_value(other)
             record[self.name] = other[field.name]
