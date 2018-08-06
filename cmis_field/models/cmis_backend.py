@@ -76,8 +76,8 @@ class CmisBackend(models.Model):
         backend = self.search(domain)
         if len(backend) != 1 and raise_if_not_found:
             if name:
-                msg = _("Expected 1 backend named %s, %s found" %
-                        (name, len(backend)))
+                msg = _("Expected 1 backend named %s, %s found") % \
+                    (name, len(backend))
             else:
                 msg = _('No backend found')
             raise UserError(msg)
