@@ -4,7 +4,7 @@
 
 {
     'name': 'CMIS for Alfresco',
-    'version': '10.0.3.0.0',
+    'version': '10.0.4.0.0',
     'summary': 'Alfresco extension for the CMIS Connector',
     'category': 'Document Management',
     'author': "ACSONE SA/NV",
