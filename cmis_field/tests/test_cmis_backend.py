@@ -95,6 +95,7 @@ class TestCmisBackend(common.SavepointCase):
                     ret.append(m)
                 query_result.__iter__.return_value = ret
                 return query_result
+            return None
         # if the same name is found and the folder_name_conflict_handler ==
         # 'increment' the method must return a new name with a suffix _(X)
         # where X is the value max found as X for the same name + 1

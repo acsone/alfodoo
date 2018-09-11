@@ -185,14 +185,14 @@ class CmisProxy(http.Controller):
         can_write = self._check_access_operation(model_inst, 'write')
         can_unlink = self._check_access_operation(model_inst, 'unlink')
         for allowable_actions in all_allowable_actions:
-            for action, value in allowable_actions.items():
+            for action, val in allowable_actions.items():
                 allowed = False
                 if action in READ_ACCESS_ALLOWABLE_ACTIONS:
-                    allowed = can_read and value
+                    allowed = can_read and val
                 elif action in WRITE_ACCESS_ALLOWABLE_ACTIONS:
-                    allowed = can_write and value
+                    allowed = can_write and val
                 elif action in UNLINK_ACCESS_ALLOWABLE_ACTIONS:
-                    allowed = can_unlink and value
+                    allowed = can_unlink and val
                 allowable_actions[action] = allowed
 
     def _sanitize_headers(self, headers):
