@@ -129,6 +129,67 @@ class TestCmisFields(common.BaseTestCmis):
                 {'cmis:propkey': 'custom value'})
             mocked_cmis_repository.reset_mock()
 
+    def test_delegated_cmis_folder(self):
+        # On a model with cmis_folders inherited by delegation:
+        # Test that the methods specified on the inherited field to get the
+        # parent, the name and the properties to use to create a folder in CMIS
+        # are property called.
+        inst = self.env['cmis.test.model.inherits'].create(
+            {'name': 'folder_name'})
+        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
+            mocked_cmis_repository = mock.MagicMock()
+            mocked_get_repository.return_value = mocked_cmis_repository
+            new_mocked_cmis_folder = mock.MagicMock()
+            mocked_cmis_repository.createFolder.return_value = \
+                new_mocked_cmis_folder
+            new_mocked_cmis_folder.getObjectId.return_value = 'cmis_id'
+
+            inst._fields['cmis_folder1'].create_value(inst)
+            mocked_cmis_repository.createFolder.assert_called_once_with(
+                "custom_parent", "custom_name",
+                {'cmis:propkey': 'custom value'})
+            mocked_cmis_repository.reset_mock()
+
+        # check that the value is on the parent and the child instances.
+        inst._fields['cmis_folder2'].create_value(inst)
+        self.assertEquals(inst.cmis_folder2, '_create_method')
+        self.assertEquals(inst.cmis_test_model_id.cmis_folder2,
+                          '_create_method')
+
+    def test_related_cmis_folder(self):
+        # On a model with related cmis_folders:
+        # Test that the methods specified on the inherited field to get the
+        # parent, the name and the properties to use to create a folder in CMIS
+        # are property called.
+        parent = self.env['cmis.test.model'].create({'name': 'folder_parent'})
+        inst = self.env['cmis.test.model.related'].create({
+            'name': 'folder_name',
+            'cmis_test_model_id': parent.id
+        })
+        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
+            mocked_cmis_repository = mock.MagicMock()
+            mocked_get_repository.return_value = mocked_cmis_repository
+            new_mocked_cmis_folder = mock.MagicMock()
+            mocked_cmis_repository.createFolder.return_value = \
+                new_mocked_cmis_folder
+            new_mocked_cmis_folder.getObjectId.return_value = 'cmis_id'
+
+            inst._fields['cmis_folder1'].create_value(inst)
+            mocked_cmis_repository.createFolder.assert_called_once_with(
+                "custom_parent", "custom_name",
+                {'cmis:propkey': 'custom value'})
+            mocked_cmis_repository.reset_mock()
+
+        # check that the value is on the parent and the child instances.
+        inst._fields['cmis_folder2'].create_value(inst)
+        self.assertEquals(inst.cmis_folder2, '_create_method')
+        self.assertEquals(inst.cmis_test_model_id.cmis_folder2,
+                          '_create_method')
+
     def test_cmis_folder_create_multi(self):
         # the create method can be called on a recordset
         inst1 = self.env['cmis.test.model'].create({'name': 'folder_name1'})
@@ -144,9 +205,8 @@ class TestCmisFields(common.BaseTestCmis):
                 if name == "folder_name1":
                     new_object_mock.getObjectId.return_value = "id1"
                     return new_object_mock
-                else:
-                    new_object_mock.getObjectId.return_value = "id2"
-                    return new_object_mock
+                new_object_mock.getObjectId.return_value = "id2"
+                return new_object_mock
             mocked_cmis_repository.createFolder.side_effect = my_side_effect
             inst1._fields['cmis_folder'].create_value(inst1 + inst2)
             self.assertEquals(inst1.cmis_folder, "id1")
@@ -178,4 +238,25 @@ class TestCmisFields(common.BaseTestCmis):
         self.cmis_backend.unlink()
         descr = inst._fields['cmis_folder'].get_description(self.env)
         backend_description = descr.get('backend')
-        self.assertTrue('backend_error' in descr.get('backend'))
+        self.assertTrue('backend_error' in backend_description)
+
+    def test_cmis_folder_copy_false(self):
+        # By default the cmis_folder value must not be copied.
+        inst1 = self.env['cmis.test.model'].create({'name': 'folder_name1'})
+        self.assertFalse(inst1._fields['cmis_folder'].copy)
+        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+                        "CmisBackend.get_cmis_repository") as \
+                mocked_get_repository:
+            mocked_cmis_repository = mock.MagicMock()
+            mocked_get_repository.return_value = mocked_cmis_repository
+
+            def my_side_effect(parent, name, prop=None):
+                new_object_mock = mock.MagicMock()
+                new_object_mock.getObjectId.return_value = "id1"
+                return new_object_mock
+
+            mocked_cmis_repository.createFolder.side_effect = my_side_effect
+            inst1._fields['cmis_folder'].create_value(inst1)
+            self.assertEquals(inst1.cmis_folder, "id1")
+            copy_inst1 = inst1.copy()
+            self.assertFalse(copy_inst1.cmis_folder)

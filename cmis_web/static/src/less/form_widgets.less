@@ -115,13 +115,14 @@ div.field_cmis_folder_content_actions {
         top: 0px;
     }
     ul.dropdown-menu {
-        width: 50px;
+        width: auto;
         position: fixed;
     }
 }
 
 form.cmis_update_content_stream,
-form.cmis_create_document {
+form.cmis_create_document,
+form.cmis_duplicate_document_resolver{
     .btn-file {
         overflow: hidden;
         position: relative;
@@ -155,4 +156,4 @@ form.cmis_create_document {
 
 .form-control:invalid {
     background-image: linear-gradient(blank, red), linear-gradient(red, red);
-  }
+}

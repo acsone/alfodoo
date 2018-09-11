@@ -9,6 +9,7 @@
           <field name="location" position="after">
               <field name="enable_sanitize_cmis_name" colspan="2"/>
               <field name="sanitize_replace_char" colspan="2" attrs="{'invisible': [('enable_sanitize_cmis_name', '=', False)]}"/>
+              <field name="folder_name_conflict_handler" colspan="4"/>
           </field>
       </field>
     </record>

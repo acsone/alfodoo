@@ -3,7 +3,7 @@
    :alt: License: AGPL-3
 
 =================================
-CMIS Connector Alfresco Extention
+CMIS Connector Alfresco Extension
 =================================
 
 This module extend the CMIS connector with specifics functionalities provided by alfresco:
