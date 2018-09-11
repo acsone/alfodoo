@@ -42,3 +42,37 @@ class CmisTestModel(models.Model):
     cmis_folder2 = CmisFolder(
         backend_name='alfresco',
         create_method='_cmis_create')
+
+
+class CmisTestModelInherits(models.Model):
+    _name = 'cmis.test.model.inherits'
+    _inherits = {'cmis.test.model': 'cmis_test_model_id'}
+    _abstract = True
+
+    cmis_test_model_id = fields.Many2one(
+        'cmis.test.model',
+        'Parent',
+        ondelete="cascade",
+        required=True
+    )
+
+
+class CmisTestModelRelated(models.Model):
+    _name = 'cmis.test.model.related'
+    _abstract = True
+
+    name = fields.Char(required=True)
+
+    cmis_test_model_id = fields.Many2one(
+        'cmis.test.model',
+        'Parent',
+        ondelete="cascade",
+        required=True
+    )
+    cmis_folder1 = CmisFolder(
+        related='cmis_test_model_id.cmis_folder1'
+    )
+
+    cmis_folder2 = CmisFolder(
+        related='cmis_test_model_id.cmis_folder2'
+    )
