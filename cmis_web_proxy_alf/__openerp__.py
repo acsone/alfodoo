@@ -5,7 +5,7 @@
 {
     'name': 'Alfodoo CMIS Web Proxy for Alfresco',
     'category': 'Document Management',
-    'version': '9.0.3.0.0',
+    'version': '9.0.4.0.0',
     'license': 'AGPL-3',
     'author': 'ACSONE SA/NV',
     'website': 'http://alfodoo.org/',

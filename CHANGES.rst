@@ -1,5 +1,26 @@
-9.?.?.?.? (?)
-~~~~~~~~~~~~~
+9.0.4.0.0 (Sep, 11, 218) backported from 10.0.4.0.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Fix: cmis_web: clear rows before reloading the table to avoid error if an
+  expanded row is no more into the reloaded info.
+* Fix: prevent error on first preview if the document name contains invalid
+  characters.
+* Fix: refresh the table when the data on the current view are refreshed.
+* Improvement: cmis_proxy : Improve modularity of _check_access_operation.
+  It's now possible to define a method '_check_cmis_access_operation' on the
+  model to adapt the _check_access_operation behaviour.
+* Improvement: New dialog to resolve conflict when we try to create a new
+  document with the same name as an existing one.
+* Improvement: New dialog to rename cmis content.
+* Ensure compatibility with the next version of cmislib (py3 compat)
+  available into github `<https://github.com/apache/chemistry-cmislib/tree/
+  py3_compat>`_ or svn `<https://svn.apache.org/repos/asf/chemistry/cmislib/
+  branches/py3_compat/>`_
+* Fix: cmis_field: Add support for cmis_folder defined as related
+
+
+9.0.3.0.0 (not released) backported from 10.0.3.0.1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Fix: copy=False is now the default on CmisFolder fields.
 * Improvement: Implement Checkin Checkout.

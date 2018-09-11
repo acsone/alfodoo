@@ -4,7 +4,7 @@
 
 {
     'name': 'Alfodoo CMIS Field',
-    'version': '9.0.2.0.0',
+    'version': '9.0.4.0.0',
     'summary': 'Specialized field to work with a CMIS server',
     'category': 'Document Management',
     'author': "ACSONE SA/NV ",

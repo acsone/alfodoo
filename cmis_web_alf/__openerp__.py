@@ -8,7 +8,7 @@
     'category': 'Document Management',
     'author': 'ACSONE SA/NV',
     'website': "http://alfodoo.org",
-    'version': '9.0.2.0.0',
+    'version': '9.0.4.0.0',
     'license': 'AGPL-3',
     'depends': [
         'cmis_alf',
