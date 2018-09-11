@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2014-2015 Savoir-faire Linux (<http://www.savoirfairelinux.com>).
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
@@ -18,7 +17,7 @@ class TestCmisBackend(common.SavepointCase):
     def test_get_by_name(self):
         backend = self.cmis_backend.get_by_name(
             name=self.backend_instance.name)
-        self.assertEquals(self.backend_instance, backend)
+        self.assertEqual(self.backend_instance, backend)
         with self.assertRaises(UserError):
             self.cmis_backend.get_by_name('error')
         backend = self.cmis_backend.get_by_name(

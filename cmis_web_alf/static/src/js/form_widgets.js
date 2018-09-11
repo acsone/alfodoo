@@ -10,7 +10,6 @@
 
 var core = require('web.core');
 var form_widgets = require('cmis_web.form_widgets');
-var Model = require('web.Model');
 
 var _t = core._t;
 
@@ -77,13 +76,13 @@ form_widgets.FieldCmisFolder.include({
     },
 
     open_in_alf: function(objectid){
-        new Model("cmis.backend")
-        .call("get_content_details_url",  [
+        this._rpc({
+            model: 'cmis.backend',
+            method: "get_content_details_url",
+            args: [
              [this.backend.id],
-             objectid,
-             this.view.dataset.get_context()
-         ])
-        .then(function (url) {
+             objectid
+         ]}).then(function (url) {
             window.open(url);
         });
     },

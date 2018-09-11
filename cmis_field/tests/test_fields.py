@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import mock
@@ -48,7 +47,7 @@ class TestCmisFields(common.BaseTestCmis):
             # check the value initialization using the method defined on the
             # field. As result the value must be set on the given record
             inst._fields['cmis_folder'].create_value(inst)
-            self.assertEquals(inst.cmis_folder, 'cmis_id')
+            self.assertEqual(inst.cmis_folder, 'cmis_id')
 
             # in the initialization process the field will compute a path
             # where to store the new folder. This path is used to request the
@@ -154,9 +153,9 @@ class TestCmisFields(common.BaseTestCmis):
 
         # check that the value is on the parent and the child instances.
         inst._fields['cmis_folder2'].create_value(inst)
-        self.assertEquals(inst.cmis_folder2, '_create_method')
-        self.assertEquals(inst.cmis_test_model_id.cmis_folder2,
-                          '_create_method')
+        self.assertEqual(inst.cmis_folder2, '_create_method')
+        self.assertEqual(inst.cmis_test_model_id.cmis_folder2,
+                         '_create_method')
 
     def test_related_cmis_folder(self):
         # On a model with related cmis_folders:
@@ -186,9 +185,9 @@ class TestCmisFields(common.BaseTestCmis):
 
         # check that the value is on the parent and the child instances.
         inst._fields['cmis_folder2'].create_value(inst)
-        self.assertEquals(inst.cmis_folder2, '_create_method')
-        self.assertEquals(inst.cmis_test_model_id.cmis_folder2,
-                          '_create_method')
+        self.assertEqual(inst.cmis_folder2, '_create_method')
+        self.assertEqual(inst.cmis_test_model_id.cmis_folder2,
+                         '_create_method')
 
     def test_cmis_folder_create_multi(self):
         # the create method can be called on a recordset
@@ -209,8 +208,8 @@ class TestCmisFields(common.BaseTestCmis):
                 return new_object_mock
             mocked_cmis_repository.createFolder.side_effect = my_side_effect
             inst1._fields['cmis_folder'].create_value(inst1 + inst2)
-            self.assertEquals(inst1.cmis_folder, "id1")
-            self.assertEquals(inst2.cmis_folder, "id2")
+            self.assertEqual(inst1.cmis_folder, "id1")
+            self.assertEqual(inst2.cmis_folder, "id2")
 
     def test_cmis_folder_create_method(self):
         # if a create_method is declared in the field definition, it's
@@ -218,7 +217,7 @@ class TestCmisFields(common.BaseTestCmis):
         # and the value returned by the method is used as field's value
         inst = self.env['cmis.test.model'].create({'name': 'folder_name'})
         inst._fields['cmis_folder2'].create_value(inst)
-        self.assertEquals(inst.cmis_folder2, '_create_method')
+        self.assertEqual(inst.cmis_folder2, '_create_method')
 
     def test_cmis_folder_get_desciption(self):
         inst = self.env['cmis.test.model'].create({'name': 'folder_name'})
@@ -231,9 +230,9 @@ class TestCmisFields(common.BaseTestCmis):
             {'id': self.cmis_backend.id,
              'name': self.cmis_backend.name,
              'location': self.cmis_backend.location})
-        self.assertEquals(descr.get('type'), 'cmis_folder')
-        self.assertEquals(descr.get('allow_create'), True)
-        self.assertEquals(descr.get('allow_delete'), False)
+        self.assertEqual(descr.get('type'), 'cmis_folder')
+        self.assertEqual(descr.get('allow_create'), True)
+        self.assertEqual(descr.get('allow_delete'), False)
         # if no backend exists an error message is put into the desciption
         self.cmis_backend.unlink()
         descr = inst._fields['cmis_folder'].get_description(self.env)
@@ -257,6 +256,6 @@ class TestCmisFields(common.BaseTestCmis):
 
             mocked_cmis_repository.createFolder.side_effect = my_side_effect
             inst1._fields['cmis_folder'].create_value(inst1)
-            self.assertEquals(inst1.cmis_folder, "id1")
+            self.assertEqual(inst1.cmis_folder, "id1")
             copy_inst1 = inst1.copy()
             self.assertFalse(copy_inst1.cmis_folder)

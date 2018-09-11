@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import json
@@ -104,8 +103,8 @@ def gen_dict_extract(key, var):
     credits: http://stackoverflow.com/questions/9807634/
     find-all-occurences-of-a-key-in-nested-python-dictionaries-and-lists
     """
-    if hasattr(var, 'iteritems'):
-        for k, v in var.iteritems():
+    if hasattr(var, 'items'):
+        for k, v in var.items():
             if k == key:
                 yield v
             if isinstance(v, dict):
@@ -128,7 +127,7 @@ class CmisProxy(http.Controller):
         returned by a call to the CMIS container by the one of the proxy"""
         if original.endswith('/'):
             original = original[:-1]
-        for k, v in values.iteritems():
+        for k, v in values.items():
             if isinstance(v, dict):
                 cls._clean_url_in_dict(v, original, new)
             elif hasattr(v, 'replace'):
@@ -274,7 +273,7 @@ class CmisProxy(http.Controller):
                 content.stream,
                 content.mimetype
             )
-        for k, v in params.iteritems():
+        for k, v in params.items():
             # no filename for parts dedicated to HTTP Form data
             files[k] = (None, v, 'text/plain;charset=utf-8')
         url = self._get_redirect_url(proxy_info, url_path)

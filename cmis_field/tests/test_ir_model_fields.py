@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import mock
@@ -24,7 +23,6 @@ class TestIrModelFields(BaseTestCmis):
             'model': 'res.company',
             'model_id': model_id,
             })
-        ir_model_fields = self.env['ir.model.fields']
         self.assertTrue(x_field in res_company._fields)
         with mock.patch.object(CmisFolder, 'create_value') as mocked:
             main_company = self.env.ref('base.main_company')

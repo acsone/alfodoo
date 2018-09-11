@@ -2,15 +2,15 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="FieldCmisFolder">
-    <div t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
+    <div t-att-class="'oe_form_field oe_read_only '+widget.widget_class " t-att-style="widget.attrs.style">
         <input type='hidden'
-               t-att-id="widget.id_for_label" 
-               t-att-tabindex="widget.node.attrs.tabindex"
-               t-att-autofocus="widget.node.attrs.autofocus"
-               t-att-placeholder="widget.node.attrs.placeholder" />
+               t-att-id="widget.id_for_label"
+               t-att-tabindex="widget.attrs.tabindex"
+               t-att-autofocus="widget.attrs.autofocus"
+               t-att-placeholder="widget.attrs.placeholder" />
         <button type="button" class="btn btn-primary cmis-create-root hidden">Create folder in DMS</button>
         <table
-            t-att-id="widget.id_for_table" 
+            t-att-id="widget.id_for_table"
             class="table table-striped table-bordered"
             cellspacing="0"
             width="100%">

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from operator import attrgetter
@@ -7,7 +6,6 @@ from odoo.exceptions import UserError
 from odoo.tools.sql import pg_varchar
 
 
-# pylint:disable=property-on-old-class
 class CmisFolder(fields.Field):
     """ A reference to a cmis:folder. (cmis:objectId)
 
