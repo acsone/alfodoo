@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/acsone/alfodoo.svg?branch=10.0)](https://travis-ci.org/acsone/alfodoo)
-[![codecov](https://codecov.io/gh/acsone/alfodoo/branch/10.0/graph/badge.svg)](https://codecov.io/gh/acsone/alfodoo)
-[![Code Climate](https://codeclimate.com/github/acsone/alfodoo/badges/gpa.svg)](https://codeclimate.com/github/acsone/alfodoo)
+[![Build Status](https://travis-ci.org/acsone/alfodoo.svg?branch=11.0)](https://travis-ci.org/acsone/alfodoo)
+[![codecov](https://codecov.io/gh/acsone/alfodoo/branch/11.0/graph/badge.svg)](https://codecov.io/gh/acsone/alfodoo)
 # Alfodoo Modules
 
 Alfodoo is a set of addons to seamlessly integrate an external Document
