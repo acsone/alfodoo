@@ -20,7 +20,7 @@ class CmisBackend(models.Model):
                 raise ValidationError(
                     _("The character to use as replacement can not be one of"
                       "'%s'") % CMIS_NAME_INVALID_CHARS
-                    )
+                )
 
     enable_sanitize_cmis_name = fields.Boolean(
         'Sanitize name on content creation?',
