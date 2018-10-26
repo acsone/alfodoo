@@ -11,10 +11,7 @@
 
  var core = require('web.core');
  var formWidget = require('web.form_widgets');
- var data = require('web.data');
  var time = require('web.time');
- var ProgressBar = require('web.ProgressBar');
- var Registry = require('web.Registry');
  var Dialog = require('web.Dialog');
  var framework = require('web.framework');
  var _ = require('_');
