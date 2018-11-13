@@ -11,10 +11,7 @@
 
  var core = require('web.core');
  var formWidget = require('web.form_widgets');
- var data = require('web.data');
  var time = require('web.time');
- var ProgressBar = require('web.ProgressBar');
- var Registry = require('web.Registry');
  var Dialog = require('web.Dialog');
  var framework = require('web.framework');
  var _ = require('_');
@@ -131,6 +128,11 @@
          this.$new_filename.val(this.new_filename);
      },
 
+     escape_query_param: function(param){
+       param = param.replace(new RegExp("'", "g"), "\\'");
+       return param;
+     },
+
      /**
         * Method called between @see init and @see start. Performs asynchronous
         * calls required by the rendering and the start method.
@@ -146,7 +148,7 @@
          this.cmis_session.query('' +
              "SELECT cmis:name FROM cmis:document WHERE " +
              "IN_FOLDER('" +  this.parent_cmisobject.objectId +
-             "') AND cmis:name like '" + name_without_ext + "-%." + ext + "'")
+             "') AND cmis:name like '" + self.escape_query_param(name_without_ext) + "-%." + ext + "'")
              .ok(function(data){
                  var cpt = data.results.length;
                  var filenames = _.map(
@@ -172,7 +174,7 @@
          this.cmis_session.query('' +
              "SELECT cmis:objectId FROM cmis:document WHERE " +
              "IN_FOLDER('" +  this.parent_cmisobject.objectId +
-             "') AND cmis:name = '" + this.file.name + "'")
+             "') AND cmis:name = '" + self.escape_query_param(this.file.name) + "'")
              .ok(function(data){
                  self.original_objectId = data.results[0].succinctProperties['cmis:objectId'];
                  dfd2.resolve();
