@@ -146,7 +146,7 @@ class CmisBackend(models.Model):
                             self.folder_name_conflict_handler)
         cmis_qry = ("SELECT cmis:objectId FROM cmis:folder WHERE "
                     "IN_FOLDER('%s') AND cmis:name='%s'" %
-                    (parent.getObjectId(), name))
+                    (parent.getObjectId(), name.replace("'", "\\'")))
         rs = parent.repository.query(cmis_qry)
         num_found_items = rs.getNumItems()
         if num_found_items > 0:
