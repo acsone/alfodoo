@@ -162,7 +162,11 @@ class CmisBackend(models.Model):
                 names = [r.name for r in rs]
                 max_num = 0
                 if names:
-                    max_num = max(
-                        [int(re.findall(r'_\((\d+)\)', n)[-1]) for n in names])
+                    nums = []
+                    for n in names:
+                        num = re.findall(r'_\((\d+)\)', n)
+                        if num:
+                            nums.append(int(num[0]))
+                    max_num = max(nums)
                 return name + '_(%d)' % (max_num + 1)
         return name
