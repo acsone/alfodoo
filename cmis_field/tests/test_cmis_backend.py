@@ -89,7 +89,7 @@ class TestCmisBackend(common.SavepointCase):
                 test = mock.Mock()
                 test.configure_mock()
                 ret = []
-                for v in ['test_(1)', 'test_(3)']:
+                for v in ['test_(backup)', 'test_(1)', 'test_(3)']:
                     m = mock.Mock()
                     m.configure_mock(name=v)
                     ret.append(m)

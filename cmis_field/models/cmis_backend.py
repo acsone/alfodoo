@@ -22,7 +22,7 @@ class CmisBackend(models.Model):
                 raise ValidationError(
                     _("The character to use as replacement can not be one of"
                       "'%s'") % CMIS_NAME_INVALID_CHARS
-                    )
+                )
 
     enable_sanitize_cmis_name = fields.Boolean(
         'Sanitize name on content creation?',
@@ -148,7 +148,7 @@ class CmisBackend(models.Model):
                             self.folder_name_conflict_handler)
         cmis_qry = ("SELECT cmis:objectId FROM cmis:folder WHERE "
                     "IN_FOLDER('%s') AND cmis:name='%s'" %
-                    (parent.getObjectId(), name))
+                    (parent.getObjectId(), name.replace("'", "\\'")))
         rs = parent.repository.query(cmis_qry)
         num_found_items = rs.getNumItems()
         if num_found_items > 0:
@@ -164,7 +164,11 @@ class CmisBackend(models.Model):
                 names = [r.name for r in rs]
                 max_num = 0
                 if names:
-                    max_num = max(
-                        [int(re.findall(r'_\((\d+)\)', n)[-1]) for n in names])
+                    nums = []
+                    for n in names:
+                        num = re.findall(r'_\((\d+)\)', n)
+                        if num:
+                            nums.append(int(num[0]))
+                    max_num = max(nums)
                 return name + '_(%d)' % (max_num + 1)
         return name
