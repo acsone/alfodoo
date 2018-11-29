@@ -168,6 +168,7 @@ class CmisBackend(models.Model):
                         num = re.findall(r'_\((\d+)\)', n)
                         if num:
                             nums.append(int(num[0]))
-                    max_num = max(nums)
+                    if nums:
+                        max_num = max(nums)
                 return name + '_(%d)' % (max_num + 1)
         return name
