@@ -2,8 +2,9 @@
 --extra-index-url https://wheelhouse.odoo-community.org/oca-simple
 
 # odoo
--r https://raw.githubusercontent.com/odoo/odoo/11.0/requirements.txt
-https://nightly.odoo.com/11.0/nightly/src/odoo_11.0.latest.zip
+-r https://raw.githubusercontent.com/odoo/odoo/12.0/requirements.txt
+https://nightly.odoo.com/12.0/nightly/src/odoo_12.0.latest.zip
 -e git+https://github.com/apache/chemistry-cmislib.git@py3_compat#egg=cmislib
+-e git+https://github.com/acsone/connector-cmis.git@12.0-mig-from-11#egg=odoo12-addon-cmis&subdirectory=setup/cmis
 
 
