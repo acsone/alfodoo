@@ -843,7 +843,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 // hide the widget if the record is not yet created
                 this.$el.hide();
             }
-            this.$el.find('button.cmis-create-root').addClass('hidden');
+            this.$el.find('button.cmis-create-root').addClass('o_hidden');
 
             if (this.$el.is(':visible')) {
                 // if the element is visible, we render it. If it's in a tab
@@ -854,7 +854,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.set_root_folder_id(value);
             if (!value) {
                 var self = this;
-                this.$el.find('button.cmis-create-root').removeClass('hidden');
+                this.$el.find('button.cmis-create-root').removeClass('o_hidden');
             }
             var self = this;
             self.add_tab_listener();
