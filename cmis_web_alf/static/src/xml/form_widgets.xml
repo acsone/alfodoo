@@ -9,7 +9,7 @@
                 data-toggle="dropdown"
                 title="Show in Alfresco"
                 aria-label="Show in Alfresco">
-                <div class="alf-ico"  aria-hidden="true"></div>
+                <div class="alf-ico" ></div>
          </button>
     </t>
 </t>
@@ -21,7 +21,7 @@
                 data-toggle="dropdown"
                 title="Show in Alfresco"
                 aria-label="Show in Alfresco">
-              <div class="alf-ico"  aria-hidden="true"></div>
+              <div class="alf-ico" ></div>
         </button>
     </t>
 </t>
