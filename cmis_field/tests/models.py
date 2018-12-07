@@ -12,6 +12,7 @@ class CmisTestModel(models.Model):
     _name = 'cmis.test.model'
     _rec_name = 'name'
     _abstract = True
+    _description = 'cmis.test.model'
 
     @api.multi
     def _get_name(self, field, backend):
@@ -47,6 +48,7 @@ class CmisTestModelInherits(models.Model):
     _name = 'cmis.test.model.inherits'
     _inherits = {'cmis.test.model': 'cmis_test_model_id'}
     _abstract = True
+    _description = 'cmis.test.model.inherits'
 
     cmis_test_model_id = fields.Many2one(
         'cmis.test.model',
@@ -59,6 +61,7 @@ class CmisTestModelInherits(models.Model):
 class CmisTestModelRelated(models.Model):
     _name = 'cmis.test.model.related'
     _abstract = True
+    _description = 'cmis.test.model.related'
 
     name = fields.Char(required=True)
 
