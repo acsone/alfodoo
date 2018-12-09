@@ -914,9 +914,11 @@ odoo.define('cmis_web.form_widgets', function (require) {
                     'field_name': self.name
                 }}).done(function (vals) {
                     var cmis_objectid = vals[self.res_id];
+                    var changes = {};
+                    changes[self.name] = cmis_objectid;
                     self.trigger_up('field_changed', {
                         dataPointID: self.dataPointID,
-                        changes: {value: cmis_objectid},
+                        changes: changes,
                     });
                 });
             });

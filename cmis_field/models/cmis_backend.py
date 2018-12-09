@@ -157,7 +157,8 @@ class CmisBackend(models.Model):
                 testname = name + '_(%)'
                 cmis_qry = ("SELECT * FROM cmis:folder WHERE "
                             "IN_FOLDER('%s') AND cmis:name like '%s'" %
-                            (parent.getObjectId(), testname))
+                            (parent.getObjectId(),
+                             testname.replace("'", "\\'")))
                 rs = parent.repository.query(cmis_qry)
                 names = [r.name for r in rs]
                 max_num = 0
