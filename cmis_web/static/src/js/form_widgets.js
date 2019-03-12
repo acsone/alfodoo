@@ -852,7 +852,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             }
 
             this.set_root_folder_id(value);
-            if (!value) {
+            if (!value && this.field.allow_create) {
                 var self = this;
                 this.$el.find('button.cmis-create-root').removeClass('o_hidden');
             }
