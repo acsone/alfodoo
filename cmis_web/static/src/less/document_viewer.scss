@@ -1,0 +1,147 @@
+@mixin cmis-web-o-viewer-black-btn {
+    background-color: rgba(black, 0.4);
+    color: rgba(theme-color('light'), 0.7);
+
+    &:hover {
+        background-color: rgba(black, 0.6);
+        color: white;
+    }
+
+    &.disabled {
+        color: gray('600');
+        background: none;
+    }
+}
+.cmis_web_modal_fullscreen {
+    z-index: $zindex-modal + 1  + 1;
+
+    .cmis_web_viewer_content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .cmis_web_viewer-header {
+            @include o-position-absolute(0, 0, $left: 0);
+            height: 45px;
+            padding: $grid-gutter-width*0.5;
+            background-color: rgba(black, 0.8);
+            z-index: 1;
+            color: #FFFFFF;
+
+            a {
+                @include o-hover-text-color(rgba(theme-color('light'), 0.6), white);
+            }
+
+            .cmis_web_close_btn {
+                @include o-position-absolute(-1px, $grid-gutter-width*0.5);
+                font-size: $h1-font-size;
+                font-weight: 300;
+            }
+
+            .cmis_web_image_caption {
+                bottom: 20%;
+                position: absolute;
+
+                .cmis_web_split_pdf_area {
+                    background-color: #3a3a3a;
+                    margin: 5px;
+                    padding: 6px;
+                    margin-left: 50px;
+
+                    .cmis_web_split_btn {
+                        vertical-align: baseline;
+                    }
+
+                    .cmis_web_page_number_input {
+                        width: 13%;
+                        color: black;
+                        display: inline;
+                    }
+
+                    .cmis_web_remainder_input {
+                        vertical-align: middle;
+                    }
+                }
+            }
+        }
+
+        .cmis_web_loading_img {
+            @include o-position-absolute($top: 45%, $right: 0, $left: 0);
+        }
+
+        .cmis_web_viewer_img_wrapper {
+            cursor: pointer;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(black, 0.7);
+
+            .cmis_web_viewer_zoomer {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 45px 0;
+
+                img {
+                    image-orientation: from-image; // Only supported in Firefox
+                }
+
+                img, video {
+                    cursor :auto;
+                    max-width: 100%;
+                    max-height: 100%;
+                    transition: 0.2s cubic-bezier(0, 0, 0.49, 1.6) 0s, opacity 0.15s;
+                    box-shadow: 0 0 40px black;
+                }
+
+                .cmis_web_viewer_pdf {
+                    width: 80%;
+                    height: 94%;
+                    border: 0px;
+                    box-shadow: 1px 1px 20px 1px #000;
+                }
+
+                .cmis_web_viewer_text {
+                    width: 80%;
+                    height: 100%;
+                    border: 0px;
+                    box-shadow: 1px 1px 20px 1px #000;
+                    background-color: white;
+                }
+
+                .cmis_web_viewer_video {
+                    height: 80%;
+                }
+            }
+        }
+
+        .cmis_web_viewer_toolbar {
+            @include o-position-absolute($left: 50%, $bottom: $grid-gutter-width*0.5);
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+            border-radius: 4px;
+            background-color: rgba(black, 0.4);
+
+            .cmis_web_viewer_toolbar_btn {
+                @include cmis-web-o-viewer-black-btn;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+        }
+    }
+
+    .arrow {
+        @include o-position-absolute(50%, $grid-gutter-width*0.5);
+        border-radius: 100%;
+        padding: 12px 16px 11px 18px;
+        @include cmis-web-o-viewer-black-btn;
+    }
+
+    .arrow-left {
+        left: $grid-gutter-width*0.5;
+        right: auto;
+        padding: 12px 18px 11px 16px;
+    }
+}

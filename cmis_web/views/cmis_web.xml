@@ -3,7 +3,7 @@
     <template id="assets_backend" name="cmis_web assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/cmis_web/static/lib/datatables/datatables.css"/>
-            <!-- -link rel="stylesheet" type="text/less" href="/cmis_web/static/src/less/document_viewer.less"/ -->
+            <link rel="stylesheet" type="text/less" href="/cmis_web/static/src/less/document_viewer.scss"/>
             <link rel="stylesheet" type="text/less" href="/cmis_web/static/src/less/form_widgets.less"/>
             <link rel="stylesheet" href="/cmis_web/static/src/css/bootstrap_fonts_fixes.css"/>
 

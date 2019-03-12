@@ -13,23 +13,25 @@ var SCROLL_ZOOM_STEP = 0.1;
 var ZOOM_STEP = 0.5;
 
 var DocumentViewer = Widget.extend({
-    template: "DocumentViewer",
+    template: "cmis_web.DocumentViewer",
     events: {
-        'click .o_download_btn': '_onDownload',
-        'click .o_viewer_img': '_onImageClicked',
-        'click .o_viewer_video': '_onVideoClicked',
-        'click .move_next': '_onNext',
-        'click .move_previous': '_onPrevious',
-        'click .o_zoom_in': '_onZoomIn',
-        'click .o_zoom_out': '_onZoomOut',
-        'click .o_close_btn, .o_viewer_img_wrapper': '_onClose',
-        'click .o_print_btn': '_onPrint',
-        'DOMMouseScroll .o_viewer_content': '_onScroll',    // Firefox
-        'mousewheel .o_viewer_content': '_onScroll',        // Chrome, Safari, IE
+        'click .cmis_web_download_btn': '_onDownload',
+        'click .cmis_web_viewer_img': '_onImageClicked',
+        'click .cmis_web_viewer_video': '_onVideoClicked',
+        'click .cmis_web_move_next': '_onNext',
+        'click .cmis_web_move_previous': '_onPrevious',
+        'click .cmis_web_rotate': '_onRotate',
+        'click .cmis_web_zoom_in': '_onZoomIn',
+        'click .cmis_web_zoom_out': '_onZoomOut',
+        'click .cmis_web_zoom_reset': '_onZoomReset',
+        'click .cmis_web_close_btn, .cmis_web_viewer_img_wrapper': '_onClose',
+        'click .cmis_web_print_btn': '_onPrint',
+        'DOMMouseScroll .cmis_web_viewer_content': '_onScroll',    // Firefox
+        'mousewheel .cmis_web_viewer_content': '_onScroll',        // Chrome, Safari, IE
         'keydown': '_onKeydown',
-        'mousedown .o_viewer_img': '_onStartDrag',
-        'mousemove .o_viewer_content': '_onDrag',
-        'mouseup .o_viewer_content': '_onEndDrag'
+        'mousedown .cmis_web_viewer_img': '_onStartDrag',
+        'mousemove .cmis_web_viewer_content': '_onDrag',
+        'mouseup .cmis_web_viewer_content': '_onEndDrag'
     },
     /**
      * The documentViewer takes an array of objects describing attachments in
@@ -69,7 +71,7 @@ var DocumentViewer = Widget.extend({
     start: function () {
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
-        this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('.cmis_web_viewer_img').load(_.bind(this._onImageLoaded, this));
         return this._super.apply(this, arguments);
     },
 
@@ -143,10 +145,10 @@ var DocumentViewer = Widget.extend({
      * @private
      */
     _updateContent: function () {
-        this.$('.o_viewer_content').html(QWeb.render('DocumentViewer.Content', {
+        this.$('.cmis_web_viewer_content').html(QWeb.render('cmis_web.DocumentViewer.Content', {
             widget: this
         }));
-        this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('.cmis_web_viewer_img').load(_.bind(this._onImageLoaded, this));
         this._reset();
     },
     /**
@@ -157,9 +159,46 @@ var DocumentViewer = Widget.extend({
      */
     _zoom: function (scale) {
         if (scale > 0.5) {
-            this.$('.o_viewer_img').css('transform', 'scale3d(' + scale + ', ' + scale + ', 1)');
+            this.$('.cmis_web_viewer_img').css('transform', 'scale3d(' + scale + ', ' + scale + ', 1)');
             this.scale = scale;
         }
+    },
+     /**
+     * Get CSS transform property based on scale and angle
+     *
+     * @private
+     * @param {float} scale
+     * @param {float} angle
+     */
+    _getTransform: function(scale, angle) {
+        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)';
+    },
+    /**
+     * Rotate image clockwise by provided angle
+     *
+     * @private
+     * @param {float} angle
+     */
+    _rotate: function (angle) {
+        this._reset();
+        var new_angle = (this.angle || 0) + angle;
+        this.$('.cmis_web_viewer_img').css('transform', this._getTransform(this.scale, new_angle));
+        this.$('.cmis_web_viewer_img').css('max-width', new_angle % 180 !== 0 ? $(document).height() : '100%');
+        this.$('.cmis_web_viewer_img').css('max-height', new_angle % 180 !== 0 ? $(document).width() : '100%');
+        this.angle = new_angle;
+    },
+    /**
+     * Zoom in/out image by provided scale
+     *
+     * @private
+     * @param {integer} scale
+     */
+    _zoom: function (scale) {
+        if (scale > 0.5) {
+            this.$('.cmis_web_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
+            this.scale = scale;
+        }
+        this.$('.cmis_web_zoom_reset').add('.cmis_web_zoom_out').toggleClass('disabled', scale === 1);
     },
 
     //--------------------------------------------------------------------------
@@ -191,7 +230,7 @@ var DocumentViewer = Widget.extend({
      */
     _onDownload: function (e) {
         e.preventDefault();
-        window.location = '/web/content/' + this.activeDocument.id + '?download=true';
+        window.open(this.activeDocument.url);
     },
     /**
      * @private
@@ -200,8 +239,8 @@ var DocumentViewer = Widget.extend({
     _onDrag: function (e) {
         e.preventDefault();
         if (this.enableDrag) {
-            var $image = this.$('.o_viewer_img');
-            var $zoomer = this.$('.o_viewer_zoomer');
+            var $image = this.$('.cmis_web_viewer_img');
+            var $zoomer = this.$('.cmis_web_viewer_zoomer');
             var top = $image.prop('offsetHeight') * this.scale > $zoomer.height() ? e.clientY - this.dragStartY : 0;
             var left = $image.prop('offsetWidth') * this.scale > $zoomer.width() ? e.clientX - this.dragStartX : 0;
             $zoomer.css("transform", "translate3d("+ left +"px, " + top + "px, 0)");
@@ -233,7 +272,7 @@ var DocumentViewer = Widget.extend({
      * @private
      */
     _onImageLoaded: function () {
-        this.$('.o_loading_img').hide();
+        this.$('.cmis_web_loading_img').hide();
     },
     /**
      * Move next previous attachment on keyboard right left key
@@ -275,7 +314,7 @@ var DocumentViewer = Widget.extend({
      */
     _onPrint: function (e) {
         e.preventDefault();
-        var src = this.$('.o_viewer_img').prop('src');
+        var src = this.$('.cmis_web_viewer_img').prop('src');
         var script = QWeb.render('PrintImage', {
             src: src
         });
@@ -330,6 +369,14 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
+    _onRotate: function (e) {
+        e.preventDefault();
+        this._rotate(90);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
     _onZoomIn: function (e) {
         e.preventDefault();
         var scale = this.scale + ZOOM_STEP;
@@ -343,6 +390,15 @@ var DocumentViewer = Widget.extend({
         e.preventDefault();
         var scale = this.scale - ZOOM_STEP;
         this._zoom(scale);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onZoomReset: function (e) {
+        e.preventDefault();
+        this.$('.cmis_web_viewer_zoomer').css("transform", "");
+        this._zoom(1);
     },
 });
 return DocumentViewer;
