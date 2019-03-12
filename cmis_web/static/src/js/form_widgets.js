@@ -1542,7 +1542,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         var wrapped_cmisobject = new CmisObjectWrapper(this, cmisobject, self.cmis_session);
                         var name = (folderId == self.root_folder_id) ? _t('Root') : wrapped_cmisobject.name;
                         var link = $('<a>').attr('href', '#').attr('data-cmis-folder-id', folderId).append(name);
-                        self.$breadcrumb.append($('<li>').append(link));
+                        self.$breadcrumb.append($('<li class="breadcrumb-item active">').append(link));
                         link.click(function (e) {
                             e.preventDefault();
                             var current_id = self.dislayed_folder_cmisobject.objectId;
