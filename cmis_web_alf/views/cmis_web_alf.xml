@@ -2,7 +2,7 @@
 <odoo>
     <template id="assets_backend" name="cmis_web assets" inherit_id="cmis_web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/cmis_web_alf/static/src/less/form_widgets.less"/>
+            <link rel="stylesheet" type="text/scss" href="/cmis_web_alf/static/src/scss/form_widgets.scss"/>
             <script type="text/javascript" src="/cmis_web_alf/static/src/js/form_widgets.js"/>
         </xpath>
     </template>

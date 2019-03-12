@@ -1,15 +1,13 @@
- .buttons-columnVisibility{
-    a {
-        background-color: initial !important;
-    }
+ a.buttons-columnVisibility{
+    background-color: initial !important;
 
-    a:before {
+    :before {
         content:' ';
         margin-left: 11px;
     }
 
     &.active{
-        a:before{
+        :before{
             content:'\2714';
             margin-top:-11px;
             margin-left: 0px;
@@ -20,32 +18,10 @@
         }
     }
 
-    a:empty:before {
+    :empty:before {
         content:'';
     }
 }
-
-/*.o_touch_device{
-    .field_cmis_folder{
-        .btn-lg {
-          // line-height: ensure even-numbered height of button next to large input
-          .button-size(@padding-large-vertical; @padding-large-horizontal; @font-size-large; @line-height-large; @btn-border-radius-large) !important;
-        }
-        .btn-sm {
-          // line-height: ensure proper height of button next to small input
-          .button-size(@padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small) !important;
-        }
-        .btn-xs {
-          .button-size(@padding-xs-vertical; @padding-xs-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small) !important;
-        }
-        .dropdown-menu {
-            > li > a {
-                padding-top: 3px !important;
-                padding-bottom: 3px !important;
-            }
-        }
-     }
-}*/
 
 div.field_cmis_folder {
 
@@ -59,13 +35,13 @@ div.field_cmis_folder {
             margin-left: 5px;
         }
     }
-    
+
     .dataTables_wrapper {
         width: 100%;
         div.cmis-root-content-buttons {
             height: 30px;
         }
-        
+
         div.cmis-checked-out-by {
             font-style: italic;
             margin-left: 10px;
@@ -84,6 +60,7 @@ div.field_cmis_folder {
                 cursor: pointer;
              }
             td {
+                padding: 6px;
                 div.cmis_content_icon:before {
                     margin-right: 4px;
                 }
@@ -97,16 +74,20 @@ div.field_cmis_folder {
         .dataTables_length {
             float: right;
             text-align: right;
-            select {
-                line-height: 18px;
-            }
         }
 
         ol.breadcrumb {
             margin-top: 5px;
             margin-bottom: 0px;
         }
-
+        .field_cmis_folder_details {
+            table {
+                width: 100%;
+                td {
+                    padding: 3px;
+                }
+            }
+        }
     }
 }
 
@@ -117,6 +98,22 @@ div.field_cmis_folder_content_actions {
     ul.dropdown-menu {
         width: auto;
         position: fixed;
+    }
+    .divider {
+        height: 1px;
+        margin: 8px 0;
+        overflow: hidden;
+        background-color: #e5e5e5;
+    }
+
+    a {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333333;
+        white-space: nowrap;
     }
 }
 
