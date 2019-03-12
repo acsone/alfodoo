@@ -164,7 +164,7 @@
           </button>
         </t>
             <a type="button"
-               class="btn btn-default btn-xs dropdown-toggle fa fa-align-justify"
+               class="btn btn-default btn-xs dropdown-toggle fa fa-align-justify cmis-dropdown-more-actions"
                t-att-id="object.getSuccinctProperty('cmis:objectId')"
                aria-label="More actions"
                data-toggle="dropdown"
