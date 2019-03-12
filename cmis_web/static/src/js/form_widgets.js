@@ -1177,8 +1177,8 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 });
             }
             /* some UI fixes */
-            this.$el.find('.dropdown-toggle').off('click');
-            this.$el.find('.dropdown-toggle').on('click', function (e) {
+            this.$el.find('.cmis-dropdown-more-actions').off('click');
+            this.$el.find('.cmis-dropdown-more-actions').on('click', function (e) {
                 self.dropdown_fix_position($(e.target));
             });
 
