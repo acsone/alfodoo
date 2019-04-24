@@ -70,7 +70,6 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.$newName = this.$el.find('#new-name');
             this.$newName.val(this.cmisObject.name);
             this.$newName.select();
-
         },
         on_click_process: function () {
             var self = this;
@@ -595,6 +594,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 ctx[actionName] = value;
             });
             ctx['canPreview'] = ctx['canGetContentStream']; // && this.mimetype === 'application/pdf';
+            ctx['isFolder'] = this.baseTypeId == 'cmis:folder';
             return QWeb.render("CmisContentActions", ctx);
         },
 
@@ -813,6 +813,8 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.on('wrapped_cmis_node_reloaded', this, this.on_wrapped_cmis_node_reloaded);
             this.backend = this.field.backend;
             this.formatType = 'char';
+            this.clipboardAction = undefined;
+            this.clipboardObject = undefined;
         },
 
         reset_widget: function () {
@@ -1221,6 +1223,26 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 var row = self._get_event_row(e);
                 self.on_click_rename(row);
             });
+            $el_actions.find('.content-action-cut').on('click', function (e) {
+                self._prevent_on_hashchange(e);
+                var row = self._get_event_row(e);
+                self.on_click_cut(row);
+            });
+            $el_actions.find('.content-action-copy').on('click', function (e) {
+                self._prevent_on_hashchange(e);
+                var row = self._get_event_row(e);
+                self.on_click_copy(row);
+            });
+            $el_actions.find('.content-action-copy-paste').on('click', function (e) {
+                self._prevent_on_hashchange(e);
+                var row = self._get_event_row(e);
+                self.on_click_copy_paste(row);
+            });
+            $el_actions.find('.content-action-cut-paste').on('click', function (e) {
+                self._prevent_on_hashchange(e);
+                var row = self._get_event_row(e);
+                self.on_click_cut_paste(row);
+            });
             $el_actions.find('.content-action-set-content-stream').on('click', function (e) {
                 self._prevent_on_hashchange(e);
                 var row = self._get_event_row(e);
@@ -1340,6 +1362,108 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 var dialog = new CmisCreateDocumentDialog(self, self.dislayed_folder_cmisobject);
                 dialog.open();
             });
+            this.$el.find('.root-content-action-copy-paste').on('click', function (e) {
+                self.get_new_filename(self.clipboardObject.name, self.displayed_folder_id
+                ).done(function (result) {
+                    self.cmis_session.createDocumentFromSource(
+                        self.displayed_folder_id, self.clipboardObject.objectId,
+                        undefined, result
+                    ).ok(function (result) {
+                        self.clear_clipboard();
+                        self.reload_displayed_folder();
+                    }).notOk(function (error) {
+                        self.clear_clipboard();
+                        self.reload_displayed_folder();
+                    });
+                });
+            });
+            this.$el.find('.root-content-action-cut-paste').on('click', function (e) {
+                self.get_new_filename(self.clipboardObject.name, self.displayed_folder_id
+                ).done(function (result) {
+                    self.cmis_session.moveObject(
+                        self.clipboardObject.objectId,
+                        self.clipboardFolder,
+                        self.displayed_folder_id
+                    ).ok(function (result) {
+                        self.clear_clipboard();
+                        self.reload_displayed_folder();
+                    })
+                });
+            });
+        },
+
+        clear_clipboard: function () {
+            this.clipboardObject = undefined;
+            this.clipboardAction = undefined;
+            this.clipboardFolder = undefined;
+        },
+
+        /**
+         * Method returning a deferred with true if the filename we want
+         * to copy (or cut) already exists in the folder
+         */
+        filename_already_exists: function (filename, folder) {
+            var self = this;
+            var deferred = $.Deferred();
+            self.cmis_session.query('' +
+                "SELECT cmis:name FROM cmis:document WHERE " +
+                "IN_FOLDER('" + folder +
+                "') AND cmis:name like '" + filename + "'")
+                .ok(function (data) {
+                    if (data.numItems > 0) {
+                        deferred.resolve(true);
+                    } else {
+                        deferred.resolve(false);
+                    }
+                })
+                .notOk(function (error) {
+                    deferred.reject(error);
+                });
+            return deferred;
+        },
+
+        /**
+         * Method returning a deferred with the new_filename for a copy or cut
+         */
+        get_new_filename: function (filename, folder) {
+            var self = this;
+            return self.filename_already_exists(filename, folder).then(function (result) {
+                if (result) {
+                    var new_filename = undefined;
+                    var re = /(?:\.([^.]+))?$/;
+                    var parts = re.exec(filename);
+                    var name_without_ext = filename.slice(0, -parts[1].length - 1);
+                    var ext = parts[1];
+                    var deferred = $.Deferred();
+                    self.cmis_session.query('' +
+                        "SELECT cmis:name FROM cmis:document WHERE " +
+                        "IN_FOLDER('" + folder +
+                        "') AND cmis:name like '" + name_without_ext.replace(new RegExp("'", "g"), "\\'") + "-%." + ext + "'"
+                        ).ok(function (data) {
+                            var cpt = data.results.length;
+                            var filenames = _.map(
+                                data.results,
+                                function (item) {
+                                    return item.succinctProperties['cmis:name'][0];
+                                });
+                            while (true) {
+                                new_filename = name_without_ext + '-' +
+                                    cpt + '.' + ext;
+                                if (_.contains(filenames, new_filename)) {
+                                    cpt += 1;
+                                } else {
+                                    break;
+                                }
+                            }
+                            deferred.resolve(new_filename);
+                        }).notOk(function (error) {
+                            deferred.reject(error);
+                        });
+                    return deferred;
+                } else {
+                    return filename;
+                }
+            })
         },
 
         /**
@@ -1372,6 +1496,53 @@ odoo.define('cmis_web.form_widgets', function (require) {
         on_click_rename: function (row) {
             var dialog = new CmisRenameContentDialog(this, row.data());
             dialog.open();
+        },
+
+        on_click_copy: function (row) {
+            this.clipboardAction = 'copy';
+            this.clipboardObject = row.data();
+            this.reload_displayed_folder();
+        },
+
+        on_click_cut: function (row) {
+            this.clipboardAction = 'cut';
+            this.clipboardObject = row.data();
+            this.clipboardFolder = this.displayed_folder_id;
+            this.reload_displayed_folder();
+        },
+
+        on_click_copy_paste: function (row) {
+            var self = this;
+            var data = row.data();
+            self.get_new_filename(self.clipboardObject.name, data.objectId
+            ).done(function (result) {
+                self.cmis_session.createDocumentFromSource(
+                    data.objectId, self.clipboardObject.objectId,
+                    undefined, result
+                ).ok(function (result) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                }).notOk(function (error) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                });
+            });
+        },
+
+        on_click_cut_paste: function (row) {
+            var self = this;
+            var data = row.data();
+            self.get_new_filename(self.clipboardObject.name, data.objectId
+            ).done(function (result) {
+                self.cmis_session.moveObject(
+                    self.clipboardObject.objectId,
+                    self.clipboardFolder,
+                    data.objectId
+                ).ok(function (result) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                })
+            });
         },
 
         on_click_details_control: function (e) {
