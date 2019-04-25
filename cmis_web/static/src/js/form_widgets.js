@@ -16,6 +16,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
     var Dialog = require('web.Dialog');
     var framework = require('web.framework');
     var DocumentViewer = require('cmis_web.DocumentViewer')
+    var crash_manager = require('web.crash_manager');
 
     var _t = core._t;
     var QWeb = core.qweb;
@@ -1388,8 +1389,15 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         self.clear_clipboard();
                         self.reload_displayed_folder();
                     }).notOk(function (error) {
-                        console.error(error);
-                        Dialog.alert(self, _t('A document with the same name already exists.'));
+                        if (error.body.message.startsWith("Duplicate child name not allowed")) {
+                            Dialog.alert(self, _t('A document with the same name already exists.'));
+                        } else {
+                            crash_manager.show_error({
+                                type: _t("Alfresco Error"),
+                                message: error.body.message,
+                                data: {debug: JSON.stringify(error)},
+                            });
+                        }
                     });
                 });
             });
@@ -1545,8 +1553,15 @@ odoo.define('cmis_web.form_widgets', function (require) {
                     self.clear_clipboard();
                     self.reload_displayed_folder();
                 }).notOk(function (error) {
-                    console.error(error);
-                    Dialog.alert(self, _t('A document with the same name already exists.'))
+                    if (error.body.message.startsWith("Duplicate child name not allowed")) {
+                        Dialog.alert(self, _t('A document with the same name already exists.'));
+                    } else {
+                        crash_manager.show_error({
+                            type: _t("Alfresco Error"),
+                            message: error.body.message,
+                            data: {debug: JSON.stringify(error)},
+                        });
+                    }
                 });
             });
         },
