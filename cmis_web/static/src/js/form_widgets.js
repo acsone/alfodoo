@@ -1387,7 +1387,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
                     ).ok(function (result) {
                         self.clear_clipboard();
                         self.reload_displayed_folder();
-                    })
+                    }).notOk(function (error) {
+                        console.error(error);
+                        Dialog.alert(self, _t('A document with the same name already exists.'));
+                    });
                 });
             });
         },
@@ -1541,7 +1544,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 ).ok(function (result) {
                     self.clear_clipboard();
                     self.reload_displayed_folder();
-                })
+                }).notOk(function (error) {
+                    console.error(error);
+                    Dialog.alert(self, _t('A document with the same name already exists.'))
+                });
             });
         },
 

@@ -147,7 +147,7 @@
              <span class="fa fa-paste"></span>
          </button>
            <button type="button"
-                 t-if="object.clipboardAction == 'cut' &amp; canMoveObject"
+                 t-if="object.clipboardAction == 'cut' &amp; canCreateDocument"
                  t-attf-class="btn btn-default btn-sm root-content-action-cut-paste"
                  data-toggle="tooltip"
                  title="Paste"
@@ -192,7 +192,7 @@
                 <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
                 <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
                 <li t-if='!isFolder'><a class='content-action-copy' href="#"><i class="fa fa-copy"></i> Copy</a></li>
-                <li t-if='canMoveObject &amp; !isFolder'><a class='content-action-cut' href="#"><i class="fa fa-cut"></i> Cut</a></li>
+                <li t-if='canMoveObject'><a class='content-action-cut' href="#"><i class="fa fa-cut"></i> Cut</a></li>
                 <li t-if='canCreateDocument &amp; object.parent.clipboardAction == "cut"'><a class='content-action-cut-paste' href="#"><i class="fa fa-paste"></i> Paste</a></li>
                 <li t-if='canCreateDocument &amp; object.parent.clipboardAction == "copy"'><a class='content-action-copy-paste' href="#"><i class="fa fa-paste"></i> Paste</a></li>
                 <li t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></li>
