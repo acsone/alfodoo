@@ -1357,7 +1357,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.$el.find('.root-content-action-new-folder').on('click', function (e) {
                 var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_cmisobject);
                 dialog.open();
-
+                dialog.opened().then(function (result) {
+                    dialog.$el.find('[autofocus]').focus();
+                });
             });
             this.$el.find('.root-content-action-new-doc').on('click', function (e) {
                 var dialog = new CmisCreateDocumentDialog(self, self.dislayed_folder_cmisobject);
@@ -1507,6 +1509,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
         on_click_rename: function (row) {
             var dialog = new CmisRenameContentDialog(this, row.data());
             dialog.open();
+            dialog.opened().then(function (result) {
+                dialog.$el.find('[autofocus]').focus();
+            });
         },
 
         on_click_copy: function (row) {
