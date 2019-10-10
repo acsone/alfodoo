@@ -16,6 +16,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
     var Dialog = require('web.Dialog');
     var framework = require('web.framework');
     var DocumentViewer = require('cmis_web.DocumentViewer')
+    var crash_manager = require('web.crash_manager');
 
     var _t = core._t;
     var QWeb = core.qweb;
@@ -567,7 +568,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
         fLastModificationDate: function () {
             return this.format_cmis_timestamp(this.lastModificationDate);
         },
-
+        
         fDetails: function () {
             return '<div class="fa fa-plus-circle"/>';
         },
@@ -595,6 +596,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 ctx[actionName] = value;
             });
             ctx['canPreview'] = ctx['canGetContentStream']; // && this.mimetype === 'application/pdf';
+            ctx['isFolder'] = this.baseTypeId == 'cmis:folder';
             return QWeb.render("CmisContentActions", ctx);
         },
 
@@ -796,7 +798,6 @@ odoo.define('cmis_web.form_widgets', function (require) {
             'click td.details-control': 'on_click_details_control',
             'click button.cmis-create-root': 'on_click_create_root',
         },
-
         /*
          * Override base methods
          */
@@ -813,6 +814,8 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.on('wrapped_cmis_node_reloaded', this, this.on_wrapped_cmis_node_reloaded);
             this.backend = this.field.backend;
             this.formatType = 'char';
+            this.clipboardAction = undefined;
+            this.clipboardObject = undefined;
         },
 
         reset_widget: function () {
@@ -1246,6 +1249,26 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 var row = self._get_event_row(e);
                 self.on_click_cancel_checkout(row);
             });
+            $el_actions.find('.content-action-cut').on('click', function (e) {
+                self._prevent_on_hashchange(e);
+                var row = self._get_event_row(e);
+                self.on_click_cut(row);
+            });
+            $el_actions.find('.content-action-copy').on('click', function (e) {
+                self._prevent_on_hashchange(e);
+                var row = self._get_event_row(e);
+                self.on_click_copy(row);
+            });
+            $el_actions.find('.content-action-copy-paste').on('click', function (e) {
+                self._prevent_on_hashchange(e);
+                var row = self._get_event_row(e);
+                self.on_click_copy_paste(row);
+            });
+            $el_actions.find('.content-action-cut-paste').on('click', function (e) {
+                self._prevent_on_hashchange(e);
+                var row = self._get_event_row(e);
+                self.on_click_cut_paste(row);
+            });
         },
 
         /**
@@ -1334,11 +1357,48 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.$el.find('.root-content-action-new-folder').on('click', function (e) {
                 var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_cmisobject);
                 dialog.open();
-
             });
             this.$el.find('.root-content-action-new-doc').on('click', function (e) {
                 var dialog = new CmisCreateDocumentDialog(self, self.dislayed_folder_cmisobject);
                 dialog.open();
+            });
+            this.$el.find('.root-content-action-copy-paste').on('click', function (e) {
+                self.get_new_filename(self.clipboardObject.name, self.displayed_folder_id
+                ).done(function (result) {
+                    self.cmis_session.createDocumentFromSource(
+                        self.displayed_folder_id, self.clipboardObject.objectId,
+                        undefined, result
+                    ).ok(function (result) {
+                        self.clear_clipboard();
+                        self.reload_displayed_folder();
+                    }).notOk(function (error) {
+                        self.clear_clipboard();
+                        self.reload_displayed_folder();
+                    });
+                });
+            });
+            this.$el.find('.root-content-action-cut-paste').on('click', function (e) {
+                self.get_new_filename(self.clipboardObject.name, self.displayed_folder_id
+                ).done(function (result) {
+                    self.cmis_session.moveObject(
+                        self.clipboardObject.objectId,
+                        self.clipboardFolder,
+                        self.displayed_folder_id
+                    ).ok(function (result) {
+                        self.clear_clipboard();
+                        self.reload_displayed_folder();
+                    }).notOk(function (error) {
+                        if (error.body.message.startsWith("Duplicate child name not allowed")) {
+                            Dialog.alert(self, _t('A document with the same name already exists.'));
+                        } else {
+                            crash_manager.show_error({
+                                type: _t("Alfresco Error"),
+                                message: error.body.message,
+                                data: {debug: JSON.stringify(error)},
+                            });
+                        }
+                    });
+                });
             });
         },
 
@@ -1354,19 +1414,107 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 $.proxy(this.do_download, this)
             );
         },
+        /**
+         * Reload and redraw the DataTables in the current context, optionally
+         * updating ordering, searching and paging as required.
+         *
+         * @param {string} paging: This parameter is used to determine what kind
+         * of draw DataTables will perform. There are three options available:
+         * - paging (default): ordering and search will not be updated and the
+         *                     paging position held where is was
+         * - full-reset: the ordering and search will be recalculated and the rows
+         *               redrawn in their new positions. The paging will be reset
+         *               back to the first page.
+         * - full-hold: the ordering and search will be recalculated and the rows
+         *              redrawn in their new positions. The paging will not be
+         *              reset - i.e. the current page will still be shown.
+         */
+        refresh_datatable: function(paging) {
+            this.datatable.draw(paging || 'page');
+        },
+
+        clear_clipboard: function () {
+            this.clipboardObject = undefined;
+            this.clipboardAction = undefined;
+            this.clipboardFolder = undefined;
+        },
 
         do_download: function (cmisObjectWrapped) {
             window.open(cmisObjectWrapped.url);
         },
-
-        on_click_preview: function (row) {
-            var cmisObjectWrapped = row.data();
-            var documentViewer = new DocumentViewer(this, cmisObjectWrapped, this.datatable.data());
-            documentViewer.appendTo($('body'));
+        /**
+         * Method returning a deferred with true if the filename we want
+         * to copy (or cut) already exists in the folder
+         */
+        filename_already_exists: function (filename, folder) {
+            var self = this;
+            var deferred = $.Deferred();
+            self.cmis_session.query('' +
+                "SELECT cmis:name FROM cmis:document WHERE " +
+                "IN_FOLDER('" + folder +
+                "') AND cmis:name like '" + filename + "'")
+                .ok(function (data) {
+                    if (data.numItems > 0) {
+                        deferred.resolve(true);
+                    } else {
+                        deferred.resolve(false);
+                    }
+                })
+                .notOk(function (error) {
+                    deferred.reject(error);
+                });
+            return deferred;
         },
 
-        on_click_get_properties: function (row) {
-            this.display_row_details(row);
+        /**
+         * Method returning a deferred with the new_filename for a copy or cut
+         */
+        get_new_filename: function (filename, folder) {
+            var self = this;
+            return self.filename_already_exists(filename, folder).then(function (result) {
+                if (result) {
+                    var new_filename = undefined;
+                    var re = /(?:\.([^.]+))?$/;
+                    var parts = re.exec(filename);
+                    var name_without_ext = filename.slice(0, -parts[1].length - 1);
+                    var ext = parts[1];
+                    var deferred = $.Deferred();
+                    self.cmis_session.query('' +
+                        "SELECT cmis:name FROM cmis:document WHERE " +
+                        "IN_FOLDER('" + folder +
+                        "') AND cmis:name like '" + name_without_ext.replace(new RegExp("'", "g"), "\\'") + "-%." + ext + "'"
+                        ).ok(function (data) {
+                            var cpt = data.results.length;
+                            var filenames = _.map(
+                                data.results,
+                                function (item) {
+                                    return item.succinctProperties['cmis:name'][0];
+                                });
+                            while (true) {
+                                new_filename = name_without_ext + '-' +
+                                    cpt + '.' + ext;
+                                if (_.contains(filenames, new_filename)) {
+                                    cpt += 1;
+                                } else {
+                                    break;
+                                }
+                            }
+                            deferred.resolve(new_filename);
+                        }).notOk(function (error) {
+                            deferred.reject(error);
+                        });
+                    return deferred;
+                } else {
+                    return filename;
+                }
+            })
+        },
+
+        /**
+         * Return the DataTable row on which the event has occured
+         */
+        _get_event_row: function(e){
+            return this.datatable.row( $(e.target).closest('tr') );
         },
 
         on_click_rename: function (row) {
@@ -1377,6 +1525,22 @@ odoo.define('cmis_web.form_widgets', function (require) {
         on_click_details_control: function (e) {
             var row = this._get_event_row(e);
             this.display_row_details(row);
+        },
+
+        on_click_preview: function(row){
+            var cmisObjectWrapped = row.data();
+            var documentViewer = new DocumentViewer(this, cmisObjectWrapped, this.datatable.data());
+            documentViewer.appendTo($('body'));
+        },
+
+        on_click_get_properties: function(row){
+            this.display_row_details(row);
+        },
+
+        on_click_copy: function (row) {
+            this.clipboardAction = 'copy';
+            this.clipboardObject = row.data();
+            this.reload_displayed_folder();
         },
 
         on_click_delete_object: function (row) {
@@ -1392,6 +1556,57 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         });
                     }
                 });
+        },
+
+        on_click_cut: function (row) {
+            this.clipboardAction = 'cut';
+            this.clipboardObject = row.data();
+            this.clipboardFolder = this.displayed_folder_id;
+            this.reload_displayed_folder();
+        },
+
+        on_click_copy_paste: function (row) {
+            var self = this;
+            var data = row.data();
+            self.get_new_filename(self.clipboardObject.name, data.objectId
+            ).done(function (result) {
+                self.cmis_session.createDocumentFromSource(
+                    data.objectId, self.clipboardObject.objectId,
+                    undefined, result
+                ).ok(function (result) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                }).notOk(function (error) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                });
+            });
+        },
+
+        on_click_cut_paste: function (row) {
+            var self = this;
+            var data = row.data();
+            self.get_new_filename(self.clipboardObject.name, data.objectId
+            ).done(function (result) {
+                self.cmis_session.moveObject(
+                    self.clipboardObject.objectId,
+                    self.clipboardFolder,
+                    data.objectId
+                ).ok(function (result) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                }).notOk(function (error) {
+                    if (error.body.message.startsWith("Duplicate child name not allowed")) {
+                        Dialog.alert(self, _t('A document with the same name already exists.'));
+                    } else {
+                        crash_manager.show_error({
+                            type: _t("Alfresco Error"),
+                            message: error.body.message,
+                            data: {debug: JSON.stringify(error)},
+                        });
+                    }
+                });
+            });
         },
 
         on_click_set_content_stream: function (row) {
