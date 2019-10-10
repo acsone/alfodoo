@@ -33,7 +33,7 @@ class AlfrescoProxy(cmis.CmisProxy):
         '/<int:backend_id>'
         '/content/thumbnails/pdf/' +
         '<string:cmis_name>',
-        ], type='http', auth="user", csrf=False, methods=['GET'])
+    ], type='http', auth="user", csrf=False, methods=['GET'])
     @main.serialize_exception
     def get_thumnails(self, backend_id, cmis_name,
                       **kwargs):
