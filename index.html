@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Alfodoo &#8212; Web CMIS Viewer  documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contribute" href="project/contribute.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          Alfodoo</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+  
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="project/contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/changes.html">Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#sep-11-2018">10.0.4.0.0 (Sep, 11, 2018)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#jan-30-2018">10.0.3.0.1 (Jan, 30, 2018)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#dec-21-2017">10.0.3.0.0 (Dec, 21, 2017)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#oct-17-2017">10.0.2.0.0 (Oct, 17, 2017)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project/changes.html#jan-4-2016">10.0.1.0.0 (Jan, 4, 2016)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project/roadmap.html">Roadmap</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/short_guide.html">Alfodoo Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#enable-cors-in-alfresco-5-x">Enable CORS in Alfresco 5.x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#alfresco-behind-a-a-proxy">Alfresco Behind a a Proxy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#configure-python-ssl-certificates">Configure python SSL certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#launch-odoo">Launch Odoo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#configure-the-cmis-connector">Configure the CMIS connector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/short_guide.html#how-to-link-a-cmis-documents-folder-to-an-odoo-model">How to link a CMIS documents folder to an Odoo model</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/api_cmis_field.html">CMIS Field</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Alfodoo</a><ul>
+<li><a class="reference internal" href="#key-features">Key Features</a></li>
+<li><a class="reference internal" href="#support-alfodoo-development">Support Alfodoo development</a></li>
+<li><a class="reference internal" href="#overview-manage-the-documents-in-odoo">Overview: Manage the documents in Odoo</a></li>
+<li><a class="reference internal" href="#project">Project</a></li>
+<li><a class="reference internal" href="#developer-s-guide">Developer’s guide</a><ul>
+<li><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+
+            
+              
+                
+  <li>
+    <a href="project/contribute.html" title="Next Chapter: Contribute"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Contribute &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="alfodoo">
+<h1>Alfodoo<a class="headerlink" href="#alfodoo" title="Permalink to this headline">¶</a></h1>
+<p>Alfodoo is a set of <a class="reference external" href="https://github.com/acsone/alfodoo">addons</a> to seamlessly integrate an external Document
+Management System with <a class="reference external" href="http://www.odoo.com">Odoo</a>.</p>
+<p>Alfodoo provides a new kind of field <em>CmisFolder</em> and its powerful widget <em>FieldCmisFolder</em>.
+Alfodoo is a set of addons to display and manage content from a CMIS container linked to an Odoo model.</p>
+<p>The Odoo widget has a modular and generic core providing functionality based
+on the CMIS V1.1 protocol. This core can be extended by additional modules
+in order to propose additional features or customizations proper to a specific
+CMIS container. At this stage, the existing customization is for the Alfresco Document
+Management System.</p>
+<p>With these addons, you are now able to enrich the user’s experience and
+provide in Odoo great features that enable the users to easily store and
+manage their documents in an external Document Management System through
+a seamless integration.</p>
+<div style="margin-top:10px;">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/TK49kl0Viyk" frameborder="0" allowfullscreen></iframe>
+</div><div class="section" id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Easy to create Alfresco space folders for any Odoo business object</li>
+<li>Drag&amp;Drop of content (office document, image, mail, ….) in Alfresco from Odoo. Your content is immediately filed in the right location</li>
+<li>Update your document (versioning) without leaving  Odoo</li>
+<li>Easy content preview and browsing (PDF, Image, Media preview)</li>
+<li>Easy connector configuration – Everything can be done directly from the Odoo interface</li>
+</ul>
+<p>In addition to these features, extensions can be implemented to add more advanced functionality such as:</p>
+<ul class="simple">
+<li><strong>Space template</strong>:  possibility to create a dedicated structured space template linked to a type of Odoo object (project, …).</li>
+<li><strong>Reporting</strong>:  from an Odoo object, possibility to generate any kind of reports in most common formats (PDF, MS office, ..). The generated document is automatically classified in the appropriate folder and enriched with appropriate metadata</li>
+<li><strong>Proxy mode</strong>:  with this mode, instead of using the actual user credentials for submitting Odoo widget requests (CMIS) to Alfresco, a proxy user is used.</li>
+</ul>
+<p>Alfodoo is <strong>100% Open Source</strong> (<a class="reference external" href="http://www.gnu.org/licenses/agpl-3.0.html">AGPL version 3</a>): the full <a class="reference external" href="https://github.com/acsone/alfodoo">source code is available on GitHub</a></p>
+<dl class="docutils">
+<dt>Full responsive HTML Widget that enables you to view and manage content from a</dt>
+<dd><cite>cmis:folder</cite>.</dd>
+</dl>
+<p>See a <a class="reference internal" href="guides/short_guide.html#code-overview"><span class="std std-ref">How to link a CMIS documents folder to an Odoo model</span></a> with examples of code</p>
+</div>
+<div class="section" id="support-alfodoo-development">
+<h2>Support Alfodoo development<a class="headerlink" href="#support-alfodoo-development" title="Permalink to this headline">¶</a></h2>
+<p>Alfodoo is open source, there are many ways to <a class="reference internal" href="project/contribute.html#contribute"><span class="std std-ref">Contribute</span></a> in different areas
+(eg testing, documentation, reporting issues, fixing bugs).</p>
+<p>The development of Alfodoo has been funded by <a class="reference external" href="http://www.acsone.eu">ACSONE SA/NV</a>.</p>
+<a class="reference external image-reference" href="https://www.acsone.eu"><img alt="ACSONE SA/NV" src="https://www.acsone.eu/logo.png" /></a>
+<p>You can also donate to support the continued development of Alfodoo. Collected funds
+will be dedicated to the improvement of Alfodoo (support of new Odoo and Alfresco versions
+development of new features).</p>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="XP2F8CTB34STJ">
+<input type="image" src="https://www.paypalobjects.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form></div>
+<div class="section" id="overview-manage-the-documents-in-odoo">
+<h2>Overview: Manage the documents in Odoo<a class="headerlink" href="#overview-manage-the-documents-in-odoo" title="Permalink to this headline">¶</a></h2>
+<p>The main part of the functionality is accessed through a “Documents” tab configurable on each Odoo model providing a “real-time” view on the Alfresco content.</p>
+<p>The “Documents” tab gives direct access to the items (documents list, sub-folders, …) linked to the Odoo object. The items are stored in the related Alfresco folder.</p>
+<p>First the user triggers the creation (button “Create folder in DMS”) of the related Alfresco folder.</p>
+<img alt="_images/cmis_crm_claim_empty.png" src="_images/cmis_crm_claim_empty.png" />
+<p>Then the following functionality becomes available:</p>
+<table class="table">
+  <tr>
+      <td> <span class="btn-odoo glyphicon glyphicon-refresh" aria-hidden="true"></span></td><td><strong>Refresh content table:</strong> This option refreshes the folder content</td>
+  </tr>
+  <tr>
+      <td> <span class="btn-odoo glyphicon glyphicon-folder-close" aria-hidden="true"></span></td><td><strong>Create folder:</strong> A (sub-)folder is created in the current folder. The user gives a name for the folder and selects "Create"</td>
+  </tr>
+  <tr>
+      <td> <span class="btn-odoo glyphicon glyphicon-file" aria-hidden="true"></span></td><td><strong>Create document:</strong> Upload a document in the current folder. The user selects a file and clicks on "Create" to upload the document</td>
+  </tr>
+  <tr>
+      <td> <div class="btn-odoo alf-ico"  aria-hidden="true"></div></span></td><td><strong>Show in Alfresco:</strong> This option opens Alfresco Share and shows the folder details page</td>
+  </tr>
+</table><p>In the content table, the user can see the documents and folders list.</p>
+<img alt="_images/cmis_crm_claim_new_folder.png" src="_images/cmis_crm_claim_new_folder.png" />
+<p>The following information is displayed for each item:</p>
+<ul class="simple">
+<li>The item name</li>
+<li>The item description</li>
+<li>Last Modification date</li>
+<li>An icon used to hide or unhide the item details (folder or document Alfresco metadata: cm:folder, cm:content, cm:title)</li>
+<li>A contextual menu: the options list for a folder item or for a document item</li>
+</ul>
+<img alt="_images/cmis_crm_claim_doc_details.png" src="_images/cmis_crm_claim_doc_details.png" />
+<p>For a “Document” item, the following options are available:</p>
+<table class="table">
+  <tr>
+      <td> <span class="btn-odoo glyphicon glyphicon-download-alt" aria-hidden="true"></span></td>
+      <td colspan="2"><strong>Download:</strong> Download the document</td>
+  </tr>
+  <tr>
+      <td> <span class="btn-odoo glyphicon glyphicon-eye-open" aria-hidden="true"></span></td>
+      <td colspan="2"><strong>Preview:</strong> Preview the document</td>
+  </tr>
+  <tr>
+      <td> <span class="btn-odoo glyphicon glyphicon-align-justify" aria-hidden="true"></span></td>
+      <td colspan="2"><strong>More actions:</strong></td>
+  </tr>
+  <tr>
+      <td colspan="2">
+      <td style="padding-left:5em"><strong>View details:</strong> this option shows some documents metadata (Alfresco cm:content).</td>
+ </tr>
+ <tr>
+      <td colspan="2">
+      <td style="padding-left:5em"><strong>Update:</strong> with this option the user can upload a new document in the folder. In case the document is associated with the Alfresco versionnable aspect Alfresco, the document version number (major) is automatically incremented.</td>
+ </tr>
+ <tr>
+      <td colspan="2">
+      <td style="padding-left:5em"><strong>Delete:</strong> delete the document.</td>
+ </tr>
+  <tr>
+      <td> <div class="btn-odoo alf-ico"  aria-hidden="true"></div></span></td>
+      <td colspan="2"><strong>Show in Alfresco:</strong> This option opens Alfresco share and shows the document details page.</td>
+  </tr>
+</table></div>
+<div class="section" id="project">
+<h2>Project<a class="headerlink" href="#project" title="Permalink to this headline">¶</a></h2>
+<p>The Alfodoo project has the objective to provide a collection of ‘addons’ in order to integrate the odoo platform with a Document Management System supporting the CMIS V1.1 protocol.</p>
+<p>Currently, the project proposes an integration between Odoo and the open-source ECM platform Alfresco.</p>
+<p>The aim is to offer Odoo users a transparent and easy access to the documents stored in the appropriate location in Alfresco.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project/contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/changes.html">Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/roadmap.html">Roadmap</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="developer-s-guide">
+<h2>Developer’s guide<a class="headerlink" href="#developer-s-guide" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/short_guide.html">Alfodoo Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#enable-cors-in-alfresco-5-x">Enable CORS in Alfresco 5.x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#alfresco-behind-a-a-proxy">Alfresco Behind a a Proxy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#configure-python-ssl-certificates">Configure python SSL certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#launch-odoo">Launch Odoo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/short_guide.html#configure-the-cmis-connector">Configure the CMIS connector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/short_guide.html#how-to-link-a-cmis-documents-folder-to-an-odoo-model">How to link a CMIS documents folder to an Odoo model</a></li>
+</ul>
+</div>
+<div class="section" id="api-reference">
+<h3>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/api_cmis_field.html">CMIS Field</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016,  ACSONE SA/NV.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

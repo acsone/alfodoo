@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CMIS Field &#8212; Web CMIS Viewer  documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Alfodoo Installation guide" href="../guides/short_guide.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Alfodoo</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+  
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../project/contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/changes.html">Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#sep-11-2018">10.0.4.0.0 (Sep, 11, 2018)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#jan-30-2018">10.0.3.0.1 (Jan, 30, 2018)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#dec-21-2017">10.0.3.0.0 (Dec, 21, 2017)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#oct-17-2017">10.0.2.0.0 (Oct, 17, 2017)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../project/changes.html#jan-4-2016">10.0.1.0.0 (Jan, 4, 2016)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../project/roadmap.html">Roadmap</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/short_guide.html">Alfodoo Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/short_guide.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/short_guide.html#enable-cors-in-alfresco-5-x">Enable CORS in Alfresco 5.x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/short_guide.html#alfresco-behind-a-a-proxy">Alfresco Behind a a Proxy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/short_guide.html#configure-python-ssl-certificates">Configure python SSL certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/short_guide.html#launch-odoo">Launch Odoo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/short_guide.html#configure-the-cmis-connector">Configure the CMIS connector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/short_guide.html#how-to-link-a-cmis-documents-folder-to-an-odoo-model">How to link a CMIS documents folder to an Odoo model</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CMIS Field</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">CMIS Field</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+
+            
+              
+                
+  <li>
+    <a href="../guides/short_guide.html" title="Previous Chapter: Alfodoo Installation guide"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Alfodoo Insta...</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="cmis-field">
+<h1>CMIS Field<a class="headerlink" href="#cmis-field" title="Permalink to this headline">¶</a></h1>
+<p>This is the API documentation for new field defined by the addob <em>cmis_field</em>.</p>
+<p>These classes are not intended for use by module developers.</p>
+<span class="target" id="module-odoo.addons.cmis_field.fields.cmis_folder"></span><dl class="class">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder">
+<em class="property">class </em><code class="descclassname">odoo.addons.cmis_field.fields.cmis_folder.</code><code class="descname">CmisFolder</code><span class="sig-paren">(</span><em>backend_name=None</em>, <em>string=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odoo/addons/cmis_field/fields/cmis_folder.html#CmisFolder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">odoo.fields.Field</span></code></p>
+<p>A reference to a cmis:folder. (cmis:objectId)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>backend_name</strong> – The attribute <code class="docutils literal notranslate"><span class="pre">backend_name</span></code> is mandatory if more than one backend
+id configured. Otherwize you must have configured one backend ir order
+to prevent errors when loading a view that includes this kind of field.</li>
+<li><strong>allow_create</strong> – Allow create from UI (by default True)</li>
+<li><strong>allow_delete</strong> – Allow delete from UI (by default False)</li>
+<li><strong>create_method</strong> – name of a method that create the field into the
+CMIS repository. The method must assign the field on all records of the
+invoked recordset. The method is called with the field definition
+instance and the bakend as paramaters
+(optional)</li>
+<li><strong>create_parent_get</strong> – name of a method that return the cmis:objectId of
+the folder to use as parent. The method is called with the field
+definition instance and the bakend as paramaters.
+(optional: by default the folder is
+created  as child of backend.initial_directory_write + ‘/’ model._name)</li>
+<li><strong>create_name_get</strong> – name of a method that return the name of the
+folder to create into the CMIS repository. The method is called with
+the field definition instance and the bakend as paramaters.
+(optional: by default instance.name_get)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>a dictionay with an entry for each record of the invoked
+recordset with the following structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="s1">&#39;cmis:objectId&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>a dictionay with an entry for each record of the invoked
+recordset with the following structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="s1">&#39;name&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Parem create_properties_get:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">name of a method that return a dictionary of
+CMIS properties ro use to create the folder. The method is called
+with the field definition instance and the bakend as paramaters
+(optional: default empty)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>a dictionay with an entry for each record of the invoked
+recordset with the following structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cmis:xxx&#39;</span><span class="p">:</span> <span class="s1">&#39;val1&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">}}</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.allow_create">
+<code class="descname">allow_create</code><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.allow_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.allow_delete">
+<code class="descname">allow_delete</code><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.allow_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.backend_name">
+<code class="descname">backend_name</code><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.backend_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.column_type">
+<code class="descname">column_type</code><em class="property"> = ('varchar', 'VARCHAR')</em><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.column_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_method">
+<code class="descname">create_method</code><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_method" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_name_get">
+<code class="descname">create_name_get</code><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_name_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_parent_get">
+<code class="descname">create_parent_get</code><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_parent_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_properties_get">
+<code class="descname">create_properties_get</code><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_properties_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_value">
+<code class="descname">create_value</code><span class="sig-paren">(</span><em>records</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odoo/addons/cmis_field/fields/cmis_folder.html#CmisFolder.create_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.create_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new folder for each record into the cmis container and
+store the value as field value</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.description_attrs">
+<code class="descname">description_attrs</code><em class="property"> = [('allow_create', '_description_allow_create'), ('allow_delete', '_description_allow_delete'), ('backend', '_description_backend'), ('change_default', '_description_change_default'), ('company_dependent', '_description_company_dependent'), ('depends', '_description_depends'), ('deprecated', '_description_deprecated'), ('groups', '_description_groups'), ('help', '_description_help'), ('manual', '_description_manual'), ('readonly', '_description_readonly'), ('related', '_description_related'), ('required', '_description_required'), ('searchable', '_description_searchable'), ('sortable', '_description_sortable'), ('states', '_description_states'), ('store', '_description_store'), ('string', '_description_string')]</em><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.description_attrs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_backend">
+<code class="descname">get_backend</code><span class="sig-paren">(</span><em>env</em>, <em>raise_if_not_found=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odoo/addons/cmis_field/fields/cmis_folder.html#CmisFolder.get_backend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_backend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_cmis_object">
+<code class="descname">get_cmis_object</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odoo/addons/cmis_field/fields/cmis_folder.html#CmisFolder.get_cmis_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_cmis_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an instance of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">cmislib.browser.binding.BrowserFolder</span></code>
+This instance is a proxy object that can be used to perform action on
+the folder into the cmis container
+:param record:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_create_names">
+<code class="descname">get_create_names</code><span class="sig-paren">(</span><em>records</em>, <em>backend</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odoo/addons/cmis_field/fields/cmis_folder.html#CmisFolder.get_create_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_create_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the names of the folders to create into the CMIS repository
+for the given recordset.
+:rtype: dict
+:return: a dictionay with an entry for each record with the following
+structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="s1">&#39;name&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_create_parents">
+<code class="descname">get_create_parents</code><span class="sig-paren">(</span><em>records</em>, <em>backend</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odoo/addons/cmis_field/fields/cmis_folder.html#CmisFolder.get_create_parents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_create_parents" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the cmis:objectId of the cmis folder to use as parent of the
+new folder.
+:rtype: dict
+:return: a dictionay with an entry for each record with the following
+structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="s1">&#39;cmis:objectId&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_create_properties">
+<code class="descname">get_create_properties</code><span class="sig-paren">(</span><em>records</em>, <em>backend</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odoo/addons/cmis_field/fields/cmis_folder.html#CmisFolder.get_create_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_create_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the properties to use to created the folder into the CMIS
+container.
+:rtype: dict
+:return: a dictionay with an entry for each record with the following
+structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cmis:xxx&#39;</span><span class="p">:</span> <span class="s1">&#39;val1&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">}}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_default_parent_path_parts">
+<code class="descname">get_default_parent_path_parts</code><span class="sig-paren">(</span><em>records</em>, <em>backend</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odoo/addons/cmis_field/fields/cmis_folder.html#CmisFolder.get_default_parent_path_parts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.get_default_parent_path_parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the default path parts into the cmis container to use as
+parent on folder create. By default:
+backend.initial_directory_write / record._name</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.related_attrs">
+<code class="descname">related_attrs</code><em class="property"> = [('comodel_name', '_related_comodel_name'), ('group_operator', '_related_group_operator'), ('groups', '_related_groups'), ('help', '_related_help'), ('readonly', '_related_readonly'), ('string', '_related_string')]</em><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.related_attrs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.type">
+<code class="descname">type</code><em class="property"> = 'cmis_folder'</em><a class="headerlink" href="#odoo.addons.cmis_field.fields.cmis_folder.CmisFolder.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/api/api_cmis_field.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016,  ACSONE SA/NV.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
