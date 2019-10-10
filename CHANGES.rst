@@ -1,3 +1,19 @@
+11.0.5.0.0 (Oct, 10, 2019)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* cmis_web: Fixes Unknown js error after clicking on 'CREATE FOLDER IN DMS' button #116
+* cmis_field: Prevent error in unique name computation
+* cmis_field: Escape quote char "'" into query
+  This change fixes an error in the case when a folder with a single quote
+  into the name was creaed by the backend.
+* cmis_web: Fixes an error in the case when a file with a single quote
+  into the name was dropped two times in the same folder. Into the second
+  drop, the logic in charge of processing duplication of content do a cmis
+  query to check if a document with the same name already exists. The
+  error occured into this query since the single quote was not escaped.
+* cmis_web: cut / copy / paste feature
+* cmis_alf: Add method to support folder creation from space-template
+
 11.0.4.0.0 (Sep, 28, 2018)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

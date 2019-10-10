@@ -5,6 +5,5 @@
 -r https://raw.githubusercontent.com/odoo/odoo/11.0/requirements.txt
 https://nightly.odoo.com/11.0/nightly/src/odoo_11.0.latest.zip
 -e git+https://github.com/apache/chemistry-cmislib.git@py3_compat#egg=cmislib
--e git+https://github.com/acsone/connector-cmis.git@11.0-mig-cmis#egg=odoo11-addon-cmis&subdirectory=setup/cmis
 
 
