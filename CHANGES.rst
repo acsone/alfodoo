@@ -1,5 +1,19 @@
-9.0.4.0.0 (Sep, 11, 218) backported from 10.0.4.0.0
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+9.0.5.0.0 (Oct, 10, 2019)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* cmis_field: Prevent error in unique name computation
+* cmis_field: Escape quote char "'" into query
+  This change fixes an error in the case when a folder with a single quote
+  into the name was creaed by the backend.
+* cmis_web: Fixes an error in the case when a file with a single quote
+  into the name was dropped two times in the same folder. Into the second
+  drop, the logic in charge of processing duplication of content do a cmis
+  query to check if a document with the same name already exists. The
+  error occured into this query since the single quote was not escaped.
+* cmis_web: cut / copy / paste feature
+
+9.0.4.0.0 (Sep, 11, 2018) backported from 10.0.4.0.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Fix: cmis_web: clear rows before reloading the table to avoid error if an
   expanded row is no more into the reloaded info.
