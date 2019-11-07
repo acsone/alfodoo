@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/acsone/alfodoo.svg?branch=11.0)](https://travis-ci.org/acsone/alfodoo)
-[![codecov](https://codecov.io/gh/acsone/alfodoo/branch/11.0/graph/badge.svg)](https://codecov.io/gh/acsone/alfodoo)
+[![Build Status](https://travis-ci.org/acsone/alfodoo.svg?branch=13.0)](https://travis-ci.org/acsone/alfodoo)
+[![codecov](https://codecov.io/gh/acsone/alfodoo/branch/13.0/graph/badge.svg)](https://codecov.io/gh/acsone/alfodoo)
 # Alfodoo Modules
 
 Alfodoo is a set of addons to seamlessly integrate an external Document
@@ -15,3 +15,8 @@ It is therefore possible in principle to easily integrate Other CMIS compliants
 content management systems such as Nuxeo, Documentum, etc. This has not been tested yet.
 
 Documentation and installation instructions can be found at http://www.alfodoo.org.
+
+[//]: # (addons)
+
+
+[//]: # (end addons)

@@ -25,4 +25,5 @@
     'images': [
         'static/description/main_icon.png',
     ],
+    'installable': False,
 }
