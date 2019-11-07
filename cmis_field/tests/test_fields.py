@@ -91,7 +91,7 @@ class TestCmisFields(common.BaseTestCmis):
 
     def test_cmis_folder_create_sanitize_name(self):
         inst = self.env['cmis.test.model'].create({'name': ' /folder/'})
-        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository") as \
                 mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()

@@ -4,7 +4,7 @@
 # DON'T IMPORT THIS MODULE IN INIT TO AVOID THE CREATION OF THE MODELS
 # DEFINED FOR TESTS INTO YOUR ODOO INSTANCE
 
-from odoo import api, fields, models
+from odoo import fields, models
 from ..fields import CmisFolder
 
 
@@ -14,19 +14,15 @@ class CmisTestModel(models.Model):
     _abstract = True
     _description = 'cmis.test.model'
 
-    @api.multi
     def _get_name(self, field, backend):
         return dict.fromkeys(self.ids, "custom_name")
 
-    @api.multi
     def _get_parent(self, field, backend):
         return dict.fromkeys(self.ids, "custom_parent")
 
-    @api.multi
     def _get_properties(self, field, backend):
         return dict.fromkeys(self.ids, {'cmis:propkey': 'custom value'})
 
-    @api.multi
     def _cmis_create(self, field, backend):
         self.cmis_folder2 = '_create_method'
 

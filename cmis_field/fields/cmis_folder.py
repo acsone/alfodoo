@@ -115,7 +115,7 @@ class CmisFolder(fields.Field):
         self._create_in_cmis(records, backend)
 
     def _create_value_related(self, records):
-        others = records.sudo() if self.related_sudo else records
+        others = records.sudo() if self.compute_sudo else records
         for record, other in zip(records, others):
             if not record.id and record.env != other.env:
                 # draft records: copy record's cache to other's cache first

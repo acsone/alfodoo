@@ -54,7 +54,6 @@ class CmisBackend(models.Model):
             'location': record.location
         }
 
-    @api.multi
     def get_web_description(self):
         """ Return informations to be included into the field description of
         cmis fields that reference the backend.
@@ -95,7 +94,6 @@ class CmisBackend(models.Model):
                             (name, CMIS_NAME_INVALID_CHARS))
         return True
 
-    @api.multi
     def sanitize_cmis_name(self, value, replace_char=None):
         """Replace chars not allowed in cmis by the value of replace_char.
         If replace_char is None, the character used to subsitute invalid chars
@@ -109,13 +107,11 @@ class CmisBackend(models.Model):
         return re.sub(CMIS_NAME_INVALID_CHARS_RX, replace_char,
                       value.strip()).strip()
 
-    @api.multi
     def sanitize_cmis_names(self, values, replace_char=None):
         """Sanitize a list of values
         """
         return [self.sanitize_cmis_name(v, replace_char) for v in values]
 
-    @api.multi
     def get_folder_by_path_parts(self, path_parts, create_if_not_found=True,
                                  cmis_parent_objectid=None):
         """Return the cmis object for the specified path parts.
@@ -129,7 +125,6 @@ class CmisBackend(models.Model):
         return self.get_folder_by_path(
             path, create_if_not_found, cmis_parent_objectid)
 
-    @api.multi
     def get_unique_folder_name(self, name, parent, conflict_handler=None):
         """Return a unique name for a folder into its parent.
 
