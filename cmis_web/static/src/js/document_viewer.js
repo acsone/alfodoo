@@ -71,7 +71,7 @@ var DocumentViewer = Widget.extend({
     start: function () {
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
-        this.$('.cmis_web_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('.cmis_web_viewer_img').on("load", _.bind(this._onImageLoaded, this));
         return this._super.apply(this, arguments);
     },
 
@@ -148,7 +148,7 @@ var DocumentViewer = Widget.extend({
         this.$('.cmis_web_viewer_content').html(QWeb.render('cmis_web.DocumentViewer.Content', {
             widget: this
         }));
-        this.$('.cmis_web_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('.cmis_web_viewer_img').on("load", _.bind(this._onImageLoaded, this));
         this._reset();
     },
     /**

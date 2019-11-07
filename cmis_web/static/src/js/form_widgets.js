@@ -16,7 +16,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
     var Dialog = require('web.Dialog');
     var framework = require('web.framework');
     var DocumentViewer = require('cmis_web.DocumentViewer')
-    var crash_manager = require('web.crash_manager');
+    var crash_manager = require('web.CrashManager');
 
     var _t = core._t;
     var QWeb = core.qweb;
@@ -915,7 +915,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                     'model_name': self.model,
                     'res_id': self.res_id,
                     'field_name': self.name
-                }}).done(function (vals) {
+                }}).then(function (vals) {
                     var cmis_objectid = vals[self.res_id];
                     var changes = {};
                     changes[self.name] = cmis_objectid;
