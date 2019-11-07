@@ -4,7 +4,7 @@
 
 import mock
 
-from openerp.tests import common
+from odoo.tests import common
 
 
 class TestCmisBackend(common.SavepointCase):
@@ -15,7 +15,7 @@ class TestCmisBackend(common.SavepointCase):
         self.backend_instance = self.env.ref('cmis.cmis_backend_alfresco')
 
     def test_get_content_details_url(self):
-        with mock.patch("openerp.addons.cmis.models.cmis_backend."
+        with mock.patch("odoo.addons.cmis.models.cmis_backend."
                         "CmisBackend.get_cmis_repository") as \
                 mocked_get_repository:
             mocked_cmis_repository = mock.MagicMock()

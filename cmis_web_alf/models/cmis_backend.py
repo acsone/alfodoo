@@ -45,7 +45,6 @@ class CmisBackend(models.Model):
         })
         return descr
 
-    @api.multi
     def get_content_details_url(self, cmis_objectid):
         """Return the url to the page into Alfresco Share
         displaying the content details
@@ -55,7 +54,6 @@ class CmisBackend(models.Model):
         properties = repo.getObject(cmis_objectid).getProperties()
         return self.get_content_details_url_from_props(properties)
 
-    @api.multi
     def get_content_details_url_from_props(self, properties):
         self.ensure_one()
         details_type = 'document-details'

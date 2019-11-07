@@ -7,7 +7,7 @@
     'category': 'Document Management',
     'author': 'ACSONE SA/NV',
     'website': "http://alfodoo.org",
-    'version': '12.0.4.0.0',
+    'version': '13.0.4.0.0',
     'license': 'AGPL-3',
     'depends': [
         'cmis_alf',
@@ -25,5 +25,5 @@
     'images': [
         'static/description/main_icon.png',
     ],
-    'installable': False,
+    'installable': True,
 }
