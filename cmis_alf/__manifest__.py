@@ -3,7 +3,7 @@
 
 {
     'name': 'CMIS for Alfresco',
-    'version': '12.0.4.0.0',
+    'version': '13.0.4.0.0',
     'summary': 'Alfresco extension for the CMIS Connector',
     'category': 'Document Management',
     'author': "ACSONE SA/NV",
@@ -21,6 +21,6 @@
     'external_dependencies': {
         'python': ['requests'],
     },
-    'installable': False,
+    'installable': True,
     'auto_install': False,
 }

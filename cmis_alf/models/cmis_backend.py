@@ -9,7 +9,6 @@ class CmisBackend(models.Model):
     _inherit = 'cmis.backend'
     _backend_type = 'cmis'
 
-    @api.multi
     @api.depends('alfresco_api_location')
     def _compute_alf_folder_template_url(self):
         for record in self:
@@ -38,7 +37,6 @@ class CmisBackend(models.Model):
         compute='_compute_alf_folder_template_url'
     )
 
-    @api.multi
     def _get_alf_api_auth_params(self):
         """
         Return the parameters to use to make JSON requests to the alfresco api
@@ -47,7 +45,6 @@ class CmisBackend(models.Model):
         self.ensure_one()
         return(self.username, self.password)
 
-    @api.multi
     def _get_alf_noderef_from_objectid(self, cmis_objectid):
         """
         Return the nodref from the cmis_objectid
@@ -71,7 +68,6 @@ class CmisBackend(models.Model):
         """
         return alf_noderef.split('/')[-1]
 
-    @api.multi
     def create_cmis_folder_from_template(self, source_objectid,
                                          parent_objectid, name, title=None,
                                          description=None):
