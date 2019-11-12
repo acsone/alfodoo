@@ -23,7 +23,7 @@ class TestIrModelFields(BaseTestCmis):
             'name': x_field,
             'model': 'res.company',
             'model_id': model_id,
-            })
+        })
         ir_model_fields = self.env['ir.model.fields']
         self.assertTrue(x_field in res_company._fields)
         with mock.patch.object(CmisFolder, 'create_value') as mocked:
