@@ -28,17 +28,69 @@ class Report(models.Model):
         self = self.with_context(report_name=report_name)
         return super(Report, self).get_pdf(ids, report_name, html, data)
 
+    @api.v7
+    def _check_attachment_use(self, cr, uid, ids, report, context=None):
+        save_in_attachment = super(Report, self)._check_attachment_use(
+            cr, uid, ids, report, context=context)
+        if (report.cmis_filename and
+                report.cmis_duplicate_handler == "use_existing"):
+            env = api.Environment(cr, uid, context)
+            ReportModel = env[self._name]
+            records = env[report.model].browse(ids)
+            report_xml = env[report._name].browse(report.id)
+            cmis_filenames = ReportModel._get_cmis_filename(
+                records, report_xml
+            )
+            for record in records:
+                # check if a document already exists into cmis
+                cmis_filename = cmis_filenames.get(record.id)
+                if not cmis_filename:
+                    # no filename -> no doc to generate
+                    continue
+                # Get the parent forlder
+                cmis_parent_folder = ReportModel._get_cmis_parent_folder(
+                    report_xml, record, cmis_filename)
+                cmis_filename = os.path.basename(cmis_filename)
+                # Search into the folder if a doc with the same name already
+                # exists
+                cmis_repo = cmis_parent_folder.repository
+                cmis_qry = ("SELECT cmis:objectId FROM cmis:document WHERE "
+                            "IN_FOLDER('%s') AND cmis:name='%s'" %
+                            (cmis_parent_folder.getObjectId(), cmis_filename))
+                logger.debug("Query CMIS with %s", cmis_qry)
+                rs = cmis_repo.query(cmis_qry)
+                num_found_items = rs.getNumItems()
+                if not num_found_items:
+                    continue
+                # A doc exists, load the content...
+                objectId = rs.getResults()[0].getObjectId()
+                cmis_document = cmis_repo.getObject(objectId)
+                content = cmis_document.getContentStream().read()
+                save_in_attachment['loaded_documents'][record.id] = content
+                save_in_attachment[record.id] = cmis_filename
+        return save_in_attachment
+
+    @api.v8
+    def _check_attachment_use(self, records, report):
+        return Report._check_attachment_use(
+            self._model, self._cr, self._uid, records.ids, report, context=self._context)
+
     @api.model
     def _postprocess_report(self, report_path, res_id, save_in_attachment):
+        report_name = self.env.context.get('report_name')
+        report_xml = self.env['ir.actions.report.xml'].search(
+            [('report_name', '=', report_name)])
+        if not report_xml or len(report_xml) > 1:
+            raise Exception(
+                'Report name should be unique (%s)' % report_name)
+        if not report_xml.attachment:
+            # Attachment could be filled to reuse and existing one stored
+            # into cmis but must be cleared for the current record since
+            # we don't want to store it into odoo
+            save_in_attachment.pop(res_id, None)
         res = super(Report, self)._postprocess_report(
             report_path, res_id, save_in_attachment)
         with open(report_path, 'rb') as pdfreport:
-            report_name = self.env.context.get('report_name')
-            report_xml = self.env['ir.actions.report.xml'].search(
-                [('report_name', '=', report_name)])
-            if not report_xml or len(report_xml) > 1:
-                raise Exception(
-                    'Report name should be unique (%s)' % report_name)
             if report_xml.cmis_filename:
                 # pylint: disable=unexpected-keyword-arg
                 self._save_in_cmis(
