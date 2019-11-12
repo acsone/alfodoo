@@ -76,6 +76,7 @@ class IrActionsReportXml(models.Model):
                 from the task creation date""")
     cmis_duplicate_handler = fields.Selection(
         selection=[
+            ('use_existing', _('Use existing')),
             ('error', _('Raise exception')),
             ('new_version', _('Create a new version')),
             ('increment', _('Rename as file(X).pdf'))
