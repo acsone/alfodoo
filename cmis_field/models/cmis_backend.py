@@ -7,6 +7,8 @@ from odoo.exceptions import UserError, ValidationError
 
 CMIS_NAME_INVALID_CHARS = r'\/:*?"<>|'
 CMIS_NAME_INVALID_CHARS_RX = '[' + re.escape(CMIS_NAME_INVALID_CHARS) + ']'
+_default_sanitize_replace_char = '_'
+_default_folder_name_conflict_handler = 'error'
 
 
 class CmisBackend(models.Model):
@@ -33,7 +35,7 @@ class CmisBackend(models.Model):
         'Replacement char',
         help='Character used as replacement of invalid characters found in'
              'the value to use as cmis:name by the sanitize method',
-        default='_')
+        default=_default_sanitize_replace_char)
     folder_name_conflict_handler = fields.Selection(
         selection=[
             ('error', _('Raise exception')),
@@ -41,7 +43,7 @@ class CmisBackend(models.Model):
         ],
         string='Strategy in case of duplicate',
         required=True,
-        default='error',
+        default=_default_folder_name_conflict_handler,
     )
 
     @api.model
