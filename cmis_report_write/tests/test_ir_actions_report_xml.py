@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.addons.cmis_field.tests import common
-from openerp.exceptions import ValidationError
+from odoo.addons.cmis_field.tests import common
+from odoo.exceptions import ValidationError
 
 
 class TestIrActionsReportXml(common.BaseTestCmis):
@@ -16,7 +15,7 @@ class TestIrActionsReportXml(common.BaseTestCmis):
         self.vals = {
             "name": "test_report_cmis_write",
             "model": "cmis.test.model",
-            "type": "ir.actions.report.xml",
+            "type": "ir.actions.report",
             "report_name": "cmis_report_write.cmis_test_model_report",
             "report_type": "qweb-pdf",
             "paperformat_id": self.env.ref("report.paperformat_euro").id,
@@ -27,7 +26,7 @@ class TestIrActionsReportXml(common.BaseTestCmis):
         }
 
     def test_constrains(self):
-        action_report = self.env['ir.actions.report.xml']
+        action_report = self.env['ir.actions.report']
         with self.assertRaises(ValidationError):
             vals = self.vals.copy()
             vals.update({
@@ -48,7 +47,7 @@ class TestIrActionsReportXml(common.BaseTestCmis):
         self.assertTrue(report)
 
     def test_cleanup(self):
-        action_report = self.env['ir.actions.report.xml']
+        action_report = self.env['ir.actions.report']
         backend_id = self.env['cmis.backend'].search([(1, '=', 1)])
         self.assertTrue(len(backend_id) >= 1)
         backend_id = backend_id[0]

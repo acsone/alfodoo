@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from collections import namedtuple
@@ -7,9 +6,9 @@ import time
 import mimetypes
 import logging
 from cStringIO import StringIO
-from openerp import api, models, _
-from openerp.exceptions import UserError
-from openerp.tools.safe_eval import safe_eval
+from odoo import api, models, _
+from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval
 
 
 logger = logging.getLogger(__name__)
@@ -78,7 +77,7 @@ class Report(models.Model):
     @api.model
     def _postprocess_report(self, report_path, res_id, save_in_attachment):
         report_name = self.env.context.get('report_name')
-        report_xml = self.env['ir.actions.report.xml'].search(
+        report_xml = self.env['ir.actions.report'].search(
             [('report_name', '=', report_name)])
         if not report_xml or len(report_xml) > 1:
             raise Exception(

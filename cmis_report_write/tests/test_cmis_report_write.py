@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import mock
-from openerp.exceptions import UserError
-from openerp.addons.cmis_field.tests import common
+from odoo.exceptions import UserError
+from odoo.addons.cmis_field.tests import common
 
 
 class TestCmisReportWrite(common.BaseTestCmis):
@@ -13,11 +12,11 @@ class TestCmisReportWrite(common.BaseTestCmis):
         cls.cmis_folder_field_id = cls.env['ir.model.fields'].search([
             ('model', '=', 'cmis.test.model'),
             ('name', '=', 'cmis_folder')])
-        action_report = cls.env['ir.actions.report.xml']
+        action_report = cls.env['ir.actions.report']
         cls.report = action_report.create({
             "name": "test_report_cmis_write",
             "model": "cmis.test.model",
-            "type": "ir.actions.report.xml",
+            "type": "ir.actions.report",
             "report_name": "cmis_report_write.cmis_test_model_report",
             "report_type": "qweb-pdf",
             "paperformat_id": cls.env.ref("report.paperformat_euro").id,

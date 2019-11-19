@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, fields, models, _
-from openerp.exceptions import ValidationError
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class IrActionsReportXml(models.Model):
 
-    _inherit = 'ir.actions.report.xml'
+    _inherit = 'ir.actions.report'
 
     @api.constrains('cmis_filename', 'cmis_backend_id', 'cmis_folder_field_id',
                     'cmis_parent_type')
@@ -40,7 +39,6 @@ class IrActionsReportXml(models.Model):
         self._cleanup_vals(vals)
         return super(IrActionsReportXml, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         self._cleanup_vals(vals)
         return super(IrActionsReportXml, self).write(vals)
