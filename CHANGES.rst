@@ -1,3 +1,8 @@
+13.0.?.?.?
+~~~~~~~~~~
+
+* cmis_report_write: New addon to save report into cmis
+
 12.0.5.0.0 (Oct, 10, 2019)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

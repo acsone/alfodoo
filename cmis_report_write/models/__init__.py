@@ -1,2 +1,1 @@
-from . import report
-from . import ir.actions.report
+from . import ir_actions_report

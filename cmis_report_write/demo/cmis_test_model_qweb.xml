@@ -4,9 +4,9 @@
     <template id="cmis_test_model_report">
       <t t-call="web.html_container"> 
         <t t-foreach="docs" t-as="o">
-          <t t-call="report.internal_layout">
+          <t t-call="web.internal_layout">
             <div class="page">
-              <div class="silog_budget_commitment_tbody">
+              <div class="my-name">
                 <p><t t-esc="o.name" /></p>
               </div>
             </div>
