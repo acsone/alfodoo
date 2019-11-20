@@ -35,8 +35,14 @@ class IrActionsReport(models.Model):
     )
     cmis_parent_type = fields.Selection(
         selection=[
-            ("backend", _("Store as child of the directory defined on the " "backend")),
-            ("folder_field", _("Store as child of the folder on the related " "model")),
+            (
+                "backend",
+                _("Store as child of the directory defined on the " "backend"),
+            ),
+            (
+                "folder_field",
+                _("Store as child of the folder on the related " "model"),
+            ),
         ],
         default="backend",
     )
@@ -62,7 +68,9 @@ class IrActionsReport(models.Model):
         default="error",
     )
     cmis_objectTypeId = fields.Char(
-        "CMIS content type", default="cmis:document", help="Only applied at creation"
+        "CMIS content type",
+        default="cmis:document",
+        help="Only applied at creation",
     )
     cmis_properties = fields.Text(
         "CMIS properties",
@@ -90,26 +98,32 @@ class IrActionsReport(models.Model):
         self._cleanup_vals([vals])
         return super().write(vals)
 
-    def render(self, res_ids, data=None):
+    def render_qweb_pdf(self, res_ids, data=None):
         # The call to postprocess_pdf_report method is only triggered
         # if the report is flagged with attachment_use. Force the flag
         # to be sure that this method is also called when we want to store
         # files into cmis
         initial_attachment_use = self.attachment_use
-        if self.cmis_filename and not self.attachment:
-            self.attachment = SAVE_IN_CMIS_MARKER
-            self.attachment_use = True
-        res = super().render(res_ids, data=data)
-        if self.attachment == SAVE_IN_CMIS_MARKER:
-            self.attachment = False
-            self.attachment_use = initial_attachment_use
+        try:
+            if self.cmis_filename and not self.attachment:
+                self.attachment = SAVE_IN_CMIS_MARKER
+                self.attachment_use = True
+            res = super().render_qweb_pdf(res_ids, data=data)
+        finally:
+            if self.attachment == SAVE_IN_CMIS_MARKER:
+                self.attachment = False
+                self.attachment_use = initial_attachment_use
         return res
 
     def retrieve_attachment(self, record):
-        if not self._get_backend(
-                record) or self.cmis_duplicate_handler != "use_existing":
+        if self.attachment != SAVE_IN_CMIS_MARKER:
             return super().retrieve_attachment(record)
-        return self._retrieve_cmis_attachment(self, record)
+        if (
+            self._get_backend(record)
+            and self.cmis_duplicate_handler == "use_existing"
+        ):
+            return self._retrieve_cmis_attachment(record)
+        return None
 
     def postprocess_pdf_report(self, record, buffer):
         if self.attachment != SAVE_IN_CMIS_MARKER:
@@ -124,7 +138,10 @@ class IrActionsReport(models.Model):
     ##################
 
     @api.constrains(
-        "cmis_filename", "cmis_backend_id", "cmis_folder_field_id", "cmis_parent_type"
+        "cmis_filename",
+        "cmis_backend_id",
+        "cmis_folder_field_id",
+        "cmis_parent_type",
     )
     def _check_cmis_config(self):
         for rec in self:
@@ -132,10 +149,14 @@ class IrActionsReport(models.Model):
                 continue
             if rec.cmis_parent_type == "backend" and not rec.cmis_backend_id:
                 raise ValidationError(
-                    _("You must specify a backend to use to store your " "file in CMIS")
+                    _(
+                        "You must specify a backend to use to store your "
+                        "file in CMIS"
+                    )
                 )
-            elif (
-                rec.cmis_parent_type == "folder_field" and not rec.cmis_folder_field_id
+            if (
+                rec.cmis_parent_type == "folder_field"
+                and not rec.cmis_folder_field_id
             ):
                 raise ValidationError(
                     _(
@@ -180,10 +201,12 @@ class IrActionsReport(models.Model):
         cmis_object_id = rs.getResults()[0].getObjectId()
         cmis_document = cmis_repo.getObject(cmis_object_id)
         content = cmis_document.getContentStream().read()
-        return res.new({
-            "datas": base64.b64encode(content),
-            "mimetype": self.get_mimetype(cmis_filename)
-        })
+        return res.new(
+            {
+                "datas": base64.b64encode(content),
+                "mimetype": self.get_mimetype(cmis_filename),
+            }
+        )
 
     def _get_cmis_filename(self, record):
         self.ensure_one()
@@ -194,8 +217,7 @@ class IrActionsReport(models.Model):
         if self.cmis_folder_field_id:
             field = record._fields[self.cmis_folder_field_id.name]
             return field.get_backend(self.env)
-        else:
-            return self.cmis_backend_id
+        return self.cmis_backend_id
 
     def _get_eval_context(self, record):
         self.ensure_one()
@@ -217,17 +239,15 @@ class IrActionsReport(models.Model):
         cmis_filename = self._get_cmis_filename(record)
         if not cmis_filename:
             # can be false to allow condition in filename
-            return
+            return None
         cmis_parent_folder = self._get_cmis_parent_folder(
             record, cmis_filename
         )
         cmis_filename = os.path.basename(cmis_filename)
-        doc_info = self._create_or_update_cmis_document(
+        self._create_or_update_cmis_document(
             buffer, record, cmis_filename, cmis_parent_folder
         )
-        someDoc = doc_info.doc
-        cmis_objectId = someDoc.getObjectId()
-        return cmis_objectId
+        return buffer
 
     def _get_cmis_parent_folder(self, record, cmis_filename):
         self.ensure_one()
@@ -283,22 +303,31 @@ class IrActionsReport(models.Model):
             if num_found_items > 0:
                 name, ext = os.path.splitext(file_name)
                 testname = name + "(*)" + ext
-                rs = cmis_parent_folder.getChildren(filter="cmis:name=%s" % testname)
+                rs = cmis_parent_folder.getChildren(
+                    filter="cmis:name=%s" % testname
+                )
                 file_name = name + "(%d)" % rs.getNumItems() + ext
             doc = self._create_cmis_document(
                 buffer, record, file_name, cmis_parent_folder
             )
             return UniqueDocInfo(doc, is_new)
-        if num_found_items > 0 and self.cmis_duplicate_handler == "new_version":
+        if (
+            num_found_items > 0
+            and self.cmis_duplicate_handler == "new_version"
+        ):
             doc = cmis_parent_folder.repository.getObject(
                 rs.getResults()[0].getObjectId()
             )
             doc = self._update_cmis_document(buffer, record, file_name, doc)
             return UniqueDocInfo(doc, is_new)
 
-        raise UserError(_('Document "%s" already exists in CMIS') % (file_name))
+        raise UserError(
+            _('Document "%s" already exists in CMIS') % (file_name)
+        )
 
-    def _create_cmis_document(self, buffer, record, file_name, cmis_parent_folder):
+    def _create_cmis_document(
+        self, buffer, record, file_name, cmis_parent_folder
+    ):
         self.ensure_one()
         props = {"cmis:name": file_name}
         if self.cmis_objectTypeId:

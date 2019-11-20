@@ -24,8 +24,8 @@ class TestIrActionsReport(common.BaseTestCmis):
             "report_name": "cmis_report_write.cmis_test_model_report",
             "report_type": "qweb-pdf",
             "paperformat_id": cls.env.ref("base.paperformat_euro").id,
-            "cmis_filename": "cmis_backend.sanitize_cmis_name(object.name)" 
-                             " + '.pdf'",
+            "cmis_filename": "cmis_backend.sanitize_cmis_name(object.name)"
+            " + '.pdf'",
             "cmis_folder_field_id": cls.cmis_folder_field_id.id,
             "cmis_parent_type": "folder_field",
             "cmis_duplicate_handler": "error",
@@ -60,14 +60,23 @@ class TestIrActionsReport(common.BaseTestCmis):
         self.mocked_wkhtmltopdf = wkhtmltopdf_patcher.start()
         self.mocked_wkhtmltopdf.return_value = self.pdf_content_1
         merge_pdfs_patcher = mock.patch.object(
-            self.report.__class__, "_merge_pdfs")
+            self.report.__class__, "_merge_pdfs"
+        )
         self.mocked_merge_pdfs = merge_pdfs_patcher.start()
         self.mocked_merge_pdfs.return_value = self.pdf_content_1
+        get_wkhtmltopdf_state_patcher = mock.patch.object(
+            self.report.__class__, "get_wkhtmltopdf_state"
+        )
+        self.mocked_get_wkhtmltopdf_state = (
+            get_wkhtmltopdf_state_patcher.start()
+        )
+        self.mocked_get_wkhtmltopdf_state.return_value = "ok"
 
         @self.addCleanup
         def stop_mock():
             wkhtmltopdf_patcher.stop()
             merge_pdfs_patcher.stop()
+            get_wkhtmltopdf_state_patcher.stop()
 
     def test_constrains(self):
         action_report = self.env["ir.actions.report"]
@@ -76,15 +85,12 @@ class TestIrActionsReport(common.BaseTestCmis):
             vals.update(
                 {
                     "cmis_folder_field_id": False,
-                    "cmis_parent_type": "folder_field"
+                    "cmis_parent_type": "folder_field",
                 }
             )
             action_report.create(vals)
             vals.update(
-                {
-                    "cmis_backend_id": False,
-                    "cmis_parent_type": "backend"
-                }
+                {"cmis_backend_id": False, "cmis_parent_type": "backend"}
             )
             action_report.create(vals)
         vals.update(
@@ -126,7 +132,7 @@ class TestIrActionsReport(common.BaseTestCmis):
     @mute_logger("odoo.addons.base.models.assetsbundle")
     def test_simple_report(self):
         with mock.patch.object(
-                self.report.__class__, "_save_in_cmis"
+            self.report.__class__, "_save_in_cmis"
         ) as mocked_save:
             # test the call the the create method inside our custom parser
             self.report.render(self.inst.ids)
