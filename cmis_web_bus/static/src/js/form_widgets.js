@@ -18,7 +18,11 @@ odoo.define('cmis_web_bus.form_widgets', function ( require) {
         init: function () {
             this._super.apply(this, arguments);
             this._channel_notify_cmis_node = 'notify_cmis_node';
+        },
+
+        start: function () {
             this.call('bus_service', 'onNotification', this, this.bus_notification);
+            return this._super();
         },
 
         bus_notification: function (notifications) {
