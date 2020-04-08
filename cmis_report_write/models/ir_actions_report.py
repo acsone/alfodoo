@@ -108,13 +108,18 @@ class IrActionsReport(models.Model):
         initial_attachment_use = self.attachment_use
         try:
             if self.cmis_filename and not self.attachment:
-                self.attachment = SAVE_IN_CMIS_MARKER
-                self.attachment_use = True
+                self.sudo().write(
+                    {"attachment": SAVE_IN_CMIS_MARKER, "attachment_use": True}
+                )
             yield
         finally:
             if self.attachment == SAVE_IN_CMIS_MARKER:
-                self.attachment = False
-                self.attachment_use = initial_attachment_use
+                self.sudo().write(
+                    {
+                        "attachment": False,
+                        "attachment_use": initial_attachment_use,
+                    }
+                )
 
     def render_qweb_pdf(self, res_ids, data=None):
         with self.save_in_attachment_if_required():
