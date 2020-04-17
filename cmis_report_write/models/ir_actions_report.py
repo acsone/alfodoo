@@ -143,7 +143,6 @@ class IrActionsReport(models.Model):
         if self.attachment != SAVE_IN_CMIS_MARKER:
             res = super().postprocess_pdf_report(record, buffer)
         else:
-            self.attachment = False
             res = self._save_in_cmis(record, buffer)
         return res
 
