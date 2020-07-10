@@ -1,7 +1,9 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+import threading
 from operator import attrgetter
-from odoo import fields, _
+from functools import partial
+from odoo import api, fields, registry, SUPERUSER_ID, _
 from odoo.exceptions import UserError
 from odoo.tools.sql import pg_varchar
 
@@ -140,6 +142,28 @@ class CmisFolder(fields.Field):
             props = properties[record.id] or {}
             value = repo.createFolder(
                 parent, name, props)
+
+            def clean_up_folder(cmis_object_id, backend_id, dbname):
+                db_registry = registry(dbname)
+                with api.Environment.manage(), db_registry.cursor() as cr:
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env["cmis.backend"].browse(backend_id)
+                    _repo = backend.get_cmis_repository()
+                    _repo.getObject(cmis_object_id).deleteTree()
+
+            # remove created resource in case of rollback
+            test_mode = getattr(threading.currentThread(), 'testing', False)
+            if not test_mode:
+                record.env.cr.after(
+                    'rollback',
+                    partial(
+                        clean_up_folder,
+                        value.getObjectId(),
+                        backend.id,
+                        record.env.cr.dbname
+                    )
+                )
+
             self.__set__(record, value.getObjectId())
 
     def _check_null(self, record, raise_exception=True):
