@@ -8,11 +8,8 @@
  odoo.define('cmis_web_proxy_alf.form_widgets', function( require) {
 "use strict";
 
-var core = require('web.core');
 var form_widgets = require('cmis_web.form_widgets');
-var Model = require('web.Model');
 
-var _t = core._t;
 
 
 form_widgets.CmisObjectWrapper.include({
