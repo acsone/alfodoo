@@ -6,6 +6,7 @@ import os
 import time
 import mimetypes
 from collections import namedtuple
+from contextlib import contextmanager
 
 from odoo import api, fields, models, _
 from odoo.tools import safe_eval
@@ -98,7 +99,8 @@ class IrActionsReport(models.Model):
         self._cleanup_vals([vals])
         return super().write(vals)
 
-    def render_qweb_pdf(self, res_ids, data=None):
+    @contextmanager
+    def save_in_attachment_if_required(self):
         # The call to postprocess_pdf_report method is only triggered
         # if the report is flagged with attachment_use. Force the flag
         # to be sure that this method is also called when we want to store
@@ -106,14 +108,26 @@ class IrActionsReport(models.Model):
         initial_attachment_use = self.attachment_use
         try:
             if self.cmis_filename and not self.attachment:
-                self.attachment = SAVE_IN_CMIS_MARKER
-                self.attachment_use = True
-            res = super().render_qweb_pdf(res_ids, data=data)
+                self.sudo().write(
+                    {"attachment": SAVE_IN_CMIS_MARKER, "attachment_use": True}
+                )
+            yield
         finally:
             if self.attachment == SAVE_IN_CMIS_MARKER:
-                self.attachment = False
-                self.attachment_use = initial_attachment_use
-        return res
+                self.sudo().write(
+                    {
+                        "attachment": False,
+                        "attachment_use": initial_attachment_use,
+                    }
+                )
+
+    def render_qweb_pdf(self, res_ids, data=None):
+        with self.save_in_attachment_if_required():
+            return super().render_qweb_pdf(res_ids, data=data)
+
+    def render(self, res_ids, data=None):
+        with self.save_in_attachment_if_required():
+            return super().render(res_ids, data=data)
 
     def retrieve_attachment(self, record):
         if self.attachment != SAVE_IN_CMIS_MARKER:
@@ -129,7 +143,6 @@ class IrActionsReport(models.Model):
         if self.attachment != SAVE_IN_CMIS_MARKER:
             res = super().postprocess_pdf_report(record, buffer)
         else:
-            self.attachment = False
             res = self._save_in_cmis(record, buffer)
         return res
 
