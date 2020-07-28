@@ -30,8 +30,8 @@ form_widgets.FieldCmisFolder.include({
 
     gen_cmis_session_token: function(){
         return JSON.stringify({
-            'model': this.view.dataset.model,
-            'res_id': this.view.datarecord.id,
+            'model': this.model,
+            'res_id': this.res_id,
             'field_name': this.name});
     },
 
