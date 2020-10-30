@@ -5,13 +5,10 @@
  + *---------------------------------------------------------
  +*/
 
- odoo.define('cmis_web_alf.form_widgets', function( require) {
+ odoo.define('cmis_web_proxy.form_widgets', function( require) {
 "use strict";
 
-var core = require('web.core');
 var form_widgets = require('cmis_web.form_widgets');
-var Model = require('web.Model');
-var _t = core._t;
 
 form_widgets.CmisObjectWrapper.include({
 
@@ -33,8 +30,8 @@ form_widgets.FieldCmisFolder.include({
 
     gen_cmis_session_token: function(){
         return JSON.stringify({
-            'model': this.view.dataset.model,
-            'res_id': this.view.datarecord.id,
+            'model': this.model,
+            'res_id': this.res_id,
             'field_name': this.name});
     },
 
