@@ -36,7 +36,9 @@ class Report(models.Model):
             report_name = self.env.context.get('report_name')
             report_xml = self.env['ir.actions.report.xml'].search(
                 [('report_name', '=', report_name)])
-            if not report_xml or len(report_xml) > 1:
+            if not report_xml:
+                return res
+            if len(report_xml) > 1:
                 raise Exception(
                     'Report name should be unique (%s)' % report_name)
             if report_xml.cmis_filename:
