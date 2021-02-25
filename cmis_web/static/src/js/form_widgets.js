@@ -805,6 +805,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this._super.apply(this, arguments);
             CmisMixin.init.call(this);
             this.backend = this.field.backend;
+            this._cmisDocReady;
 
             this.formatType = 'char';
         },
@@ -831,12 +832,23 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var self = this;
             this._cmisDocReady
                 .then(function(cmisDoc) {
+                    // self.cmis_session.getParents(self.value)
+                    //     .ok(function(parents) {
+                    //         console.log("parents")
+                    //         console.log(parents)
+                    //     })
+                    //     .notOk(function(err){})
+                    
                     var ctx = { object: cmisDoc };
-                    var $cmisDoc = QWeb.render("CmisDocumentView", ctx)
+                    var $cmisDoc = QWeb.render("CmisDocumentReadOnly", ctx)
                     self.$el.html($cmisDoc)
                 })
-                .catch(function(error){console.log(error)});                  
-        },
+                .catch(function(error) {
+                    var err = error || "Could not initialise session"
+                    console.log(err)
+                    // self.on_cmis_error(err)             
+                });
+            },
 
         _renderEdit: function() {
             var $input = $(QWeb.render("CmisDocumentEdit"))
@@ -846,24 +858,24 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         _setCmisDoc: function() {
             var self = this;
+
+            var getDocument = function(success, failure) {
+               self.cmis_session.getObject(self.value, "latest", {
+                includeAllowableActions: true
+            })
+                    .ok(function(cmisDoc) {
+                        var wrappedCmisDoc = self.wrap_cmis_object(cmisDoc)
+                        success(wrappedCmisDoc)
+                    })
+                    .notOk(function(error) {
+                        failure(error) });
+            }
+
             this._cmisDocReady = new Promise(function(resolve, reject) {
                 self.sessionReady
-                    .then(function() {
-                        self.cmis_session.getObject(self.value)
-                        .ok(function(cmisDoc) {
-                            var wrappedCmisDoc = self.wrap_cmis_object(cmisDoc)
-                            resolve(wrappedCmisDoc)
-                        })
-                        .notOk(function(error) {
-                            self.on_cmis_error(error)
-                            reject(error) });
-                    })
-                    .catch(function(error) {
-                        var errorMsg = "Could not load session or repositories"
-                        reject(errorMsg)
-                    });
+                    .then(function() { getDocument(resolve, reject) })
+                    .catch(function(error) { reject(error) });
             });
-            return this._cmisDocReady
         }
     });
 
