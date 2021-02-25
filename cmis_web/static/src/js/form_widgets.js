@@ -796,6 +796,77 @@ odoo.define('cmis_web.form_widgets', function (require) {
         },
     };
 
+    var FieldCmisDocument = basicFields.FieldChar.extend(CmisMixin, {
+        template: "FieldCmisDocument",
+
+        widget_class: 'field_cmis_document',
+
+        init: function (parent, name, record, options) {
+            this._super.apply(this, arguments);
+            CmisMixin.init.call(this);
+            this.backend = this.field.backend;
+
+            this.formatType = 'char';
+        },
+
+        willStart: function() {
+            this.load_cmis_config();
+            this.init_cmis_session();
+            this.sessionReady = Promise.all([
+                this.cmis_session_initialized,
+                this.load_cmis_repositories()
+            ])
+            this._setCmisDoc()
+            
+            return Promise.resolve()
+        },
+
+        _render: function() {
+            this._super.apply(this, arguments);
+
+            if (this.mode == "edit") {
+                return
+            }
+
+            var self = this;
+            this._cmisDocReady
+                .then(function(cmisDoc) {
+                    var ctx = { object: cmisDoc };
+                    var $cmisDoc = QWeb.render("CmisDocumentView", ctx)
+                    self.$el.html($cmisDoc)
+                })
+                .catch(function(error){console.log(error)});                  
+        },
+
+        _renderEdit: function() {
+            var $input = $(QWeb.render("CmisDocumentEdit"))
+            this._prepareInput($input)
+            this.$el.html(this.$input)
+        },
+
+        _setCmisDoc: function() {
+            var self = this;
+            this._cmisDocReady = new Promise(function(resolve, reject) {
+                self.sessionReady
+                    .then(function() {
+                        self.cmis_session.getObject(self.value)
+                        .ok(function(cmisDoc) {
+                            var wrappedCmisDoc = self.wrap_cmis_object(cmisDoc)
+                            resolve(wrappedCmisDoc)
+                        })
+                        .notOk(function(error) {
+                            self.on_cmis_error(error)
+                            reject(error) });
+                    })
+                    .catch(function(error) {
+                        var errorMsg = "Could not load session or repositories"
+                        reject(errorMsg)
+                    });
+            });
+            return this._cmisDocReady
+        }
+    });
+
     var FieldCmisFolder = basicFields.FieldChar.extend(CmisMixin, {
         template: "FieldCmisFolder",
 
@@ -1800,6 +1871,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
     });
 
     registry.add('cmis_folder', FieldCmisFolder);
+    registry.add('cmis_document', FieldCmisDocument);
 
     return {
         CmisUpdateContentStreamDialog: CmisUpdateContentStreamDialog,
@@ -1807,6 +1879,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
         CmisObjectWrapper: CmisObjectWrapper,
         CmisMixin: CmisMixin,
         FieldCmisFolder: FieldCmisFolder,
+        FieldCmisDocument: FieldCmisDocument,
         CmisCreateFolderDialog: CmisCreateFolderDialog,
         CmisCreateDocumentDialog: CmisCreateDocumentDialog,
         CmisDuplicateDocumentResolver: CmisDuplicateDocumentResolver,
