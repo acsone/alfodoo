@@ -374,10 +374,10 @@
     </div>
 </t>
 
-<t t-name="CmisDocumentView">
-    <a class="cmis-doc" t-att-href="object.url">
-        <t t-esc="object.name"/>
-    </a>
+<t t-name="CmisDocumentReadOnly">
+    <div class="cmis-doc-readonly">
+            <span><t t-esc="object.name"/><t t-raw="object.fContentActions()" /></span>
+    </div>
 </t>
 
 <t t-name="CmisDocumentEdit">
