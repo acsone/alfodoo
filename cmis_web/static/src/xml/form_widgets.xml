@@ -367,4 +367,22 @@
     </div>
 </t>
 
+<t t-name="FieldCmisDocument">
+    <div t-att-class="'oe_form_field ' + widget.widget_class" t-att-style="widget.attrs.style">
+        <span>Loading cmis document...</span>
+        <span class="fa fa-spinner fa-spin"></span>
+    </div>
+</t>
+
+<t t-name="CmisDocumentView">
+    <a class="cmis-doc" t-att-href="object.url">
+        <t t-esc="object.name"/>
+    </a>
+</t>
+
+<t t-name="CmisDocumentEdit">
+    <input class="cmis-doc-input o_input" placeholder="Document id">
+    </input>
+</t>
+
 </templates>
