@@ -9,7 +9,6 @@ from odoo import _, http
 from odoo.http import request
 from odoo.exceptions import AccessError
 from odoo.addons.web.controllers import main
-from odoo.tools import safe_eval
 
 _logger = logging.getLogger(__name__)
 
