@@ -9,6 +9,7 @@ from odoo import _, http
 from odoo.http import request
 from odoo.exceptions import AccessError
 from odoo.addons.web.controllers import main
+from odoo.tools import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -130,6 +131,20 @@ class CmisProxy(http.Controller):
         return urllib.parse.urljoin(request.httprequest.host_url,
                                     CMIS_PROXY_PATH)
 
+    def _get_requests_timeout(self):
+        """
+        Fetch and return the requests timeout (ir.config_parameter in seconds)
+        Trigger a logged error if something is wrong with the ir.config_parameter
+        :return: timeout (seconds in float)
+        """
+        try:
+            timeout = safe_eval(self.env['ir.config_parameter'].get_param(
+                "cmis.requests_timeout", "FAULTY"))
+        except Exception as e:
+            _logger.error(e)
+            timeout = 10.0
+        return timeout
+
     @classmethod
     def _clean_url_in_dict(cls, values, original, new):
         """Replace all occurences of the CMIS container url in the json
@@ -247,6 +262,7 @@ class CmisProxy(http.Controller):
             params=params,
             stream=True,
             auth=(proxy_info["username"], proxy_info["password"]),
+            timeout=self._get_requests_timeout()
         )
         r.raise_for_status()
         headers = dict(list(r.headers.items()))
@@ -265,6 +281,7 @@ class CmisProxy(http.Controller):
             url,
             params=params,
             auth=(proxy_info["username"], proxy_info["password"]),
+            timeout=self._get_requests_timeout()
         )
         r.raise_for_status()
         if r.text:
@@ -300,6 +317,7 @@ class CmisProxy(http.Controller):
             url,
             files=files,
             auth=(proxy_info["username"], proxy_info["password"]),
+            timeout=self._get_requests_timeout()
         )
         r.raise_for_status()
         if r.text:
