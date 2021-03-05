@@ -137,7 +137,7 @@ class CmisProxy(http.Controller):
         :return: timeout (seconds in float)
         """
         try:
-            timeout = float(request.env['ir.config_parameter'].get_param(
+            timeout = float(request.env['ir.config_parameter'].sudo().get_param(
                 "cmis.requests_timeout", "FAULTY"))
         except ValueError as e:
             _logger.error(e)
