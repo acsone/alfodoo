@@ -45,6 +45,11 @@ var DocumentViewer = Widget.extend({
     init: function (parent, cmisDocumentWrapped, cmisFolderContent) {
         this._super.apply(this, arguments);
         var self = this;
+
+        if (!cmisFolderContent) {
+            cmisFolderContent = [cmisDocumentWrapped]
+        }
+
         this.documents = _.filter(cmisFolderContent, function (content) {
             if (content.mimetype === undefined){
                 return false;
