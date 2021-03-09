@@ -596,7 +596,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             });
             ctx['canPreview'] = ctx['canGetContentStream']; // && this.mimetype === 'application/pdf';
             ctx['isFolder'] = this.baseTypeId == 'cmis:folder';
-            return QWeb.render("CmisContentActions", ctx);
+            return QWeb.render("CmisDocumentActions", ctx);
         },
 
         get_content_url: function () {
@@ -806,38 +806,31 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 this.cmis_session_initialized,
                 this.load_cmis_repositories()
             ])
-            this._setCmisDoc()
-            
+           
             return Promise.resolve()
         },
 
         _render: function() {
             this._super.apply(this, arguments);
-
+            var self = this;
+            
             if (this.mode == "edit") {
                 return
             }
 
-            var self = this;
-            this._cmisDocReady
-                .then(function(cmisDoc) {
-                    // self.cmis_session.getParents(self.value)
-                    //     .ok(function(parents) {
-                    //         console.log("parents")
-                    //         console.log(parents)
-                    //     })
-                    //     .notOk(function(err){})
-                    
-                    var ctx = { object: cmisDoc };
-                    var $cmisDoc = QWeb.render("CmisDocumentReadOnly", ctx)
-                    self.$el.html($cmisDoc)
+            this._syncCmisDocument()
+                .then(function(cmisDoc) {                   
+                    self._renderCmisDocument(cmisDoc);
                 })
-                .catch(function(error) {
-                    var err = error || "Could not initialise session"
-                    console.log(err)
-                    // self.on_cmis_error(err)             
-                });
-            },
+        },
+        
+        
+        _renderCmisDocument: function(cmisDoc) {
+            var ctx = { object: cmisDoc };
+            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", ctx)
+            this.$el.html($cmisDoc)
+            this.register_document_events();
+        },
 
         _renderEdit: function() {
             var $input = $(QWeb.render("CmisDocumentEdit"))
@@ -845,25 +838,56 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.$el.html(this.$input)
         },
 
-        _setCmisDoc: function() {
+        _syncCmisDocument: function() {
+            this.cmisDocument = null;
+            this.$el.html(QWeb.render("CmisDocumentWaiting"))
+
             var self = this;
 
-            var getDocument = function(success, failure) {
-               self.cmis_session.getObject(self.value, "latest", {
-                includeAllowableActions: true
-            })
-                    .ok(function(cmisDoc) {
-                        var wrappedCmisDoc = self.wrap_cmis_object(cmisDoc)
-                        success(wrappedCmisDoc)
+            return this.sessionReady
+                // We get the document from the server and wrap it...
+                .then(function() {
+                    return new Promise(function(resolve) {
+                        var options = { includeAllowableActions: true }
+                        self.cmis_session.getObject(self.value, "this", options)
+                            .ok(function(cmisDocument) {
+                                resolve(self.wrap_cmis_object(cmisDocument));
+                            })
+                        });
                     })
-                    .notOk(function(error) {
-                        failure(error) });
-            }
+                // Then, we add the document's pdf rendition to the wrapper.
+                // This would be better done in one step with getObject if possible
+                // to avoid a second request.
+                .then(function(cmisDocument) {
+                    return new Promise(function(resolve) {
+                        var options = {renditionFilter: "application/pdf"}
+                        self.cmis_session.getRenditions(self.value, options)
+                            .ok(function(renditions) {
+                                cmisDocument.renditions = renditions;
+                                resolve(cmisDocument)
+                            })
+                        });
+                })
+                .then(function(cmisDocument) {
+                    self.cmisDocument = cmisDocument;
+                    return cmisDocument;
+                })
+                .catch(function(reason) {
+                    var reason = reason || "Could not initialise session"
+                    self.on_cmis_error(reason)             
+                });
+        },
 
-            this._cmisDocReady = new Promise(function(resolve, reject) {
-                self.sessionReady
-                    .then(function() { getDocument(resolve, reject) })
-                    .catch(function(error) { reject(error) });
+        on_click_preview: function () {
+            var documentViewer = new DocumentViewer(this, this.cmisDocument);
+            documentViewer.appendTo($('body'));
+        },
+
+        register_document_events: function () {
+            var self = this;
+            var $el_actions = this.$el.find('.field_cmis_folder_content_actions');
+            $el_actions.find('.content-action-preview').on('click', function (e) {
+                self.on_click_preview();
             });
         }
     });

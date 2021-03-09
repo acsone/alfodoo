@@ -369,6 +369,12 @@
 
 <t t-name="FieldCmisDocument">
     <div t-att-class="'oe_form_field ' + widget.widget_class" t-att-style="widget.attrs.style">
+        <t t-call="CmisDocumentWaiting" />
+    </div>
+</t>
+
+<t t-name="CmisDocumentWaiting">
+    <div class="cmis-doc-waiting">
         <span>Loading cmis document...</span>
         <span class="fa fa-spinner fa-spin"></span>
     </div>
@@ -376,13 +382,74 @@
 
 <t t-name="CmisDocumentReadOnly">
     <div class="cmis-doc-readonly">
-            <span><t t-esc="object.name"/><t t-raw="object.fContentActions()" /></span>
+            <span class="test-find"><t t-esc="object.name"/><t t-raw="object.fContentActions()" /></span>
     </div>
 </t>
 
 <t t-name="CmisDocumentEdit">
     <input class="cmis-doc-input o_input" placeholder="Document id">
     </input>
+</t>
+
+<t t-name="CmisDocumentActions" class="top-node">
+    <span class="field_cmis_folder_content_actions">
+        <div class="btn-group px-2" role="group">
+            <t t-call="cmisDocumentDownloadButton" />
+            <t t-call="cmisDocumentPreviewButton" />
+            <t t-call="cmisContextDropdown" />
+            <t t-call="cmisAlfrescoButton" />
+        </div>
+    </span>
+</t>
+
+<t t-name="cmisDocumentDownloadButton">
+    <t t-if='canGetContentStream'>
+        <button type="button"
+            class="btn btn-default btn-xs content-action-download px-1"
+            aria-label="Download"
+            data-toggle="tooltip"
+            title="Download">
+            <span class="fa fa-download"></span>
+        </button>
+    </t>
+</t>
+
+<t t-name="cmisDocumentPreviewButton">
+    <t t-if='canPreview'>
+        <button type="button"
+            class="btn btn-default btn-xs content-action-preview px-1 "
+            data-toggle="tooltip"
+            title="Preview"
+            aria-label="Preview">
+            <span class="fa fa-eye"></span>
+        </button>
+    </t>
+</t>
+
+<t t-name="cmisContextDropdown">
+    <button type="button"
+        class="btn btn-default btn-xs dropdown-toggle fa fa-align-justify cmis-dropdown-more-actions px-1"
+        t-att-id="object.getSuccinctProperty('cmis:objectId')"
+        aria-label="More actions"
+        data-toggle="dropdown"
+        title="More actions"
+        aria-haspopup="true"
+        aria-expanded="true">
+    </button>
+    <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
+        <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
+        <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>               
+        <li t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></li>
+        <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li -->
+        <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>
+        <li t-if='canCheckIn'><a class='content-action-checkin' href="#">Import new version</a></li>
+        <li t-if='canCancelCheckOut'><a class='content-action-cancel-checkout' href="#">Cancel Edit</a></li>
+        <li t-if='canCheckOut'><a class='content-action-checkout' href="#">Offline Edit</a></li>
+        <t t-if='canDeleteObject'>
+            <li role="separator" class="divider"></li>
+            <li><a class='content-action-delete-object' href="#">Delete</a></li>
+        </t>
+    </ul>
 </t>
 
 </templates>
