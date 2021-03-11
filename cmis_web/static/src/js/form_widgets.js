@@ -1,4 +1,4 @@
-/* ---------------------------------------------------------
+/*---------------------------------------------------------
  + * Odoo cmis_web
  + * Author  Laurent Mignon 2016 Acsone SA/NV
  + * License in __openerp__.py at root level of the module
@@ -26,10 +26,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
             if (this.el.checkValidity()) {
                 return true;
             }
-            
+            else {
                 // Use pseudo HMLT5 submit to display validation errors
                 $('<input type="submit">').hide().appendTo(this.$el).click().remove();
-            
+            }
         },
     });
 
@@ -145,7 +145,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var parts = re.exec(this.file.name);
             var name_without_ext = this.file.name.slice(0, -parts[1].length - 1);
             var ext = parts[1];
-            // Looks for an alternate filename
+            // looks for an alternate filename
             var dfd1 = $.Deferred();
             this.cmis_session.query('' +
                 "SELECT cmis:name FROM cmis:document WHERE " +
@@ -173,7 +173,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                     self.getParent().on_cmis_error(error);
                     dfd1.reject(error);
                 });
-            // Get original document
+            // get original document
             var dfd2 = $.Deferred();
             this.cmis_session.query('' +
                 "SELECT cmis:objectId FROM cmis:document WHERE " +
@@ -208,7 +208,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         self.cmis_session
                             .checkIn(checkedOutNode.succinctProperties['cmis:objectId'], major, {}, self.file, comment)
                             .ok(function (data) {
-                                // After checkin the working copy must be deleted (self.data)
+                                // after checkin the working copy must be deleted (self.data)
                                 // the date received into the response is the new version
                                 // created
                                 self.getParent().trigger('cmis_node_deleted', [self.original_objectId]);
@@ -465,7 +465,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.data.cmis_session
                 .checkIn(this.data.objectId, major, {}, file, comment)
                 .ok(function (data) {
-                    // After checkin the working copy must be deleted (self.data)
+                    // after checkin the working copy must be deleted (self.data)
                     // the date received into the response is the new version
                     // created
                     self.getParent().trigger('cmis_node_deleted', [self.data.cmis_object]);
@@ -495,7 +495,6 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.title = this.getSuccinctProperty('cm:title', cmis_object) || '';
             this.description = this.getSuccinctProperty('cmis:description', cmis_object);
             this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmis_object);
-            this.creationDate = this.getSuccinctProperty('cmis:creationDate', cmis_object);
             this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
             this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
             this.versionSeriesId = this.getSuccinctProperty('cmis:versionSeriesId', cmis_object);
@@ -547,37 +546,27 @@ odoo.define('cmis_web.form_widgets', function (require) {
             return 'fa fa-fw';
         },
 
-        /** FName
+        /** fName
          * return the cmis:name formatted to be rendered in ta datatable cell
          *
          **/
         fName: function () {
             var cls = this._get_css_class();
             var val = "<div class='" + cls + " cmis_content_icon'>" + this.name;
-            val += "</div>";
+            val = val + "</div>";
             if (this.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')) {
                 val = val + "<div class='fa fa-key cmis-checked-out-by'> " + _t('By:') + ' ' + this.getSuccinctProperty('cmis:versionSeriesCheckedOutBy') + '</div>';
             }
             return val;
         },
 
-        /** FLastModificationDate
+        /** fLastModificationDate
          * return the cmis:mastModificationDate formatted to be rendered in ta datatable cell
          *
          **/
         fLastModificationDate: function () {
             return this.format_cmis_timestamp(this.lastModificationDate);
         },
-
-        /**
-        * Format cmis object creation date
-        * @returns the cmis:creationDate formatted to be rendered in a datatable cell
-        *
-        **/
-       fCreationDate: function() {
-            return this.format_cmis_timestamp(this.creationDate);
-        },
-
 
         fDetails: function () {
             return '<div class="fa fa-plus-circle"/>';
@@ -595,19 +584,29 @@ odoo.define('cmis_web.form_widgets', function (require) {
             return '';
         },
 
+        getActionsContext: function () {
+            var ctx = {object: this};
+            _.map(this.cmis_object.allowableActions, function (value, actionName) {
+                ctx[actionName] = value;
+            });
+            ctx['canPreview'] = ctx['canGetContentStream']; // && this.mimetype === 'application/pdf';
+            ctx['isFolder'] = this.baseTypeId == 'cmis:folder';
+            return ctx
+        },
+
         /**
          * Content actions
          *
          * render the list of available actions
          */
         fContentActions: function () {
-            var ctx = {object: this};
-            _.map(this.cmis_object.allowableActions, function (value, actionName) {
-                ctx[actionName] = value;
-            });
-            ctx.canPreview = ctx.canGetContentStream; // && this.mimetype === 'application/pdf';
-            ctx.isFolder = this.baseTypeId == 'cmis:folder';
+            var ctx = this.getActionsContext();
             return QWeb.render("CmisContentActions", ctx);
+        },
+
+        documentActions: function () {
+            var ctx = this.getActionsContext();
+            return QWeb.render("CmisDocumentActions", ctx)
         },
 
         get_content_url: function () {
@@ -619,7 +618,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             if (this.mimetype === 'application/pdf') {
                 return this.get_content_url();
             } else if (rendition) {
-                return this.cmis_session.getContentStreamURL(rendition.streamId);
+                return this.cmis_session.getContentStreamURL(rendition['streamId']);
             }
             return null;
         },
@@ -634,7 +633,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             if (this.mimetype.match("(video)")) {
                 return 'video';
             }
-            // Here we hope that alfresco is able to render the document as pdf
+            // here we hope that alfresco is able to render the document as pdf
             return "pdf";
         },
 
@@ -735,7 +734,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var self = this;
             if (this.cmis_session.repositories) {
                 return dfd.resolve();
-            } 
+            } else {
                 self.cmis_session
                     .loadRepositories()
                     .ok(function (data) {
@@ -745,7 +744,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         self.on_cmis_error(error);
                         dfd.reject(error);
                     });
-            
+            }
             return dfd.promise();
         },
 
@@ -806,7 +805,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
             CmisMixin.init.call(this);
             this.backend = this.field.backend;
             this._cmisDocReady;
-
+            if (this.value){
+                this._initVersions();
+            }
             this.formatType = 'char';
         },
 
@@ -817,38 +818,44 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 this.cmis_session_initialized,
                 this.load_cmis_repositories()
             ])
-            this._setCmisDoc()
-            
+           
             return Promise.resolve()
         },
 
         _render: function() {
             this._super.apply(this, arguments);
-
-            if (this.mode == "edit") {
+            var self = this;
+            
+            if (this.mode == "edit" || !this.value) {
                 return
             }
 
-            var self = this;
-            this._cmisDocReady
+            this._syncCmisDocument()
                 .then(function(cmisDoc) {
-                    // self.cmis_session.getParents(self.value)
-                    //     .ok(function(parents) {
-                    //         console.log("parents")
-                    //         console.log(parents)
-                    //     })
-                    //     .notOk(function(err){})
-                    
-                    var ctx = { object: cmisDoc };
-                    var $cmisDoc = QWeb.render("CmisDocumentReadOnly", ctx)
-                    self.$el.html($cmisDoc)
+                    self._renderCmisDocument(cmisDoc);
                 })
-                .catch(function(error) {
-                    var err = error || "Could not initialise session"
-                    console.log(err)
-                    // self.on_cmis_error(err)             
-                });
-            },
+        },
+        
+        _initVersions: function(){
+            var objectId = this.value.split(";");
+            this.versionSeriesId = objectId[0]
+            this.versions = {
+                all: {},
+                current: {},
+                currentLabel: objectId[1] || "latest"
+            }
+        },
+        
+        _renderCmisDocument: function() {
+            var ctx = this.versions.current;
+            ctx.versions = [];
+            _.each(this.versions.all, function(version) {
+                 ctx.versions.push([version.versionLabel, version.labelClassName])
+            })
+            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", { object: ctx})
+            this.$el.html($cmisDoc)
+            this.register_document_events();
+        },
 
         _renderEdit: function() {
             var $input = $(QWeb.render("CmisDocumentEdit"))
@@ -856,25 +863,79 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.$el.html(this.$input)
         },
 
-        _setCmisDoc: function() {
+        _setDocument: function(allVersions) {
+            var self = this;
+            var versions = {};
+            var currentLabel = this.versions.currentLabel;
+
+            _.each(allVersions, function(version) {
+                var label = version.succinctProperties["cmis:versionLabel"];
+                var doc = self.wrap_cmis_object(version);
+                doc.labelClassName = "document-version-label-" + label.replace('.', '-')
+                versions[label] = doc
+                
+                var isCurrent = label === currentLabel
+                    || currentLabel === "latest"
+                    && version.succinctProperties["cmis:isLatestVersion"]
+                
+                if (isCurrent) {
+                    self.versions.current = doc;
+                }
+            })
+            this.versions.all = versions;
+        },
+
+        _syncCmisDocument: function() {
+            this.$el.html(QWeb.render("CmisDocumentWaiting"))
+
             var self = this;
 
-            var getDocument = function(success, failure) {
-               self.cmis_session.getObject(self.value, "latest", {
-                includeAllowableActions: true
-            })
-                    .ok(function(cmisDoc) {
-                        var wrappedCmisDoc = self.wrap_cmis_object(cmisDoc)
-                        success(wrappedCmisDoc)
-                    })
-                    .notOk(function(error) {
-                        failure(error) });
-            }
+            return this.sessionReady
+                .then(function() {
+                    return new Promise(function(resolve) {
+                        var options = {
+                            objectid: self.value,
+                            includeAllowableActions: true,
+                        }
+                        self.cmis_session.getAllVersions(self.value, options)
+                            .ok(function(allVersions) {
+                                resolve(self._setDocument(allVersions))
+                            })
+                    });
+                })                
+                .catch(function(reason) {
+                    var reason = reason || "Could not initialise session"
+                    self.on_cmis_error(reason)             
+                });
+        },
 
-            this._cmisDocReady = new Promise(function(resolve, reject) {
-                self.sessionReady
-                    .then(function() { getDocument(resolve, reject) })
-                    .catch(function(error) { reject(error) });
+        on_click_preview: function () {
+            var documentViewer = new DocumentViewer(this, this.versions.current);
+            documentViewer.appendTo($('body'));
+        },
+
+        on_click_version: function(versionLabel) {
+            this.versions.current = _.find(this.versions.all, function(version) {
+               return version.versionLabel === versionLabel
+            })
+            var changes = {};
+            changes[this.name] = this.versions.current.objectId
+            this.trigger_up('field_changed', {
+                dataPointID: this.dataPointID,
+                changes: changes,
+            });
+        },
+
+        register_document_events: function () {
+            var self = this;
+            var $el_actions = this.$el.find('.field_cmis_document_actions');
+            _.each(this.versions.all, function(version) {
+                $el_actions.find('.' + version.labelClassName).on('click', function (e) {
+                    self.on_click_version(version.versionLabel);
+                });
+            });
+            $el_actions.find('.content-action-preview').on('click', function (e) {
+                self.on_click_preview();
             });
         }
     });
@@ -937,7 +998,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 this.$input.val(value);
             }
             if (!this.res_id) {
-                // Hide the widget if the record is not yet created
+                // hide the widget if the record is not yet created
                 this.$el.hide();
             }
             this.$el.find('button.cmis-create-root').addClass('o_hidden');
@@ -958,7 +1019,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
         },
 
         _renderReadonly: function () {
-            // In edit mode we need the in
+            // in edit mode we need the in
             this._prepareInput(this.$el);
         },
         /**
@@ -1078,11 +1139,6 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         width: '120px'
                     },
                     {
-                        data:'fCreationDate()',
-                        width:'120px',
-                        visible: false,
-                    },
-                    {
                         data: 'lastModifiedBy',
                         width: '60px',
                         visible: false,
@@ -1173,7 +1229,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.register_content_events();
         },
 
-        /** Function called by datatablet to obtain the required data
+        /** function called by datatablet to obtain the required data
          *
          * The function is given three parameters and no return is required. The
          * parameters are:
@@ -1246,9 +1302,6 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         orders_by.push('cmis:lastModificationDate ' + sort_order);
                         break;
                     case 5:
-                        orders_by.push('cmis:creationDate ' + sort_order);
-                        break;
-                    case 6:
                         orders_by.push('cmis:lastModifiedBy ' + sort_order);
                         break;
                 }
@@ -1263,7 +1316,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var self = this;
             var datatable_container = this.$el.find('.dataTables_scrollBody');
             datatable_container.off('dragleave dragend drop dragover dragenter drop');
-            if (self.dislayed_folder_cmisobject && self.dislayed_folder_cmisobject.allowableActions.canCreateDocument) {
+            if (self.dislayed_folder_cmisobject && self.dislayed_folder_cmisobject.allowableActions['canCreateDocument']) {
                 datatable_container.on('dragover dragenter', function (e) {
                     datatable_container.addClass('is-dragover');
                     e.preventDefault();
@@ -1281,20 +1334,20 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
                 });
             }
-            /* Some UI fixes */
+            /* some UI fixes */
             this.$el.find('.cmis-dropdown-more-actions').off('click');
             this.$el.find('.cmis-dropdown-more-actions').on('click', function (e) {
                 self.dropdown_fix_position($(e.target));
             });
 
             this.$el.find('.dropdown-menu').off('mouseleave');
-            // Hide the dropdown menu on mouseleave
+            // hide the dropdown menu on mouseleave
             this.$el.find('.dropdown-menu').on('mouseleave', function (e) {
                 if ($(e.target).is(':visible')) {
                     $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
                 }
             });
-            // Hide the dropdown menu on link clicked
+            // hide the dropdown menu on link clicked
             this.$el.find('.dropdown-menu a').on('click', function (e) {
                 if ($(e.target).is(':visible')) {
                     $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
@@ -1431,7 +1484,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
          * Reload and redraw the DataTables in the current context, optionally
          * updating ordering, searching and paging as required.
          *
-         * @param {String} paging: This parameter is used to determine what kind
+         * @param {string} paging: This parameter is used to determine what kind
          * of draw DataTables will perform. There are three options available:
          * - paging (default): ordering and search will not be updated and the
          *                     paging position held where is was
@@ -1575,9 +1628,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
                             deferred.reject(error);
                         });
                     return deferred;
-                } 
+                } else {
                     return filename;
-                
+                }
             })
         },
 
@@ -1725,7 +1778,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
         },
 
         /**
-         * Fix for dropdowns that are inside a container with "overflow: scroll"
+         * fix for dropdowns that are inside a container with "overflow: scroll"
          * This fix is required in order to have the dropdown to be displayed
          * on top of the table without scrolling. Without this fix, the menu will
          * appears into the table container but at the same time, scrollbars will
@@ -1795,7 +1848,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 return;
             }
             var page_index = this.page_index;
-            this.page_index = -1; // Force reload
+            this.page_index = -1; // force reload
             this.display_folder(page_index, this.displayed_folder_id);
         },
 
