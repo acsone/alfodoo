@@ -22,13 +22,16 @@ form_widgets.CmisObjectWrapper.include({
     },
 
     get_preview_url : function(){
+        console.log("overide")
       var _url =  this._super.apply(this, arguments);
+      console.log(_url)
       if (_url) {
           return _url;
       }
       // By default, review are generated in alfresco the first time it's requested by share
       // Before this first access, the renditions on the cmis object is empty.
       // Use the alfresco API to trigger a first rendition of the document.
+      console.log(this.alfresco_api_location + '/node/workspace/SpacesStore/' + this.versionSeriesId + '/content/thumbnails/pdf/' + encodeURI(this.name) + '?c=force&lastModified=pdf%' + new Date().getUTCMilliseconds())
       return this.alfresco_api_location + '/node/workspace/SpacesStore/' + this.versionSeriesId + '/content/thumbnails/pdf/' + encodeURI(this.name) + '?c=force&lastModified=pdf%' + new Date().getUTCMilliseconds();
     },
 

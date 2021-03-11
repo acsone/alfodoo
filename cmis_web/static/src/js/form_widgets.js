@@ -584,19 +584,29 @@ odoo.define('cmis_web.form_widgets', function (require) {
             return '';
         },
 
-        /**
-         * Content actions
-         *
-         * render the list of available actions
-         */
-        fContentActions: function () {
+        getActionsContext: function () {
             var ctx = {object: this};
             _.map(this.cmis_object.allowableActions, function (value, actionName) {
                 ctx[actionName] = value;
             });
             ctx['canPreview'] = ctx['canGetContentStream']; // && this.mimetype === 'application/pdf';
             ctx['isFolder'] = this.baseTypeId == 'cmis:folder';
-            return QWeb.render("CmisDocumentActions", ctx);
+            return ctx
+        },
+
+        /**
+         * Content actions
+         *
+         * render the list of available actions
+         */
+        fContentActions: function () {
+            var ctx = this.getActionsContext();
+            return QWeb.render("CmisContentActions", ctx);
+        },
+
+        documentActions: function () {
+            var ctx = this.getActionsContext();
+            return QWeb.render("CmisDocumentActions", ctx)
         },
 
         get_content_url: function () {
@@ -795,7 +805,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
             CmisMixin.init.call(this);
             this.backend = this.field.backend;
             this._cmisDocReady;
-
+            if (this.value){
+                this._initVersions();
+            }
             this.formatType = 'char';
         },
 
@@ -814,20 +826,33 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this._super.apply(this, arguments);
             var self = this;
             
-            if (this.mode == "edit") {
+            if (this.mode == "edit" || !this.value) {
                 return
             }
 
             this._syncCmisDocument()
-                .then(function(cmisDoc) {                   
+                .then(function(cmisDoc) {
                     self._renderCmisDocument(cmisDoc);
                 })
         },
         
+        _initVersions: function(){
+            var objectId = this.value.split(";");
+            this.versionSeriesId = objectId[0]
+            this.versions = {
+                all: {},
+                current: {},
+                currentLabel: objectId[1] || "latest"
+            }
+        },
         
-        _renderCmisDocument: function(cmisDoc) {
-            var ctx = { object: cmisDoc };
-            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", ctx)
+        _renderCmisDocument: function() {
+            var ctx = this.versions.current;
+            ctx.versions = [];
+            _.each(this.versions.all, function(version) {
+                 ctx.versions.push([version.versionLabel, version.labelClassName])
+            })
+            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", { object: ctx})
             this.$el.html($cmisDoc)
             this.register_document_events();
         },
@@ -838,40 +863,46 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.$el.html(this.$input)
         },
 
+        _setDocument: function(allVersions) {
+            var self = this;
+            var versions = {};
+            var currentLabel = this.versions.currentLabel;
+
+            _.each(allVersions, function(version) {
+                var label = version.succinctProperties["cmis:versionLabel"];
+                var doc = self.wrap_cmis_object(version);
+                doc.labelClassName = "document-version-label-" + label.replace('.', '-')
+                versions[label] = doc
+                
+                var isCurrent = label === currentLabel
+                    || currentLabel === "latest"
+                    && version.succinctProperties["cmis:isLatestVersion"]
+                
+                if (isCurrent) {
+                    self.versions.current = doc;
+                }
+            })
+            this.versions.all = versions;
+        },
+
         _syncCmisDocument: function() {
-            this.cmisDocument = null;
             this.$el.html(QWeb.render("CmisDocumentWaiting"))
 
             var self = this;
 
             return this.sessionReady
-                // We get the document from the server and wrap it...
                 .then(function() {
                     return new Promise(function(resolve) {
-                        var options = { includeAllowableActions: true }
-                        self.cmis_session.getObject(self.value, "this", options)
-                            .ok(function(cmisDocument) {
-                                resolve(self.wrap_cmis_object(cmisDocument));
+                        var options = {
+                            objectid: self.value,
+                            includeAllowableActions: true,
+                        }
+                        self.cmis_session.getAllVersions(self.value, options)
+                            .ok(function(allVersions) {
+                                resolve(self._setDocument(allVersions))
                             })
-                        });
-                    })
-                // Then, we add the document's pdf rendition to the wrapper.
-                // This would be better done in one step with getObject if possible
-                // to avoid a second request.
-                .then(function(cmisDocument) {
-                    return new Promise(function(resolve) {
-                        var options = {renditionFilter: "application/pdf"}
-                        self.cmis_session.getRenditions(self.value, options)
-                            .ok(function(renditions) {
-                                cmisDocument.renditions = renditions;
-                                resolve(cmisDocument)
-                            })
-                        });
-                })
-                .then(function(cmisDocument) {
-                    self.cmisDocument = cmisDocument;
-                    return cmisDocument;
-                })
+                    });
+                })                
                 .catch(function(reason) {
                     var reason = reason || "Could not initialise session"
                     self.on_cmis_error(reason)             
@@ -879,13 +910,30 @@ odoo.define('cmis_web.form_widgets', function (require) {
         },
 
         on_click_preview: function () {
-            var documentViewer = new DocumentViewer(this, this.cmisDocument);
+            var documentViewer = new DocumentViewer(this, this.versions.current);
             documentViewer.appendTo($('body'));
+        },
+
+        on_click_version: function(versionLabel) {
+            this.versions.current = _.find(this.versions.all, function(version) {
+               return version.versionLabel === versionLabel
+            })
+            var changes = {};
+            changes[this.name] = this.versions.current.objectId
+            this.trigger_up('field_changed', {
+                dataPointID: this.dataPointID,
+                changes: changes,
+            });
         },
 
         register_document_events: function () {
             var self = this;
-            var $el_actions = this.$el.find('.field_cmis_folder_content_actions');
+            var $el_actions = this.$el.find('.field_cmis_document_actions');
+            _.each(this.versions.all, function(version) {
+                $el_actions.find('.' + version.labelClassName).on('click', function (e) {
+                    self.on_click_version(version.versionLabel);
+                });
+            });
             $el_actions.find('.content-action-preview').on('click', function (e) {
                 self.on_click_preview();
             });

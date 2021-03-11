@@ -382,7 +382,10 @@
 
 <t t-name="CmisDocumentReadOnly">
     <div class="cmis-doc-readonly">
-            <span class="test-find"><t t-esc="object.name"/><t t-raw="object.fContentActions()" /></span>
+            <span>
+                <t t-esc="object.name"/>
+                <t t-raw="object.documentActions()" />
+            </span>
     </div>
 </t>
 
@@ -391,9 +394,10 @@
     </input>
 </t>
 
-<t t-name="CmisDocumentActions" class="top-node">
-    <span class="field_cmis_folder_content_actions">
+<t t-name="CmisDocumentActions">
+    <span class="field_cmis_document_actions">
         <div class="btn-group px-2" role="group">
+            <t t-call="cmisDocumentVersionDropdown" />
             <t t-call="cmisDocumentDownloadButton" />
             <t t-call="cmisDocumentPreviewButton" />
             <t t-call="cmisContextDropdown" />
@@ -452,4 +456,16 @@
     </ul>
 </t>
 
+<t t-name="cmisDocumentVersionDropdown">
+    <button class="btn btn-default btn-xs dropdown-toggle px-1" data-toggle="dropdown">
+        <t t-esc="object.getSuccinctProperty('cmis:versionLabel')" />
+    </button>
+    <t t-if="object.versions">
+        <ul class="dropdown-menu btn-block">
+            <t t-foreach="object.versions || [['coucou', 'plop']]" t-as="version">
+                <li><a t-att-class="version[1]" href="#"><span t-esc="version[0]"/></a></li>
+            </t>
+        </ul>
+    </t>
+</t>
 </templates>
