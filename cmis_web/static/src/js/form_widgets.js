@@ -1549,6 +1549,7 @@ var CmisMixin = {
     },
 
     on_click_rename: function(row){
+        row.data().refresh();
         var dialog = new CmisRenameContentDialog(this, row.data());
         dialog.open();
     },
