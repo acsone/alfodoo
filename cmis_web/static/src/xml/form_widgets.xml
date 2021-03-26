@@ -21,6 +21,7 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>Modified</th>
+                <th>Created</th>
                 <th>Modifier</th>
                 <th></th>
             </tr>
@@ -32,6 +33,7 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>Modified</th>
+                <th>Created</th>
                 <th>Modifier</th>
                 <th></th>
             </tr>
