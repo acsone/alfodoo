@@ -1346,6 +1346,9 @@ var CmisMixin = {
         this.$el.find('.root-content-action-new-folder').on('click', function(e){
             var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_cmisobject);
             dialog.open();
+            dialog.opened().then(function (result) {
+                dialog.$el.find('[autofocus]').focus();
+            });
         });
         this.$el.find('.root-content-action-copy-paste').on('click', function (e) {
             self.get_new_filename(self.clipboardObject.name, self.displayed_folder_id
@@ -1552,6 +1555,9 @@ var CmisMixin = {
         row.data().refresh();
         var dialog = new CmisRenameContentDialog(this, row.data());
         dialog.open();
+        dialog.opened().then(function (result) {
+            dialog.$el.find('[autofocus]').focus();
+        });
     },
 
     on_click_details_control: function(e){
