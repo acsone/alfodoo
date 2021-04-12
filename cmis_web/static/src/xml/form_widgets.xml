@@ -21,6 +21,7 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>Modified</th>
+                <th>Created</th>
                 <th>Modifier</th>
                 <th></th>
             </tr>
@@ -32,6 +33,7 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>Modified</th>
+                <th>Created</th>
                 <th>Modifier</th>
                 <th></th>
             </tr>
@@ -138,6 +140,22 @@
                  aria-label="Add document">
              <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
          </button>
+           <button type="button"
+                 t-if="object.clipboardAction == 'copy' &amp; canCreateDocument"
+                 t-attf-class="btn btn-default btn-sm root-content-action-copy-paste"
+                 data-toggle="tooltip"
+                 title="Paste"
+                 aria-label="Paste">
+             <span class="fa fa-paste"></span>
+         </button>
+           <button type="button"
+                 t-if="object.clipboardAction == 'cut' &amp; canCreateDocument"
+                 t-attf-class="btn btn-default btn-sm root-content-action-cut-paste"
+                 data-toggle="tooltip"
+                 title="Paste"
+                 aria-label="Paste">
+             <span class="fa fa-paste"></span>
+         </button>
        </div>
     </div>
 </t>
@@ -146,13 +164,13 @@
     <div class="field_cmis_folder_content_actions">
     <div class="btn-group pull-right" role="group">
         <t t-if='canGetContentStream'>
-          <a type="button"
+          <button type="button"
              class="btn btn-default btn-xs content-action-download"
              aria-label="Download"
              data-toggle="tooltip"
              title="Download">
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-          </a>
+          </button>
         </t>
         <t t-if='canPreview'>
           <button type="button"
@@ -163,7 +181,7 @@
               <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
           </button>
         </t>
-            <a type="button"
+            <button type="button"
                class="btn btn-default btn-xs dropdown-toggle glyphicon glyphicon-align-justify"
                t-att-id="object.getSuccinctProperty('cmis:objectId')"
                aria-label="More actions"
@@ -171,10 +189,14 @@
                title="More actions"
                aria-haspopup="true"
                aria-expanded="true">
-            </a>
+            </button>
             <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
                 <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
                 <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
+                <li t-if='!isFolder'><a class='content-action-copy' href="#"><i class="fa fa-copy"></i> Copy</a></li>
+                <li t-if='canMoveObject'><a class='content-action-cut' href="#"><i class="fa fa-cut"></i> Cut</a></li>
+                <li t-if='canCreateDocument &amp; object.parent.clipboardAction == "cut"'><a class='content-action-cut-paste' href="#"><i class="fa fa-paste"></i> Paste</a></li>
+                <li t-if='canCreateDocument &amp; object.parent.clipboardAction == "copy"'><a class='content-action-copy-paste' href="#"><i class="fa fa-paste"></i> Paste</a></li>
                 <li t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></li>
                 <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li -->
                 <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>

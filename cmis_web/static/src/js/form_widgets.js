@@ -11,13 +11,11 @@
 
  var core = require('web.core');
  var formWidget = require('web.form_widgets');
- var data = require('web.data');
  var time = require('web.time');
- var ProgressBar = require('web.ProgressBar');
- var Registry = require('web.Registry');
  var Dialog = require('web.Dialog');
  var framework = require('web.framework');
  var DocumentViewer = require('cmis_web.DocumentViewer')
+ var crash_manager = require('web.crash_manager');
  
  var _t = core._t;
  var QWeb = core.qweb;
@@ -129,6 +127,11 @@
          this.$new_filename.val(this.new_filename);
      },
 
+     escape_query_param: function(param){
+       param = param.replace(new RegExp("'", "g"), "\\'");
+       return param;
+     },
+
      /**
         * Method called between @see init and @see start. Performs asynchronous
         * calls required by the rendering and the start method.
@@ -144,7 +147,7 @@
          this.cmis_session.query('' +
              "SELECT cmis:name FROM cmis:document WHERE " +
              "IN_FOLDER('" +  this.parent_cmisobject.objectId +
-             "') AND cmis:name like '" + name_without_ext + "-%." + ext + "'")
+             "') AND cmis:name like '" + self.escape_query_param(name_without_ext) + "-%." + ext + "'")
              .ok(function(data){
                  var cpt = data.results.length;
                  var filenames = _.map(
@@ -170,7 +173,7 @@
          this.cmis_session.query('' +
              "SELECT cmis:objectId FROM cmis:document WHERE " +
              "IN_FOLDER('" +  this.parent_cmisobject.objectId +
-             "') AND cmis:name = '" + this.file.name + "'")
+             "') AND cmis:name = '" + self.escape_query_param(this.file.name) + "'")
              .ok(function(data){
                  self.original_objectId = data.results[0].succinctProperties['cmis:objectId'];
                  dfd2.resolve();
@@ -473,6 +476,7 @@
        this.title = this.getSuccinctProperty('cm:title', cmis_object) || '';
        this.description = this.getSuccinctProperty('cmis:description', cmis_object);
        this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmis_object);
+       this.creationDate = this.getSuccinctProperty('cmis:creationDate', cmis_object);
        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
        this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
        this.versionSeriesId = this.getSuccinctProperty('cmis:versionSeriesId', cmis_object);
@@ -546,6 +550,15 @@
        return this.format_cmis_timestamp(this.lastModificationDate);
    },
 
+   /**
+    * Format cmis object creation date
+    * @returns the cmis:creationDate formatted to be rendered in a datatable cell
+    *
+    **/
+   fCreationDate: function() {
+        return this.format_cmis_timestamp(this.creationDate);
+    },
+
    fDetails: function(){
      return '<div class="fa fa-plus-circle"/>'  ;
    },
@@ -573,6 +586,7 @@
            ctx[actionName] = value;
        });
        ctx['canPreview'] = ctx['canGetContentStream']; // && this.mimetype === 'application/pdf';
+       ctx['isFolder'] = this.baseTypeId == 'cmis:folder';
        return QWeb.render("CmisContentActions", ctx);
    },
 
@@ -786,6 +800,8 @@ var CmisMixin = {
         this.on('cmis_node_content_updated', this, this.on_cmis_node_content_updated);
         this.on('wrapped_cmis_node_reloaded', this, this.on_wrapped_cmis_node_reloaded);
         this.backend = this.field_manager.get_field_desc(this.name).backend;
+        this.clipboardAction = undefined;
+        this.clipboardObject = undefined;
     },
 
     start: function () {
@@ -796,7 +812,6 @@ var CmisMixin = {
             return;
         }
         this.view.on("change:actual_mode", this, this.on_mode_change);
-
         // refresh the displayed forlder on reload.
         this.getParent().on('load_record', this, this.reload_displayed_folder);
 
@@ -973,6 +988,11 @@ var CmisMixin = {
                     width:'120px'
                 },
                 {
+                    data:'fCreationDate()',
+                    width:'120px',
+                    visible: false,
+                },
+                {
                     data: 'lastModifiedBy',
                     width:'60px',
                     visible: false,
@@ -1132,6 +1152,9 @@ var CmisMixin = {
                 orders_by.push('cmis:lastModificationDate ' + sort_order);
                 break;
             case 5:
+                orders_by.push('cmis:creationDate ' + sort_order);
+                break;
+            case 6:
                 orders_by.push('cmis:lastModifiedBy ' + sort_order);
                 break;
             }
@@ -1163,12 +1186,32 @@ var CmisMixin = {
                  self.upload_files(e.originalEvent.dataTransfer.files);
 
              });
-         }
-         /* some UI fixes */
-         this.$el.find('.dropdown-toggle').off('click');
-         this.$el.find('.dropdown-toggle').on('click', function (e){
-             self.dropdown_fix_position($(e.target));
-         });
+        }
+        /* some UI fixes */
+        this.$el.find('.dropdown-toggle').off('click');
+        this.$el.find('.dropdown-toggle').on('click', function (e){
+            self.dropdown_fix_position($(e.target));
+        });
+        this.$el.find('.content-action-cut').on('click', function (e) {
+            self._prevent_on_hashchange(e);
+            var row = self._get_event_row(e);
+            self.on_click_cut(row);
+        });
+        this.$el.find('.content-action-copy').on('click', function (e) {
+            self._prevent_on_hashchange(e);
+            var row = self._get_event_row(e);
+            self.on_click_copy(row);
+        });
+        this.$el.find('.content-action-copy-paste').on('click', function (e) {
+            self._prevent_on_hashchange(e);
+            var row = self._get_event_row(e);
+            self.on_click_copy_paste(row);
+        });
+        this.$el.find('.content-action-cut-paste').on('click', function (e) {
+            self._prevent_on_hashchange(e);
+            var row = self._get_event_row(e);
+            self.on_click_cut_paste(row);
+        });
 
          this.$el.find('.dropdown-menu').off('mouseleave');
          // hide the dropdown menu on mouseleave
@@ -1308,7 +1351,6 @@ var CmisMixin = {
     refresh_datatable: function(paging) {
         this.datatable.draw(paging || 'page');
     },
-
     /**
      * Method called when a root folder is initialized
      */
@@ -1322,12 +1364,122 @@ var CmisMixin = {
         this.$el.find('.root-content-action-new-folder').on('click', function(e){
             var dialog = new CmisCreateFolderDialog(self, self.dislayed_folder_cmisobject);
             dialog.open();
-
+        });
+        this.$el.find('.root-content-action-copy-paste').on('click', function (e) {
+            self.get_new_filename(self.clipboardObject.name, self.displayed_folder_id
+            ).done(function (result) {
+                self.cmis_session.createDocumentFromSource(
+                    self.displayed_folder_id, self.clipboardObject.objectId,
+                    undefined, result
+                ).ok(function (result) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                }).notOk(function (error) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                });
+            });
+        });
+        this.$el.find('.root-content-action-cut-paste').on('click', function (e) {
+            self.get_new_filename(self.clipboardObject.name, self.displayed_folder_id
+            ).done(function (result) {
+                self.cmis_session.moveObject(
+                    self.clipboardObject.objectId,
+                    self.clipboardFolder,
+                    self.displayed_folder_id
+                ).ok(function (result) {
+                    self.clear_clipboard();
+                    self.reload_displayed_folder();
+                }).notOk(function (error) {
+                    if (error.body.message.startsWith("Duplicate child name not allowed")) {
+                        Dialog.alert(self, _t('A document with the same name already exists.'));
+                    } else {
+                        crash_manager.show_error({
+                            type: _t("Alfresco Error"),
+                            message: error.body.message,
+                            data: {debug: JSON.stringify(error)},
+                        });
+                    }
+                });
+            });
         });
         this.$el.find('.root-content-action-new-doc').on('click', function(e){
             var dialog = new CmisCreateDocumentDialog(self, self.dislayed_folder_cmisobject);
             dialog.open();
         });
+    },
+    clear_clipboard: function () {
+            this.clipboardObject = undefined;
+            this.clipboardAction = undefined;
+            this.clipboardFolder = undefined;
+        },
+
+    /**
+     * Method returning a deferred with true if the filename we want
+     * to copy (or cut) already exists in the folder
+     */
+    filename_already_exists: function (filename, folder) {
+        var self = this;
+        var deferred = $.Deferred();
+        self.cmis_session.query('' +
+            "SELECT cmis:name FROM cmis:document WHERE " +
+            "IN_FOLDER('" + folder +
+            "') AND cmis:name like '" + filename + "'")
+            .ok(function (data) {
+                if (data.numItems > 0) {
+                    deferred.resolve(true);
+                } else {
+                    deferred.resolve(false);
+                }
+            })
+            .notOk(function (error) {
+                deferred.reject(error);
+            });
+        return deferred;
+    },
+
+    /**
+     * Method returning a deferred with the new_filename for a copy or cut
+     */
+    get_new_filename: function (filename, folder) {
+        var self = this;
+        return self.filename_already_exists(filename, folder).then(function (result) {
+            if (result) {
+                var new_filename = undefined;
+                var re = /(?:\.([^.]+))?$/;
+                var parts = re.exec(filename);
+                var name_without_ext = filename.slice(0, -parts[1].length - 1);
+                var ext = parts[1];
+                var deferred = $.Deferred();
+                self.cmis_session.query('' +
+                    "SELECT cmis:name FROM cmis:document WHERE " +
+                    "IN_FOLDER('" + folder +
+                    "') AND cmis:name like '" + name_without_ext.replace(new RegExp("'", "g"), "\\'") + "-%." + ext + "'"
+                    ).ok(function (data) {
+                        var cpt = data.results.length;
+                        var filenames = _.map(
+                            data.results,
+                            function (item) {
+                                return item.succinctProperties['cmis:name'][0];
+                            });
+                        while (true) {
+                            new_filename = name_without_ext + '-' +
+                                cpt + '.' + ext;
+                            if (_.contains(filenames, new_filename)) {
+                                cpt += 1;
+                            } else {
+                                break;
+                            }
+                        }
+                        deferred.resolve(new_filename);
+                    }).notOk(function (error) {
+                        deferred.reject(error);
+                    });
+                return deferred;
+            } else {
+                return filename;
+            }
+        })
     },
 
     /**
@@ -1352,9 +1504,66 @@ var CmisMixin = {
         var documentViewer = new DocumentViewer(this, cmisObjectWrapped, this.datatable.data());
         documentViewer.appendTo($('body'));
     },
-
+    
     on_click_get_properties: function(row){
         this.display_row_details(row);
+    },
+    
+    on_click_copy: function (row) {
+        this.clipboardAction = 'copy';
+        this.clipboardObject = row.data();
+        this.reload_displayed_folder();
+    },
+
+    on_click_cut: function (row) {
+        this.clipboardAction = 'cut';
+        this.clipboardObject = row.data();
+        this.clipboardFolder = this.displayed_folder_id;
+        this.reload_displayed_folder();
+    },
+
+    on_click_copy_paste: function (row) {
+        var self = this;
+        var data = row.data();
+        self.get_new_filename(self.clipboardObject.name, data.objectId
+        ).done(function (result) {
+            self.cmis_session.createDocumentFromSource(
+                data.objectId, self.clipboardObject.objectId,
+                undefined, result
+            ).ok(function (result) {
+                self.clear_clipboard();
+                self.reload_displayed_folder();
+            }).notOk(function (error) {
+                self.clear_clipboard();
+                self.reload_displayed_folder();
+            });
+        });
+    },
+
+    on_click_cut_paste: function (row) {
+        var self = this;
+        var data = row.data();
+        self.get_new_filename(self.clipboardObject.name, data.objectId
+        ).done(function (result) {
+            self.cmis_session.moveObject(
+                self.clipboardObject.objectId,
+                self.clipboardFolder,
+                data.objectId
+            ).ok(function (result) {
+                self.clear_clipboard();
+                self.reload_displayed_folder();
+            }).notOk(function (error) {
+                if (error.body.message.startsWith("Duplicate child name not allowed")) {
+                    Dialog.alert(self, _t('A document with the same name already exists.'));
+                } else {
+                    crash_manager.show_error({
+                        type: _t("Alfresco Error"),
+                        message: error.body.message,
+                        data: {debug: JSON.stringify(error)},
+                    });
+                }
+            });
+        });
     },
 
     on_click_rename: function(row){
