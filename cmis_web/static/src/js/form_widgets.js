@@ -1349,6 +1349,16 @@ var CmisMixin = {
      *              reset - i.e. the current page will still be shown.
      */
     refresh_datatable: function(paging) {
+        var self = this;
+        var rows = this.$datatable.find('tr[id]');
+        var to_show = [];
+        _.each(rows, function(row){
+            var r = self.datatable.row(row);
+            if ( r.child.isShown() ) {
+                self.display_row_details(r);
+                to_show.push(r);
+            }
+        });
         this.datatable.draw(paging || 'page');
     },
     /**
