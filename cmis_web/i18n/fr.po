@@ -236,6 +236,14 @@ msgstr "Veuillez d'abord enregistrer votre objet une première fois."
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:24
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:36
+#, python-format
+msgid "Created"
+msgstr "Date de création"
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:90
 #, python-format
 msgid "Created By"
