@@ -926,6 +926,14 @@ odoo.define('cmis_web.form_widgets', function (require) {
             });
         },
 
+        on_click_download: function() {
+            this.do_download(this.versions.current);
+        },
+
+        do_download: function (cmisObjectWrapped) {
+            window.open(cmisObjectWrapped.url);
+        },
+
         register_document_events: function () {
             var self = this;
             var $el_actions = this.$el.find('.field_cmis_document_actions');
@@ -936,6 +944,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
             });
             $el_actions.find('.content-action-preview').on('click', function (e) {
                 self.on_click_preview();
+            });
+            $el_actions.find('.content-action-download').on('click', function (e) {
+                self.on_click_download();
             });
         }
     });
