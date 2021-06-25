@@ -13,5 +13,5 @@
     "demo": [],
     "pre_init_hook": "pre_init_hook",
     "images": ["static/description/main_icon.png"],
-    "installable": True,
+    "installable": False,
 }

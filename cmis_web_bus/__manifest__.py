@@ -13,4 +13,5 @@
     "depends": ["cmis_web", "bus"],
     "data": ["views/cmis_web_bus.xml"],
     "demo": [],
+    "installable": False,
 }

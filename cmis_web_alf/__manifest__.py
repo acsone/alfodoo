@@ -25,5 +25,5 @@
     'images': [
         'static/description/main_icon.png',
     ],
-    'installable': True,
+    'installable': False,
 }

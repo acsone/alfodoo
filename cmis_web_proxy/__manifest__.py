@@ -14,5 +14,5 @@
     "data": ["views/cmis_backend.xml", "views/cmis_web_proxy.xml"],
     "external_dependencies": {"python": ["requests", "cmislib"]},
     "images": ["static/description/main_icon.png"],
-    "installable": True,
+    "installable": False,
 }

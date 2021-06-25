@@ -12,5 +12,5 @@
     "depends": ["cmis_web_report_write", "cmis_web_bus"],
     "data": ["views/cmis_web_report_write_alf.xml"],
     "demo": [],
-    "installable": True,
+    "installable": False,
 }
