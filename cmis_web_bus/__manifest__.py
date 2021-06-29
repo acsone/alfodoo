@@ -6,12 +6,12 @@
     "description": """
         Instant Messaging Bus to send notification to the CMIS components
         in live""",
-    "version": "13.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV",
     "website": "https://acsone.eu/",
     "depends": ["cmis_web", "bus"],
     "data": ["views/cmis_web_bus.xml"],
     "demo": [],
-    "installable": False,
+    "installable": True,
 }
