@@ -3,7 +3,7 @@
 
 {
     'name': 'Alfodoo CMIS Field',
-    'version': '13.0.4.0.0',
+    'version': "14.0.1.0.0",
     'summary': 'Specialized field to work with a CMIS server',
     'category': 'Document Management',
     'author': "ACSONE SA/NV ",
@@ -15,7 +15,7 @@
     'data': [
         'views/cmis_backend_view.xml'
     ],
-    'installable': False,
+    'installable': True,
     'images': [
         'static/description/main_icon.png',
     ],
