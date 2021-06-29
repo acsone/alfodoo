@@ -9,5 +9,6 @@ class IrModelFields(models.Model):
     _inherit = 'ir.model.fields'
 
     ttype = fields.Selection(
-        selection_add=[('cmis_folder', 'CMIS Folder')]
+        selection_add=[('cmis_folder', 'CMIS Folder')],
+        ondelete={"cmis_folder": "cascade"},
     )

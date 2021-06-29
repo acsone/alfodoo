@@ -73,7 +73,7 @@ class CmisFolder(fields.Field):
     }
 
     def __init__(self, backend_name=None, string=None, **kwargs):
-        super(CmisFolder, self).__init__(
+        super().__init__(
             backend_name=backend_name, string=string, **kwargs)
 
     def _description_backend(self, env):
