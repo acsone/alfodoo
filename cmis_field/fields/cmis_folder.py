@@ -61,16 +61,14 @@ class CmisFolder(fields.Field):
     """
     type = 'cmis_folder'
     column_type = ('varchar', pg_varchar())
-    _slots = {
-        'backend_name': None,
-        'create_method': None,
-        'create_name_get': 'name_get',
-        'create_parent_get': None,
-        'create_properties_get': None,
-        'allow_create': True,
-        'allow_delete': False,
-        'copy': False,  # noderef are not copied by default
-    }
+    backend_name = None
+    create_method = None
+    create_name_get = 'name_get'
+    create_parent_get = None
+    create_properties_get = None
+    allow_create = True
+    allow_delete = False
+    copy = False  # noderef are not copied by default
 
     def __init__(self, backend_name=None, string=None, **kwargs):
         super().__init__(
