@@ -27,10 +27,10 @@ addon | version | summary
 [cmis_report_write](cmis_report_write/) | 14.0.1.0.0 | Cmis Report Write
 [cmis_web](cmis_web/) | 14.0.1.0.0 | CMIS Web browser widget
 [cmis_web_alf](cmis_web_alf/) | 14.0.1.0.0 | Extensions to the Alfodoo web widgets for Alfresco
-[cmis_web_bus](cmis_web_bus/) | 13.0.1.0.0 | Cmis Web Bus
-[cmis_web_proxy](cmis_web_proxy/) | 13.0.1.0.0 | Odoo as proxy server for your cmis requests.
-[cmis_web_proxy_alf](cmis_web_proxy_alf/) | 13.0.1.0.0 | Alfodoo CMIS Web Proxy for Alfresco
-[cmis_web_report_write](cmis_web_report_write/) | 13.0.1.0.0 | Cmis Web Report Write
-[cmis_web_report_write_alf](cmis_web_report_write_alf/) | 13.0.1.0.0 | Cmis Web Report Write Alf
+[cmis_web_bus](cmis_web_bus/) | 14.0.1.0.0 | Cmis Web Bus
+[cmis_web_proxy](cmis_web_proxy/) | 14.0.1.0.0 | Odoo as proxy server for your cmis requests.
+[cmis_web_proxy_alf](cmis_web_proxy_alf/) | 14.0.1.0.0 | Alfodoo CMIS Web Proxy for Alfresco
+[cmis_web_report_write](cmis_web_report_write/) | 14.0.1.0.0 | Cmis Web Report Write
+[cmis_web_report_write_alf](cmis_web_report_write_alf/) | 14.0.1.0.0 | Cmis Web Report Write Alf
 
 [//]: # (end addons)
