@@ -12,7 +12,7 @@
     "website": "http://alfodoo.org/",
     "depends": ["cmis_web"],
     "data": ["views/cmis_backend.xml", "views/cmis_web_proxy.xml"],
-    "external_dependencies": {"python": ["requests", "cmislib3"]},
+    "external_dependencies": {"python": ["requests", "cmislib"]},
     "images": ["static/description/main_icon.png"],
     "installable": True,
 }
