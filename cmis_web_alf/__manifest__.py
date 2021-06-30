@@ -20,7 +20,7 @@
         "static/src/xml/*.xml",
     ],
     'external_dependencies': {
-        'python': ['cmislib'],
+        'python': ['cmislib3'],
     },
     'images': [
         'static/description/main_icon.png',
