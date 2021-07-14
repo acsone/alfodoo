@@ -121,13 +121,13 @@ class IrActionsReport(models.Model):
                     }
                 )
 
-    def render_qweb_pdf(self, res_ids, data=None):
+    def _render_qweb_pdf(self, res_ids, data=None):
         with self.save_in_attachment_if_required():
-            return super().render_qweb_pdf(res_ids, data=data)
+            return super()._render_qweb_pdf(res_ids, data=data)
 
-    def render(self, res_ids, data=None):
+    def _render(self, res_ids, data=None):
         with self.save_in_attachment_if_required():
-            return super().render(res_ids, data=data)
+            return super()._render(res_ids, data=data)
 
     def retrieve_attachment(self, record):
         if self.attachment != SAVE_IN_CMIS_MARKER:
@@ -139,9 +139,9 @@ class IrActionsReport(models.Model):
             return self._retrieve_cmis_attachment(record)
         return None
 
-    def postprocess_pdf_report(self, record, buffer):
+    def _postprocess_pdf_report(self, record, buffer):
         if self.attachment != SAVE_IN_CMIS_MARKER:
-            res = super().postprocess_pdf_report(record, buffer)
+            res = super()._postprocess_pdf_report(record, buffer)
         else:
             res = self._save_in_cmis(record, buffer)
         return res
@@ -245,7 +245,7 @@ class IrActionsReport(models.Model):
 
     def _safe_eval(self, source, record):
         self.ensure_one()
-        return safe_eval(source, self._get_eval_context(record))
+        return safe_eval.safe_eval(source, self._get_eval_context(record))
 
     def _save_in_cmis(self, record, buffer):
         self.ensure_one()
