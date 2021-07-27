@@ -402,8 +402,8 @@
             <t t-call="cmisDocumentVersionDropdown" />
             <t t-call="cmisDocumentDownloadButton" />
             <t t-call="cmisDocumentPreviewButton" />
-            <t t-call="cmisContextDropdown" />
-            <t t-call="cmisAlfrescoButton" />
+            <!-- <t t-call="cmisContextDropdown" /> -->
+            <!-- <t t-call="cmisAlfrescoButton" /> -->
         </div>
     </span>
 </t>
