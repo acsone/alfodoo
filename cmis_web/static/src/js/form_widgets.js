@@ -848,11 +848,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             }
             this.$el.find('button.cmis-create-root').addClass('o_hidden');
 
-            if (this.$el.is(':visible')) {
-                // if the element is visible, we render it. If it's in a tab
-                // the rendition will be don on tab activation
-                this.render_datatable();
-            }
+            this.render_datatable();
 
             this.set_root_folder_id(value);
             if (!value && this.field.allow_create) {
