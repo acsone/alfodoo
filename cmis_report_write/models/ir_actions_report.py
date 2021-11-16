@@ -3,7 +3,6 @@
 import logging
 import base64
 import os
-import time
 import mimetypes
 from collections import namedtuple
 from contextlib import contextmanager
@@ -11,6 +10,7 @@ from contextlib import contextmanager
 from odoo import api, fields, models, _
 from odoo.tools import safe_eval
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools.safe_eval import time
 
 _logger = logging.getLogger(__name__)
 
