@@ -257,10 +257,9 @@ class IrActionsReport(models.Model):
             record, cmis_filename
         )
         cmis_filename = os.path.basename(cmis_filename)
-        self._create_or_update_cmis_document(
+        return self._create_or_update_cmis_document(
             buffer, record, cmis_filename, cmis_parent_folder
         )
-        return buffer
 
     def _get_cmis_parent_folder(self, record, cmis_filename):
         self.ensure_one()
