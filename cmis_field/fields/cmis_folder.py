@@ -70,9 +70,9 @@ class CmisFolder(fields.Field):
     allow_delete = False
     copy = False  # noderef are not copied by default
 
-    def __init__(self, backend_name=None, string=None, **kwargs):
-        super().__init__(
-            backend_name=backend_name, string=string, **kwargs)
+    def __init__(self, **kwargs):
+        self.backend_name = kwargs.get("backend_name")
+        super().__init__(**kwargs)
 
     def _description_backend(self, env):
         backend = self.get_backend(env, raise_if_not_found=False)
