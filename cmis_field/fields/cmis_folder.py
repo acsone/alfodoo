@@ -74,12 +74,35 @@ class CmisFolder(fields.Field):
         'copy': False,  # noderef are not copied by default
     }
 
-    def __init__(self, backend_name=None, string=None, **kwargs):
-        super(CmisFolder, self).__init__(
-            backend_name=backend_name, string=string, **kwargs)
+    def __init__(self, string=None, **kwargs):
+        super(CmisFolder, self).__init__(string=string, **kwargs)
+
+    def  _is_registry_loading_mode(self, env):
+        """
+        Check if we are in the installation process.
+        """
+        return env.context.get("install_mode")
 
     def _description_backend(self, env):
-        backend = self.get_backend(env, raise_if_not_found=False)
+        if self.inherited:
+            # In the case of a cmis field inherited from another module
+            # the attribute backend_name is not inherited so we have to
+            # get it on the original fiel
+            backend = self.inherited_field.get_backend(env, raise_if_not_found=False)
+        else:
+            backend = self.get_backend(env, raise_if_not_found=False)
+        if len(backend) > 1:
+            if self._is_registry_loading_mode(env):
+                # While the registry is loading, specific attributes are not available
+                # on the field (such as `backend_name`). At this stage, the fields
+                # are accessed to validate the xml views of the module being
+                # loaded/updated. We can therefore safely takes the first backend
+                # into the list.
+                backend = backend[:1]
+            else:
+                msg = (_('Too many backend found. '
+                         'Please check your configuration.'))
+                return {'backend_error': msg}
         if not backend:
             if self.backend_name:
                 msg = (_('Backend named %s not found. '
