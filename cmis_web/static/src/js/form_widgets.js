@@ -826,7 +826,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this._super.apply(this, arguments);
             var self = this;
             
-            if (this.mode == "edit" || !this.value) {
+            if (!this.value) {
                 return
             }
 
@@ -939,13 +939,16 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var $el_actions = this.$el.find('.field_cmis_document_actions');
             _.each(this.versions.all, function(version) {
                 $el_actions.find('.' + version.labelClassName).on('click', function (e) {
+                    e.preventDefault()
                     self.on_click_version(version.versionLabel);
                 });
             });
             $el_actions.find('.content-action-preview').on('click', function (e) {
+                e.preventDefault()
                 self.on_click_preview();
             });
             $el_actions.find('.content-action-download').on('click', function (e) {
+                e.preventDefault()
                 self.on_click_download();
             });
         }
