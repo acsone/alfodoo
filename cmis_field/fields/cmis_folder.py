@@ -1,13 +1,11 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import threading
-import time
 from operator import attrgetter
 from functools import partial
 from odoo import api, fields, registry, SUPERUSER_ID, _
 from odoo.exceptions import UserError
 from odoo.tools.sql import pg_varchar
-from cmislib.exceptions import ObjectNotFoundException
 
 
 class CmisFolder(fields.Field):
@@ -174,14 +172,15 @@ class CmisFolder(fields.Field):
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     backend = env["cmis.backend"].browse(backend_id)
                     _repo = backend.get_cmis_repository()
-                    # The rollback is delayed by an arbitrary length of time to give
-                    # the GED time to create the folder. If the folder is not properly
-                    # created at the time the rollback executes, it cannot be deleted.
-                    time.sleep(0.5)
-                    try:
-                        _repo.getObject(cmis_object_id).deleteTree()
-                    except ObjectNotFoundException:
-                        pass
+                    _repo.getObject(cmis_object_id).deleteTree()
+                    # If an error is raised just after the creation of the
+                    # folder, in the same transaction, the rollback hook
+                    # deletes the folder in Alfresco but the cmis field of
+                    # the record is not emptied. Leaving us with a record
+                    # referencing a non-existing folder.
+                    # Here the cmis folder reference is emptied after
+                    # deleting the Alfresco folder.
+                    self.__set__(record, None)
 
             # remove created resource in case of rollback
             test_mode = getattr(threading.currentThread(), 'testing', False)
