@@ -150,6 +150,7 @@ class CmisFolder(fields.Field):
                     env["cmis.backend"].browse(backend_id)
                     _repo = backend.get_cmis_repository()
                     _repo.getObject(cmis_object_id).deleteTree()
+                    self.__set__(record, None)
 
             # remove created resource in case of rollback
             test_mode = getattr(threading.currentThread(), 'testing', False)
