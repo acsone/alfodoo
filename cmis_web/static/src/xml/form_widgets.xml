@@ -383,7 +383,6 @@
 <t t-name="CmisDocumentReadOnly">
     <div class="cmis-doc-readonly">
             <span>
-                <t t-esc="object.name"/>
                 <t t-raw="object.documentActions()" />
             </span>
     </div>
@@ -396,7 +395,7 @@
 
 <t t-name="CmisDocumentActions">
     <span class="field_cmis_document_actions">
-        <div class="btn-group px-2" role="group">
+        <div class="btn-group" role="group">
             <t t-call="cmisDocumentVersionDropdown" />
             <t t-call="cmisDocumentDownloadButton" />
             <t t-call="cmisDocumentPreviewButton" />
@@ -409,7 +408,7 @@
 <t t-name="cmisDocumentDownloadButton">
     <t t-if='canGetContentStream'>
         <button type="button"
-            class="btn btn-default btn-xs content-action-download px-1"
+            class="btn btn-default btn-xs content-action-download px-2"
             aria-label="Download"
             data-toggle="tooltip"
             title="Download">
@@ -421,7 +420,7 @@
 <t t-name="cmisDocumentPreviewButton">
     <t t-if='canPreview'>
         <button type="button"
-            class="btn btn-default btn-xs content-action-preview px-1 "
+            class="btn btn-default btn-xs content-action-preview px-2 "
             data-toggle="tooltip"
             title="Preview"
             aria-label="Preview">
@@ -432,7 +431,7 @@
 
 <t t-name="cmisContextDropdown">
     <button type="button"
-        class="btn btn-default btn-xs dropdown-toggle fa fa-align-justify cmis-dropdown-more-actions px-1"
+        class="btn btn-default btn-xs dropdown-toggle fa fa-align-justify cmis-dropdown-more-actions px-2"
         t-att-id="object.getSuccinctProperty('cmis:objectId')"
         aria-label="More actions"
         data-toggle="dropdown"
@@ -457,7 +456,7 @@
 </t>
 
 <t t-name="cmisDocumentVersionDropdown">
-    <button class="btn btn-default btn-xs dropdown-toggle px-1" data-toggle="dropdown">
+    <button class="btn btn-default btn-xs dropdown-toggle px-2" data-toggle="dropdown">
         <t t-esc="object.getSuccinctProperty('cmis:versionLabel')" />
     </button>
     <t t-if="object.versions">
