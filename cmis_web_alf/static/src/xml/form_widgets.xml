@@ -14,6 +14,12 @@
     </t>
 </t>
 
+<t t-extend="CmisDocumentActions">
+    <t t-jquery="span.field_cmis_document_actions > div.btn-group" t-operation="append">
+        <t t-call="cmisAlfrescoButton" />
+    </t>
+</t>
+
 <t t-extend="CmisContentActions">
      <t t-jquery="div.field_cmis_folder_content_actions > div.btn-group" t-operation="append">
         <t t-call="cmisAlfrescoButton" />
@@ -22,7 +28,7 @@
 
 <t t-name="cmisAlfrescoButton">
     <button type="button"
-            class="btn btn-default btn-xs btn-alf content-action-open-alf"
+            class="btn btn-default btn-xs btn-alf content-action-open-alf px-2"
             data-toggle="tooltip"
             title="Show in Alfresco"
             aria-label="Show in Alfresco">
