@@ -95,4 +95,25 @@ form_widgets.FieldCmisFolder.include({
     },
 });
 
+form_widgets.FieldCmisDocument.include({
+  open_in_alf: function(objectid){
+        this._rpc({
+            model: 'cmis.backend',
+            method: "get_content_details_url",
+            args: [
+             [this.backend.id],
+             objectid
+         ]}).then(function (url) {
+            window.open(url);
+        });
+    },
+
+  register_document_events: function(){
+        var self = this;
+        this._super.apply(this, arguments);
+        /* bind content events */
+        this.$el.find('.content-action-open-alf').on('click',(e) => self.open_in_alf(self.value));
+    },
+});
+
 });
