@@ -141,10 +141,12 @@ class IrActionsReport(models.Model):
 
     def _postprocess_pdf_report(self, record, buffer):
         if self.attachment != SAVE_IN_CMIS_MARKER:
-            res = super()._postprocess_pdf_report(record, buffer)
+            super()._postprocess_pdf_report(record, buffer)
+            if self.cmis_filename and self.cmis_folder_field_id:
+                self._save_in_cmis(record, buffer)
         else:
-            res = self._save_in_cmis(record, buffer)
-        return res
+            self._save_in_cmis(record, buffer)
+        return buffer
 
     ##################
     # specific methods
