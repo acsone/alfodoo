@@ -31,3 +31,17 @@ class CmisDocument(fields.Field):
                 msg = _('No backend found. Please check your configuration.')
             return {'backend_error': msg}
         return backend.get_web_description()[backend.id]
+
+    def get_cmis_object(self, record):
+        """Returns an instance of
+        :class:`cmislib.browser.binding.BrowserDocument`
+        This instance is a proxy object that can be used to perform action on
+        the document into the cmis container
+        :param record:
+        """
+        val = self.__get__(record, record)
+        if not val:
+            return None
+        backend = self.get_backend(record.env)
+        repo = backend.get_cmis_repository()
+        return repo.getObject(val)

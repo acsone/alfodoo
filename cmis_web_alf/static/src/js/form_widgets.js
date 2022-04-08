@@ -22,16 +22,13 @@ form_widgets.CmisObjectWrapper.include({
     },
 
     get_preview_url : function(){
-        console.log("overide")
       var _url =  this._super.apply(this, arguments);
-      console.log(_url)
       if (_url) {
           return _url;
       }
       // By default, review are generated in alfresco the first time it's requested by share
       // Before this first access, the renditions on the cmis object is empty.
       // Use the alfresco API to trigger a first rendition of the document.
-      console.log(this.alfresco_api_location + '/node/workspace/SpacesStore/' + this.versionSeriesId + '/content/thumbnails/pdf/' + encodeURI(this.name) + '?c=force&lastModified=pdf%' + new Date().getUTCMilliseconds())
       return this.alfresco_api_location + '/node/workspace/SpacesStore/' + this.versionSeriesId + '/content/thumbnails/pdf/' + encodeURI(this.name) + '?c=force&lastModified=pdf%' + new Date().getUTCMilliseconds();
     },
 
@@ -92,6 +89,25 @@ form_widgets.FieldCmisFolder.include({
 });
 
 form_widgets.FieldCmisDocument.include({
+  wrap_cmis_object: function(cmisObject) {
+      var obj = this._super.apply(this, arguments);
+      obj.alfresco_api_location = this.alfresco_api_location;
+      return obj;
+  },
+
+  bind_cmis_config: function(backend){
+      this._super.apply(this, arguments);
+      this.alfresco_api_location = backend.alfresco_api_location;
+  },
+
+  register_root_content_events: function(){
+      var self = this;
+      this._super.apply(this, arguments);
+      this.$el.find('.root-content-action-open-alf').on('click', function(e){
+          self.open_in_alf(self.dislayed_folder_cmisobject.objectId);
+      });
+  },
+
   open_in_alf: function(objectid){
         this._rpc({
             model: 'cmis.backend',
