@@ -856,12 +856,6 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.register_document_events();
         },
 
-        _renderEdit: function() {
-            var $input = $(QWeb.render("CmisDocumentEdit"))
-            this._prepareInput($input)
-            this.$el.html(this.$input)
-        },
-
         _setDocument: function(allVersions) {
             var self = this;
             var versions = {};
@@ -913,7 +907,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             documentViewer.appendTo($('body'));
         },
 
-        on_click_version: function(versionLabel) {
+        on_change_version: function(versionLabel) {
             this.versions.current = _.find(this.versions.all, function(version) {
                return version.versionLabel === versionLabel
             })
@@ -936,12 +930,22 @@ odoo.define('cmis_web.form_widgets', function (require) {
         register_document_events: function () {
             var self = this;
             var $el_actions = this.$el.find('.field_cmis_document_actions');
-            _.each(this.versions.all, function(version) {
-                $el_actions.find('.' + version.labelClassName).on('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    self.on_click_version(version.versionLabel);
-                });
+            // _.each(this.versions.all, function(version) {
+            //     $el_actions.find('.' + version.labelClassName).on('click', function (e) {
+            //         e.preventDefault();
+            //         e.stopPropagation();
+            //         self.on_click_version(version.versionLabel);
+            //     });
+            // });
+            const versions = $el_actions.find('.content-action-versions')
+            versions.on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            versions.on('change', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                self.on_change_version(e.target.value)
             });
             $el_actions.find('.content-action-preview').on('click', function (e) {
                 e.preventDefault();
