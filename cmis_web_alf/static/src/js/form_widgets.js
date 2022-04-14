@@ -107,14 +107,6 @@ form_widgets.FieldCmisDocument.include({
       this.alfresco_api_location = backend.alfresco_api_location;
   },
 
-  register_root_content_events: function(){
-      var self = this;
-      this._super.apply(this, arguments);
-      this.$el.find('.root-content-action-open-alf').on('click', function(e){
-          self.open_in_alf(self.dislayed_folder_cmisobject.objectId);
-      });
-  },
-
   open_in_alf: function(objectid){
         this._rpc({
             model: 'cmis.backend',
@@ -131,7 +123,11 @@ form_widgets.FieldCmisDocument.include({
         var self = this;
         this._super.apply(this, arguments);
         /* bind content events */
-        this.$el.find('.content-action-open-alf').on('click',(e) => self.open_in_alf(self.value));
+        this.$el.find('.content-action-open-alf').on('click',(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            self.open_in_alf(self.value)
+          });
     },
 });
 
