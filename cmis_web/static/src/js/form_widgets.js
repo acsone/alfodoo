@@ -391,6 +391,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
             input_text.val(label);
         },
 
+        onDestroy: function (callback) {
+            this._onDestroy = callback
+        },
+
         on_click_ok: function () {
             var self = this;
             var input = this.$el.find("input[type='file']")[0]
@@ -419,6 +423,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         close: function () {
             this._super();
+        },
+
+        destroy: function () {
+            const onDestroy = this._onDestroy;
+            this._super();
+            onDestroy();
         }
     });
 
@@ -811,7 +821,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.formatType = 'char';
         },
 
-        willStart: function() {
+        willStart: function () {
             this.load_cmis_config();
             this.init_cmis_session();
             this.sessionReady = Promise.all([
@@ -822,21 +832,21 @@ odoo.define('cmis_web.form_widgets', function (require) {
             return Promise.resolve()
         },
 
-        _render: function() {
+        _render: function () {
             this._super.apply(this, arguments);
             var self = this;
-            
+
             if (!this.value) {
                 return
             }
 
             this._syncCmisDocument()
-                .then(function(cmisDoc) {
+                .then(function (cmisDoc) {
                     self._renderCmisDocument(cmisDoc);
                 })
         },
-        
-        _initVersions: function(){
+
+        _initVersions: function () {
             var objectId = this.value.split(";");
             this.versionSeriesId = objectId[0]
             this.versions = {
@@ -845,33 +855,35 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 currentLabel: objectId[1] || "latest"
             }
         },
-        
-        _renderCmisDocument: function() {
+
+        _renderCmisDocument: function () {
             var ctx = this.versions.current;
             ctx.versions = [];
-            _.each(this.versions.all, function(version) {
-                 ctx.versions.push([version.versionLabel, version.labelClassName])
+            _.each(this.versions.all, function (version) {
+                ctx.versions.push([version.versionLabel, version.labelClassName])
             })
-            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", { object: ctx})
+            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", {object: ctx})
             this.$el.html($cmisDoc)
             this.register_document_events();
         },
 
-        _setDocument: function(allVersions) {
+        _setDocument: function (allVersions) {
             var self = this;
             var versions = {};
             var currentLabel = this.versions.currentLabel;
 
-            _.each(allVersions, function(version) {
+            _.each(allVersions, function (version) {
                 var label = version.succinctProperties["cmis:versionLabel"];
                 var doc = self.wrap_cmis_object(version);
                 doc.labelClassName = "document-version-label-" + label.replace('.', '-')
                 versions[label] = doc
-                
+                const isLatest = version.succinctProperties["cmis:isLatestVersion"]
+                if (isLatest) {
+                    self.latestLabel = label
+                }
                 var isCurrent = label === currentLabel
-                    || currentLabel === "latest"
-                    && version.succinctProperties["cmis:isLatestVersion"]
-                
+                    || (currentLabel === "latest" && isLatest)
+
                 if (isCurrent) {
                     self.versions.current = doc;
                 }
@@ -879,27 +891,27 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.versions.all = versions;
         },
 
-        _syncCmisDocument: function() {
+        _syncCmisDocument: function () {
             this.$el.html(QWeb.render("CmisDocumentWaiting"))
 
             var self = this;
 
             return this.sessionReady
-                .then(function() {
-                    return new Promise(function(resolve) {
+                .then(function () {
+                    return new Promise(function (resolve) {
                         var options = {
                             objectid: self.value,
                             includeAllowableActions: true,
                         }
                         self.cmis_session.getAllVersions(self.value, options)
-                            .ok(function(allVersions) {
+                            .ok(function (allVersions) {
                                 resolve(self._setDocument(allVersions))
                             })
                     });
-                })                
-                .catch(function(reason) {
+                })
+                .catch(function (reason) {
                     var reason = reason || "Could not initialise session"
-                    self.on_cmis_error(reason)             
+                    self.on_cmis_error(reason)
                 });
         },
 
@@ -908,9 +920,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
             documentViewer.appendTo($('body'));
         },
 
-        on_change_version: function(versionLabel) {
-            this.versions.current = _.find(this.versions.all, function(version) {
-               return version.versionLabel === versionLabel
+        on_change_version: function (versionLabel) {
+            this.versions.current = _.find(this.versions.all, function (version) {
+                return version.versionLabel === versionLabel
             })
             var changes = {};
             changes[this.name] = this.versions.current.objectId
@@ -920,24 +932,41 @@ odoo.define('cmis_web.form_widgets', function (require) {
             });
         },
 
-        on_click_download: function() {
+        on_click_download: function () {
             this.do_download(this.versions.current);
         },
 
         do_download: function (cmisObjectWrapped) {
             window.open(cmisObjectWrapped.url);
         },
+        on_click_set_content_stream: function () {
+            const self = this;
+            const cmisDoc = this.versions.current;
+            const dialog = new CmisUpdateContentStreamDialog(this, cmisDoc);
+            dialog.onDestroy(() => {
+                self._syncCmisDocument()
+                    .then(() => self.on_change_version(self.latestLabel))
+            })
+            dialog.open();
+        },
+        on_click_rename: function () {
+            var dialog = new CmisRenameContentDialog(this, this.versions.current);
+            dialog.open();
+            dialog.opened().then(function (result) {
+                dialog.$el.find('[autofocus]').focus();
+            });
+        },
 
         register_document_events: function () {
             var self = this;
             var $el_actions = this.$el.find('.field_cmis_document_actions');
-            // _.each(this.versions.all, function(version) {
-            //     $el_actions.find('.' + version.labelClassName).on('click', function (e) {
-            //         e.preventDefault();
-            //         e.stopPropagation();
-            //         self.on_click_version(version.versionLabel);
-            //     });
-            // });
+            _.each(this.versions.all, function(version) {
+                $el_actions.find('.' + version.labelClassName).on('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    self.on_click_version(version.versionLabel);
+                });
+            });
             const versions = $el_actions.find('.content-action-versions')
             versions.on('click', function (e) {
                 e.preventDefault();
@@ -958,7 +987,22 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 e.stopPropagation();
                 self.on_click_download();
             });
-        }
+            $el_actions.find('.content-action-set-content-stream').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                self.on_click_set_content_stream();
+            });
+            $el_actions.find('.content-action-rename').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                self.on_click_rename();
+            });
+            $el_actions.find('.content-action-get-properties').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                self.on_click_get_properties();
+            });
+        },
     });
 
     var FieldCmisFolder = basicFields.FieldChar.extend(CmisMixin, {
