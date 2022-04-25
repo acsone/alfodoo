@@ -428,7 +428,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
         destroy: function () {
             const onDestroy = this._onDestroy;
             this._super();
-            onDestroy();
+            if (typeof (onDestroy) === "function") {
+                onDestroy();
+            }
         }
     });
 
@@ -843,6 +845,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this._syncCmisDocument()
                 .then(function (cmisDoc) {
                     self._renderCmisDocument(cmisDoc);
+                })
+                .then(function() {
+                    const currentVersion = self.value.split(";")[1]
+                    if (currentVersion !== self.latestLabel) {
+                        self.on_change_version(self.latestLabel)
+                    }
                 })
         },
 
