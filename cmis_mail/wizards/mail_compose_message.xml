@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+  <record model="ir.ui.view" id="mail_compose_message_form_view">
+    <field name="name">mail.compose.message.form (in cmis_mail)</field>
+    <field name="model">mail.compose.message</field>
+    <field name="inherit_id" ref="mail.email_compose_message_wizard_form" />
+    <field name="arch" type="xml">
+      <field name="template_id" position="after">
+        <field name="allowed_cmis_folder_field_ids" invisible="1" />
+        <field name="is_multiple_cmis_fields" invisible="1" />
+        <field name="is_save_in_cmis_enabled" attrs="{'invisible': [('attachment_ids', '=', [])]}" />
+        <newline />
+        <field name="cmis_folder_field_id"
+               domain="[('model', '=', model), ('ttype', '=', 'cmis_folder')]"
+               attrs="{'invisible': ['|', '|', ('is_save_in_cmis_enabled', '=', False), ('attachment_ids', '=', []), ('is_multiple_cmis_fields', '=', False)]}" />
+      </field>
+    </field>
+  </record>
+</odoo>
