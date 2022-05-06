@@ -809,14 +809,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
     var FieldCmisDocument = basicFields.FieldChar.extend(CmisMixin, {
         template: "FieldCmisDocument",
-
         widget_class: 'field_cmis_document',
 
         init: function (parent, name, record, options) {
             this._super.apply(this, arguments);
             CmisMixin.init.call(this);
             this.backend = this.field.backend;
-            this._cmisDocReady;
             if (this.value){
                 this._initVersions();
             }
@@ -826,56 +824,52 @@ odoo.define('cmis_web.form_widgets', function (require) {
         willStart: function () {
             this.load_cmis_config();
             this.init_cmis_session();
-            this.sessionReady = Promise.all([
+            this.cmisSessionReady = Promise.all([
                 this.cmis_session_initialized,
                 this.load_cmis_repositories()
-            ])
-           
-            return Promise.resolve()
+            ]);
+            return Promise.resolve();
         },
 
         _render: function () {
             this._super.apply(this, arguments);
-            var self = this;
-
-            if (!this.value) {
-                return
+            if (this.value) {
+                var self = this;
+                this._syncCmisDocument()
+                    .then(function (cmisDoc) {
+                        self._renderCmisDocument(cmisDoc);
+                    })
+                    .then(function () {
+                        var currentVersion = self.value.split(";")[1];
+                        if (currentVersion !== self.latestLabel) {
+                            self.on_change_version(self.latestLabel);
+                        }
+                    });
             }
-
-            this._syncCmisDocument()
-                .then(function (cmisDoc) {
-                    self._renderCmisDocument(cmisDoc);
-                })
-                .then(function() {
-                    const currentVersion = self.value.split(";")[1]
-                    if (currentVersion !== self.latestLabel) {
-                        self.on_change_version(self.latestLabel)
-                    }
-                })
         },
 
         _initVersions: function () {
             var objectId = this.value.split(";");
-            this.versionSeriesId = objectId[0]
+            this.versionSeriesId = objectId[0];
             this.versions = {
                 all: {},
                 current: {},
                 currentLabel: objectId[1] || "latest"
-            }
+            };
         },
 
         _renderCmisDocument: function () {
             var ctx = this.versions.current;
             ctx.versions = [];
             _.each(this.versions.all, function (version) {
-                ctx.versions.push([version.versionLabel, version.labelClassName])
-            })
-            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", {object: ctx})
-            this.$el.html($cmisDoc)
+                ctx.versions.push([version.versionLabel, version.labelClassName]);
+            });
+            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", {object: ctx});
+            this.$el.html($cmisDoc);
             this.register_document_events();
         },
 
-        _setDocument: function (allVersions) {
+        _setVersions: function (allVersions) {
             var self = this;
             var versions = {};
             var currentLabel = this.versions.currentLabel;
@@ -883,43 +877,40 @@ odoo.define('cmis_web.form_widgets', function (require) {
             _.each(allVersions, function (version) {
                 var label = version.succinctProperties["cmis:versionLabel"];
                 var doc = self.wrap_cmis_object(version);
-                doc.labelClassName = "document-version-label-" + label.replace('.', '-')
-                versions[label] = doc
-                const isLatest = version.succinctProperties["cmis:isLatestVersion"]
+                doc.labelClassName = "document-version-label-" + label.replace('.', '-');
+                versions[label] = doc;
+                var isLatest = version.succinctProperties["cmis:isLatestVersion"];
                 if (isLatest) {
-                    self.latestLabel = label
+                    self.latestLabel = label;
                 }
-                var isCurrent = label === currentLabel
-                    || (currentLabel === "latest" && isLatest)
+                var isCurrent = label === currentLabel || (currentLabel === "latest" && isLatest);
 
                 if (isCurrent) {
                     self.versions.current = doc;
                 }
-            })
+            });
             this.versions.all = versions;
         },
 
         _syncCmisDocument: function () {
-            this.$el.html(QWeb.render("CmisDocumentWaiting"))
-
+            this.$el.html(QWeb.render("CmisDocumentWaiting"));
             var self = this;
-
-            return this.sessionReady
+            return this.cmisSessionReady
                 .then(function () {
                     return new Promise(function (resolve) {
                         var options = {
                             objectid: self.value,
                             includeAllowableActions: true,
-                        }
+                        };
                         self.cmis_session.getAllVersions(self.value, options)
                             .ok(function (allVersions) {
-                                resolve(self._setDocument(allVersions))
-                            })
+                                resolve(self._setVersions(allVersions));
+                            });
                     });
                 })
                 .catch(function (reason) {
-                    var reason = reason || "Could not initialise session"
-                    self.on_cmis_error(reason)
+                    reason = reason ? reason : "Could not initialise session";
+                    self.on_cmis_error(reason);
                 });
         },
 
@@ -930,8 +921,8 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         on_change_version: function (versionLabel) {
             this.versions.current = _.find(this.versions.all, function (version) {
-                return version.versionLabel === versionLabel
-            })
+                return version.versionLabel === versionLabel;
+            });
             var changes = {};
             changes[this.name] = this.versions.current.objectId
             this.trigger_up('field_changed', {
@@ -948,13 +939,15 @@ odoo.define('cmis_web.form_widgets', function (require) {
             window.open(cmisObjectWrapped.url);
         },
         on_click_set_content_stream: function () {
-            const self = this;
-            const cmisDoc = this.versions.current;
-            const dialog = new CmisUpdateContentStreamDialog(this, cmisDoc);
-            dialog.onDestroy(() => {
+            var self = this;
+            var cmisDoc = this.versions.current;
+            var dialog = new CmisUpdateContentStreamDialog(this, cmisDoc);
+            dialog.onDestroy(function() {
                 self._syncCmisDocument()
-                    .then(() => self.on_change_version(self.latestLabel))
-            })
+                    .then(function () {
+                        self.on_change_version(self.latestLabel);
+                    });
+            });
             dialog.open();
         },
         on_click_rename: function () {
@@ -970,46 +963,42 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var $el_actions = this.$el.find('.field_cmis_document_actions');
             _.each(this.versions.all, function(version) {
                 $el_actions.find('.' + version.labelClassName).on('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                    self.stopEvent(e);
                     self.on_click_version(version.versionLabel);
                 });
             });
-            const versions = $el_actions.find('.content-action-versions')
+            var versions = $el_actions.find('.content-action-versions');
             versions.on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+                self.stopEvent(e);
             });
             versions.on('change', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                self.on_change_version(e.target.value)
+                self.stopEvent(e);
+                self.on_change_version(e.target.value);
             });
             $el_actions.find('.content-action-preview').on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+                self.stopEvent(e);
                 self.on_click_preview();
             });
             $el_actions.find('.content-action-download').on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+                self.stopEvent(e);
                 self.on_click_download();
             });
             $el_actions.find('.content-action-set-content-stream').on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+                self.stopEvent(e);
                 self.on_click_set_content_stream();
             });
             $el_actions.find('.content-action-rename').on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+                self.stopEvent(e);
                 self.on_click_rename();
             });
             $el_actions.find('.content-action-get-properties').on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+                self.stopEvent(e);
                 self.on_click_get_properties();
             });
+        },
+        stopEvent: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
         },
     });
 
