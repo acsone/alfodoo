@@ -22,6 +22,24 @@
         content:'';
     }
 }
+ div.field_cmis_document {
+     .select-cmis-doc {
+         width: fit-content;
+     }
+     select {
+        appearance: none;
+        background-color: transparent;
+        border: none;
+        font-family: inherit;
+        font-size: inherit;
+        cursor: inherit;
+        line-height: inherit;
+        outline: none;
+         width: fit-content;
+         padding: 0;
+         margin: 0;
+    }
+ }
 
 div.field_cmis_folder {
 
