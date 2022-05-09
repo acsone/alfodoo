@@ -6,6 +6,7 @@ from functools import partial
 from odoo import api, fields, registry, SUPERUSER_ID, _
 from odoo.exceptions import UserError
 from odoo.tools.sql import pg_varchar
+from cmislib.exceptions import ObjectNotFoundException
 
 
 class CmisFolder(fields.Field):
@@ -147,9 +148,12 @@ class CmisFolder(fields.Field):
                 db_registry = registry(dbname)
                 with api.Environment.manage(), db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
-                    env["cmis.backend"].browse(backend_id)
+                    backend = env["cmis.backend"].browse(backend_id)
                     _repo = backend.get_cmis_repository()
-                    _repo.getObject(cmis_object_id).deleteTree()
+                    try:
+                        _repo.getObject(cmis_object_id).deleteTree()
+                    except ObjectNotFoundException:
+                        pass
 
             # remove created resource in case of rollback
             test_mode = getattr(threading.currentThread(), 'testing', False)
