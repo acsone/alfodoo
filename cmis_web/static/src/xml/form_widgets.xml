@@ -384,9 +384,9 @@
 
 <t t-name="CmisDocumentReadOnly">
     <div class="cmis-doc-readonly">
-            <span>
-                <t t-raw="object.documentActions()" />
-            </span>
+        <span>
+            <t t-raw="object.documentActions()" />
+        </span>
     </div>
 </t>
 
@@ -398,7 +398,7 @@
 <t t-name="CmisDocumentActions">
     <span class="field_cmis_document_actions">
         <div class="btn-group" role="group">
-<!--            <t t-call="cmisDocumentVersionDropdown" />-->
+            <t t-call="cmisDocumentVersionDropdown" />
             <t t-call="cmisDocumentDownloadButton" />
             <t t-call="cmisDocumentPreviewButton" />
             <t t-call="cmisContextDropdown" />
@@ -458,25 +458,14 @@
     </div>
 </t>
 
-<!--<t t-name="cmisDocumentVersionDropdown">-->
-<!--    <button class="btn btn-default btn-xs dropdown-toggle px-2" data-toggle="dropdown">-->
-<!--        <t t-esc="object.getSuccinctProperty('cmis:versionLabel')" />-->
-<!--    </button>-->
-<!--    <t t-if="object.versions">-->
-<!--        <ul class="dropdown-menu btn-block">-->
-<!--            <t t-foreach="object.versions" t-as="version">-->
-<!--                <li><a t-att-class="version[1]" href="#"><span t-esc="version[0]"/></a></li>-->
-<!--            </t>-->
-<!--        </ul>-->
-<!--    </t>-->
-<!--</t>-->
 <t t-name="cmisDocumentVersionDropdown">
-    <t t-if="object.versions">
-        <select class="form-control content-action-versions">
-            <t t-foreach="object.versions" t-as="version">
-                <option t-att-value="version[1]" t-esc="version[0]"></option>
+    <div t-if="object.versionsSelection" class="select-cmis-doc px-2">
+        <select class="content-action-versions">
+            <t t-foreach="object.versionsSelection" t-as="version">
+                <option t-if="object.versionLabel == version" t-att-value="version" t-esc="version" selected="selected"></option>
+                <option t-else="" t-att-value="version" t-esc="version"></option>
             </t>
         </select>
-    </t>
+    </div>
 </t>
 </templates>
