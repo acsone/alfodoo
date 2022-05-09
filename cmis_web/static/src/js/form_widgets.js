@@ -838,12 +838,6 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 this._syncCmisDocument()
                     .then(function (cmisDoc) {
                         self._renderCmisDocument(cmisDoc);
-                    })
-                    .then(function () {
-                        var currentVersion = self.value.split(";")[1];
-                        if (currentVersion !== self.latestLabel) {
-                            self.on_change_version(self.latestLabel);
-                        }
                     });
             }
         },
@@ -852,7 +846,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var objectId = this.value.split(";");
             this.versionSeriesId = objectId[0];
             this.versions = {
-                all: {},
+                all: [],
                 current: {},
                 currentLabel: objectId[1] || "latest"
             };
@@ -860,9 +854,8 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         _renderCmisDocument: function () {
             var ctx = this.versions.current;
-            ctx.versions = [];
-            _.each(this.versions.all, function (version) {
-                ctx.versions.push([version.versionLabel, version.labelClassName]);
+            ctx.versionsSelection = _.map(this.versions.all, function (version) {
+                return version.versionLabel;
             });
             var $cmisDoc = QWeb.render("CmisDocumentReadOnly", {object: ctx});
             this.$el.html($cmisDoc);
@@ -871,21 +864,17 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         _setVersions: function (allVersions) {
             var self = this;
-            var versions = {};
+            var versions = [];
             var currentLabel = this.versions.currentLabel;
 
             _.each(allVersions, function (version) {
                 var label = version.succinctProperties["cmis:versionLabel"];
                 var doc = self.wrap_cmis_object(version);
-                doc.labelClassName = "document-version-label-" + label.replace('.', '-');
-                versions[label] = doc;
-                var isLatest = version.succinctProperties["cmis:isLatestVersion"];
-                if (isLatest) {
+                versions.push(doc);
+                if (version.succinctProperties["cmis:isLatestVersion"]) {
                     self.latestLabel = label;
                 }
-                var isCurrent = label === currentLabel || (currentLabel === "latest" && isLatest);
-
-                if (isCurrent) {
+                if (label === currentLabel) {
                     self.versions.current = doc;
                 }
             });
@@ -920,15 +909,16 @@ odoo.define('cmis_web.form_widgets', function (require) {
         },
 
         on_change_version: function (versionLabel) {
-            this.versions.current = _.find(this.versions.all, function (version) {
+            var currentVersion = _.find(this.versions.all, function (version) {
                 return version.versionLabel === versionLabel;
             });
             var changes = {};
-            changes[this.name] = this.versions.current.objectId
+            changes[this.name] = currentVersion.objectId;
             this.trigger_up('field_changed', {
                 dataPointID: this.dataPointID,
                 changes: changes,
             });
+            this.versions.current = currentVersion;
         },
 
         on_click_download: function () {
@@ -961,14 +951,11 @@ odoo.define('cmis_web.form_widgets', function (require) {
         register_document_events: function () {
             var self = this;
             var $el_actions = this.$el.find('.field_cmis_document_actions');
-            _.each(this.versions.all, function(version) {
-                $el_actions.find('.' + version.labelClassName).on('click', function (e) {
-                    self.stopEvent(e);
-                    self.on_click_version(version.versionLabel);
-                });
-            });
             var versions = $el_actions.find('.content-action-versions');
             versions.on('click', function (e) {
+                self.stopEvent(e);
+            });
+            versions.on('input', function (e) {
                 self.stopEvent(e);
             });
             versions.on('change', function (e) {
