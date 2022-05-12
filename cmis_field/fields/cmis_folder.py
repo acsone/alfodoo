@@ -1,6 +1,7 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import threading
+import time
 from operator import attrgetter
 from functools import partial
 from odoo import api, fields, registry, SUPERUSER_ID, _
@@ -150,6 +151,10 @@ class CmisFolder(fields.Field):
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     backend = env["cmis.backend"].browse(backend_id)
                     _repo = backend.get_cmis_repository()
+                    # The rollback is delayed by an arbitrary length of time to give
+                    # the GED time to create the folder. If the folder is not properly
+                    # created at the time the rollback executes, it cannot be deleted.
+                    time.sleep(0.5)
                     try:
                         _repo.getObject(cmis_object_id).deleteTree()
                     except ObjectNotFoundException:
