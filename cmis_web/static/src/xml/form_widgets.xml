@@ -210,7 +210,7 @@
             </ul>
         </div>
     </div>
-    
+
 </t>
 
 <t t-name='CmisUpdateContentStreamView'>
@@ -342,6 +342,22 @@
         </div>
     </form>
 </t>
+<t t-name='CmisAddDocumentDialog'>
+    <form class="form-horizontal cmis_create_document" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file" autofocus="autofocus">
+                        Browse&amp;hellip; <input type="file" required="required" multiple="false"/>
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly='1'/>
+            </div>
+            </div>
+        </div>
+    </form>
+</t>
 
 <t t-name='CmisCreateFolderDialog'>
     <form class="form-horizontal" role="form" t-att-id="id">
@@ -390,9 +406,13 @@
     </div>
 </t>
 
-<t t-name="CmisDocumentEdit">
-    <input class="cmis-doc-input o_input" placeholder="Document id">
-    </input>
+<t t-name="CmisDocumentAdd">
+    <div class="cmis-doc-add">
+        <div class="px-2">
+            <span class="fa fa-plus-circle mr-2 content-action-add"/>
+            <small class="text-muted">Add a document</small>
+        </div>
+    </div>
 </t>
 
 <t t-name="CmisDocumentActions">
