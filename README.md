@@ -31,7 +31,6 @@ addon | version | maintainers | summary
 [cmis_web_proxy_alf](cmis_web_proxy_alf/) | 13.0.1.0.0 |  | Alfodoo CMIS Web Proxy for Alfresco
 [cmis_web_report_write](cmis_web_report_write/) | 13.0.1.0.0 |  | Cmis Web Report Write
 [cmis_web_report_write_alf](cmis_web_report_write_alf/) | 13.0.1.0.0 |  | Cmis Web Report Write Alf
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
 
 [//]: # (end addons)
 
