@@ -49,14 +49,4 @@ jobs:
         - unbuffer coverage run ${VIRTUAL_ENV}/bin/odoo -d ${DB_NAME} --stop-after-init -i ${ADDONS_TEST} --test-enable | acsoo checklog
       after_success:
       - codecov
-    - stage: deploy
-      if: branch = 10.0
-      env: BUILD_DOC=1
-      install:
-        - pip install -r requirements-test.txt
-        - pip install https://github.com/Syntaf/travis-sphinx/archive/master.tar.gz
-        - pip install sphinx-bootstrap-theme
-      script:
-        - travis-sphinx build -s doc/
-      after_success:
-        - travis-sphinx deploy -b 10.0 -c alfodoo.org
+
