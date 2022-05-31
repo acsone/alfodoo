@@ -1,17 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* cmis_alf
+# 	* cmis_alf
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0+e\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: <>\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: cmis_alf
+#: model:ir.model.fields,field_description:cmis_alf.field_cmis_backend__alf_folder_template_url
+msgid "Alf Folder Template Url"
+msgstr ""
 
 #. module: cmis_alf
 #: model:ir.model.fields,field_description:cmis_alf.field_cmis_backend__alfresco_api_location
@@ -37,4 +42,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:cmis_alf.cmis_backend_form_view
 msgid "e.g. http://localhost:8080/share"
 msgstr ""
-
