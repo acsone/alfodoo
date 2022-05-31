@@ -7,7 +7,7 @@
     'category': 'Document Management',
     'author': 'ACSONE SA/NV',
     'website': "https://alfodoo.org",
-    'version': '13.0.4.0.0',
+    'version': '13.0.4.0.1',
     'license': 'AGPL-3',
     'price': 400,
     'currency': 'EUR',
