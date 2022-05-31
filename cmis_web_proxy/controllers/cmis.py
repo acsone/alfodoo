@@ -130,6 +130,20 @@ class CmisProxy(http.Controller):
         return urllib.parse.urljoin(request.httprequest.host_url,
                                     CMIS_PROXY_PATH)
 
+    def _get_requests_timeout(self):
+        """
+        Fetch and return the requests timeout (ir.config_parameter in seconds)
+        Trigger a logged error if something is wrong with the ir.config_parameter
+        :return: timeout (seconds in float)
+        """
+        try:
+            timeout = float(request.env['ir.config_parameter'].sudo().get_param(
+                "cmis.requests_timeout", "FAULTY"))
+        except ValueError as e:
+            _logger.error(e)
+            timeout = 10.0
+        return timeout
+
     @classmethod
     def _clean_url_in_dict(cls, values, original, new):
         """Replace all occurences of the CMIS container url in the json
@@ -142,7 +156,7 @@ class CmisProxy(http.Controller):
             elif hasattr(v, "replace"):
                 values[k] = v.replace(original, new)
 
-    def _check_access_operation(self, model_inst, operation):
+    def _check_access_operation(self, model_inst, operation, field_name=None):
         """
         Check if the user has the appropriate rights to perform the operation.
         The default is to check the access rights and access rules on the
@@ -164,7 +178,8 @@ class CmisProxy(http.Controller):
         """
         try:
             if hasattr(model_inst, "_check_cmis_access_operation"):
-                res = model_inst._check_cmis_access_operation(operation, None)
+                res = model_inst._check_cmis_access_operation(
+                    operation, field_name)
                 if res not in ("allow", "deny", "default"):
                     raise ValueError(
                         "_check_cmis_access_operation result "
@@ -179,7 +194,7 @@ class CmisProxy(http.Controller):
         return True
 
     def _apply_permissions_mapping(
-        self, value, headers, proxy_info, model_inst=None
+        self, value, headers, proxy_info, model_inst=None, field_name=None
     ):
         """This method modify the defined allowableActions returned by the
         CMIS container to apply the Odoo operation policy defined of the
@@ -192,9 +207,12 @@ class CmisProxy(http.Controller):
         ]
         if not all_allowable_actions:
             return
-        can_read = self._check_access_operation(model_inst, "read")
-        can_write = self._check_access_operation(model_inst, "write")
-        can_unlink = self._check_access_operation(model_inst, "unlink")
+        can_read = self._check_access_operation(
+            model_inst, "read", field_name)
+        can_write = self._check_access_operation(
+            model_inst, "write", field_name)
+        can_unlink = self._check_access_operation(
+            model_inst, "unlink", field_name)
         for allowable_actions in all_allowable_actions:
             for action, val in list(allowable_actions.items()):
                 allowed = False
@@ -212,7 +230,7 @@ class CmisProxy(http.Controller):
                 headers[key] = None
 
     def _prepare_json_response(
-        self, value, headers, proxy_info, model_inst=None
+        self, value, headers, proxy_info, model_inst=None, field_name=None
     ):
         cmis_location = proxy_info["location"]
         self._clean_url_in_dict(
@@ -222,7 +240,7 @@ class CmisProxy(http.Controller):
         )
         if proxy_info["apply_odoo_security"]:
             self._apply_permissions_mapping(
-                value, headers, proxy_info, model_inst
+                value, headers, proxy_info, model_inst, field_name
             )
         self._sanitize_headers(headers)
         response = werkzeug.Response(
@@ -247,13 +265,14 @@ class CmisProxy(http.Controller):
             params=params,
             stream=True,
             auth=(proxy_info["username"], proxy_info["password"]),
+            timeout=self._get_requests_timeout()
         )
         r.raise_for_status()
         headers = dict(list(r.headers.items()))
         self._sanitize_headers(headers)
         return werkzeug.Response(r, headers=headers, direct_passthrough=True)
 
-    def _forward_get(self, url_path, proxy_info, model_inst, params):
+    def _forward_get(self, url_path, proxy_info, model_inst, field_name, params):
         """
         :return: :class:`Response <Response>` object
         :rtype: werkzeug.Response
@@ -265,17 +284,23 @@ class CmisProxy(http.Controller):
             url,
             params=params,
             auth=(proxy_info["username"], proxy_info["password"]),
+            timeout=self._get_requests_timeout()
         )
         r.raise_for_status()
         if r.text:
             response = self._prepare_json_response(
-                r.json(), dict(list(r.headers.items())), proxy_info, model_inst
+                r.json(),
+                dict(list(r.headers.items())),
+                proxy_info,
+                model_inst,
+                field_name
             )
         else:
             response = werkzeug.Response()
         return response
 
-    def _forward_post(self, url_path, proxy_info, model_inst, params):
+    def _forward_post(self, url_path, proxy_info, model_inst, field_name,
+                      params):
         """The CMIS Browser binding is designed to be queried from the browser
         Therefore, the parameters in a POST are expected to be submitted as
         HTTP multipart forms. Therefore each parameter in the request is
@@ -300,11 +325,16 @@ class CmisProxy(http.Controller):
             url,
             files=files,
             auth=(proxy_info["username"], proxy_info["password"]),
+            timeout=self._get_requests_timeout()
         )
         r.raise_for_status()
         if r.text:
             response = self._prepare_json_response(
-                r.json(), dict(list(r.headers.items())), proxy_info, model_inst
+                r.json(),
+                dict(list(r.headers.items())),
+                proxy_info,
+                model_inst,
+                field_name
             )
         else:
             response = werkzeug.Response()
@@ -408,7 +438,7 @@ class CmisProxy(http.Controller):
         return False
 
     def _check_content_action_access(
-        self, cmis_path, proxy_info, params, model_inst
+        self, cmis_path, proxy_info, params, model_inst, field_name
     ):
         """Check that the User has de required Permissioon on the Odoo model
         instance to di the expected CMIS action
@@ -420,7 +450,7 @@ class CmisProxy(http.Controller):
         if not operation:
             _logger.info("CMIS action %s not supported", cmisaction)
             return False
-        if not self._check_access_operation(model_inst, operation):
+        if not self._check_access_operation(model_inst, operation, field_name):
             _logger.info(
                 "User don't have the access right for operation %s "
                 "on %s to execute the CMIS action %s",
@@ -467,16 +497,16 @@ class CmisProxy(http.Controller):
         # model_inst or a child of this one
         if not cmis_path and "objectId" not in params:
             # The request is not for an identified content
-            return model_inst
+            return model_inst, field_name
         if not self._check_cmis_content_access(
             cmis_path, proxy_info, params, model_inst, field_name
         ):
             raise AccessError(_("Bad request"))
         if not self._check_content_action_access(
-            cmis_path, proxy_info, params, model_inst
+            cmis_path, proxy_info, params, model_inst, field_name
         ):
             raise AccessError(_("Bad request"))
-        return model_inst
+        return model_inst, field_name
 
     @http.route(
         [
@@ -500,8 +530,9 @@ class CmisProxy(http.Controller):
         )
         method = request.httprequest.method
         model_inst = False
+        field_name = False
         if proxy_info.get("apply_odoo_security"):
-            model_inst = self._check_access(cmis_path, proxy_info, kwargs)
+            model_inst, field_name = self._check_access(cmis_path, proxy_info, kwargs)
         if method not in ["GET", "POST"]:
             raise AccessError(
                 _("The HTTP METHOD %s is not supported by CMIS") % method
@@ -510,4 +541,4 @@ class CmisProxy(http.Controller):
             method = self._forward_get
         elif method == "POST":
             method = self._forward_post
-        return method(cmis_path, proxy_info, model_inst, kwargs)
+        return method(cmis_path, proxy_info, model_inst, field_name, kwargs)
