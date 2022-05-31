@@ -247,6 +247,14 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Created"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Created By"
 msgstr ""
