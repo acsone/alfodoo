@@ -1,4 +1,4 @@
-/*---------------------------------------------------------
+/* ---------------------------------------------------------
  + * Odoo web_cmis_viewer
  + * Author  Laurent Mignon 2016 Acsone SA/NV
  + * License in __openerp__.py at root level of the module

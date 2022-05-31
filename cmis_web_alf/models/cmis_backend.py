@@ -64,8 +64,8 @@ class CmisBackend(models.Model):
                 if isinstance(paths, list):
                     paths = paths[0]
                 params = {'filter': 'path|%s' % path}
-                url = ('%s/page/repository#' % self.share_location +
-                       safe_urlencode(params))
+                url = ('%s/page/repository#' % self.share_location
+                       + safe_urlencode(params))
                 return url
             details_type = 'folder-details'
         noderef = properties['alfcmis:nodeRef']

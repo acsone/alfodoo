@@ -7,7 +7,7 @@
     "version": "13.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV",
-    "website": "http://alfodoo.org/",
+    "website": "https://alfodoo.org",
     "depends": ["cmis_web_proxy"],
     "data": ["views/cmis_backend.xml", "views/cmis_web_proxy_alf.xml"],
     "demo": [],
