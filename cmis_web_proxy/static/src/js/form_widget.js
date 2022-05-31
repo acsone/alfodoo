@@ -1,4 +1,4 @@
-/*---------------------------------------------------------
+/* ---------------------------------------------------------
  + * Odoo web_cmis_viewer
  + * Author  Laurent Mignon 2016 Acsone SA/NV
  + * License in __openerp__.py at root level of the module
@@ -57,9 +57,9 @@ form_widgets.FieldCmisFolder.include({
     get_preview_url_params: function(cmisObjectWrapped){
         var params = this._super.apply(this, arguments);
         if (this.apply_odoo_security){
-            // add the token as parameter and into the http headers
+            // Add the token as parameter and into the http headers
             var token = this.gen_cmis_session_token();
-            params['token'] = token;
+            params.token = token;
         }
         return params;
     },

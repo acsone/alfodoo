@@ -1,4 +1,4 @@
-/*---------------------------------------------------------
+/* ---------------------------------------------------------
  + * Odoo web_cmis_viewer
  + * Author  Laurent Mignon 2016 Acsone SA/NV
  + * License in __openerp__.py at root level of the module
@@ -56,7 +56,7 @@ form_widgets.FieldCmisFolder.include({
     register_content_events: function(){
         var self = this;
         this._super.apply(this, arguments);
-        /* bind content events */
+        /* Bind content events */
         this.$el.find('.content-action-open-alf').on('click', function(e){
             var row = self._get_event_row(e);
             row.data().refresh().done(

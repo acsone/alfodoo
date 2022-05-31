@@ -135,7 +135,7 @@ class TestIrActionsReport(common.BaseTestCmis):
             self.report.__class__, "_save_in_cmis"
         ) as mocked_save:
             # test the call the the create method inside our custom parser
-            self.report.render(self.inst.ids)
+            self.report._render(self.inst.ids)
             # check that the method is called
             self.assertEqual(mocked_save.call_count, 1)
             record, bugger = mocked_save.call_args[0]
@@ -151,7 +151,7 @@ class TestIrActionsReport(common.BaseTestCmis):
             self.report.__class__, "_create_or_update_cmis_document"
         ) as mocked_save:
             # test the call the the create method inside our custom parser
-            self.report.render(self.inst.ids)
+            self.report._render(self.inst.ids)
             # check that the method is called
             self.assertEqual(mocked_save.call_count, 0)
 
@@ -171,14 +171,14 @@ class TestIrActionsReport(common.BaseTestCmis):
             rp.query.return_value = rs
             rs.getNumItems.return_value = 0
             # test the call the the create method inside our custom parser
-            self.report.render(self.inst.ids)
+            self.report._render(self.inst.ids)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 1)
 
             with self.assertRaises(UserError):
                 # a second call must fails
                 rs.getNumItems.return_value = 1
-                self.report.render(self.inst.ids)
+                self.report._render(self.inst.ids)
 
     @mute_logger("odoo.addons.base.models.assetsbundle")
     def test_duplicate_handle_new_version(self):
@@ -198,7 +198,7 @@ class TestIrActionsReport(common.BaseTestCmis):
             rp.query.return_value = rs
             rs.getNumItems.return_value = 1
             # test the call the the create method inside our custom parser
-            self.report.render(self.inst.ids)
+            self.report._render(self.inst.ids)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 0)
             self.assertEqual(mocked_update.call_count, 1)
@@ -222,7 +222,7 @@ class TestIrActionsReport(common.BaseTestCmis):
             cmis_parent_folder.getChildren.return_value = rs
             rs.getNumItems.return_value = 1
             # test the call the the create method inside our custom parser
-            self.report.render(self.inst.ids)
+            self.report._render(self.inst.ids)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 1)
             file_name = mocked_create.call_args[0][2]
@@ -258,5 +258,5 @@ class TestIrActionsReport(common.BaseTestCmis):
             )
             self.mocked_merge_pdfs.side_effect = lambda a: a[0].getvalue()
             # test the call the the create method inside our custom parser
-            res = self.report.render(self.inst.ids)
+            res = self.report._render(self.inst.ids)
             self.assertEqual(res[0], self.pdf_content_2)

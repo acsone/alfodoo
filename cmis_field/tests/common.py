@@ -9,23 +9,12 @@ class BaseTestCmis(common.SavepointCase):
 
     @classmethod
     def _init_test_model(cls, model_cls):
-        registry = cls.env.registry
-        cr = cls.env.cr
-        cr.commit = mock.MagicMock()
-        inst = model_cls._build_model(registry, cr)
-        model = cls.env[model_cls._name].with_context(todo=[])
-        model._prepare_setup()
-        model._setup_base()
-        model._setup_fields()
-        model._setup_complete()
-        model._auto_init()
-        model.init()
-        models_ = model.pool.descendants([model._name], '_inherits')
-        model.pool.init_models(
-            model._cr,
-            models_,
-            dict(model._context, update_custom_fields=True))
-        return inst
+        model_cls._build_model(cls.env.registry, cls.env.cr)
+        cls.env.registry.setup_models(cls.env.cr)
+        cls.env.registry.init_models(
+            cls.env.cr, [model_cls._name], dict(cls.env.context, update_custom_fields=True)
+        )
+        return cls.env[model_cls._name]
 
     @classmethod
     def setUpClass(cls):
