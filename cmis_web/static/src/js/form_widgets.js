@@ -495,6 +495,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.title = this.getSuccinctProperty('cm:title', cmis_object) || '';
             this.description = this.getSuccinctProperty('cmis:description', cmis_object);
             this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmis_object);
+            this.creationDate = this.getSuccinctProperty('cmis:creationDate', cmis_object);
             this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmis_object);
             this.objectId = this.getSuccinctProperty('cmis:objectId', cmis_object);
             this.versionSeriesId = this.getSuccinctProperty('cmis:versionSeriesId', cmis_object);
@@ -567,6 +568,16 @@ odoo.define('cmis_web.form_widgets', function (require) {
         fLastModificationDate: function () {
             return this.format_cmis_timestamp(this.lastModificationDate);
         },
+
+        /**
+        * Format cmis object creation date
+        * @returns the cmis:creationDate formatted to be rendered in a datatable cell
+        *
+        **/
+       fCreationDate: function() {
+            return this.format_cmis_timestamp(this.creationDate);
+        },
+
 
         fDetails: function () {
             return '<div class="fa fa-plus-circle"/>';
@@ -984,6 +995,11 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         width: '120px'
                     },
                     {
+                        data:'fCreationDate()',
+                        width:'120px',
+                        visible: false,
+                    },
+                    {
                         data: 'lastModifiedBy',
                         width: '60px',
                         visible: false,
@@ -1147,6 +1163,9 @@ odoo.define('cmis_web.form_widgets', function (require) {
                         orders_by.push('cmis:lastModificationDate ' + sort_order);
                         break;
                     case 5:
+                        orders_by.push('cmis:creationDate ' + sort_order);
+                        break;
+                    case 6:
                         orders_by.push('cmis:lastModifiedBy ' + sort_order);
                         break;
                 }
