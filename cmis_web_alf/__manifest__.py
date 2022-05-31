@@ -6,7 +6,7 @@
         Extensions to the Alfodoo web widgets for Alfresco""",
     'category': 'Document Management',
     'author': 'ACSONE SA/NV',
-    'website': "http://alfodoo.org",
+    'website': "https://alfodoo.org",
     'version': "14.0.1.0.0",
     'license': 'AGPL-3',
     'depends': [

@@ -7,7 +7,7 @@
     'summary': 'Alfresco extension for the CMIS Connector',
     'category': 'Document Management',
     'author': "ACSONE SA/NV",
-    'website': 'http://alfodoo.org/',
+    'website': 'https://alfodoo.org',
     'license': 'AGPL-3',
     'depends': [
         'cmis',

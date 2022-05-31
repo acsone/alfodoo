@@ -9,7 +9,7 @@
     "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV",
-    "website": "http://alfodoo.org/",
+    "website": "https://alfodoo.org",
     "depends": ["cmis_web"],
     "data": ["views/cmis_backend.xml", "views/cmis_web_proxy.xml"],
     "external_dependencies": {"python": ["requests", "cmislib"]},
