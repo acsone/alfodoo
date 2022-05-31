@@ -5,7 +5,7 @@
     "name": "Cmis Report Write",
     "description": """
         Save your report into a CMIS container""",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV",
     "website": "https://alfodoo.org",
