@@ -8,7 +8,7 @@
     "version": "13.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV",
-    "website": "https://acsone.eu/",
+    "website": "https://alfodoo.org",
     "depends": ["cmis_field"],
     "data": ["views/ir_actions_report.xml"],
     "demo": ["demo/cmis_test_model_qweb.xml"],

@@ -6,7 +6,7 @@
         CMIS Web browser widget""",
     'category': 'Document Management',
     'author': 'ACSONE SA/NV',
-    'website': "http://alfodoo.org",
+    'website': "https://alfodoo.org",
     'version': '13.0.4.0.0',
     'license': 'AGPL-3',
     'price': 400,
