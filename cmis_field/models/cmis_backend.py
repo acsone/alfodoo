@@ -15,7 +15,7 @@ class CmisBackend(models.Model):
     @api.constrains('sanitize_replace_char')
     def _check_sanitize_replace_char(self):
         for rec in self:
-            rc = self.sanitize_replace_char
+            rc = rec.sanitize_replace_char
             if rc and re.findall(CMIS_NAME_INVALID_CHARS_RX, rc):
                 raise ValidationError(
                     _("The character to use as replacement can not be one of"
@@ -137,8 +137,8 @@ class CmisBackend(models.Model):
         :return: a unique name
         """
         self.ensure_one()
-        conflict_handler = (conflict_handler or
-                            self.folder_name_conflict_handler)
+        conflict_handler = (conflict_handler
+                            or self.folder_name_conflict_handler)
         cmis_qry = ("SELECT cmis:objectId FROM cmis:folder WHERE "
                     "IN_FOLDER('%s') AND cmis:name='%s'" %
                     (parent.getObjectId(), name.replace("'", "\\'")))
