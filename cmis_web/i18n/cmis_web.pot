@@ -4,8 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-10 07:19+0000\n"
+"PO-Revision-Date: 2022-06-10 07:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,6 +54,7 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Add"
 msgstr ""
@@ -59,6 +62,13 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Add a document"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Add document"
@@ -74,6 +84,7 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
@@ -137,6 +148,7 @@ msgstr ""
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
@@ -181,6 +193,7 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Create Documents "
@@ -297,6 +310,7 @@ msgstr ""
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Download"
 msgstr ""
@@ -372,6 +386,13 @@ msgstr ""
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Loading"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Loading cmis document..."
 msgstr ""
 
 #. module: cmis_web
@@ -564,6 +585,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Rename"
 msgstr ""
@@ -637,6 +659,7 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Update"

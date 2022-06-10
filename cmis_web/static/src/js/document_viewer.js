@@ -192,19 +192,6 @@ var DocumentViewer = Widget.extend({
         this.$('.cmis_web_viewer_img').css('max-height', new_angle % 180 !== 0 ? $(document).width() : '100%');
         this.angle = new_angle;
     },
-    /**
-     * Zoom in/out image by provided scale
-     *
-     * @private
-     * @param {integer} scale
-     */
-    _zoom: function (scale) {
-        if (scale > 0.5) {
-            this.$('.cmis_web_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
-            this.scale = scale;
-        }
-        this.$('.cmis_web_zoom_reset').add('.cmis_web_zoom_out').toggleClass('disabled', scale === 1);
-    },
 
     // --------------------------------------------------------------------------
     // Handlers
