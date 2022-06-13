@@ -22,11 +22,15 @@
         content:'';
     }
 }
- div.field_cmis_document {
-     .select-cmis-doc {
-         width: fit-content;
-     }
-     select {
+div.field_cmis_document {
+    .select-cmis {
+        width: fit-content;
+        padding-top: 0.375em;
+        padding-bottom: 0.375em;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+    }
+    select {
         appearance: none;
         background-color: transparent;
         border: none;
@@ -35,11 +39,12 @@
         cursor: inherit;
         line-height: inherit;
         outline: none;
-         width: fit-content;
-         padding: 0;
-         margin: 0;
+        width: fit-content;
+        padding: 0;
+        margin: 0;
+        min-width: 40px;
     }
- }
+}
 
 div.field_cmis_folder {
 
