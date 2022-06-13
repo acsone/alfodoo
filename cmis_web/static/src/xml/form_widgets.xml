@@ -478,8 +478,18 @@
     </div>
 </t>
 
+<!--<t t-name="cmisContextDropdown">-->
+<!--    <div class="select-cmis">-->
+<!--        <select class="context-actions-dropdown" t-att-id="object.getSuccinctProperty('cmis:objectId')">-->
+<!--            <option selected="selected"><span class="dropdown-toggle fa fa-align-justify"/></option>-->
+<!--            <option t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></option>-->
+<!--            <option t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></option>-->
+<!--        </select>-->
+<!--    </div>-->
+<!--</t>-->
+
 <t t-name="cmisDocumentVersionDropdown">
-    <div t-if="object.versionsSelection" class="select-cmis-doc px-2">
+    <div t-if="object.versionsSelection" class="select-cmis">
         <select class="content-action-versions">
             <t t-foreach="object.versionsSelection" t-as="version">
                 <option t-if="object.versionLabel == version" t-att-value="version" t-esc="version" selected="selected"></option>
