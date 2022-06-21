@@ -22,7 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [cmis_alf](cmis_alf/) | 13.0.4.0.1 |  | Alfresco extension for the CMIS Connector
-[cmis_field](cmis_field/) | 13.0.4.0.1 |  | Specialized field to work with a CMIS server
+[cmis_field](cmis_field/) | 13.0.4.0.2 |  | Specialized field to work with a CMIS server
 [cmis_report_write](cmis_report_write/) | 13.0.1.0.1 |  | Cmis Report Write
 [cmis_web](cmis_web/) | 13.0.4.0.2 |  | CMIS Web browser widget
 [cmis_web_alf](cmis_web_alf/) | 13.0.4.0.1 |  | Extensions to the Alfodoo web widgets for Alfresco
