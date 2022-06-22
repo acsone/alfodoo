@@ -148,6 +148,8 @@ class CmisProxy(http.Controller):
     def _clean_url_in_dict(cls, values, original, new):
         """Replace all occurences of the CMIS container url in the json
         returned by a call to the CMIS container by the one of the proxy"""
+        if isinstance(values, list):
+            values = values[0]
         if original.endswith("/"):
             original = original[:-1]
         for k, v in list(values.items()):
@@ -412,7 +414,10 @@ class CmisProxy(http.Controller):
         repo = proxy_info["cmis_repository"]
         if not request_cmis_objectid:
             # get the CMIS object id from cmis_path
-            cmis_content = repo.getObjectByPath(cmis_path)
+            if model_inst and field_name and field_name in model_inst._fields:
+                cmis_content = repo.getObject(model_inst[field_name])
+            else:
+                cmis_content = repo.getObjectByPath(cmis_path)
             request_cmis_objectid = cmis_content.getObjectId()
         if request_cmis_objectid == token_cmis_objectid:
             # the operation is on the CMIS content linked to the Odoo model
