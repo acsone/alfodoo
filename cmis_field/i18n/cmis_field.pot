@@ -144,3 +144,9 @@ msgstr ""
 #, python-format
 msgid "The character to use as replacement can not be one of'%s'"
 msgstr ""
+
+#. module: cmis_field
+#: code:addons/cmis_field/fields/cmis_folder.py:0
+#, python-format
+msgid "Too many backend found. Please check your configuration."
+msgstr ""
