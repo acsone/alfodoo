@@ -79,8 +79,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 this.cmisSession
                     .updateProperties(this.cmisObject.objectId, {'cmis:name': newName})
                     .ok(function (cmisObject) {
-                        self.getParent().trigger('cmis_node_updated', [cmisObject]);
-                        self.cmisObject.name = newName;
+                        self.trigger_up('reload');
                         self.$el.parents('.modal').modal('hide');
                     });
             }
