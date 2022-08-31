@@ -403,6 +403,7 @@
         <span>
             <t t-raw="object.documentActions()" />
         </span>
+        <span class="file-name o_hidden" t-raw="object.fName()"/>
     </div>
 </t>
 

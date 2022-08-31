@@ -185,3 +185,6 @@ td.o_field_cmis_document_cell{
 div.field_cmis_document.no-version div.select-cmis{
     display:none;
 }
+div.field_cmis_document.show-file-name span.file-name{
+    display: inherit !important;
+}
