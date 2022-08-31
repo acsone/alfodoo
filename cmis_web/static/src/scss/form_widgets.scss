@@ -181,3 +181,7 @@ form.cmis_duplicate_document_resolver{
 td.o_field_cmis_document_cell{
     overflow: visible !important;
 }
+
+div.field_cmis_document.no-version div.select-cmis{
+    display:none;
+}
