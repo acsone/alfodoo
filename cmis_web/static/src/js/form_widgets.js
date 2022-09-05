@@ -79,7 +79,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 this.cmisSession
                     .updateProperties(this.cmisObject.objectId, {'cmis:name': newName})
                     .ok(function (cmisObject) {
-                        self.getParent().trigger('cmis_node_updated', [cmisObject]);
+                        self.trigger_up('reload');
                         self.$el.parents('.modal').modal('hide');
                     });
             }
@@ -1071,11 +1071,34 @@ odoo.define('cmis_web.form_widgets', function (require) {
             dialog.opened().then(function (result) {
                 dialog.$el.find('[autofocus]').focus();
             });
+        },
+        toggle_more_action: function name() {
+            var element = this.$el[0];
+            if (!element || element.disabled || $(element).hasClass("disabled")) {
+                return;
+            }
+            var menu = this.$el.find('ul')[0];
+            var isActive = $(element).hasClass("show");
+            if (isActive) {
+                $(element).focus();
+                element.setAttribute('aria-expanded', true);
+            }else{
+                $(element).focus();
+                element.setAttribute('aria-expanded', false);
+
+            }
+            $(menu).toggleClass("show");
+            $(element).toggleClass("show");
         }, register_document_action_events: function () {
             var self = this;
             var $el_actions = this.$el.find('.field_cmis_document_actions');
             var versions = $el_actions.find('.content-action-versions');
+            var more_action = $el_actions.find('.cmis-dropdown-more-actions');
             // var $context = $el_actions.find('.context-actions-dropdown');
+            more_action.on('click', function (e) {
+                e.stopPropagation() ;
+                self.toggle_more_action();
+            });
             versions.on('click', function (e) {
                 self.stopEvent(e);
             });
