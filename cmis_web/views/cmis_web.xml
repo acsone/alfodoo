@@ -11,6 +11,7 @@
             <script type="text/javascript" src="/cmis_web/static/lib/datatables/datatables.js"/>
             <script type="text/javascript" src="/cmis_web/static/src/js/document_viewer.js"/>
             <script type="text/javascript" src="/cmis_web/static/src/js/form_widgets.js"/>
+            <script type="text/javascript" src="/cmis_web/static/src/js/field_utils.js"/>
         </xpath>
     </template>
 
