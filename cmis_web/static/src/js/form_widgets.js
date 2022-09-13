@@ -327,7 +327,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var cmis_session = parent.cmis_session;
             _.each(input.files, function (file, index, list) {
                 cmis_session
-                    .createDocument(this.parent_cmisobject.objectId, file, {'cmis:name': file.name}, file.mimeType)
+                    .createDocument(parent.dislayed_folder_cmisobject.objectId, file, {'cmis:name': file.name}, file.mimeType)
                     .ok(function (data) {
                         processedFiles.push(data);
                         if (processedFiles.length == numFiles) {
