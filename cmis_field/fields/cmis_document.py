@@ -1,8 +1,6 @@
 # Copyright 2020 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import base64
-from io import BytesIO
 import threading
 import time
 from functools import partial
@@ -81,8 +79,16 @@ class CmisDocument(fields.Field):
         return repo.getObject(val)
 
     def create_value(self, records, documents):
-        """Create a new folder for each record into the cmis container and
+        """Create a new document for each record into the cmis container and
         store the value as field value
+
+        :param records: An odoo recordset
+        :param documents: A mapping of files to their corresponding record as a dict of
+        dicts. The key of the parent dict should be the id of the corresponding record,
+        while each child dict should contain a 'name' key for the name of the file,
+        a 'mimetype' key for its mimetype and a 'data' key for its content (bytes).
+        :type documents: dict[:int, dict['name': str, 'mimetype': str, 'file': bytes]]
+
         """
         for record in records:
             self._check_null(record)
@@ -107,11 +113,10 @@ class CmisDocument(fields.Field):
             backend.is_valid_cmis_name(name, raise_if_invalid=True)
             parent = parents[record.id]
             props = properties[record.id] or {}
-            content = self._decode_file(document)
-            value = parent.createDocument(
-                name=name,
+            object_id = parent.createDocument(
+                name,
                 properties=props,
-                contentFile=content,
+                contentFile=document.get("data"),
                 contentType=document.get("mimetype"),
             )
 
@@ -137,19 +142,13 @@ class CmisDocument(fields.Field):
                     'rollback',
                     partial(
                         clean_up_document,
-                        value.getObjectId(),
+                        object_id,
                         backend.id,
                         record.env.cr.dbname
                     )
                 )
 
-            self.__set__(record, value.getObjectId())
-
-    @staticmethod
-    def _decode_file(document):
-        file = document.get("data")
-        _, content = file.split(",")
-        return BytesIO(base64.b64decode(content))
+            self.__set__(record, object_id)
 
     def get_create_parents(self, records, backend):
         """return the cmis:objectId of the cmis folder to use as parent of the
