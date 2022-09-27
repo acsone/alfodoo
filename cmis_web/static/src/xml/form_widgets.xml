@@ -419,7 +419,6 @@
 <t t-name="CmisDocumentActions">
     <span class="field_cmis_document_actions">
         <div class="btn-group" role="group">
-            <t t-call="cmisDocumentVersionDropdown" />
             <t t-call="cmisDocumentDownloadButton" />
             <t t-call="cmisDocumentPreviewButton" />
             <t t-call="cmisContextDropdown" />
@@ -463,40 +462,9 @@
             aria-expanded="true">
         </button>
         <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')" overflow-working="0">
-<!--            <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>-->
             <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
-            <li t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></li>
-            <!-- li t-if='canGetAllVersions'><a class='content-action-get-all-versions' href="#">Check Versions</a></li -->
-<!--            <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>-->
-<!--            <li t-if='canCheckIn'><a class='content-action-checkin' href="#">Import new version</a></li>-->
-<!--            <li t-if='canCancelCheckOut'><a class='content-action-cancel-checkout' href="#">Cancel Edit</a></li>-->
-<!--            <li t-if='canCheckOut'><a class='content-action-checkout' href="#">Offline Edit</a></li>-->
-<!--            <t t-if='canDeleteObject'>-->
-<!--                <li role="separator" class="divider"></li>-->
-<!--                <li><a class='content-action-delete-object' href="#">Delete</a></li>-->
-<!--            </t>-->
+            <li><a class='content-action-checkin' href="#">Import new version</a></li>
         </ul>
-    </div>
-</t>
-
-<!--<t t-name="cmisContextDropdown">-->
-<!--    <div class="select-cmis">-->
-<!--        <select class="context-actions-dropdown" t-att-id="object.getSuccinctProperty('cmis:objectId')">-->
-<!--            <option selected="selected"><span class="dropdown-toggle fa fa-align-justify"/></option>-->
-<!--            <option t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></option>-->
-<!--            <option t-if='canSetContentStream and !canCheckIn'><a class='content-action-set-content-stream' href="#">Update</a></option>-->
-<!--        </select>-->
-<!--    </div>-->
-<!--</t>-->
-
-<t t-name="cmisDocumentVersionDropdown">
-    <div t-if="object.versionsSelection" class="select-cmis">
-        <select class="content-action-versions">
-            <t t-foreach="object.versionsSelection" t-as="version">
-                <option t-if="object.versionLabel == version" t-att-value="version" t-esc="version" selected="selected"></option>
-                <option t-else="" t-att-value="version" t-esc="version"></option>
-            </t>
-        </select>
     </div>
 </t>
 </templates>
