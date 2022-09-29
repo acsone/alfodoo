@@ -124,4 +124,12 @@ form_widgets.FieldCmisDocument.include({
     },
 });
 
+form_widgets.CmisVersionsHistoryDialog.include({
+    _get_version_url: function (version) {
+        var noderef = version.getSuccinctProperty("alfcmis:nodeRef").split("://").join("/");
+        return `${version.alfresco_api_location}/node/content/${noderef}/${version.name}`;
+
+    },
+});
+
 });
