@@ -385,6 +385,45 @@
     </div>
 </t>
 
+    <t t-name='CmisVersionsHistoryDialog'>
+    <div class="cmis-document-history">
+        <div class="versions border-top container">
+            <t t-set="versions" t-value="widget.versions"/>
+                <div class="cmis-version-row row border border-top-0">
+                    <div class="col-sm-1">Version</div>
+                    <div class="col-sm-4">Name</div>
+                    <div class="col-sm-4">Actions</div>
+                </div>
+                <div t-foreach="versions" t-as="version">
+                    <div class="cmis-version-row row border border-top-0">
+                        <div class="col-sm-1 version-text" t-esc="version.versionLabel"/>
+                        <div class="col-sm-4 version-text" t-esc="version.name"/>
+                        <div class="col-sm-4" t-if="version.allowableActions.canGetContentStream">
+                            <button type="button"
+                                    t-att-id="'download_' + version.objectId"
+                                    t-att-value = "version.objectId"
+                                    class="btn btn-default btn-xs version-download px-2"
+                                    data-toggle="tooltip"
+                                    title="Download"
+                                    aria-label="Preview">
+                                    <span t-att-value="version.objectId" class="fa fa fa-download"></span>
+                            </button>
+                            <button type="button"
+                                    t-att-id="'preview_' + version.objectId"
+                                    t-att-value = "version.objectId"
+                                    class="btn btn-default btn-xs version-preview px-2"
+                                    data-toggle="tooltip"
+                                    title="Preview"
+                                    aria-label="Preview">
+                                    <span t-att-value="version.objectId" class="fa fa-eye"></span>
+                            </button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</t>
+
 <t t-name="FieldCmisDocument">
     <div t-att-class="'oe_form_field ' + widget.widget_class" t-att-style="widget.attrs.style">
         <t t-call="CmisDocumentWaiting" />
@@ -464,6 +503,7 @@
         <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')" overflow-working="0">
             <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
             <li><a class='content-action-checkin' href="#">Import new version</a></li>
+            <li><a class='content-action-history' href="#">Show document history</a></li>
         </ul>
     </div>
 </t>
