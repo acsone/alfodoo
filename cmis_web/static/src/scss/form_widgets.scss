@@ -141,6 +141,35 @@ div.field_cmis_folder_content_actions {
     }
 }
 
+span.field_cmis_document_actions {
+    a.dropdown-toggle.fa-align-justify {
+        top: 0px;
+    }
+    ul.dropdown-menu {
+        width: auto;
+   }
+    .divider {
+        height: 1px;
+        margin: 8px 0;
+        overflow: hidden;
+        background-color: #e5e5e5;
+    }
+
+    a {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333333;
+        white-space: nowrap;
+    }
+    a:hover {
+        color: white;
+        background-color: #00A09D;
+    }
+}
+
 form.cmis_update_content_stream,
 form.cmis_create_document,
 form.cmis_duplicate_document_resolver{
@@ -187,4 +216,11 @@ div.field_cmis_document.no-version div.select-cmis{
 }
 div.field_cmis_document.show-file-name span.file-name{
     display: inherit !important;
+}
+
+div.cmis-version-row {
+    height: 30px;
+    .version-text {
+        line-height: 30px;
+    }
 }

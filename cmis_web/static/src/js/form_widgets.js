@@ -552,6 +552,75 @@ odoo.define('cmis_web.form_widgets', function (require) {
         },
     });
 
+    var CmisVersionsHistoryDialog = Dialog.extend({
+        template: 'CmisVersionsHistoryDialog',
+        events: {
+            'change .btn-file :file': 'on_file_change'
+        },
+
+        init: function (parent, versions) {
+            var self = this;
+            this.versions = versions;
+            var options = {
+                buttons: [
+                    {
+                        text: _t("Close"),
+                        click: function (e) {
+                            e.stopPropagation();
+                            self.$el.parents('.modal').modal('hide');
+                        }
+                    },
+
+                ],
+                close: function () {
+                    self.close();
+                },
+                title: _t("Document history"),
+            };
+            this._super(parent, options);
+        },
+
+        start: function() {
+            this.register_document_action_events();
+            return this._super.apply(this, arguments);
+        },
+
+        register_document_action_events: function () {
+            var self = this;
+            this.$el.find('.version-download').on('click', function (e) {
+                e.stopPropagation();
+                self.on_click_download(e);
+            });
+            this.$el.find('.version-preview').on('click', function (e) {
+                e.stopPropagation();
+                self.on_click_preview(e);
+            });
+        },
+
+        _get_version_url: function (version) {},
+
+        on_click_preview: function (e) {
+            var objectId = e.target.attributes.value.nodeValue;
+            var version = this.versions.find((item) => item.objectId === objectId);
+            var url = this._get_version_url(version);
+            if (url) {
+                window.open(url);
+            };
+        },
+
+        on_click_download: function(e) {
+            var objectId = e.target.attributes.value.nodeValue;
+            var version = this.versions.find((item) => item.objectId === objectId);
+            if (version) {
+                window.open(version.url);
+            }
+        },
+
+        close: function () {
+            this._super();
+        }
+    });
+
     var CmisObjectWrapper = core.Class.extend({
 
         init: function (parent, cmis_object, cmis_session) {
@@ -1041,6 +1110,20 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         },
 
+        on_click_show_history: function () {
+            var self = this;
+            // without the objectId in the options, this returns a "versionSeriesId does not exist" error.
+            // Exactly why it does is anyone's guess...
+            var options = {includeAllowableActions: true, objectId: this.value};
+            this.cmis_session.getAllVersions(this.value, options)
+                .ok(function (versions) {
+                    var wrapped_versions = self.wrap_cmis_objects(versions)
+                    var dialog = new CmisVersionsHistoryDialog(self, wrapped_versions);
+                    dialog.open();
+                });
+
+        },
+
         _cancel_checkout: function () {
             this.cmis_session.cancelCheckOut(this.document.objectId);
         },
@@ -1087,6 +1170,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
             $el_actions.find('.content-action-checkin').on('click', function (e) {
                 self.stopEvent(e);
                 self.on_click_import_new_version();
+            });
+            $el_actions.find('.content-action-history').on('click', function (e) {
+                self.stopEvent(e);
+                self.on_click_show_history();
             });
             $el_actions.find('.content-action-get-properties').on('click', function (e) {
                 self.stopEvent(e);
@@ -2123,6 +2210,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
         FieldCmisDocument: FieldCmisDocument,
         CmisCreateFolderDialog: CmisCreateFolderDialog,
         CmisCreateDocumentDialog: CmisCreateDocumentDialog,
+        CmisVersionsHistoryDialog: CmisVersionsHistoryDialog,
         CmisDuplicateDocumentResolver: CmisDuplicateDocumentResolver,
         DEFAULT_CMIS_OPTIONS: DEFAULT_CMIS_OPTIONS,
     };
