@@ -647,6 +647,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.versionSeriesId = this.getSuccinctProperty('cmis:versionSeriesId', cmis_object);
             this.versionLabel = this.getSuccinctProperty('cmis:versionLabel');
             this.url = this.cmis_session.getContentStreamURL(this.objectId, 'attachment');
+            this.isCheckedOut = !!this.getSuccinctProperty("cmis:versionSeriesCheckedOutId");
             this.allowableActions = cmis_object.allowableActions;
             this.renditions = cmis_object.renditions;
         },
@@ -1102,10 +1103,20 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.cmis_session.checkOut(self.document.objectId)
                 .ok(function(data) {
                     var dialog = new CmisCheckinDialog(self, self.wrap_cmis_object(data), true);
+                    dialog.onDestroy(function() {
+                        self.verify_is_checked_out()
+                            .then(function (isCheckedOut) {
+                                if (isCheckedOut) {
+                                    return self._cancel_checkout.bind(self)();
+                                }
+                            })
+                            .catch((error) => console.log("error"))
+                            .finally(() => self.trigger_up("reload"));
+                    });
                     dialog.open();
                 })
                 .notOk(function() {
-                    self._cancel_checkout();
+                    self._cancel_checkout.bind(self);
                 });
 
         },
@@ -1124,8 +1135,32 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         },
 
+        on_cancel_checkout: function (e) {
+            var self = this;
+            this._cancel_checkout().finally(() => self.trigger_up('reload'));
+        },
+
         _cancel_checkout: function () {
-            this.cmis_session.cancelCheckOut(this.document.objectId);
+            var self = this;
+            return new Promise(function(resolve, reject) {
+                self.cmis_session.cancelCheckOut(self.document.objectId)
+                    .ok((data) => resolve(data))
+                    .notOk((error) => reject(error));
+            });
+        },
+
+        verify_is_checked_out: function() {
+            var self = this;
+            return new Promise(function (resolve) {
+                self.cmis_session.getObject(self.document.objectId)
+                    .ok(function (doc) {
+                        resolve(self.wrap_cmis_object(doc).isCheckedOut)
+                    })
+                    .notOk(function (doc) {
+                        // safer to assume the doc is checked out
+                        resolve(true)
+                    })
+            });
         },
 
         toggle_more_action: function name() {
@@ -1178,6 +1213,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
             $el_actions.find('.content-action-get-properties').on('click', function (e) {
                 self.stopEvent(e);
                 self.on_click_get_properties();
+            });
+            $el_actions.find('.content-action-cancel-checkout').on('click', function (e) {
+                self.stopEvent(e);
+                self.on_cancel_checkout();
             });
         },
 
