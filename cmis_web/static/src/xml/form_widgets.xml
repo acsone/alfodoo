@@ -502,8 +502,10 @@
         </button>
         <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')" overflow-working="0">
             <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
-            <li><a class='content-action-checkin' href="#">Import new version</a></li>
-            <li><a class='content-action-history' href="#">Show document history</a></li>
+            <li t-if='canUpdateProperties'><a class='content-action-checkin' href="#">Import new version</a></li>
+            <li t-if="canGetContentStream"><a class='content-action-history' href="#">Show document history</a></li>
+            <li t-if='object.isCheckedOut' role="separator" class="divider"></li>
+            <li t-if='object.isCheckedOut'><a class='content-action-cancel-checkout' href="#">Cancel checkout</a></li>
         </ul>
     </div>
 </t>
