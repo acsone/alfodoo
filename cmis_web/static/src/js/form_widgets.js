@@ -1128,11 +1128,27 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var options = {includeAllowableActions: true, objectId: this.value};
             this.cmis_session.getAllVersions(this.value, options)
                 .ok(function (versions) {
-                    var wrapped_versions = self.wrap_cmis_objects(versions)
+                    var wrapped_versions = self.wrap_cmis_objects(versions);
                     var dialog = new CmisVersionsHistoryDialog(self, wrapped_versions);
                     dialog.open();
                 });
 
+        },
+
+        on_click_toggle_details: function () {
+            var self = this;
+            var $documentDetails = this.$el.find(".document-details");
+            this.$el.find('.toggle-document-details').toggleClass('fa-minus fa-plus-circle');
+            if ($documentDetails.is(":empty")) {
+                $documentDetails.append(QWeb.render("cmisDocumentContentDetails", {object: this.document}));
+                this.$el.find('.toggle-document-details').on('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    self.on_click_toggle_details();
+                });
+            } else {
+                $documentDetails.empty();
+            }
         },
 
         on_cancel_checkout: function (e) {
@@ -1154,12 +1170,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
             return new Promise(function (resolve) {
                 self.cmis_session.getObject(self.document.objectId)
                     .ok(function (doc) {
-                        resolve(self.wrap_cmis_object(doc).isCheckedOut)
+                        resolve(self.wrap_cmis_object(doc).isCheckedOut);
                     })
                     .notOk(function (doc) {
                         // safer to assume the doc is checked out
-                        resolve(true)
-                    })
+                        resolve(true);
+                    });
             });
         },
 
@@ -1212,7 +1228,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             });
             $el_actions.find('.content-action-get-properties').on('click', function (e) {
                 self.stopEvent(e);
-                self.on_click_get_properties();
+                self.on_click_toggle_details();
             });
             $el_actions.find('.content-action-cancel-checkout').on('click', function (e) {
                 self.stopEvent(e);

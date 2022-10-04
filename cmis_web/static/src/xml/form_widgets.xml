@@ -443,6 +443,7 @@
             <t t-raw="object.documentActions()" />
         </span>
         <span class="file-name o_hidden" t-raw="object.fName()"/>
+        <span class="document-details"/>
     </div>
 </t>
 
@@ -489,10 +490,19 @@
     </t>
 </t>
 
+<t t-name="cmisDocumentContentDetails">
+    <div>
+        <div class="toggle-document-details pull-right">
+            <i class="fa fa-times-circle p-2"></i>
+        </div>
+        <t t-call="CmisContentDetails"/>
+    </div>
+</t>
+
 <t t-name="cmisContextDropdown">
     <div class="dropdown context-actions-dropdown">
         <button type="button"
-            class="btn btn-default btn-xs dropdown-toggle fa fa-align-justify cmis-dropdown-more-actions px-2"
+            class="btn btn-default btn-xs dropdown-toggle fa fa-align-justify cmis-dropdown-more-actions px-2 "
             t-att-id="object.getSuccinctProperty('cmis:objectId')"
             aria-label="More actions"
             data-toggle="dropdown"
@@ -501,6 +511,7 @@
             aria-expanded="true">
         </button>
         <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')" overflow-working="0">
+            <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
             <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
             <li t-if='canUpdateProperties'><a class='content-action-checkin' href="#">Import new version</a></li>
             <li t-if="canGetContentStream"><a class='content-action-history' href="#">Show document history</a></li>
