@@ -119,14 +119,14 @@ form_widgets.FieldCmisDocument.include({
         });
     },
 
-  register_document_events: function(){
+  register_document_action_events: function(){
         var self = this;
         this._super.apply(this, arguments);
         /* bind content events */
         this.$el.find('.content-action-open-alf').on('click',(e) => {
             e.preventDefault();
             e.stopPropagation();
-            self.open_in_alf(self.value)
+            self.open_in_alf(self.value);
           });
     },
 });
