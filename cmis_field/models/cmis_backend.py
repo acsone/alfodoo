@@ -72,7 +72,10 @@ class CmisBackend(models.Model):
         backend = self.search(domain)
         if len(backend) != 1 and raise_if_not_found:
             if name:
-                msg = _("Expected 1 backend named %s, %s found") % (name, len(backend))
+                msg = _("Expected 1 backend named %(name)s, %(number)s found") % {
+                    "name": name,
+                    "number": len(backend),
+                }
             else:
                 msg = _("No backend found")
             raise UserError(msg)
@@ -90,11 +93,11 @@ class CmisBackend(models.Model):
                 return False
             raise UserError(
                 _(
-                    "%s is not a valid name.\n"
-                    "The following chars are not allowed %s and"
+                    "%(name)s is not a valid name.\n"
+                    "The following chars are not allowed %(invalid_chars)s and"
                     "the name can not ends with a space or a '.'"
                 )
-                % (name, CMIS_NAME_INVALID_CHARS)
+                % {"name": name, "invalid_chars": CMIS_NAME_INVALID_CHARS}
             )
         return True
 
@@ -132,7 +135,7 @@ class CmisBackend(models.Model):
 
         Check if the name already exists into the parent.
         If the name already exists:
-         if bakend.folder_name_conflict_handler == 'error'
+         if backend.folder_name_conflict_handler == 'error'
             ValidationError is raised
          if backend.folder_name_conflict_handler == 'increment'
             return a new name with suffix '_X'

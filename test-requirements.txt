@@ -1,1 +1,1 @@
-cmislib @ git+https://github.com/apache/chemistry-cmislib.git@py3_compat
+odoo-test-helper
