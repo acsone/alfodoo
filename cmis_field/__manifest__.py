@@ -11,8 +11,13 @@
     "license": "AGPL-3",
     "depends": ["cmis"],
     "data": ["views/cmis_backend_view.xml"],
-    "installable": False,
+    "installable": True,
     "images": [
         "static/description/main_icon.png",
     ],
+    "external_dependencies": {
+        "python": [
+            "cmislib>=0.7.0",
+        ]
+    },
 }

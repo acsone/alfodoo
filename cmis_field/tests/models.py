@@ -12,8 +12,7 @@ from ..fields import CmisFolder
 class CmisTestModel(models.Model):
     _name = "cmis.test.model"
     _rec_name = "name"
-    _abstract = True
-    _description = "cmis.test.model"
+    _description = "cmis.test.model Fake Model"
 
     def _get_name(self, field, backend):
         return dict.fromkeys(self.ids, "custom_name")
@@ -42,8 +41,7 @@ class CmisTestModel(models.Model):
 class CmisTestModelInherits(models.Model):
     _name = "cmis.test.model.inherits"
     _inherits = {"cmis.test.model": "cmis_test_model_id"}
-    _abstract = True
-    _description = "cmis.test.model.inherits"
+    _description = "cmis.test.model.inherits Fake Model"
 
     cmis_test_model_id = fields.Many2one(
         "cmis.test.model", "Parent", ondelete="cascade", required=True
@@ -52,8 +50,7 @@ class CmisTestModelInherits(models.Model):
 
 class CmisTestModelRelated(models.Model):
     _name = "cmis.test.model.related"
-    _abstract = True
-    _description = "cmis.test.model.related"
+    _description = "cmis.test.model.related Fake Model"
 
     name = fields.Char(required=True)
 

@@ -1,3 +1,4 @@
+
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
@@ -22,7 +23,7 @@ Configuration
 In Settings -> Cmis -> backend Create a new CMIS backend with the host,
 login and password.
 
-Documentation: `alfodoo.org <http://alfodoo.org>`_ 
+Documentation: `alfodoo.org <http://alfodoo.org>`_
 
 
 Credits

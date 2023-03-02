@@ -1,5 +1,6 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+import logging
 import threading
 import time
 from functools import partial
@@ -10,6 +11,8 @@ from cmislib.exceptions import ObjectNotFoundException
 from odoo import SUPERUSER_ID, _, api, fields, registry
 from odoo.exceptions import UserError
 from odoo.tools.sql import pg_varchar
+
+_logger = logging.getLogger(__name__)
 
 
 class CmisFolder(fields.Field):
@@ -170,7 +173,7 @@ class CmisFolder(fields.Field):
 
             def clean_up_folder(cmis_object_id, backend_id, dbname):
                 db_registry = registry(dbname)
-                with api.Environment.manage(), db_registry.cursor() as cr:
+                with db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     backend = env["cmis.backend"].browse(backend_id)
                     _repo = backend.get_cmis_repository()
@@ -181,13 +184,12 @@ class CmisFolder(fields.Field):
                     try:
                         _repo.getObject(cmis_object_id).deleteTree()
                     except ObjectNotFoundException:
-                        pass
+                        _logger.info("Cannot clean up folder: ObjectNotFoundException")
 
             # remove created resource in case of rollback
-            test_mode = getattr(threading.currentThread(), "testing", False)
+            test_mode = getattr(threading.current_thread(), "testing", False)
             if not test_mode:
-                record.env.cr.after(
-                    "rollback",
+                record.env.cr.postrollback.add(
                     partial(
                         clean_up_folder,
                         value.getObjectId(),
