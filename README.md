@@ -1,28 +1,17 @@
 
 <!-- /!\ Non OCA Context : Set here the badge of your runbot / runboat instance. -->
-[![Pre-commit Status](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml/badge.svg?branch=14.0)](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml?query=branch%3A14.0)
-[![Build Status](https://github.com/acsone/alfodoo/actions/workflows/test.yml/badge.svg?branch=14.0)](https://github.com/acsone/alfodoo/actions/workflows/test.yml?query=branch%3A14.0)
-[![codecov](https://codecov.io/gh/acsone/alfodoo/branch/14.0/graph/badge.svg)](https://codecov.io/gh/acsone/alfodoo)
+[![Pre-commit Status](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml/badge.svg?branch=16.0)](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml?query=branch%3A16.0)
+[![Build Status](https://github.com/acsone/alfodoo/actions/workflows/test.yml/badge.svg?branch=16.0)](https://github.com/acsone/alfodoo/actions/workflows/test.yml?query=branch%3A16.0)
+[![codecov](https://codecov.io/gh/acsone/alfodoo/branch/16.0/graph/badge.svg)](https://codecov.io/gh/acsone/alfodoo)
 <!-- /!\ Non OCA Context : Set here the badge of your translation instance. -->
 
 <!-- /!\ do not modify above this line -->
 
 # Alfodoo
 
-Alfodoo is a set of addons to seamlessly integrate an external Document
-Management System with Odoo.
+Alfodoo is a set of addons to seamlessly integrate an external Document Management System with Odoo.
 
-Alfresco Enterprise Content Management System (from version 4.2) is supported.
 
-The code is structured in two parts:
-
-- pure CMIS 1.1 compliant modules (cmis_field, cmis_web)
-- Alfresco specific extension modules (cmis_alf, cmis_web_alf).
-
-It is therefore possible in principle to easily integrate Other CMIS compliants
-content management systems such as Nuxeo, Documentum, etc. This has not been tested yet.
-
-Documentation and installation instructions can be found at https://alfodoo.org.
 
 <!-- /!\ do not modify below this line -->
 
