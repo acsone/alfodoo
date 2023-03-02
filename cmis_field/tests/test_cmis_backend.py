@@ -3,62 +3,59 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import mock
+
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import common
 
 
 class TestCmisBackend(common.SavepointCase):
-
     def setUp(self):
         super(TestCmisBackend, self).setUp()
-        self.cmis_backend = self.env['cmis.backend']
-        self.backend_instance = self.env.ref('cmis.cmis_backend_alfresco')
+        self.cmis_backend = self.env["cmis.backend"]
+        self.backend_instance = self.env.ref("cmis.cmis_backend_alfresco")
 
     def test_get_by_name(self):
-        backend = self.cmis_backend.get_by_name(
-            name=self.backend_instance.name)
+        backend = self.cmis_backend.get_by_name(name=self.backend_instance.name)
         self.assertEqual(self.backend_instance, backend)
         with self.assertRaises(UserError):
-            self.cmis_backend.get_by_name('error')
-        backend = self.cmis_backend.get_by_name(
-            'error', raise_if_not_found=False)
+            self.cmis_backend.get_by_name("error")
+        backend = self.cmis_backend.get_by_name("error", raise_if_not_found=False)
         self.assertFalse(backend)
 
     def test_is_valid_cmis_name(self):
-        backend = self.cmis_backend.get_by_name(
-            name=self.backend_instance.name)
+        backend = self.cmis_backend.get_by_name(name=self.backend_instance.name)
         self.assertFalse(backend.is_valid_cmis_name(r'my\/:*?"<>| directory'))
-        self.assertFalse(backend.is_valid_cmis_name(r'abc.'))
-        self.assertFalse(backend.is_valid_cmis_name(r'abc '))
-        self.assertTrue(backend.is_valid_cmis_name('my directory'))
+        self.assertFalse(backend.is_valid_cmis_name(r"abc."))
+        self.assertFalse(backend.is_valid_cmis_name(r"abc "))
+        self.assertTrue(backend.is_valid_cmis_name("my directory"))
         with self.assertRaises(UserError):
-            backend.is_valid_cmis_name(r'my\/:*?"<>| directory',
-                                       raise_if_invalid=True)
+            backend.is_valid_cmis_name(r'my\/:*?"<>| directory', raise_if_invalid=True)
 
     def test_sanitize_cmis_name(self):
         self.backend_instance.sanitize_replace_char = "_"
-        sanitized = self.backend_instance.sanitize_cmis_name('m/y dir*', '_')
-        self.assertEqual(sanitized, 'm_y dir_')
-        sanitized = self.backend_instance.sanitize_cmis_name('m/y dir*', None)
-        self.assertEqual(sanitized, 'm_y dir_')
-        sanitized = self.backend_instance.sanitize_cmis_name('m/y dir*', '')
-        self.assertEqual(sanitized, 'my dir')
-        sanitized = self.backend_instance.sanitize_cmis_name('m/y dir*', '-')
-        self.assertEqual(sanitized, 'm-y dir-')
-        sanitized = self.backend_instance.sanitize_cmis_name('/y dir*', ' ')
-        self.assertEqual(sanitized, 'y dir')
-        sanitized = self.backend_instance.sanitize_cmis_name('xyz.', ' ')
-        self.assertEqual(sanitized, 'xyz')
-        sanitized = self.backend_instance.sanitize_cmis_name('xyz.....', ' ')
-        self.assertEqual(sanitized, 'xyz')
-        sanitized = self.backend_instance.sanitize_cmis_name('.x.y.z..', ' ')
-        self.assertEqual(sanitized, '.x.y.z')
+        sanitized = self.backend_instance.sanitize_cmis_name("m/y dir*", "_")
+        self.assertEqual(sanitized, "m_y dir_")
+        sanitized = self.backend_instance.sanitize_cmis_name("m/y dir*", None)
+        self.assertEqual(sanitized, "m_y dir_")
+        sanitized = self.backend_instance.sanitize_cmis_name("m/y dir*", "")
+        self.assertEqual(sanitized, "my dir")
+        sanitized = self.backend_instance.sanitize_cmis_name("m/y dir*", "-")
+        self.assertEqual(sanitized, "m-y dir-")
+        sanitized = self.backend_instance.sanitize_cmis_name("/y dir*", " ")
+        self.assertEqual(sanitized, "y dir")
+        sanitized = self.backend_instance.sanitize_cmis_name("xyz.", " ")
+        self.assertEqual(sanitized, "xyz")
+        sanitized = self.backend_instance.sanitize_cmis_name("xyz.....", " ")
+        self.assertEqual(sanitized, "xyz")
+        sanitized = self.backend_instance.sanitize_cmis_name(".x.y.z..", " ")
+        self.assertEqual(sanitized, ".x.y.z")
         with self.assertRaises(ValidationError):
             self.backend_instance.sanitize_replace_char = "/"
 
         sanitized = self.backend_instance.sanitize_cmis_names(
-            ['/y dir*', 'sub/dir'], ' ')
-        self.assertEqual(sanitized, ['y dir', 'sub dir'])
+            ["/y dir*", "sub/dir"], " "
+        )
+        self.assertEqual(sanitized, ["y dir", "sub dir"])
 
     def test_get_unique_folder_name(self):
         mocked_parent = mock.MagicMock()
@@ -68,14 +65,15 @@ class TestCmisBackend(common.SavepointCase):
         query_result = mock.MagicMock()
         repository.query.side_effect = lambda *a: query_result
         query_result.getNumItems.side_effect = lambda *a: 0
-        self.assertEqual('test', self.backend_instance.get_unique_folder_name(
-            'test', mocked_parent))
+        self.assertEqual(
+            "test", self.backend_instance.get_unique_folder_name("test", mocked_parent)
+        )
         # if the same name is found and the folder_name_conflict_handler ==
         # 'error' a ValidationError is raised
         query_result.getNumItems.side_effect = lambda *a: 1
-        self.backend_instance.folder_name_conflict_handler = 'error'
+        self.backend_instance.folder_name_conflict_handler = "error"
         with self.assertRaises(ValidationError):
-            self.backend_instance.get_unique_folder_name('test', mocked_parent)
+            self.backend_instance.get_unique_folder_name("test", mocked_parent)
 
         self.cpt = 0
 
@@ -88,21 +86,21 @@ class TestCmisBackend(common.SavepointCase):
                 test = mock.Mock()
                 test.configure_mock()
                 ret = []
-                for v in ['test_(backup)', 'test_(1)', 'test_(3)']:
+                for v in ["test_(backup)", "test_(1)", "test_(3)"]:
                     m = mock.Mock()
                     m.configure_mock(name=v)
                     ret.append(m)
                 query_result.__iter__.return_value = ret
                 return query_result
             return None  # pragma: no cover
+
         # if the same name is found and the folder_name_conflict_handler ==
         # 'increment' the method must return a new name with a suffix _(X)
         # where X is the value max found as X for the same name + 1
-        self.backend_instance.folder_name_conflict_handler = 'increment'
+        self.backend_instance.folder_name_conflict_handler = "increment"
         repository.query.side_effect = query
-        name = self.backend_instance.get_unique_folder_name(
-            'test', mocked_parent)
-        self.assertEqual('test_(4)', name)
+        name = self.backend_instance.get_unique_folder_name("test", mocked_parent)
+        self.assertEqual("test_(4)", name)
 
     def test_get_unique_folder_name_2(self):
         mocked_parent = mock.MagicMock()
@@ -112,14 +110,15 @@ class TestCmisBackend(common.SavepointCase):
         query_result = mock.MagicMock()
         repository.query.side_effect = lambda *a: query_result
         query_result.getNumItems.side_effect = lambda *a: 0
-        self.assertEqual('test', self.backend_instance.get_unique_folder_name(
-            'test', mocked_parent))
+        self.assertEqual(
+            "test", self.backend_instance.get_unique_folder_name("test", mocked_parent)
+        )
         # if the same name is found and the folder_name_conflict_handler ==
         # 'error' a ValidationError is raised
         query_result.getNumItems.side_effect = lambda *a: 1
-        self.backend_instance.folder_name_conflict_handler = 'error'
+        self.backend_instance.folder_name_conflict_handler = "error"
         with self.assertRaises(ValidationError):
-            self.backend_instance.get_unique_folder_name('test', mocked_parent)
+            self.backend_instance.get_unique_folder_name("test", mocked_parent)
 
         self.cpt = 0
 
@@ -133,18 +132,18 @@ class TestCmisBackend(common.SavepointCase):
                 test = mock.Mock()
                 test.configure_mock()
                 ret = []
-                for v in ['test_(backup)']:
+                for v in ["test_(backup)"]:
                     m = mock.Mock()
                     m.configure_mock(name=v)
                     ret.append(m)
                 query_result.__iter__.return_value = ret
                 return query_result
             return None  # pragma: no cover
+
         # if no name is found and the folder_name_conflict_handler ==
         # 'increment' the method must return a new name with a suffix _(X)
         # where X is the value max found as X for the same name + 1
-        self.backend_instance.folder_name_conflict_handler = 'increment'
+        self.backend_instance.folder_name_conflict_handler = "increment"
         repository.query.side_effect = query
-        name = self.backend_instance.get_unique_folder_name(
-            'test', mocked_parent)
-        self.assertEqual('test_(1)', name)
+        name = self.backend_instance.get_unique_folder_name("test", mocked_parent)
+        self.assertEqual("test_(1)", name)

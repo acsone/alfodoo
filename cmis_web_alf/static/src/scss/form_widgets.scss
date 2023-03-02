@@ -1,12 +1,12 @@
 .o_touch_device.o_web_client {
-    .btn-alf{
-        &.btn-sm{
+    .btn-alf {
+        &.btn-sm {
             padding-left: 8px;
             padding-right: 8px;
             padding-top: 6px;
             padding-bottom: 6px;
         }
-        &.btn-xs{
+        &.btn-xs {
             padding-left: 3px;
             padding-right: 3px;
             padding-top: 2px;
@@ -15,28 +15,28 @@
     }
 }
 
-.btn-alf{
-    &.btn-sm{
+.btn-alf {
+    &.btn-sm {
         padding-left: 8px;
         padding-right: 8px;
         padding-top: 6px;
         padding-bottom: 6px;
     }
-    &.btn-xs{
+    &.btn-xs {
         padding-left: 3px;
         padding-right: 3px;
         padding-top: 2px;
         padding-bottom: 2px;
     }
-    div.alf-ico{ 
-        background-image: url('/cmis_web_alf/static/src/images/alfresco-logo-16.png');
+    div.alf-ico {
+        background-image: url("/cmis_web_alf/static/src/images/alfresco-logo-16.png");
         background-repeat: no-repeat;
         background-position-x: left;
         background-position-y: center;
         width: 16px;
         height: 16px;
     }
-    .btn-group &{
+    .btn-group & {
         margin-left: -1px;
     }
     &:focus {

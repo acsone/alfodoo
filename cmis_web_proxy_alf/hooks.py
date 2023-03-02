@@ -6,9 +6,7 @@ _logger = logging.getLogger(__name__)
 
 
 def pre_init_hook(cr):
-    _logger.info(
-        "Adds a value for alfresco_api_location for all cmis.backend"
-    )
+    _logger.info("Adds a value for alfresco_api_location for all cmis.backend")
     cr.execute(
         """
         ALTER TABLE cmis_backend

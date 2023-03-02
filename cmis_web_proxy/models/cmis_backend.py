@@ -1,8 +1,8 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
-from odoo import tools
+from odoo import api, fields, models, tools
+
 from ..controllers import cmis
 
 
@@ -42,7 +42,7 @@ class CmisBackend(models.Model):
 
     @api.model
     def _get_web_description(self, record):
-        """ Return the desciption of backend record to be included into the
+        """Return the desciption of backend record to be included into the
         field description of cmis fields that reference the backend.
         """
         descr = super(CmisBackend, self)._get_web_description(record)

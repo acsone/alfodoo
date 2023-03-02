@@ -2,11 +2,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, http
-from odoo.http import request
 from odoo.exceptions import AccessError
-from odoo.addons.web.controllers import main
+from odoo.http import request
 
 from odoo.addons.cmis_web_proxy.controllers import cmis
+from odoo.addons.web.controllers import main
 
 ALFRESCO_API_PROXY_PATH = "/alfresco/s/api"
 
@@ -17,9 +17,7 @@ class AlfrescoProxy(cmis.CmisProxy):
         if not token:
             raise AccessError(_("Bad request"))
         # check access to object from token
-        model_inst, field_name = self._decode_token(
-            "/", proxy_info, params, token
-        )
+        model_inst, field_name = self._decode_token("/", proxy_info, params, token)
         if not self._check_cmis_content_access(
             "/", proxy_info, params, model_inst, field_name
         ):
@@ -45,9 +43,7 @@ class AlfrescoProxy(cmis.CmisProxy):
         """
         # proxy_info are information available into the cache without loading
         # the cmis.backend from the database
-        proxy_info = request.env["cmis.backend"].get_proxy_info_by_id(
-            backend_id
-        )
+        proxy_info = request.env["cmis.backend"].get_proxy_info_by_id(backend_id)
         if proxy_info["apply_odoo_security"]:
             self._check_alfresco_access(proxy_info, kwargs)
         url = (

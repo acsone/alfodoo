@@ -1,12 +1,11 @@
-
 .btn-odoo {
     color: #21b799;
     background-color: white;
     border-color: white;
 }
 
-div.alf-ico{ 
-    background-image: url('./img/alfresco-logo-16.png');
+div.alf-ico {
+    background-image: url("./img/alfresco-logo-16.png");
     background-repeat: no-repeat;
     background-position-x: left;
     background-position-y: center;

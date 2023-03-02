@@ -6,11 +6,11 @@ from odoo import models
 
 class IrActionsReport(models.Model):
 
-    _inherit = 'ir.actions.report'
+    _inherit = "ir.actions.report"
 
     def _save_in_cmis(self, record, buffer):
         res = super()._save_in_cmis(record, buffer)
-        bus = self.env['bus.bus']
+        bus = self.env["bus.bus"]
         if self.cmis_folder_field_id:
             # only notify on the root folder
             field_name = self.cmis_folder_field_id.name

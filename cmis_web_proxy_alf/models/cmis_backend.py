@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+
 from ..controllers import alfresco
 
 
@@ -16,9 +17,7 @@ class CmisBackend(models.Model):
                 alfresco.ALFRESCO_API_PROXY_PATH + "/%s" % record.id
             )
 
-    alfresco_api_location = fields.Char(
-        string="Alfresco Api Url", required=True
-    )
+    alfresco_api_location = fields.Char(string="Alfresco Api Url", required=True)
     proxy_api_location = fields.Char(
         readonly=True, compute="_compute_proxy_api_location"
     )
@@ -32,7 +31,7 @@ class CmisBackend(models.Model):
 
     @api.model
     def _get_web_description(self, record):
-        """ Return the desciption of backend record to be included into the
+        """Return the desciption of backend record to be included into the
         field description of alfresco fields that reference the backend.
         """
         descr = super(CmisBackend, self)._get_web_description(record)

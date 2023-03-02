@@ -2,16 +2,18 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import threading
 import time
-from operator import attrgetter
 from functools import partial
-from odoo import api, fields, registry, SUPERUSER_ID, _
+from operator import attrgetter
+
+from cmislib.exceptions import ObjectNotFoundException
+
+from odoo import SUPERUSER_ID, _, api, fields, registry
 from odoo.exceptions import UserError
 from odoo.tools.sql import pg_varchar
-from cmislib.exceptions import ObjectNotFoundException
 
 
 class CmisFolder(fields.Field):
-    """ A reference to a cmis:folder. (cmis:objectId)
+    """A reference to a cmis:folder. (cmis:objectId)
 
     :param backend_name:
 
@@ -61,11 +63,12 @@ class CmisFolder(fields.Field):
             {record.id: {'cmis:xxx': 'val1', ...}}
 
     """
-    type = 'cmis_folder'
-    column_type = ('varchar', pg_varchar())
+
+    type = "cmis_folder"
+    column_type = ("varchar", pg_varchar())
     backend_name = None
     create_method = None
-    create_name_get = 'name_get'
+    create_name_get = "name_get"
     create_parent_get = None
     create_properties_get = None
     allow_create = True
@@ -99,25 +102,24 @@ class CmisFolder(fields.Field):
                 # into the list.
                 backend = backend[:1]
             else:
-                msg = (_('Too many backend found. '
-                         'Please check your configuration.'))
-                return {'backend_error': msg}
+                msg = _("Too many backend found. " "Please check your configuration.")
+                return {"backend_error": msg}
         if not backend:
             if self.backend_name:
-                msg = (_('Backend named %s not found. '
-                         'Please check your configuration.') %
-                       self.backend_name)
+                msg = (
+                    _("Backend named %s not found. " "Please check your configuration.")
+                    % self.backend_name
+                )
             else:
-                msg = _('No backend found. Please check your configuration.')
-            return {'backend_error': msg}
+                msg = _("No backend found. Please check your configuration.")
+            return {"backend_error": msg}
         return backend.get_web_description()[backend.id]
 
-    _description_allow_create = property(attrgetter('allow_create'))
-    _description_allow_delete = property(attrgetter('allow_delete'))
+    _description_allow_create = property(attrgetter("allow_create"))
+    _description_allow_delete = property(attrgetter("allow_delete"))
 
     def get_backend(self, env, raise_if_not_found=True):
-        return env['cmis.backend'].get_by_name(
-            self.backend_name, raise_if_not_found)
+        return env["cmis.backend"].get_by_name(self.backend_name, raise_if_not_found)
 
     def create_value(self, records):
         """Create a new folder for each record into the cmis container and
@@ -164,8 +166,7 @@ class CmisFolder(fields.Field):
             parent = parents[record.id]
             name = backend.get_unique_folder_name(name, parent)
             props = properties[record.id] or {}
-            value = repo.createFolder(
-                parent, name, props)
+            value = repo.createFolder(parent, name, props)
 
             def clean_up_folder(cmis_object_id, backend_id, dbname):
                 db_registry = registry(dbname)
@@ -183,16 +184,16 @@ class CmisFolder(fields.Field):
                         pass
 
             # remove created resource in case of rollback
-            test_mode = getattr(threading.currentThread(), 'testing', False)
+            test_mode = getattr(threading.currentThread(), "testing", False)
             if not test_mode:
                 record.env.cr.after(
-                    'rollback',
+                    "rollback",
                     partial(
                         clean_up_folder,
                         value.getObjectId(),
                         backend.id,
-                        record.env.cr.dbname
-                    )
+                        record.env.cr.dbname,
+                    ),
                 )
 
             self.__set__(record, value.getObjectId())
@@ -200,7 +201,7 @@ class CmisFolder(fields.Field):
     def _check_null(self, record, raise_exception=True):
         val = self.__get__(record, record)
         if val and raise_exception:
-            raise UserError(_('A value is already assigned to %s') % self)
+            raise UserError(_("A value is already assigned to %s") % self)
         return val
 
     def get_create_names(self, records, backend):
@@ -213,7 +214,7 @@ class CmisFolder(fields.Field):
             {record.id: 'name'}
 
         """
-        if self.create_name_get == 'name_get':
+        if self.create_name_get == "name_get":
             return dict(records.name_get())
         fct = self.create_name_get
         if not callable(fct):
@@ -237,7 +238,8 @@ class CmisFolder(fields.Field):
             return fct(self, backend)
         path_parts = self.get_default_parent_path_parts(records, backend)
         parent_cmis_object = backend.get_folder_by_path_parts(
-            path_parts, create_if_not_found=True)
+            path_parts, create_if_not_found=True
+        )
         return dict.fromkeys(records.ids, parent_cmis_object)
 
     def get_create_properties(self, records, backend):
@@ -262,8 +264,8 @@ class CmisFolder(fields.Field):
         parent on folder create. By default:
         backend.initial_directory_write / record._name
         """
-        path_parts = backend.initial_directory_write.split('/')
-        path_parts.append(records[0]._name.replace('.', '_'))
+        path_parts = backend.initial_directory_write.split("/")
+        path_parts.append(records[0]._name.replace(".", "_"))
         return path_parts
 
     def get_cmis_object(self, record):

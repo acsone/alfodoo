@@ -3,11 +3,13 @@
 import json
 import logging
 import urllib.parse
+
 import werkzeug
 
 from odoo import _, http
-from odoo.http import request
 from odoo.exceptions import AccessError
+from odoo.http import request
+
 from odoo.addons.web.controllers import main
 
 _logger = logging.getLogger(__name__)
@@ -19,10 +21,9 @@ except ImportError:
 
 CMIS_PROXY_PATH = "/cmis/1.1/browser"
 
-READ_ACCESS_CMIS_ACTIONS = set(["query"])
+READ_ACCESS_CMIS_ACTIONS = {"query"}
 
-WRITE_ACCESS_CMIS_ACTIONS = set(
-    [
+WRITE_ACCESS_CMIS_ACTIONS = {
         "createRelationship",
         # "createPolicy", method at repository level:  not supported
         # "createItem", method at repository level:  not supported
@@ -40,21 +41,17 @@ WRITE_ACCESS_CMIS_ACTIONS = set(
         "checkIn",
         # "applyPolicy", method at repository level:  not supported
         # "applyACL", method at repository level:  not supported
-    ]
-)
+}
 
-UNLINK_ACCESS_CMIS_ACTIONS = set(
-    [
+UNLINK_ACCESS_CMIS_ACTIONS = {
         "delete",
         "deleteContent",
         "removeObjectFromFolder",
         # "removePolicy", method at repository level:  not supported
         # "deleteType", method at repository level:  not supported
-    ]
-)
+}
 
-READ_ACCESS_ALLOWABLE_ACTIONS = set(
-    [
+READ_ACCESS_ALLOWABLE_ACTIONS = {
         "canGetDescendants",
         "canGetChildren",
         "canGetFolderParent",
@@ -65,11 +62,9 @@ READ_ACCESS_ALLOWABLE_ACTIONS = set(
         "canGetObjectRelationships",
         "canGetAppliedPolicies",
         "canGetACL",
-    ]
-)
+}
 
-WRITE_ACCESS_ALLOWABLE_ACTIONS = set(
-    [
+WRITE_ACCESS_ALLOWABLE_ACTIONS = {
         "canCreateDocument",
         "canCreateFolder",
         # "canCreatePolicy",
@@ -83,18 +78,15 @@ WRITE_ACCESS_ALLOWABLE_ACTIONS = set(
         "canCheckIn",
         # "canApplyPolicy",
         # "canApplyACL",
-    ]
-)
+}
 
-UNLINK_ACCESS_ALLOWABLE_ACTIONS = set(
-    [
+UNLINK_ACCESS_ALLOWABLE_ACTIONS = {
         "canRemoveObjectFromFolder",
         "canDeleteObject",
         "canDeleteContentStream",
         "canDeleteTree",
         # "canRemovePolicy",
-    ]
-)
+}
 
 CMSI_ACTIONS_OPERATION_MAP = {}
 for a in READ_ACCESS_CMIS_ACTIONS:
@@ -106,7 +98,7 @@ for a in UNLINK_ACCESS_CMIS_ACTIONS:
 
 
 def gen_dict_extract(key, var):
-    """ This method is used to recusrively find into a json structure (dict)
+    """This method is used to recusrively find into a json structure (dict)
     all values of a given key
     credits: http://stackoverflow.com/questions/9807634/
     find-all-occurences-of-a-key-in-nested-python-dictionaries-and-lists
@@ -127,8 +119,7 @@ def gen_dict_extract(key, var):
 class CmisProxy(http.Controller):
     @property
     def _cmis_proxy_base_url(self):
-        return urllib.parse.urljoin(request.httprequest.host_url,
-                                    CMIS_PROXY_PATH)
+        return urllib.parse.urljoin(request.httprequest.host_url, CMIS_PROXY_PATH)
 
     def _get_requests_timeout(self):
         """
@@ -137,8 +128,11 @@ class CmisProxy(http.Controller):
         :return: timeout (seconds in float)
         """
         try:
-            timeout = float(request.env['ir.config_parameter'].sudo().get_param(
-                "cmis.requests_timeout", "FAULTY"))
+            timeout = float(
+                request.env["ir.config_parameter"]
+                .sudo()
+                .get_param("cmis.requests_timeout", "FAULTY")
+            )
         except ValueError as e:
             _logger.error(e)
             timeout = 10.0
@@ -178,8 +172,7 @@ class CmisProxy(http.Controller):
         """
         try:
             if hasattr(model_inst, "_check_cmis_access_operation"):
-                res = model_inst._check_cmis_access_operation(
-                    operation, field_name)
+                res = model_inst._check_cmis_access_operation(operation, field_name)
                 if res not in ("allow", "deny", "default"):
                     raise ValueError(
                         "_check_cmis_access_operation result "
@@ -207,12 +200,9 @@ class CmisProxy(http.Controller):
         ]
         if not all_allowable_actions:
             return
-        can_read = self._check_access_operation(
-            model_inst, "read", field_name)
-        can_write = self._check_access_operation(
-            model_inst, "write", field_name)
-        can_unlink = self._check_access_operation(
-            model_inst, "unlink", field_name)
+        can_read = self._check_access_operation(model_inst, "read", field_name)
+        can_write = self._check_access_operation(model_inst, "write", field_name)
+        can_unlink = self._check_access_operation(model_inst, "unlink", field_name)
         for allowable_actions in all_allowable_actions:
             for action, val in list(allowable_actions.items()):
                 allowed = False
@@ -265,7 +255,7 @@ class CmisProxy(http.Controller):
             params=params,
             stream=True,
             auth=(proxy_info["username"], proxy_info["password"]),
-            timeout=self._get_requests_timeout()
+            timeout=self._get_requests_timeout(),
         )
         r.raise_for_status()
         headers = dict(list(r.headers.items()))
@@ -284,7 +274,7 @@ class CmisProxy(http.Controller):
             url,
             params=params,
             auth=(proxy_info["username"], proxy_info["password"]),
-            timeout=self._get_requests_timeout()
+            timeout=self._get_requests_timeout(),
         )
         r.raise_for_status()
         if r.text:
@@ -293,14 +283,13 @@ class CmisProxy(http.Controller):
                 dict(list(r.headers.items())),
                 proxy_info,
                 model_inst,
-                field_name
+                field_name,
             )
         else:
             response = werkzeug.Response()
         return response
 
-    def _forward_post(self, url_path, proxy_info, model_inst, field_name,
-                      params):
+    def _forward_post(self, url_path, proxy_info, model_inst, field_name, params):
         """The CMIS Browser binding is designed to be queried from the browser
         Therefore, the parameters in a POST are expected to be submitted as
         HTTP multipart forms. Therefore each parameter in the request is
@@ -325,7 +314,7 @@ class CmisProxy(http.Controller):
             url,
             files=files,
             auth=(proxy_info["username"], proxy_info["password"]),
-            timeout=self._get_requests_timeout()
+            timeout=self._get_requests_timeout(),
         )
         r.raise_for_status()
         if r.text:
@@ -334,14 +323,14 @@ class CmisProxy(http.Controller):
                 dict(list(r.headers.items())),
                 proxy_info,
                 model_inst,
-                field_name
+                field_name,
             )
         else:
             response = werkzeug.Response()
         return response
 
     def _check_provided_token(self, cmis_path, proxy_info, params):
-        """ Check that a token is present in the request or in the http
+        """Check that a token is present in the request or in the http
         headers and both are equal.
         :return: the token value if checks are OK, False otherwise.
         """
@@ -395,8 +384,7 @@ class CmisProxy(http.Controller):
         token_cmis_objectid = getattr(model_inst, field_name)
         if not token_cmis_objectid:
             _logger.info(
-                "The referenced model doesn't reference a CMIS "
-                "content (%s, %s)",
+                "The referenced model doesn't reference a CMIS " "content (%s, %s)",
                 model_inst._name,
                 model_inst.id,
             )
@@ -525,18 +513,14 @@ class CmisProxy(http.Controller):
         """
         # proxy_info are informations available into the cache without loading
         # the cmis.backend from the database
-        proxy_info = request.env["cmis.backend"].get_proxy_info_by_id(
-            backend_id
-        )
+        proxy_info = request.env["cmis.backend"].get_proxy_info_by_id(backend_id)
         method = request.httprequest.method
         model_inst = False
         field_name = False
         if proxy_info.get("apply_odoo_security"):
             model_inst, field_name = self._check_access(cmis_path, proxy_info, kwargs)
         if method not in ["GET", "POST"]:
-            raise AccessError(
-                _("The HTTP METHOD %s is not supported by CMIS") % method
-            )
+            raise AccessError(_("The HTTP METHOD %s is not supported by CMIS") % method)
         if method == "GET":
             method = self._forward_get
         elif method == "POST":

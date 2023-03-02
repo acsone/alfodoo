@@ -8,9 +8,7 @@ class IrActionsReport(models.Model):
 
     _inherit = "ir.actions.report"
 
-    def _create_cmis_document(
-        self, buffer, record, file_name, cmis_parent_folder
-    ):
+    def _create_cmis_document(self, buffer, record, file_name, cmis_parent_folder):
         res = super()._create_cmis_document(
             buffer, record, file_name, cmis_parent_folder
         )

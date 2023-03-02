@@ -4,10 +4,11 @@ import logging
 import os
 import time
 
-import odoo.tests.common as common
 from cmislib import CmisClient
 from cmislib.browser.binding import BrowserBinding
 from cmislib.exceptions import NotSupportedException
+
+import odoo.tests.common as common
 
 _logger = logging.getLogger(__name__)
 
@@ -61,9 +62,7 @@ class BaseTestCmisProxy(common.HttpCase):
                 "version": "1.0",
             }
         )
-        web_descr = self.cmis_backend.get_web_description()[
-            self.cmis_backend.id
-        ]
+        web_descr = self.cmis_backend.get_web_description()[self.cmis_backend.id]
         proxy_path = web_descr["cmis_location"]
         self.authenticate("admin", "admin")
         self.cmis_url = "http://%s:%d%s" % (
@@ -91,7 +90,7 @@ class BaseTestCmisClient(BaseTestCmisProxy):
         self.test_doc2 = os.path.join(TEST_DIR, "test_doc2.pdf")
 
     def tearDown(self):
-        """ Clean up after the test. """
+        """Clean up after the test."""
         try:
             self.test_folder.deleteTree()
         except NotSupportedException:
@@ -105,16 +104,16 @@ class TestCmisClient(BaseTestCmisProxy):
         an ID and a name
         """
         repo_info = self.cmis_client.getRepositories()
-        self.assert_(len(repo_info) >= 1)
-        self.assert_("repositoryId" in repo_info[0])
-        self.assert_("repositoryName" in repo_info[0])
+        self.assertTrue(len(repo_info) >= 1)
+        self.assertTrue("repositoryId" in repo_info[0])
+        self.assertTrue("repositoryName" in repo_info[0])
 
     def testDefaultRepository(self):
         """Get the default repository by calling the repo's service URL
         and check that the repository url is the one of the proxy"""
         repo = self.cmis_client.getDefaultRepository()
-        self.assert_(repo is not None)
-        self.assert_(repo.getRepositoryId() is not None)
+        self.assertTrue(repo is not None)
+        self.assertTrue(repo.getRepositoryId() is not None)
         self.assertEqual(repo.getRepositoryUrl(), self.cmis_url)
 
 
@@ -129,10 +128,7 @@ class TestCmisQuery(BaseTestCmisClient):
 
     def testSimpleSelect(self):
         """Execute simple select from cmis:document"""
-        query = (
-            "SELECT * FROM cmis:document where cmis:name = '%s'"
-            % self.filename
-        )
+        query = "SELECT * FROM cmis:document where cmis:name = '%s'" % self.filename
         rs = self.repo.query(query)
         self.assertTrue(isInResultSet(rs, self.cmis_content))
 
@@ -148,7 +144,7 @@ class TestRepository(BaseTestCmisClient):
 
     def testCreateDocumentSpecialChar(self):
         with open(self.test_doc1, "rb") as test_file:
-            filename = u"éééà€ß.pdf"
+            filename = "éééà€ß.pdf"
             cmis_content = self.test_folder.createDocument(
                 filename, contentFile=test_file
             )
@@ -161,7 +157,7 @@ class TestRepository(BaseTestCmisClient):
         new_folder = self.repo.createFolder(self.test_folder, folder_name)
         objectId = new_folder.getObjectId()
         cmis_content = self.repo.getObject(objectId)
-        self.assertEquals(folder_name, cmis_content.getName())
+        self.assertEqual(folder_name, cmis_content.getName())
         new_folder.delete()
 
     def testReturnVersion(self):
@@ -192,24 +188,22 @@ class TestRepository(BaseTestCmisClient):
         doc21Id = doc21.getObjectId()
 
         docLatest = self.repo.getObject(doc10Id, returnVersion="latest")
-        self.assertEquals(doc21Id, docLatest.getObjectId())
+        self.assertEqual(doc21Id, docLatest.getObjectId())
 
-        docLatestMajor = self.repo.getObject(
-            doc10Id, returnVersion="latestmajor"
-        )
-        self.assertEquals(doc20Id, docLatestMajor.getObjectId())
+        docLatestMajor = self.repo.getObject(doc10Id, returnVersion="latestmajor")
+        self.assertEqual(doc20Id, docLatestMajor.getObjectId())
 
     def testMoveDocument(self):
         """Move a Document from one folder to another folder"""
         subFolder1 = self.test_folder.createFolder("sub1")
         doc = subFolder1.createDocument("testdoc1")
-        self.assertEquals(len(subFolder1.getChildren()), 1)
+        self.assertEqual(len(subFolder1.getChildren()), 1)
         subFolder2 = self.test_folder.createFolder("sub2")
-        self.assertEquals(len(subFolder2.getChildren()), 0)
+        self.assertEqual(len(subFolder2.getChildren()), 0)
         doc.move(subFolder1, subFolder2)
-        self.assertEquals(len(subFolder1.getChildren()), 0)
-        self.assertEquals(len(subFolder2.getChildren()), 1)
-        self.assertEquals(doc.name, subFolder2.getChildren()[0].name)
+        self.assertEqual(len(subFolder1.getChildren()), 0)
+        self.assertEqual(len(subFolder2.getChildren()), 1)
+        self.assertEqual(doc.name, subFolder2.getChildren()[0].name)
 
 
 class TestFolder(BaseTestCmisClient):
@@ -222,8 +216,8 @@ class TestFolder(BaseTestCmisClient):
         child2 = self.test_folder.createFolder(name2)
         sub_child = child2.createFolder(sub_name)
         rs = self.test_folder.getChildren()
-        self.assert_(rs is not None)
-        self.assertEquals(2, len(rs.getResults()))
+        self.assertTrue(rs is not None)
+        self.assertEqual(2, len(rs.getResults()))
         self.assertTrue(isInResultSet(rs, child1))
         self.assertTrue(isInResultSet(rs, child2))
         self.assertFalse(isInResultSet(rs, sub_child))
@@ -232,23 +226,23 @@ class TestFolder(BaseTestCmisClient):
         """Create a test folder, then delete it"""
         name = "testDeleteEmptyFolder folder"
         folder = self.test_folder.createFolder(name)
-        self.assertEquals(name, folder.getName())
+        self.assertEqual(name, folder.getName())
         newFolder = folder.createFolder("testFolder")
         children = folder.getChildren()
-        self.assertEquals(1, len(children.getResults()))
+        self.assertEqual(1, len(children.getResults()))
         newFolder.delete()
         children = folder.getChildren()
-        self.assertEquals(0, len(children.getResults()))
+        self.assertEqual(0, len(children.getResults()))
 
     def testUpdateProperties(self):
         """Create a test folder, then update its properties"""
         name = "testUpdateProperties folder"
         folder = self.test_folder.createFolder(name)
-        self.assertEquals(name, folder.getName())
+        self.assertEqual(name, folder.getName())
         name2 = "testUpdateProperties folder2"
         props = {"cmis:name": name2}
         folder.updateProperties(props)
-        self.assertEquals(name2, folder.getName())
+        self.assertEqual(name2, folder.getName())
 
 
 class TestDocument(BaseTestCmisClient):
@@ -271,7 +265,7 @@ class TestDocument(BaseTestCmisClient):
             doc = self.test_folder.createDocument(
                 filename, contentFile=test_file, properties=props
             )
-        self.assertEquals(filename, doc.getName())
+        self.assertEqual(filename, doc.getName())
         if not doc.allowableActions["canCheckOut"]:
             self.skipTest("The test doc cannot be checked out...skipping")
         private_working_copy = doc.checkout()
@@ -301,7 +295,7 @@ class TestDocument(BaseTestCmisClient):
         """Create a document in a test folder, then delete it"""
         new_doc = self.test_folder.createDocument("testDocument")
         children = self.test_folder.getChildren()
-        self.assertEquals(1, len(children.getResults()))
+        self.assertEqual(1, len(children.getResults()))
         new_doc.delete()
         children = self.test_folder.getChildren()
-        self.assertEquals(0, len(children.getResults()))
+        self.assertEqual(0, len(children.getResults()))

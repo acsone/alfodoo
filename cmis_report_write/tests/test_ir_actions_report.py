@@ -2,12 +2,14 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import base64
+
 import mock
 import pkg_resources
 
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
+
 from odoo.addons.cmis_field.tests import common
-from odoo.exceptions import ValidationError, UserError
 
 
 class TestIrActionsReport(common.BaseTestCmis):
@@ -24,8 +26,7 @@ class TestIrActionsReport(common.BaseTestCmis):
             "report_name": "cmis_report_write.cmis_test_model_report",
             "report_type": "qweb-pdf",
             "paperformat_id": cls.env.ref("base.paperformat_euro").id,
-            "cmis_filename": "cmis_backend.sanitize_cmis_name(object.name)"
-            " + '.pdf'",
+            "cmis_filename": "cmis_backend.sanitize_cmis_name(object.name)" " + '.pdf'",
             "cmis_folder_field_id": cls.cmis_folder_field_id.id,
             "cmis_parent_type": "folder_field",
             "cmis_duplicate_handler": "error",
@@ -59,17 +60,13 @@ class TestIrActionsReport(common.BaseTestCmis):
         )
         self.mocked_wkhtmltopdf = wkhtmltopdf_patcher.start()
         self.mocked_wkhtmltopdf.return_value = self.pdf_content_1
-        merge_pdfs_patcher = mock.patch.object(
-            self.report.__class__, "_merge_pdfs"
-        )
+        merge_pdfs_patcher = mock.patch.object(self.report.__class__, "_merge_pdfs")
         self.mocked_merge_pdfs = merge_pdfs_patcher.start()
         self.mocked_merge_pdfs.return_value = self.pdf_content_1
         get_wkhtmltopdf_state_patcher = mock.patch.object(
             self.report.__class__, "get_wkhtmltopdf_state"
         )
-        self.mocked_get_wkhtmltopdf_state = (
-            get_wkhtmltopdf_state_patcher.start()
-        )
+        self.mocked_get_wkhtmltopdf_state = get_wkhtmltopdf_state_patcher.start()
         self.mocked_get_wkhtmltopdf_state.return_value = "ok"
 
         @self.addCleanup
@@ -89,9 +86,7 @@ class TestIrActionsReport(common.BaseTestCmis):
                 }
             )
             action_report.create(vals)
-            vals.update(
-                {"cmis_backend_id": False, "cmis_parent_type": "backend"}
-            )
+            vals.update({"cmis_backend_id": False, "cmis_parent_type": "backend"})
             action_report.create(vals)
         vals.update(
             {
@@ -131,9 +126,7 @@ class TestIrActionsReport(common.BaseTestCmis):
 
     @mute_logger("odoo.addons.base.models.assetsbundle")
     def test_simple_report(self):
-        with mock.patch.object(
-            self.report.__class__, "_save_in_cmis"
-        ) as mocked_save:
+        with mock.patch.object(self.report.__class__, "_save_in_cmis") as mocked_save:
             # test the call the the create method inside our custom parser
             self.report._render(self.inst.ids)
             # check that the method is called

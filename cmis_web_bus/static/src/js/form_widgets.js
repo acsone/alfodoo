@@ -5,23 +5,20 @@
  + *---------------------------------------------------------
  +*/
 
-odoo.define('cmis_web_bus.form_widgets', function ( require) {
+odoo.define("cmis_web_bus.form_widgets", function (require) {
     "use strict";
 
-
-    require('bus.BusService');
-    var form_widgets = require('cmis_web.form_widgets');
-
+    require("bus.BusService");
+    var form_widgets = require("cmis_web.form_widgets");
 
     form_widgets.FieldCmisFolder.include({
-
         init: function () {
             this._super.apply(this, arguments);
-            this._channel_notify_cmis_node = 'notify_cmis_node';
+            this._channel_notify_cmis_node = "notify_cmis_node";
         },
 
         start: function () {
-            this.call('bus_service', 'onNotification', this, this.bus_notification);
+            this.call("bus_service", "onNotification", this, this.bus_notification);
             return this._super();
         },
 
@@ -41,15 +38,13 @@ odoo.define('cmis_web_bus.form_widgets', function ( require) {
             if (this.root_folder_id !== cmis_objectid) {
                 return;
             }
-            if (message.action === 'update') {
+            if (message.action === "update") {
                 if (this.datatable) {
-                // Avoid multiple refresh in cass of multiple notification
-                // of update of the same node
+                    // Avoid multiple refresh in cass of multiple notification
+                    // of update of the same node
                     _.debounce(this.datatable.ajax.reload, 300, true)();
                 }
             }
         },
-
     });
-
 });

@@ -3,10 +3,11 @@
 from contextlib import contextmanager
 
 import mock
+
 from odoo import http
 
-from . import common
 from ..controllers import main
+from . import common
 
 
 @contextmanager
@@ -21,17 +22,19 @@ def mock_http_request_env(env):
 
 
 class TestCmisController(common.BaseTestCmis):
-
     @classmethod
     def setUpClass(cls):
         super(TestCmisController, cls).setUpClass()
-        cls.cmis_test_model_inst = cls.env['cmis.test.model'].create(
-            {'name': 'folder_name'})
+        cls.cmis_test_model_inst = cls.env["cmis.test.model"].create(
+            {"name": "folder_name"}
+        )
 
     def test_init_field_value(self):
         controller = main.CmisController()
         with mock_http_request_env(self.env):
             val = controller.create_field_value(
-                self.cmis_test_model_inst._name, self.cmis_test_model_inst.id,
-                'cmis_folder2')
+                self.cmis_test_model_inst._name,
+                self.cmis_test_model_inst.id,
+                "cmis_folder2",
+            )
             self.assertDictEqual(val, {"value": "_create_method"})

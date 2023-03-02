@@ -1,15 +1,15 @@
 # Copyright 2019 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-import logging
 import base64
-import os
+import logging
 import mimetypes
+import os
 from collections import namedtuple
 from contextlib import contextmanager
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import safe_eval
-from odoo.exceptions import ValidationError, UserError
 from odoo.tools.safe_eval import time
 
 _logger = logging.getLogger(__name__)
@@ -132,10 +132,7 @@ class IrActionsReport(models.Model):
     def retrieve_attachment(self, record):
         if self.attachment != SAVE_IN_CMIS_MARKER:
             return super().retrieve_attachment(record)
-        if (
-            self._get_backend(record)
-            and self.cmis_duplicate_handler == "use_existing"
-        ):
+        if self._get_backend(record) and self.cmis_duplicate_handler == "use_existing":
             return self._retrieve_cmis_attachment(record)
         return None
 
@@ -164,15 +161,9 @@ class IrActionsReport(models.Model):
                 continue
             if rec.cmis_parent_type == "backend" and not rec.cmis_backend_id:
                 raise ValidationError(
-                    _(
-                        "You must specify a backend to use to store your "
-                        "file in CMIS"
-                    )
+                    _("You must specify a backend to use to store your " "file in CMIS")
                 )
-            if (
-                rec.cmis_parent_type == "folder_field"
-                and not rec.cmis_folder_field_id
-            ):
+            if rec.cmis_parent_type == "folder_field" and not rec.cmis_folder_field_id:
                 raise ValidationError(
                     _(
                         "You must select the folder field to use to "
@@ -195,9 +186,7 @@ class IrActionsReport(models.Model):
             # no filename -> no doc to generate
             return res
         # Get the parent forlder
-        cmis_parent_folder = self._get_cmis_parent_folder(
-            record, cmis_filename
-        )
+        cmis_parent_folder = self._get_cmis_parent_folder(record, cmis_filename)
         cmis_filename = os.path.basename(cmis_filename)
         # Search into the folder if a doc with the same name already
         # exists
@@ -255,9 +244,7 @@ class IrActionsReport(models.Model):
         if not cmis_filename:
             # can be false to allow condition in filename
             return None
-        cmis_parent_folder = self._get_cmis_parent_folder(
-            record, cmis_filename
-        )
+        cmis_parent_folder = self._get_cmis_parent_folder(record, cmis_filename)
         cmis_filename = os.path.basename(cmis_filename)
         return self._create_or_update_cmis_document(
             buffer, record, cmis_filename, cmis_parent_folder
@@ -317,31 +304,22 @@ class IrActionsReport(models.Model):
             if num_found_items > 0:
                 name, ext = os.path.splitext(file_name)
                 testname = name + "(*)" + ext
-                rs = cmis_parent_folder.getChildren(
-                    filter="cmis:name=%s" % testname
-                )
+                rs = cmis_parent_folder.getChildren(filter="cmis:name=%s" % testname)
                 file_name = name + "(%d)" % rs.getNumItems() + ext
             doc = self._create_cmis_document(
                 buffer, record, file_name, cmis_parent_folder
             )
             return UniqueDocInfo(doc, is_new)
-        if (
-            num_found_items > 0
-            and self.cmis_duplicate_handler == "new_version"
-        ):
+        if num_found_items > 0 and self.cmis_duplicate_handler == "new_version":
             doc = cmis_parent_folder.repository.getObject(
                 rs.getResults()[0].getObjectId()
             )
             doc = self._update_cmis_document(buffer, record, file_name, doc)
             return UniqueDocInfo(doc, is_new)
 
-        raise UserError(
-            _('Document "%s" already exists in CMIS') % (file_name)
-        )
+        raise UserError(_('Document "%s" already exists in CMIS') % (file_name))
 
-    def _create_cmis_document(
-        self, buffer, record, file_name, cmis_parent_folder
-    ):
+    def _create_cmis_document(self, buffer, record, file_name, cmis_parent_folder):
         self.ensure_one()
         props = {"cmis:name": file_name}
         if self.cmis_objectTypeId:

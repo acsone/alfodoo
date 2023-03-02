@@ -1,30 +1,29 @@
- a.buttons-columnVisibility{
+a.buttons-columnVisibility {
     background-color: initial !important;
 
     :before {
-        content:' ';
+        content: " ";
         margin-left: 11px;
     }
 
-    &.active{
-        :before{
-            content:'\2714';
-            margin-top:-11px;
+    &.active {
+        :before {
+            content: "\2714";
+            margin-top: -11px;
             margin-left: 0px;
-            text-align:center;
-            &:empty{
-                content:'';
+            text-align: center;
+            &:empty {
+                content: "";
             }
         }
     }
 
     :empty:before {
-        content:'';
+        content: "";
     }
 }
 
 div.field_cmis_folder {
-
     margin-top: 15px;
     width: 100%;
 
@@ -50,7 +49,7 @@ div.field_cmis_folder {
         div.dataTables_scrollBody {
             min-height: 40vh;
             &.is-dragover {
-                outline: 2px dashed #4F94C9;
+                outline: 2px dashed #4f94c9;
                 outline-offset: +2px;
             }
         }
@@ -58,7 +57,7 @@ div.field_cmis_folder {
         tr {
             td.details-control {
                 cursor: pointer;
-             }
+            }
             td {
                 padding: 3px 6px;
                 vertical-align: middle;
@@ -67,7 +66,7 @@ div.field_cmis_folder {
                 }
 
                 div.cmis-folder {
-                   cursor: pointer;
+                    cursor: pointer;
                 }
             }
         }
@@ -120,11 +119,11 @@ div.field_cmis_folder_content_actions {
 
 form.cmis_update_content_stream,
 form.cmis_create_document,
-form.cmis_duplicate_document_resolver{
+form.cmis_duplicate_document_resolver {
     .btn-file {
         overflow: hidden;
         position: relative;
-        input[type=file] {
+        input[type="file"] {
             background: red;
             cursor: inherit;
             display: block;
@@ -146,10 +145,11 @@ form.cmis_duplicate_document_resolver{
 }
 
 .form-control:invalid {
-  border-color: #135286;
-  outline: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    border-color: #135286;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+        0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 
 .form-control:invalid {
