@@ -344,6 +344,52 @@ odoo.define('cmis_web.form_widgets', function (require) {
         }
     });
 
+    var CmisLinkDocumentDialog = Dialog.extend({
+        template: 'CmisLinkDocumentDialog',
+
+        init: function (parent, parentCmisObject) {
+            var self = this;
+            var options = {
+                buttons: [
+                    {
+                        text: _t("Link"),
+                        classes: "btn-primary",
+                        click: function (e) {
+                            e.stopPropagation();
+                            if (self.check_validity()) {
+                                self.on_click_link();
+                            }
+                        }
+                    },
+                    {
+                        text: _t("Close"),
+                        click: function (e) {
+                            e.stopPropagation();
+                            self.$el.parents('.modal').modal('hide');
+                        }
+                    },
+
+                ],
+                close: function () {
+                    self.close();
+                },
+                title: _t("Link Document"),
+            };
+            this._super(parent, options);
+        },
+
+        on_click_link: function () {
+            var objectId = this.$el.find("input[id='identifier']").val();
+            var parent = this.getParent();
+            parent.trigger('cmis-link-document', objectId);
+            this.close();
+        },
+
+        close: function () {
+            this._super();
+        }
+    });
+
     var CmisAddDocumentDialog = Dialog.extend({
         template: 'CmisAddDocumentDialog',
         events: {
@@ -963,6 +1009,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.document = {};
 
             this.on('cmis-add-document', this, this.onAddDocument);
+            this.on('cmis-link-document', this, this.onLinkDocument);
             this.on('cmis_node_content_updated', this, this.onDocumentUpdated);
         },
 
@@ -993,7 +1040,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             if (this.value && this.value !== "empty") {
                 this._renderCmisDocument(this.document);
             } else {
-                this._renderAddCmisDocument();
+                this._renderNoDocument();
             }
         },
 
@@ -1012,10 +1059,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.register_document_action_events();
         },
 
-        _renderAddCmisDocument: function () {
-            var $cmisDoc = QWeb.render("CmisDocumentAdd", {});
+        _renderNoDocument: function () {
+            var $cmisDoc = QWeb.render("CmisNoDocumentActions", {});
             this.$el.html($cmisDoc);
-            this.register_document_add_events();
+            this.register_no_document();
         },
 
         _get_document: function (objectId) {
@@ -1034,6 +1081,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 .then(() => self._getDocumentsFromFiles(files))
                 .then((documents) => self._uploadDocumentsToCreate(documents))
                 .then((result) => self.trigger_up('reload'));
+        },
+
+        onLinkDocument: function(objectId) {
+            var self = this;
+            this.cmis_config_loaded
+                .then(() => self.update_document_field(objectId));
         },
 
         onDocumentUpdated: function (document) {
@@ -1069,12 +1122,22 @@ odoo.define('cmis_web.form_widgets', function (require) {
             dialog.open();
         },
 
+        onClickLinkDocument: function () {
+            var dialog = new CmisLinkDocumentDialog(this);
+            dialog.open();
+        },
+
         on_click_preview: function () {
             var documentViewer = new DocumentViewer(this, this.document);
             documentViewer.appendTo($('body'));
         },
 
         update_document_field: function (objectId) {
+            var re = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+            var ok = re.exec(objectId);
+            if (!ok) {
+                return {"error": "invalid_object_id"};
+            };
             var changes = {};
             changes[this.name] = objectId;
             this.trigger_up('field_changed', {
@@ -1236,11 +1299,16 @@ odoo.define('cmis_web.form_widgets', function (require) {
             });
         },
 
-        register_document_add_events: function () {
+        register_no_document: function () {
             var self = this;
             this.$el.find('.content-action-add').on('click', function (e) {
                 self.stopEvent(e);
                 self.onClickAddDocument();
+            });
+
+            this.$el.find('.content-action-link').on('click', function (e) {
+                self.stopEvent(e);
+                self.onClickLinkDocument();
             });
         },
 

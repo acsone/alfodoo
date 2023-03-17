@@ -359,6 +359,21 @@
     </form>
 </t>
 
+<t t-name='CmisLinkDocumentDialog'>
+<form class="form-horizontal cmis_link_document" role="form" t-att-id="id">
+    <div class="form-group mb0">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <span class="input-group-text col-sm-8">
+                    <label for="identifier">Identifier</label>
+                    <input class="ml-1" id="identifier" type="text"/>
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
+</t>
+
 <t t-name='CmisCreateFolderDialog'>
     <form class="form-horizontal" role="form" t-att-id="id">
         <div class="form-group mb0">
@@ -454,6 +469,20 @@
             <small class="text-muted">Add a document</small>
         </div>
     </div>
+</t>
+
+<t t-name="CmisDocumentLink">
+<div class="cmis-doc-link">
+    <div class="px-2">
+        <span class="fa fa-solid fa-link mr-2 content-action-link"/>
+        <small class="text-muted">Link with an existing document</small>
+    </div>
+</div>
+</t>
+
+<t t-name="CmisNoDocumentActions">
+    <t t-call="CmisDocumentAdd"/>
+    <t t-call="CmisDocumentLink"/>
 </t>
 
 <t t-name="CmisDocumentActions">
