@@ -3,6 +3,7 @@
 
         <template id="assets_backend" name="cmis web proxy assets" inherit_id="cmis_web.assets_backend">
             <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/cmis_web_proxy/static/src/scss/form_widgets.scss"/>
                 <script type="text/javascript" src="/cmis_web_proxy/static/src/js/form_widget.js"/>
             </xpath>
         </template>
