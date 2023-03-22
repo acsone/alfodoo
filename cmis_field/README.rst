@@ -22,7 +22,7 @@ Configuration
 In Settings -> Cmis -> backend Create a new CMIS backend with the host,
 login and password.
 
-Documentation: `alfodoo.org <http://alfodoo.org>`_ 
+Documentation: `alfodoo.org <http://alfodoo.org>`_
 
 
 Credits
