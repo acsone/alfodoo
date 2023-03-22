@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Most of the code copied from https://github.com/odoo/odoo/blob/c1fa3b8ab3dfa1306dbdd3b6dc910405a3357d16/addons/mail/static/src/xml/thread.xml
+-->
+<templates xml:space="preserve">
+
+    <t t-name="cmis_web.DocumentViewer.Content">
+        <div class="cmis_web_viewer_content">
+            <div class="cmis_web_viewer-header">
+                <span class="cmis_web_image_caption">
+                    <i class="fa fa-picture-o mr8" t-if="widget.activeDocument.type == 'image'" role="img" aria-label="Image" title="Image"/>
+                    <i class="fa fa-file-text mr8" t-if="widget.activeDocument.type == 'pdf'" role="img" aria-label="PDF file" title="PDF file"/>
+                    <i class="fa fa-video-camera mr8" t-if="widget.activeDocument.type == 'video'" role="img" aria-label="Video" title="Video"/>
+                    <t t-esc="widget.activeDocument.name"/>
+                    <a role="button" href="#" class="cmis_web_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                </span>
+
+                <a role="button" class="cmis_web_close_btn float-right" href="#" aria-label="Close" title="Close">×</a>
+            </div>
+            <div class="cmis_web_viewer_img_wrapper">
+                <div class="cmis_web_viewer_zoomer">
+                    <div t-if="widget.activeDocument.type == 'image'" class="cmis_web_loading_img text-center">
+                        <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
+                    </div>
+                    <img t-if="widget.activeDocument.type == 'image'" class="cmis_web_viewer_img" t-attf-src="#{widget.activeDocument.viewer_url}" alt="Viewer"/>
+                    <iframe class="mt32 cmis_web_viewer_pdf" t-if="widget.activeDocument.type == 'pdf'" t-attf-src="#{widget.activeDocument.viewer_url}" allowfullscreen='1' webkitallowfullscreen='1'/>
+                    <video t-if="widget.activeDocument.type == 'video'" class="cmis_web_viewer_video" controls="controls">
+                        <source t-attf-src="#{widget.activeDocument.viewer_url}" t-att-data-type="widget.activeDocument.mimetype"/>
+                    </video>
+                </div>
+            </div>
+            <div t-if="widget.activeDocument.type == 'image'" class="cmis_web_viewer_toolbar btn-toolbar" role="toolbar">
+                <div class="btn-group ml0" role="group">
+                    <a role="button" href="#" class="cmis_web_viewer_toolbar_btn btn cmis_web_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
+                    <a role="button" href="#" class="cmis_web_viewer_toolbar_btn btn cmis_web_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
+                    <a role="button" href="#" class="cmis_web_viewer_toolbar_btn btn cmis_web_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
+                </div>
+                <div class="btn-group ml8" role="group">
+                    <a role="button" href="#" class="cmis_web_viewer_toolbar_btn btn cmis_web_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" role="img" aria-label="Rotate"/></a>
+                </div>
+                <div class="btn-group ml8" role="group">
+                    <a role="button" href="#" class="cmis_web_viewer_toolbar_btn btn cmis_web_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
+                    <a role="button" href="#" class="cmis_web_viewer_toolbar_btn btn cmis_web_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="cmis_web.DocumentViewer">
+        <div class="modal cmis_web_modal_fullscreen" tabindex="-1" role="dialog" aria-hidden="true">
+            <t t-call="cmis_web.DocumentViewer.Content"/>
+
+            <t t-if="widget.documents.length != 1">
+                <a class="arrow arrow-left cmis_web_move_previous" href="#">
+                    <span class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
+                </a>
+                <a class="arrow arrow-right cmis_web_move_next" href="#">
+                    <span class="fa  fa-chevron-right" role="img" aria-label="Next" title="Next"/>
+                </a>
+            </t>
+        </div>
+    </t>
+</templates>
