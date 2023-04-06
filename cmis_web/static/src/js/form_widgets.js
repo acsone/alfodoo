@@ -1080,7 +1080,8 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.cmis_config_loaded
                 .then(() => self._getDocumentsFromFiles(files))
                 .then((documents) => self._uploadDocumentsToCreate(documents))
-                .then((result) => self.trigger_up('reload'));
+                .catch((error) => false)
+                .then((result) => result ? self.trigger_up('reload') : false);
         },
 
         onLinkDocument: function(objectId) {
