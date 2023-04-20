@@ -17,8 +17,8 @@ class CmisFolderField extends Component {
         const props = {
             list: {
                 records: [
-                    {id: 1, name: "Doc 1", date: "2023-04-18", author: "qgr"},
-                    {id: 2, name: "Doc 2", date: "2000-01-01", author: "qgr"},
+                    {id: 1, name: "Doc 1", modified: "2023-04-18", modifier: "qgr"},
+                    {id: 2, name: "Doc 2", modified: "2000-01-01", modifier: "qgr"},
                 ],
             },
         };

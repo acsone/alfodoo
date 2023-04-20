@@ -7,21 +7,34 @@
 + *---------------------------------------------------------
 +*/
 
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+
 const { Component, useState } = owl;
 
 export class CmisTable extends Component {
     setup() {
+        this.allColumns = this.getAllColumns();
         this.state = useState({
             columns: this.getActiveColumns(),
         });
     }
 
-    getActiveColumns() {
+    getAllColumns() {
         return [
-            {id: 1, type: "field", name: "name", label: "Name"},
-            {id: 2, type: "field", name: "date", label: "Date"},
-            {id: 3, type: "field", name: "author", label: "Author"},
-        ]
+            {id: 1, type: "button_group", name: "details", label: "", active: true, optional: false},
+            {id: 2, type: "field", name: "name", label: "Name", active: true, optional: true},
+            {id: 3, type: "field", name: "title", label: "Title", active: false, optional: true},
+            {id: 4, type: "field", name: "description", label: "Description", active: true, optional: true},
+            {id: 5, type: "field", name: "modified", label: "Modified", active: true, optional: true},
+            {id: 6, type: "field", name: "modifier", label: "Modifier", active: false, optional: true},
+            {id: 7, type: "button_group", name: "actions", label: "", active: true, optional: false},
+        ];
+    }
+
+    getActiveColumns() {
+        return this.allColumns.filter((col) => col.active)
     }
 
     getColumnClass(column) {
@@ -171,8 +184,27 @@ export class CmisTable extends Component {
         return formatter(record.data[fieldName], formatOptions); */
         return record[column.name]
     }
+
+    toggleOptionalColumn(columnId) {
+        let index = this.allColumns.findIndex((col) => col.id === columnId);
+        this.allColumns[index].active = !this.allColumns[index].active;
+        this.state.columns = this.getActiveColumns();
+    }
+
+    get getOptionalColumns() {
+        return this.allColumns
+            .filter((col) => col.optional)
+            .map((col) => ({
+                id: col.id,
+                label: col.label,
+                name: col.name,
+                value: col.active,
+            }));
+    }
 }
 
 CmisTable.template = "cmis_web.CmisTable";
 CmisTable.rowsTemplate = "cmis_web.CmisTable.Rows";
 CmisTable.recordRowTemplate = "cmis_web.CmisTable.RecordRow";
+
+CmisTable.components = { DropdownItem, CheckBox, Dropdown };

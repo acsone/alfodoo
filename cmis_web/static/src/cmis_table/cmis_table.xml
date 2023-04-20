@@ -84,6 +84,29 @@
                                 </t>
                             </Dropdown>
                         </th> -->
+                        <th class="o_list_controller o_list_actions_header" style="width: 32px; min-width: 32px">
+                            <Dropdown
+                                class="'o_optional_columns_dropdown text-center border-top-0'"
+                                togglerClass="'btn p-0'"
+                                skipTogglerTabbing="true"
+                                position="'bottom-end'">
+                                <t t-set-slot="toggler">
+                                    <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                                </t>
+
+                                <t t-foreach="getOptionalColumns" t-as="column" t-key="column.id">
+                                    <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalColumn(column.id)">
+                                        <CheckBox
+                                            onChange="() => this.toggleOptionalColumn(column.id)"
+                                            value="column.value"
+                                            name="column.name"
+                                        >
+                                            <t t-esc="column.label"/>
+                                        </CheckBox>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
@@ -330,6 +353,9 @@
                         <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
                         <!-- <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/> -->
                     </td>
+                </t>
+                <t t-if="column.type === 'button_group'">
+                    <td/>
                 </t>
                 <!-- <t t-if="column.type === 'button_group'">
                     <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
