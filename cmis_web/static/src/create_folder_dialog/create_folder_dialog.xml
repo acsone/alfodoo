@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="cmis_web.CreateFolderDialog" owl="1">
+        <Dialog size="'md'" title="'Create Folder'">
+            <div class="form-group row">
+                <label
+                    for="folderName"
+                    class="col-sm-3 col-form-label"
+                >Folder Name:</label>
+                <div class="col-sm-9">
+                    <input type="text" id="folderName" t-ref="folderName" />
+                </div>
+            </div>
+            <t t-set-slot="footer" owl="1">
+                <button class="btn btn-primary" t-on-click="onConfirm">Create</button>
+                <button class="btn btn-secondary" t-on-click="onClose">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
