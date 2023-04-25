@@ -354,7 +354,12 @@
                         <!-- <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/> -->
                     </td>
                 </t>
-                <t t-if="column.type === 'button_group'">
+                <t t-if="column.type === 'widget'">
+                    <td class="o_data_cell" t-att-class="getCellClass(column, cmisObject)">
+                        <Widget t-props="column.props" cmisObject="cmisObject"/>
+                    </td>
+                </t>
+                <t t-if="column.type === 'other'">
                     <td/>
                 </t>
                 <!-- <t t-if="column.type === 'button_group'">

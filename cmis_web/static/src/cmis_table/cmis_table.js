@@ -10,6 +10,7 @@
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Widget } from "@web/views/widgets/widget";
 
 const { Component, useState } = owl;
 
@@ -23,14 +24,16 @@ export class CmisTable extends Component {
 
     getAllColumns() {
         return [
-            {id: 1, type: "button_group", name: "details", label: "", active: true, optional: false},
+            {id: 1, type: "other", name: "details", label: "", active: true, optional: false, props: {name: "cmis_actions"}},
             {id: 2, type: "field", name: "name", label: "Name", active: true, optional: true},
             {id: 3, type: "field", name: "title", label: "Title", active: false, optional: true},
             {id: 4, type: "field", name: "description", label: "Description", active: true, optional: true},
             {id: 5, type: "field", name: "modified", label: "Modified", active: true, optional: true},
             {id: 6, type: "field", name: "created", label: "Created", active: false, optional: true},
             {id: 7, type: "field", name: "modifier", label: "Modifier", active: false, optional: true},
-            {id: 8, type: "button_group", name: "actions", label: "", active: true, optional: false},
+            {id: 8, type: "widget", name: "actions", label: "", active: true, optional: false, props: {
+                name: "cmis_actions"
+            }},
         ];
     }
 
@@ -209,4 +212,4 @@ CmisTable.template = "cmis_web.CmisTable";
 CmisTable.rowsTemplate = "cmis_web.CmisTable.Rows";
 CmisTable.recordRowTemplate = "cmis_web.CmisTable.RecordRow";
 
-CmisTable.components = { DropdownItem, CheckBox, Dropdown };
+CmisTable.components = { DropdownItem, CheckBox, Dropdown, Widget };

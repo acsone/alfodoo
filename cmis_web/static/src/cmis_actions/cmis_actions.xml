@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="cmis_web.CmisActions" owl="1">
+        <button type="button" class="btn btn-outline-primary" t-on-click="() => console.log(props.cmisObject.objectId)">
+            <i class="fa fa-eye"/>
+        </button>
+    </t>
+</templates>
