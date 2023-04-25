@@ -23,6 +23,7 @@
             "/cmis_web/static/src/cmis_folder/cmis_folder.xml",
             "/cmis_web/static/src/cmis_table/cmis_table.js",
             "/cmis_web/static/src/cmis_table/cmis_table.xml",
+            "/cmis_web/static/src/cmis_object_wrapper_service.js",
         ],
     }
 }

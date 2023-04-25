@@ -28,8 +28,9 @@ export class CmisTable extends Component {
             {id: 3, type: "field", name: "title", label: "Title", active: false, optional: true},
             {id: 4, type: "field", name: "description", label: "Description", active: true, optional: true},
             {id: 5, type: "field", name: "modified", label: "Modified", active: true, optional: true},
-            {id: 6, type: "field", name: "modifier", label: "Modifier", active: false, optional: true},
-            {id: 7, type: "button_group", name: "actions", label: "", active: true, optional: false},
+            {id: 6, type: "field", name: "created", label: "Created", active: false, optional: true},
+            {id: 7, type: "field", name: "modifier", label: "Modifier", active: false, optional: true},
+            {id: 8, type: "button_group", name: "actions", label: "", active: true, optional: false},
         ];
     }
 
@@ -170,7 +171,7 @@ export class CmisTable extends Component {
         return true
     }
 
-    getFormattedValue(column, record) {
+    getFormattedValue(column, cmisObject) {
         /* const fieldName = column.name;
         const field = this.fields[fieldName];
         const formatter = formatters.get(field.type, (val) => val);
@@ -182,7 +183,8 @@ export class CmisTable extends Component {
             field: record.fields[fieldName],
         };
         return formatter(record.data[fieldName], formatOptions); */
-        return record[column.name]
+        const value = cmisObject.columnMapper[column.name]
+        return value ? value : ""
     }
 
     toggleOptionalColumn(columnId) {

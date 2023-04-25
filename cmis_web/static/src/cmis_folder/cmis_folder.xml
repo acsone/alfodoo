@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="cmis_web.CmisFolderField" owl="1">
+    <t t-if="props.record.resId" t-name="cmis_web.CmisFolderField" owl="1">
+        <t t-if="!props.value and props.allowCreate">
+            <div class="mb-2">
+                <button t-ref="buttonCreateFolder" type="button" class="btn btn-primary hidden" t-on-click="createRootFolder">Create folder in DMS</button>
+            </div>
+        </t>
         <CmisTable t-props="rendererProps" />
     </t>
 </templates>

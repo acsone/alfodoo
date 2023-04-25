@@ -189,8 +189,7 @@ class CmisFolder(fields.Field):
             # remove created resource in case of rollback
             test_mode = getattr(threading.current_thread(), "testing", False)
             if not test_mode:
-                record.env.cr.after(
-                    "rollback",
+                record.env.cr.postrollback.add(
                     partial(
                         clean_up_folder,
                         value.getObjectId(),
