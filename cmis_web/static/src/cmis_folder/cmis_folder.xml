@@ -23,7 +23,7 @@
             <i class="fa fa-file"/>
         </button>
         <div t-on-drop="ev => this.onDrop(ev)" t-on-dragenter="ev => this.onDragenter(ev)" t-on-dragleave="ev => this.onDragleave(ev)" t-att-class="{ 'o-dragging-inside': state.isDraggingInside }">
-            <CmisTable t-props="rendererProps"/>
+            <CmisTable t-props="rendererProps" deleteFile.bind="deleteFile"/>
         </div>
     </t>
 </templates>

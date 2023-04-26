@@ -12,6 +12,8 @@ import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { CmisTable } from "../cmis_table/cmis_table";
 import { AddDocumentDialog } from "../add_document_dialog/add_document_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { sprintf } from "@web/core/utils/strings";
 import framework from "web.framework";
 
 const { Component, useRef, useState } = owl;
@@ -170,6 +172,27 @@ class CmisFolderField extends Component {
         })
     }
 
+    deleteFile(cmisObject) {
+        self = this
+        const dialogProps = {
+            title: "Delete File",
+            body: sprintf(
+                (
+                    'Confirm deletion of "%s".'
+                ),
+                cmisObject.name
+            ),
+            confirmLabel: "Delete",
+            confirm: () => {
+                this.cmisSession.deleteObject(cmisObject.objectId, true).ok(function () {
+                    self.queryCmisData()
+                });
+            },
+            cancel: () => {},
+        };
+        this.dialogService.add(ConfirmationDialog, dialogProps);
+    }
+
     onDragenter(ev) {
         if (this.dragCount === 0) {
             this.state.isDraggingInside = true;
@@ -200,7 +223,7 @@ class CmisFolderField extends Component {
 
 CmisFolderField.template = "cmis_web.CmisFolderField";
 CmisFolderField.supportedTypes = ["cmis_folder"];
-CmisFolderField.components = { AddDocumentDialog, CmisTable };
+CmisFolderField.components = { CmisTable };
 CmisFolderField.props = {
     ...standardFieldProps,
     backend: [
