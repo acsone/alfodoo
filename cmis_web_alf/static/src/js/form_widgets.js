@@ -26,10 +26,17 @@ form_widgets.CmisObjectWrapper.include({
       if (_url) {
           return _url;
       }
-      // By default, review are generated in alfresco the first time it's requested by share
+      // By default, preview are generated in alfresco the first time it's requested by share
       // Before this first access, the renditions on the cmis object is empty.
       // Use the alfresco API to trigger a first rendition of the document.
-      return this.alfresco_api_location + '/node/workspace/SpacesStore/' + this.versionSeriesId + '/content/thumbnails/pdf/' + encodeURI(this.name) + '?c=force&lastModified=pdf%' + new Date().getUTCMilliseconds();
+      var params = {
+          'c': 'force',
+          'lastModified': 'pdf%' + new Date().getUTCMilliseconds(),
+          'token': this.token,
+          'objectId': this.objectId,
+
+      }
+      return this.alfresco_api_location + '/node/workspace/SpacesStore/' + this.versionSeriesId + '/content/thumbnails/pdf/' + encodeURI(this.name) + '?' + $.param(params);
     },
 
 });
