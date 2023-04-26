@@ -11,6 +11,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { CmisTable } from "../cmis_table/cmis_table";
+import { AddDocumentDialog } from "../add_document_dialog/add_document_dialog";
 import framework from "web.framework";
 
 const { Component, useRef, useState } = owl;
@@ -20,6 +21,7 @@ class CmisFolderField extends Component {
         this.notificationService = useService("notification");
         this.rpc = useService("rpc");
         this.cmisObjectWrapperService = useService("cmisObjectWrapperService");
+        this.dialogService = useService("dialog");
 
         this.backend = this.props.backend;
         this.state = useState({
@@ -186,11 +188,19 @@ class CmisFolderField extends Component {
         this.state.isDraggingInside = false;
         this.uploadFiles(ev.dataTransfer.files);
     }
+
+    onClickAddDocument() {
+        const dialogProps = {
+            confirm: (files) => {this.uploadFiles(files)},
+            close: () => {},
+        };
+        this.dialogService.add(AddDocumentDialog, dialogProps);
+    }
 }
 
 CmisFolderField.template = "cmis_web.CmisFolderField";
 CmisFolderField.supportedTypes = ["cmis_folder"];
-CmisFolderField.components = { CmisTable };
+CmisFolderField.components = { AddDocumentDialog, CmisTable };
 CmisFolderField.props = {
     ...standardFieldProps,
     backend: [

@@ -25,6 +25,8 @@
             "/cmis_web/static/src/cmis_table/cmis_table.xml",
             "/cmis_web/static/src/cmis_actions/cmis_actions.js",
             "/cmis_web/static/src/cmis_actions/cmis_actions.xml",
+            "/cmis_web/static/src/add_document_dialog/add_document_dialog.js",
+            "/cmis_web/static/src/add_document_dialog/add_document_dialog.xml",
             "/cmis_web/static/src/cmis_object_wrapper_service.js",
         ],
     }
