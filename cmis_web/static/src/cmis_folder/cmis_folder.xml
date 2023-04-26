@@ -7,7 +7,15 @@
             </div>
         </t>
         <button type="button"
-                class="btn btn-outline-primary mb-2"
+                class="btn btn-outline-primary mb-2 me-2"
+                data-toggle="tooltip"
+                title="Refresh content table"
+                aria-label="Refresh content table"
+                t-on-click="queryCmisData">
+            <i class="fa fa-refresh"/>
+        </button>
+        <button type="button"
+            class="btn btn-outline-primary mb-2"
                 data-toggle="tooltip"
                 title="Add document"
                 aria-label="Add document"
