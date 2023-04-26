@@ -11,6 +11,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { CmisTable } from "../cmis_table/cmis_table";
+import framework from "web.framework";
 
 const { Component, useRef, useState } = owl;
 
@@ -24,12 +25,15 @@ class CmisFolderField extends Component {
         this.state = useState({
             value: this.props.value,
             cmisObjectsWrap: [],
+            isDraggingInside: false,
         })
         this.buttonCreateFolderRef = useRef("buttonCreateFolder")
 
         this.cmisSession = null
         this.rootFolderId = null
         this.displayFolderId = null
+
+        this.dragCount = 0
 
         this.initCmisSession()
         this.setRootFolderId()
@@ -126,6 +130,61 @@ class CmisFolderField extends Component {
         if (error) {
             this.notificationService.add(error.message, { type: "danger" });
         }
+    }
+
+    uploadFiles(files) {
+        var self = this;
+        var numFiles = files.length;
+        let processedFiles = [];
+        if (numFiles > 0) {
+            framework.blockUI();
+        }
+        Array.prototype.forEach.call(files, file => {           //FileList is not an Array but conform to its contract
+            self.cmisSession
+            .createDocument(self.displayFolderId, file, {"cmis:name": file.name}, file.mimetype)
+            .ok(function (data) {
+                processedFiles.push(data);
+                if (processedFiles.length == numFiles) {
+                    self.queryCmisData();
+                    framework.unblockUI();
+                }
+            })
+            .notOk(function (error) {
+                if (error) {
+                    console.error(error.text);
+                    framework.unblockUI();
+                    /* if (error.type == 'application/json') {
+                        var jerror = JSON.parse(error.text);
+                        if (jerror.exception === 'contentAlreadyExists') {
+                            var dialog = new CmisDuplicateDocumentResolver(self, self.dislayed_folder_cmisobject, file);
+                            dialog.open();
+                            framework.unblockUI();
+                            return;
+                        }
+                    } */
+                }
+                //self.on_cmis_error(error);
+            });
+        })
+    }
+
+    onDragenter(ev) {
+        if (this.dragCount === 0) {
+            this.state.isDraggingInside = true;
+        }
+        this.dragCount += 1;
+    }
+
+    onDragleave(ev) {
+        this.dragCount -= 1;
+        if (this.dragCount === 0) {
+            this.state.isDraggingInside = false;
+        }
+    }
+
+    onDrop(ev) {
+        this.state.isDraggingInside = false;
+        this.uploadFiles(ev.dataTransfer.files);
     }
 }
 

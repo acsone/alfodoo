@@ -6,6 +6,8 @@
                 <button t-ref="buttonCreateFolder" type="button" class="btn btn-primary hidden" t-on-click="createRootFolder">Create folder in DMS</button>
             </div>
         </t>
-        <CmisTable t-props="rendererProps" />
+        <div t-on-drop="ev => this.onDrop(ev)" t-on-dragenter="ev => this.onDragenter(ev)" t-on-dragleave="ev => this.onDragleave(ev)" t-att-class="{ 'o-dragging-inside': state.isDraggingInside }">
+            <CmisTable t-props="rendererProps"/>
+        </div>
     </t>
 </templates>
