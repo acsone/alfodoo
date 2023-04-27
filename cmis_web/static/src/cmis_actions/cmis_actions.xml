@@ -4,7 +4,7 @@
         <button type="button" class="btn btn-outline-primary" t-on-click="() => console.log(props.cmisObject.objectId)">
             <i class="fa fa-eye"/>
         </button>
-        <button type="button" class="btn btn-outline-primary">
+        <button type="button" class="btn btn-outline-primary" t-on-click="(ev) => ev.stopPropagation()">
             <i class="fa fa-align-justify"/>
             <Dropdown toggler="'parent'">
                 <DropdownItem>
