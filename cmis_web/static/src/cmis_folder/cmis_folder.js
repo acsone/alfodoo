@@ -11,7 +11,9 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { CmisTable } from "../cmis_table/cmis_table";
+import { CmisBreadcrumbs } from "../cmis_breadcrumbs/cmis_breadcrumbs";
 import { AddDocumentDialog } from "../add_document_dialog/add_document_dialog";
+import { CreateFolderDialog } from "../create_folder_dialog/create_folder_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { sprintf } from "@web/core/utils/strings";
 import framework from "web.framework";
@@ -30,6 +32,7 @@ class CmisFolderField extends Component {
             value: this.props.value,
             cmisObjectsWrap: [],
             isDraggingInside: false,
+            parentFolders: [],
         })
         this.buttonCreateFolderRef = useRef("buttonCreateFolder")
 
@@ -100,15 +103,16 @@ class CmisFolderField extends Component {
         )
 
         loadCmisRepositories
-        .then(() => this.displayFolder(this.rootFolderId))
+        .then(() => this.displayFolder({name: "Root", id: this.rootFolderId}))
     }
 
-    async displayFolder(folderId) {
-        if (this.displayFolderId === folderId) {
+    async displayFolder(folder) {
+        if (this.displayFolderId === folder.id) {
             return;
         }
-        this.displayFolderId = folderId;
+        this.displayFolderId = folder.id;
         this.queryCmisData();
+        this.updateParentFolders(folder);
     }
 
     async createRootFolder() {
@@ -172,7 +176,7 @@ class CmisFolderField extends Component {
         })
     }
 
-    deleteFile(cmisObject) {
+    deleteObject(cmisObject) {
         self = this
         const dialogProps = {
             title: "Delete File",
@@ -219,11 +223,45 @@ class CmisFolderField extends Component {
         };
         this.dialogService.add(AddDocumentDialog, dialogProps);
     }
+
+    createFolder(folderName) {
+        var self = this;
+        framework.blockUI();
+        this.cmisSession
+            .createFolder(this.displayFolderId, folderName)
+            .ok(function() {
+                self.queryCmisData();
+                framework.unblockUI();
+            });
+    }
+
+    onClickCreateFolder() {
+        const dialogProps = {
+            confirm: (folderName) => {this.createFolder(folderName)},
+            close: () => {},
+        };
+        this.dialogService.add(CreateFolderDialog, dialogProps);
+    }
+
+    updateParentFolders(folder) {
+        let folderIndex = null;
+        for (var i in this.state.parentFolders) {
+            if (this.state.parentFolders[i].id === folder.id) {
+                folderIndex = i;
+                break;
+            };
+        };
+        if (folderIndex !== null) {
+            this.state.parentFolders.length = parseInt(folderIndex) + 1;
+        } else {
+            this.state.parentFolders.push({id: folder.id, name: folder.name});
+        }
+    }
 }
 
 CmisFolderField.template = "cmis_web.CmisFolderField";
 CmisFolderField.supportedTypes = ["cmis_folder"];
-CmisFolderField.components = { CmisTable };
+CmisFolderField.components = { CmisBreadcrumbs, CmisTable };
 CmisFolderField.props = {
     ...standardFieldProps,
     backend: [

@@ -18,13 +18,16 @@ class CmisObjectWrapper {
         this.cmisSession = cmisSession;
         this.parseObject(cmisObject);
         this.columnMapper = {
-            name: this.name,
+            name: "  " + this.name,
             title: this.title,
             description: this.description,
             modified: this.fLastModificationDate(),
             created: this.fCreationDate(),
             modifier: this.lastModifiedBy,
         };
+        this.classMapper = {
+            name: this.fNameClass(),
+        }
     }
 
     parseObject(cmisObject) {
@@ -90,14 +93,15 @@ class CmisObjectWrapper {
      * return the cmis:name formatted to be rendered in ta datatable cell
      *
      **/
-    fName() {
+    fNameClass() {
         var cls = this._getCssClass();
-        var val = "<div class='" + cls + " cmis_content_icon'>" + this.name;
+        /* var val = "<div class='" + cls + " cmis_content_icon'>" + this.name;
         val += "</div>";
         if (this.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')) {
             val = val + "<div class='fa fa-key cmis-checked-out-by'> " + this.env._t('By:') + ' ' + this.getSuccinctProperty('cmis:versionSeriesCheckedOutBy') + '</div>';
         }
-        return val;
+        return val; */
+        return cls
     }
 
     /** FLastModificationDate

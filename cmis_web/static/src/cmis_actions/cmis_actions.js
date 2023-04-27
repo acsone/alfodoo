@@ -15,7 +15,7 @@ const { Component } = owl;
 
 class CmisActions extends Component {
     onDelete() {
-        this.props.deleteFile(this.props.cmisObject)
+        this.props.deleteObject(this.props.cmisObject)
     }
 }
 

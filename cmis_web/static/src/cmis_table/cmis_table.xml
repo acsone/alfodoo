@@ -330,6 +330,7 @@
         <tr class="o_data_row"
             t-att-class="getRowClass(cmisObject)"
             t-att-data-id="cmisObject.objectId"
+            t-on-click="(ev) => this.onClickRow(cmisObject)"
         >
             <t t-foreach="getColumns(cmisObject)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
@@ -356,7 +357,7 @@
                 </t>
                 <t t-if="column.type === 'widget'">
                     <td class="o_data_cell" t-att-class="getCellClass(column, cmisObject)">
-                        <Widget t-props="column.props" cmisObject="cmisObject" deleteFile="props.deleteFile"/>
+                        <Widget t-props="column.props" cmisObject="cmisObject" deleteObject="props.deleteObject"/>
                     </td>
                 </t>
                 <t t-if="column.type === 'other'">

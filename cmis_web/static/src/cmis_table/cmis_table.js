@@ -110,7 +110,7 @@ export class CmisTable extends Component {
         return this.state.columns;
     }
 
-    getCellClass(column, record) {
+    getCellClass(column, cmisObject) {
         /* if (!this.cellClassByColumn[column.id]) {
             const classNames = ["o_data_cell"];
             if (column.type === "button_group") {
@@ -167,7 +167,8 @@ export class CmisTable extends Component {
             }
         }
         return classNames.join(" "); */
-        return ""
+        const value = cmisObject.classMapper[column.name]
+        return value ? value : ""
     }
 
     canUseFormatter(column, record) {
@@ -205,6 +206,12 @@ export class CmisTable extends Component {
                 name: col.name,
                 value: col.active,
             }));
+    }
+
+    onClickRow(cmisObject) {
+        if (cmisObject.baseTypeId === "cmis:folder") {
+            this.props.displayFolder({name: cmisObject.name, id: cmisObject.objectId})
+        }
     }
 }
 
