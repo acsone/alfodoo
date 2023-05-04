@@ -32,6 +32,8 @@
             "/cmis_web/static/src/cmis_breadcrumbs/cmis_breadcrumbs.js",
             "/cmis_web/static/src/cmis_breadcrumbs/cmis_breadcrumbs.scss",
             "/cmis_web/static/src/cmis_breadcrumbs/cmis_breadcrumbs.xml",
+            "/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.js",
+            "/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml",
             "/cmis_web/static/src/cmis_object_wrapper_service.js",
         ],
     }

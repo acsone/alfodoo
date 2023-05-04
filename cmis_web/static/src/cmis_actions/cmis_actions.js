@@ -7,13 +7,23 @@
 + *---------------------------------------------------------
 +*/
 
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CmisAttachmentViewer } from "../cmis_attachment_viewer/cmis_attachment_viewer"
 
 const { Component } = owl;
 
 class CmisActions extends Component {
+    setup() {
+        this.dialogService = useService("dialog");
+    }
+
+    onClickPreview() {
+        this.dialogService.add(CmisAttachmentViewer, { cmisObject: this.props.cmisObject });
+    }
+
     onDelete() {
         this.props.deleteObject(this.props.cmisObject)
     }
