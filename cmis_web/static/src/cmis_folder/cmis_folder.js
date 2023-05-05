@@ -15,6 +15,7 @@ import { CmisBreadcrumbs } from "../cmis_breadcrumbs/cmis_breadcrumbs";
 import { AddDocumentDialog } from "../add_document_dialog/add_document_dialog";
 import { CreateFolderDialog } from "../create_folder_dialog/create_folder_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { sprintf } from "@web/core/utils/strings";
 import framework from "web.framework";
 
@@ -22,7 +23,6 @@ const { Component, useRef, useState } = owl;
 
 class CmisFolderField extends Component {
     setup() {
-        this.notificationService = useService("notification");
         this.rpc = useService("rpc");
         this.cmisObjectWrapperService = useService("cmisObjectWrapperService");
         this.dialogService = useService("dialog");
@@ -68,11 +68,11 @@ class CmisFolderField extends Component {
 
     initCmisSession() {
         if (this.backend.backend_error) {
-            this.notificationService.add(this.backend.backend_error, { type: "danger" });
+            this.dialogService.add(WarningDialog, { title: "CMIS Error", message: this.backend.backend_error });
             return;
         }
         this.cmisSession = cmis.createSession(this.backend.location);
-        this.cmisSession.setGlobalHandlers(this.onCmisError, this.onCmisError);
+        this.cmisSession.setGlobalHandlers(this.onCmisError.bind(this), this.onCmisError.bind(this));
         this.cmisSession.setCharacterSet(document.characterSet);
     }
 
@@ -126,10 +126,7 @@ class CmisFolderField extends Component {
 
     async createRootFolder() {
         if (!this.props.record.resId) {
-            this.notificationService.add(
-                this.env._t("Create your object first"),
-                { type: "danger" },
-            );
+            this.dialogService.add(WarningDialog, { title: "CMIS Error", message: this.env._t("Create your object first") });
             return;
         }
         const cmisFolderValue = await this.rpc(
@@ -144,8 +141,9 @@ class CmisFolderField extends Component {
     }
 
     onCmisError(error) {
+        framework.unblockUI();
         if (error) {
-            this.notificationService.add(error.message, { type: "danger" });
+            this.dialogService.add(WarningDialog, { title: "CMIS Error", message: error.body.message });
         }
     }
 
