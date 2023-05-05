@@ -18,6 +18,7 @@ const { Component } = owl;
 class CmisActions extends Component {
     setup() {
         this.dialogService = useService("dialog");
+        this.allowableActions = this.props.cmisObject.allowableActions;
     }
 
     onClickDownload() {

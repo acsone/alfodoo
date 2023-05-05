@@ -33,6 +33,7 @@ class CmisFolderField extends Component {
             cmisObjectsWrap: [],
             isDraggingInside: false,
             parentFolders: [],
+            allowableActions: {},
         })
         this.buttonCreateFolderRef = useRef("buttonCreateFolder")
 
@@ -111,6 +112,14 @@ class CmisFolderField extends Component {
             return;
         }
         this.displayFolderId = folder.id;
+        var self = this;
+        const cmisFolderData = await new Promise((resolve, reject) => {
+            self.cmisSession.getObject(self.displayFolderId, "latest", {includeAllowableActions: true})
+            .ok(function(data) {
+                resolve(data);
+            });
+        });
+        this.state.allowableActions = cmisFolderData.allowableActions;
         this.queryCmisData();
         this.updateParentFolders(folder);
     }
@@ -198,6 +207,9 @@ class CmisFolderField extends Component {
     }
 
     onDragenter(ev) {
+        if (!this.state.allowableActions.canCreateDocument) {
+            return
+        }
         if (this.dragCount === 0) {
             this.state.isDraggingInside = true;
         }
@@ -205,6 +217,9 @@ class CmisFolderField extends Component {
     }
 
     onDragleave(ev) {
+        if (!this.state.allowableActions.canCreateDocument) {
+            return
+        }
         this.dragCount -= 1;
         if (this.dragCount === 0) {
             this.state.isDraggingInside = false;
@@ -212,6 +227,9 @@ class CmisFolderField extends Component {
     }
 
     onDrop(ev) {
+        if (!this.state.allowableActions.canCreateDocument) {
+            return
+        }
         this.state.isDraggingInside = false;
         this.uploadFiles(ev.dataTransfer.files);
     }
