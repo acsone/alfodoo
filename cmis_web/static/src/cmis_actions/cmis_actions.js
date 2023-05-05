@@ -20,6 +20,10 @@ class CmisActions extends Component {
         this.dialogService = useService("dialog");
     }
 
+    onClickDownload() {
+        window.open(this.props.cmisObject.url);
+    }
+
     onClickPreview() {
         this.dialogService.add(CmisAttachmentViewer, { cmisObject: this.props.cmisObject, cmisFolderObjects: this.props.cmisFolderObjects });
     }

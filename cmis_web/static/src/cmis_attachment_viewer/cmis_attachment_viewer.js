@@ -29,6 +29,7 @@ class CmisAttachmentViewerViewable {
         this.defaultSource = this.getDocumentSource(cmisObject);
         this.imageUrl = cmisObject.getContentUrl();
         this.localId = cmisObject.objectId;
+        this.downloadUrl = cmisObject.url;
     }
 
     isViewable() {
@@ -85,6 +86,15 @@ class CmisAttachmentViewerViewable {
         const path = "/cmis_web/static/lib/pdfjs-1.9.426/web/odoo-viewer.html";
         return path + '?' + urlParams;
     }
+
+    download() {
+        const downloadLink = document.createElement('a');
+        downloadLink.setAttribute('href', this.downloadUrl);
+        // Adding 'download' attribute into a link prevents open a new tab or change the current location of the window.
+        // This avoids interrupting the activity in the page such as rtc call.
+        downloadLink.setAttribute('download', '');
+        downloadLink.click();
+    }
 }
 
 export class CmisAttachmentViewer extends Component {
@@ -101,7 +111,10 @@ export class CmisAttachmentViewer extends Component {
                 this.props.close();
             },
             onClickHeader: (ev) => { ev.stopPropagation(); },
-            onClickDownload: () => { console.log("ClickDownload") },
+            onClickDownload: (ev) => { 
+                ev.stopPropagation();
+                this.attachmentViewer.attachmentViewerViewable.download();
+            },
             onClickClose: () => { this.props.close(); },
             onClickImage: (ev) => {
                 if (this.attachmentViewer.isDragging) {
