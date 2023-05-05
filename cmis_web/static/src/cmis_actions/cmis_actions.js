@@ -21,7 +21,7 @@ class CmisActions extends Component {
     }
 
     onClickPreview() {
-        this.dialogService.add(CmisAttachmentViewer, { cmisObject: this.props.cmisObject });
+        this.dialogService.add(CmisAttachmentViewer, { cmisObject: this.props.cmisObject, cmisFolderObjects: this.props.cmisFolderObjects });
     }
 
     onDelete() {

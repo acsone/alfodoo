@@ -28,7 +28,7 @@ class CmisAttachmentViewerViewable {
         this.displayName = cmisObject.name;
         this.defaultSource = this.getDocumentSource(cmisObject);
         this.imageUrl = cmisObject.getContentUrl();
-        this.localId = cmis.objectId;
+        this.localId = cmisObject.objectId;
     }
 
     isViewable() {
@@ -93,9 +93,8 @@ export class CmisAttachmentViewer extends Component {
         this._translate = { x: 0, y: 0, dx: 0, dy: 0 };
         
         this.attachmentViewer = useState({
-            attachmentViewerViewable: new CmisAttachmentViewerViewable(this.props.cmisObject),
-            attachmentViewerViewables: {},
-            onClick: () => { 
+            attachmentViewerViewables: this.getViewables(),
+            onClick: () => {
                 if (this.attachmentViewer.isDragging) {
                     return;
                 }
@@ -104,13 +103,13 @@ export class CmisAttachmentViewer extends Component {
             onClickHeader: (ev) => { ev.stopPropagation(); },
             onClickDownload: () => { console.log("ClickDownload") },
             onClickClose: () => { this.props.close(); },
-            onClickImage: (ev) => { 
+            onClickImage: (ev) => {
                 if (this.attachmentViewer.isDragging) {
                     return;
                 }
                 ev.stopPropagation();
             },
-            onLoadImage: (ev) => { 
+            onLoadImage: (ev) => {
                 if (!this.attachmentViewer) {
                     return;
                 }
@@ -126,16 +125,26 @@ export class CmisAttachmentViewer extends Component {
                 ev.stopPropagation();
                 this.print();
             },
-            onClickPrevious: () => { console.log("ClickPrevious") },
-            onClickNext: () => { console.log("ClickNext") },
+            onClickPrevious: (ev) => {
+                ev.stopPropagation();
+                this.previous();
+            },
+            onClickNext: (ev) => {
+                ev.stopPropagation();
+                this.next();
+            },
             isDragging: false,
             scale: 1,
             angle: 0,
             imageStyle: this.imageStyle(),
             isImageLoading: false,
         })
+        this.attachmentViewer.attachmentViewerViewable = this.getCurrentViewable();
 
-        this._imageRef = useRef('image_' + this.attachmentViewer.attachmentViewerViewable.localId);
+        this._imageRefs = {}
+        this.attachmentViewer.attachmentViewerViewables.forEach(viewable => {
+            this._imageRefs[viewable.localId] = useRef('image_' + viewable.localId)
+        })
         this._zoomerRef = useRef('zoomer');
 
         this._onClickGlobal = this._onClickGlobal.bind(this);
@@ -150,6 +159,26 @@ export class CmisAttachmentViewer extends Component {
         onWillUnmount(() => {
             document.removeEventListener('click', this._onClickGlobal);
         });
+    }
+
+    getViewables() {
+        let viewables = [];
+        this.props.cmisFolderObjects.forEach(cmisObject => {
+            if (cmisObject.baseTypeId === "cmis:document") {
+                viewables.push(new CmisAttachmentViewerViewable(cmisObject))
+            }
+        });
+        return viewables;
+    }
+
+    getCurrentViewable() {
+        let currentViewable = null;
+        this.attachmentViewer.attachmentViewerViewables.forEach(viewable => {
+            if (viewable.localId === this.props.cmisObject.objectId) {
+                currentViewable = viewable;
+            }
+        });
+        return currentViewable;
     }
 
     imageStyle() {
@@ -175,7 +204,7 @@ export class CmisAttachmentViewer extends Component {
         if (!this.attachmentViewer || !this.attachmentViewer.attachmentViewerViewable) {
             return;
         }
-        const image = this._imageRef.el;
+        const image = this._imageRefs[this.attachmentViewer.attachmentViewerViewable.localId].el;
         if (
             this.attachmentViewer.attachmentViewerViewable.isImage &&
             (!image || !image.complete)
@@ -234,7 +263,7 @@ export class CmisAttachmentViewer extends Component {
     
     _updateZoomerStyle() {
         const attachmentViewer = this.attachmentViewer;
-        const image = this._imageRef.el
+        const image = this._imageRefs[attachmentViewer.attachmentViewerViewable.localId].el
         // some actions are too fast that sometimes this function is called
         // before setting the refs, so we just do nothing when image is null
         if (!image) {
@@ -363,6 +392,18 @@ export class CmisAttachmentViewer extends Component {
                 </body>
             </html>`);
         printWindow.document.close();
+    }
+
+    previous() {
+        const index = this.attachmentViewer.attachmentViewerViewables.findIndex(attachment => attachment === this.attachmentViewer.attachmentViewerViewable);
+        const prevIndex = index === 0 ? this.attachmentViewer.attachmentViewerViewables.length - 1 : index - 1;
+        this.attachmentViewer.attachmentViewerViewable = this.attachmentViewer.attachmentViewerViewables[prevIndex];
+    }
+
+    next() {
+        const index = this.attachmentViewer.attachmentViewerViewables.findIndex(attachment => attachment === this.attachmentViewer.attachmentViewerViewable);
+        const nextIndex = index === this.attachmentViewer.attachmentViewerViewables.length - 1 ? 0 : index + 1;
+        this.attachmentViewer.attachmentViewerViewable = this.attachmentViewer.attachmentViewerViewables[nextIndex];
     }
 }
 
