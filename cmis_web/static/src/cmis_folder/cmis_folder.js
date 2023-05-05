@@ -15,6 +15,7 @@ import { CmisBreadcrumbs } from "../cmis_breadcrumbs/cmis_breadcrumbs";
 import { AddDocumentDialog } from "../add_document_dialog/add_document_dialog";
 import { CreateFolderDialog } from "../create_folder_dialog/create_folder_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { RenameDialog } from "../rename_dialog/rename_dialog";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { sprintf } from "@web/core/utils/strings";
 import framework from "web.framework";
@@ -183,8 +184,25 @@ class CmisFolderField extends Component {
         })
     }
 
+    renameObject(cmisObject) {
+        var self = this;
+        const dialogProps = {
+            title: `Rename ${cmisObject.name}`,
+            name: cmisObject.name,
+            confirm: (newName) => {
+                if (newName !== cmisObject.name) {
+                    this.cmisSession.updateProperties(cmisObject.objectId, {'cmis:name': newName}).ok(function () {
+                        self.queryCmisData();
+                    });
+                }
+            },
+            close: () => {},
+        };
+        this.dialogService.add(RenameDialog, dialogProps);
+    }
+
     deleteObject(cmisObject) {
-        self = this
+        var self = this;
         const dialogProps = {
             title: "Delete File",
             body: sprintf(
@@ -196,7 +214,7 @@ class CmisFolderField extends Component {
             confirmLabel: "Delete",
             confirm: () => {
                 this.cmisSession.deleteObject(cmisObject.objectId, true).ok(function () {
-                    self.queryCmisData()
+                    self.queryCmisData();
                 });
             },
             cancel: () => {},

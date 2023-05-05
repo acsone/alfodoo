@@ -29,8 +29,12 @@ class CmisActions extends Component {
         this.dialogService.add(CmisAttachmentViewer, { cmisObject: this.props.cmisObject, cmisFolderObjects: this.props.cmisFolderObjects });
     }
 
+    onRename() {
+        this.props.renameObject(this.props.cmisObject);
+    }
+    
     onDelete() {
-        this.props.deleteObject(this.props.cmisObject)
+        this.props.deleteObject(this.props.cmisObject);
     }
 }
 
