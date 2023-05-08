@@ -14,9 +14,15 @@
                     <DropdownItem t-if="allowableActions.canUpdateProperties">
                         <div t-on-click="onRename">Rename</div>
                     </DropdownItem>
-                    <DropdownItem t-if="allowableActions.canDeleteObject">
-                        <div t-on-click="onDelete">Delete</div>
+                    <DropdownItem t-if="allowableActions.canSetContentStream and !allowableActions.canCheckIn">
+                        <div t-on-click="onUpdate">Update</div>
                     </DropdownItem>
+                    <t t-if="allowableActions.canDeleteObject">
+                        <div class="dropdown-divider"/>
+                        <DropdownItem>
+                            <div t-on-click="onDelete">Delete</div>
+                        </DropdownItem>
+                    </t>
                 </Dropdown>
             </button>
         </div>

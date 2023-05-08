@@ -16,6 +16,7 @@ import { AddDocumentDialog } from "../add_document_dialog/add_document_dialog";
 import { CreateFolderDialog } from "../create_folder_dialog/create_folder_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { RenameDialog } from "../rename_dialog/rename_dialog";
+import { UpdateDocumentContentDialog } from "../update_document_content_dialog/update_document_content_dialog";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { sprintf } from "@web/core/utils/strings";
 import framework from "web.framework";
@@ -199,6 +200,22 @@ class CmisFolderField extends Component {
             close: () => {},
         };
         this.dialogService.add(RenameDialog, dialogProps);
+    }
+
+    updateDocumentContent(cmisObject) {
+        var self = this;
+        const dialogProps = {
+            title: `Update content of ${cmisObject.name}`,
+            confirm: (file) => {
+                if (file) {
+                    this.cmisSession.setContentStream(cmisObject.objectId, file, true, file.name).ok(function () {
+                        self.queryCmisData();
+                    });
+                }
+            },
+            close: () => {},
+        };
+        this.dialogService.add(UpdateDocumentContentDialog, dialogProps);
     }
 
     deleteObject(cmisObject) {

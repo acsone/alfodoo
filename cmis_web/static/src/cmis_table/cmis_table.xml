@@ -357,7 +357,7 @@
                 </t>
                 <t t-if="column.type === 'widget'">
                     <td class="o_data_cell" t-att-class="getCellClass(column, cmisObject)">
-                        <Widget t-props="column.props" cmisObject="cmisObject" cmisFolderObjects="list" deleteObject="props.deleteObject" renameObject="props.renameObject"/>
+                        <Widget t-props="column.props" cmisObject="cmisObject" cmisFolderObjects="list" deleteObject="props.deleteObject" renameObject="props.renameObject" updateDocumentContent="props.updateDocumentContent"/>
                     </td>
                 </t>
                 <t t-if="column.type === 'other'">

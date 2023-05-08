@@ -32,6 +32,10 @@ class CmisActions extends Component {
     onRename() {
         this.props.renameObject(this.props.cmisObject);
     }
+
+    onUpdate() {
+        this.props.updateDocumentContent(this.props.cmisObject);
+    }
     
     onDelete() {
         this.props.deleteObject(this.props.cmisObject);

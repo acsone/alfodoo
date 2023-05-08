@@ -38,7 +38,7 @@
         </div>
         <CmisBreadcrumbs parentFolders="state.parentFolders" displayFolder.bind="displayFolder"/>
         <div t-on-drop="ev => this.onDrop(ev)" t-on-dragenter="ev => this.onDragenter(ev)" t-on-dragleave="ev => this.onDragleave(ev)" t-att-class="{ 'o-dragging-inside': state.isDraggingInside }">
-            <CmisTable t-props="rendererProps" deleteObject.bind="deleteObject" displayFolder.bind="displayFolder" renameObject.bind="renameObject" />
+            <CmisTable t-props="rendererProps" deleteObject.bind="deleteObject" displayFolder.bind="displayFolder" renameObject.bind="renameObject" updateDocumentContent.bind="updateDocumentContent"/>
         </div>
     </t>
 </templates>
