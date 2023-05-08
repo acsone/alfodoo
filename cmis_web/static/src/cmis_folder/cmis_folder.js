@@ -21,7 +21,7 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { sprintf } from "@web/core/utils/strings";
 import framework from "web.framework";
 
-const { Component, useRef, useState } = owl;
+const { Component, onWillRender, useRef, useState } = owl;
 
 class CmisFolderField extends Component {
     setup() {
@@ -46,7 +46,10 @@ class CmisFolderField extends Component {
         this.dragCount = 0
 
         this.initCmisSession()
-        this.setRootFolderId()
+
+        onWillRender(async () => {
+            this.setRootFolderId();
+        });
     }
 
     async queryCmisData() {
@@ -88,10 +91,10 @@ class CmisFolderField extends Component {
     }
 
     async setRootFolderId() {
-        if (this.rootFolderId === this.props.value) {
+        if (this.rootFolderId === this.state.value) {
             return;
         }
-        this.rootFolderId = this.props.value;
+        this.rootFolderId = this.state.value;
         
         if (!this.rootFolderId) {
             return;
@@ -143,7 +146,7 @@ class CmisFolderField extends Component {
                 field_name: this.props.name,
             },
         );
-        this.state.value = cmisFolderValue.value
+        this.state.value = cmisFolderValue.value;
     }
 
     onCmisError(error) {
