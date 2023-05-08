@@ -20,18 +20,19 @@ export class CmisTable extends Component {
         this.state = useState({
             columns: this.getActiveColumns(),
         });
+        this.preventReorder = false;
     }
 
     getAllColumns() {
         return [
-            {id: 1, type: "other", name: "details", label: "", active: true, optional: false, props: {name: "cmis_actions"}},
-            {id: 2, type: "field", name: "name", label: "Name", active: true, optional: true},
-            {id: 3, type: "field", name: "title", label: "Title", active: false, optional: true},
-            {id: 4, type: "field", name: "description", label: "Description", active: true, optional: true},
-            {id: 5, type: "field", name: "modified", label: "Modified", active: true, optional: true},
-            {id: 6, type: "field", name: "created", label: "Created", active: false, optional: true},
-            {id: 7, type: "field", name: "modifier", label: "Modifier", active: false, optional: true},
-            {id: 8, type: "widget", name: "actions", label: "", active: true, optional: false, props: {
+            {id: 1, type: "other", name: "details", label: "", hasLabel: false, active: true, optional: false, props: {name: "cmis_actions"}},
+            {id: 2, type: "field", name: "name", label: "Name", hasLabel: true, active: true, optional: true},
+            {id: 3, type: "field", name: "title", label: "Title", hasLabel: true, active: false, optional: true},
+            {id: 4, type: "field", name: "description", label: "Description", hasLabel: true, active: true, optional: true},
+            {id: 5, type: "field", name: "lastModificationDate", label: "Modified", hasLabel: true, active: true, optional: true},
+            {id: 6, type: "field", name: "creationDate", label: "Created", hasLabel: true, active: false, optional: true},
+            {id: 7, type: "field", name: "lastModifiedBy", label: "Modifier", hasLabel: true, active: false, optional: true},
+            {id: 8, type: "widget", name: "actions", label: "", hasLabel: false, active: true, optional: false, props: {
                 name: "cmis_actions"
             }},
         ];
@@ -48,15 +49,16 @@ export class CmisTable extends Component {
         } else {
             classNames.push("cursor-default");
         }
-        /* const orderBy = this.props.list.orderBy;
+        const orderBy = this.props.list.orderBy;
         if (
+            orderBy &&
             orderBy.length &&
-            column.widget !== "handle" &&
+            //column.widget !== "handle" &&
             orderBy[0].name === column.name &&
             column.hasLabel
         ) {
             classNames.push("table-active");
-        } */
+        }
         if (this.isNumericColumn(column)) {
             classNames.push("o_list_number_th");
         }
@@ -70,12 +72,50 @@ export class CmisTable extends Component {
         return classNames.join(" ");
     }
 
+    onHoverSortColumn(ev, column) {
+        if (this.props.list.orderBy.length && this.props.list.orderBy[0].name === column.name) {
+            return;
+        } else if (this.isSortable(column)) { //&& column.widget !== "handle") {
+            ev.target.classList.toggle("table-active", ev.type == "mouseenter");
+        }
+    }
+
     isSortable(column) {
         /* const { hasLabel, name } = column;
         const { sortable } = this.fields[name];
         const { options } = this.props.list.activeFields[name];
         return (sortable || options.allow_order) && hasLabel; */
-        return false
+        return column.hasLabel
+    }
+
+    getSortableIconClass(column) {
+        if (!this.props.list.cmisObjects) {
+            return;
+        }
+        const { orderBy } = this.props.list;
+        const classNames = this.isSortable(column) ? ["fa", "fa-lg", "px-2"] : ["d-none"];
+        if (orderBy.length && orderBy[0].name === column.name) {
+            classNames.push(orderBy[0].asc ? "fa-angle-up" : "fa-angle-down");
+        } else {
+            classNames.push("fa-angle-down", "opacity-0", "opacity-75-hover");
+        }
+
+        return classNames.join(" ");
+    }
+
+    onClickSortColumn(column) {
+        if (this.preventReorder) {
+            this.preventReorder = false;
+            return;
+        }
+        /* if (this.props.list.editedRecord || this.props.list.model.useSampleModel) {
+            return;
+        } */
+        const fieldName = column.name;
+        const list = this.props.list;
+        if (this.isSortable(column)) {
+            list.sortBy(fieldName);
+        }
     }
 
     isNumericColumn(column) {

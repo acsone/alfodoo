@@ -10,6 +10,7 @@
 import { registry } from "@web/core/registry";
 import { localization } from "@web/core/l10n/localization";
 import { luxonToMomentFormat } from "@web/core/l10n/dates";
+import { sortBy } from "@web/core/utils/arrays";
 
 class CmisObjectWrapper {
     constructor(cmisObject, cmisSession) {
@@ -21,9 +22,9 @@ class CmisObjectWrapper {
             name: "  " + this.name,
             title: this.title,
             description: this.description,
-            modified: this.fLastModificationDate(),
-            created: this.fCreationDate(),
-            modifier: this.lastModifiedBy,
+            lastModificationDate: this.fLastModificationDate(),
+            creationDate: this.fCreationDate(),
+            lastModifiedBy: this.lastModifiedBy,
         };
         this.classMapper = {
             name: this.fNameClass(),
@@ -203,13 +204,31 @@ class CmisObjectWrapper {
 
 }
 
+class CmisObjectCollection {
+    constructor(cmisObjects, cmisSession) {
+        this.cmisObjects = cmisObjects.map(cmisObject => new CmisObjectWrapper(cmisObject.object, cmisSession));
+        this.orderBy = [];
+        this.sortBy("name");
+    }
+
+    sortBy(field) {
+        if (this.orderBy.length && field === this.orderBy[0].name) {
+            this.orderBy[0].asc = !this.orderBy[0].asc;
+        } else {
+            this.orderBy.length = 0;
+            this.orderBy.push({name: field, asc: true});
+        }
+        this.cmisObjects = sortBy(this.cmisObjects, field, this.orderBy[0].asc ? "asc": "desc");
+    }
+}
+
 const cmisObjectWrapperService = {
     start() {
-        return function wrap(cmisObjects, cmisSession) {
-            return cmisObjects.map(
-                cmisObject => new CmisObjectWrapper(cmisObject.object, cmisSession)
-            )
+        function wrap(cmisObjects, cmisSession) {
+            return new CmisObjectCollection(cmisObjects, cmisSession);
         };
+
+        return { wrap }
     },
 };
 

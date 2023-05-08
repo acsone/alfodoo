@@ -67,7 +67,7 @@ class CmisFolderField extends Component {
                 resolve(data);
             });
         });
-        this.state.cmisObjectsWrap = this.cmisObjectWrapperService(cmisObjectsData.objects, this.cmisSession)
+        this.state.cmisObjectsWrap = this.cmisObjectWrapperService.wrap(cmisObjectsData.objects, this.cmisSession)
         return;
     }
 

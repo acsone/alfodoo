@@ -51,12 +51,15 @@
                             <th t-if="column.type === 'field'"
                                 t-att-data-name="column.name"
                                 t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
+                                t-on-mouseenter="ev => this.onHoverSortColumn(ev, column)"
+                                t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
+                                t-on-click="() => this.onClickSortColumn(column)"
                                 tabindex="-1">
                                 <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
                                 <div t-att-class="{'d-flex': true, 'flex-row-reverse': isNumeric}">
                                     <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'text-end' : ''"
                                             t-esc="column.label"/>
-                                    <!-- <i t-att-class="getSortableIconClass(column)"/> -->
+                                    <i t-att-class="getSortableIconClass(column)"/>
                                 </div>
                             </th>
                             <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
@@ -134,7 +137,7 @@
     <t t-name="cmis_web.CmisTable.Rows" owl="1">
         <!-- <t t-if="!list.isGrouped"> -->
         <t t-if="1">
-            <t t-foreach="list" t-as="cmisObject" t-key="cmisObject.objectId">
+            <t t-foreach="list.cmisObjects || []" t-as="cmisObject" t-key="cmisObject.objectId">
                 <t t-call="{{ constructor.recordRowTemplate }}"/>
             </t>
             <!-- <tr t-if="displayRowCreates">
@@ -357,7 +360,7 @@
                 </t>
                 <t t-if="column.type === 'widget'">
                     <td class="o_data_cell" t-att-class="getCellClass(column, cmisObject)">
-                        <Widget t-props="column.props" cmisObject="cmisObject" cmisFolderObjects="list" deleteObject="props.deleteObject" renameObject="props.renameObject" updateDocumentContent="props.updateDocumentContent"/>
+                        <Widget t-props="column.props" cmisObject="cmisObject" cmisFolderObjects="list.cmisObjects" deleteObject="props.deleteObject" renameObject="props.renameObject" updateDocumentContent="props.updateDocumentContent"/>
                     </td>
                 </t>
                 <t t-if="column.type === 'other'">
