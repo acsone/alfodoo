@@ -363,9 +363,6 @@
                         <Widget t-props="column.props" cmisObject="cmisObject" cmisFolderObjects="list.cmisObjects" deleteObject="props.deleteObject" renameObject="props.renameObject" updateDocumentContent="props.updateDocumentContent"/>
                     </td>
                 </t>
-                <t t-if="column.type === 'other'">
-                    <td/>
-                </t>
                 <!-- <t t-if="column.type === 'button_group'">
                     <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">

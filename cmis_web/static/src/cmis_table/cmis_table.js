@@ -25,7 +25,7 @@ export class CmisTable extends Component {
 
     getAllColumns() {
         return [
-            {id: 1, type: "other", name: "details", label: "", hasLabel: false, active: true, optional: false, props: {name: "cmis_actions"}},
+            //{id: 1, type: "other", name: "details", label: "", hasLabel: false, active: true, optional: false},   Not implemented: Colum for view details button
             {id: 2, type: "field", name: "name", label: "Name", hasLabel: true, active: true, optional: true},
             {id: 3, type: "field", name: "title", label: "Title", hasLabel: true, active: false, optional: true},
             {id: 4, type: "field", name: "description", label: "Description", hasLabel: true, active: true, optional: true},
