@@ -82,6 +82,7 @@ class CmisBackend(models.Model):
             self.alf_folder_template_url,
             json=payload,
             auth=self._get_alf_api_auth_params(),
+            timeout=10,
         )
         r.raise_for_status()
         resp = r.json()
