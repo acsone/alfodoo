@@ -93,6 +93,10 @@ class CmisFolderField extends Component {
         }
         this.rootFolderId = this.props.value;
         
+        if (!this.rootFolderId) {
+            return;
+        }
+
         var self = this;
         const loadCmisRepositories = new Promise(
             function(resolve, reject) {
