@@ -81,11 +81,14 @@ class CmisFolderField extends Component {
         this.cmisSession.setCharacterSet(document.characterSet);
     }
 
-    get rendererProps() {
+    get dynamicProps() {
         const props = {
             displayFolderId: this.displayFolderId,
             cmisSession: this.cmisSession,
             list: this.state.cmisObjectsWrap,
+            deleteObject: this.deleteObject.bind(this),
+            renameObject: this.renameObject.bind(this),
+            updateDocumentContent: this.updateDocumentContent.bind(this),
         };
         return props;
     }
