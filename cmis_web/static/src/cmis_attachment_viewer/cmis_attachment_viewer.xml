@@ -119,7 +119,7 @@
                                     t-on-mousedown="_onMousedownImage"
                                     t-on-wheel="_onWheelImage"
                                     t-on-load="attachmentViewer.onLoadImage"
-                                    t-att-src="attachmentViewer.attachmentViewerViewable.imageUrl"
+                                    t-att-src="attachmentViewer.attachmentViewerViewable.documentSource"
                                     t-att-style="attachmentViewer.imageStyle"
                                     draggable="false"
                                     alt="Viewer"
@@ -128,20 +128,13 @@
                                 />
                             </div>
                         </t>
-                        <t t-if="attachmentViewer.attachmentViewerViewable.isPdf">
-                            <iframe
-                                class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf w-75 h-100 border-0"
-                                t-ref="iframeViewerPdf"
-                                t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"
-                            />
-                        </t>
-                        <t t-if="attachmentViewer.attachmentViewerViewable.isText">
+                        <t t-elif="attachmentViewer.attachmentViewerViewable.isText">
                             <iframe
                                 class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_isText o_text w-75 h-100 border-0"
-                                t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"
+                                t-att-src="attachmentViewer.attachmentViewerViewable.documentSource"
                             />
                         </t>
-                        <t t-if="attachmentViewer.attachmentViewerViewable.isVideo">
+                        <t t-elif="attachmentViewer.attachmentViewerViewable.isVideo">
                             <video
                                 class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo w-75 h-75"
                                 t-on-click="attachmentViewer.onClickVideo"
@@ -149,9 +142,16 @@
                             >
                                 <source
                                     t-att-data-type="attachmentViewer.attachmentViewerViewable.mimetype"
-                                    t-att-src="attachmentViewer.attachmentViewerViewable.imageUrl"
+                                    t-att-src="attachmentViewer.attachmentViewerViewable.documentSource"
                                 />
                             </video>
+                        </t>
+                        <t t-else="">
+                            <iframe
+                                class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf w-75 h-100 border-0"
+                                t-ref="iframeViewerPdf"
+                                t-att-src="attachmentViewer.attachmentViewerViewable.documentSource"
+                            />
                         </t>
                     </div>
                     <t t-if="attachmentViewer.attachmentViewerViewable.isImage">

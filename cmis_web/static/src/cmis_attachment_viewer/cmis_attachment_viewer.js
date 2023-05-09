@@ -28,8 +28,8 @@ class CmisAttachmentViewerViewable {
         this.isText = this.isText();
         this.isVideo = this.isVideo();
         this.displayName = cmisObject.name;
-        this.defaultSource = this.getDocumentSource(cmisObject);
-        this.imageUrl = cmisObject.getContentUrl();
+        this.documentSource = this.getDocumentSource(cmisObject);
+        this.contentUrl = cmisObject.getContentUrl();
         this.localId = cmisObject.objectId;
         this.downloadUrl = cmisObject.url;
     }
@@ -77,6 +77,10 @@ class CmisAttachmentViewerViewable {
     }
 
     getDocumentSource(cmisObject) {
+        if (cmisObject.getPreviewType() !== "pdf") {
+            return cmisObject.getContentUrl();
+        }
+
         const params = {
             file: cmisObject.getPreviewUrl(),
             httpHeaders: "{}",
@@ -390,7 +394,7 @@ export class CmisAttachmentViewer extends Component {
     }
 
     print() {
-        const imageUrl = this.attachmentViewer.attachmentViewerViewable.imageUrl;
+        const contentUrl = this.attachmentViewer.attachmentViewerViewable.contentUrl;
         const printWindow = window.open("about:blank", "_new");
         printWindow.document.open();
         printWindow.document.write(`
@@ -407,7 +411,7 @@ export class CmisAttachmentViewer extends Component {
                     </script>
                 </head>
                 <body onload='onloadImage()'>
-                    <img src="${imageUrl}" alt=""/>
+                    <img src="${contentUrl}" alt=""/>
                 </body>
             </html>`);
         printWindow.document.close();

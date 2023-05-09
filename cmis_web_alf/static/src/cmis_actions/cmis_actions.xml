@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t
+        t-name="cmis_web_alf.CmisActions"
+        t-inherit="cmis_web.CmisActions"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//div[@class='btn-group']" position="inside">
+            <button
+                type="button"
+                title="Show in Alfresco"
+                class="btn btn-outline-primary btn-sm"
+                t-on-click="(ev) => this.onClickOpenInAlf(ev)"
+            >
+                <i class="alf-ico" />
+            </button>
+        </xpath>
+    </t>
+</templates>
