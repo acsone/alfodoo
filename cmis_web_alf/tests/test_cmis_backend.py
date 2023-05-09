@@ -2,12 +2,12 @@
 # Copyright 2016 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import mock
+from unittest import mock
 
 from odoo.tests import common
 
 
-class TestCmisBackend(common.SavepointCase):
+class TestCmisBackend(common.TransactionCase):
     def setUp(self):
         super(TestCmisBackend, self).setUp()
         self.cmis_backend = self.env["cmis.backend"]
