@@ -1024,9 +1024,14 @@ odoo.define('cmis_web.form_widgets', function (require) {
             return new Promise(function(resolve) {
                 self.cmisSessionReady.then(function() {
                     if (self.value) {
-                        self._get_document(self.value).then(function (document) {
-                            self.document = self.wrap_cmis_object(document);
-                            resolve(document);
+                        self._get_document(self.value).catch(function(error) {
+                            self.value = "__error__";
+                            resolve({});
+                        }).then(function (document) {
+                            if (!!document) {
+                                self.document = self.wrap_cmis_object(document);
+                                resolve(document);
+                            }
                         });
                     } else {
                         resolve({});
@@ -1037,10 +1042,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         _render: function () {
             this._super.apply(this, arguments);
-            if (this.value && this.value !== "empty") {
-                this._renderCmisDocument(this.document);
-            } else {
+            if (this.value === "empty") {
                 this._renderNoDocument();
+            } else if (this.value === "__error__") {
+                this._renderGetError();
+            } else if (this.document) {
+                this._renderCmisDocument(this.document);
             }
         },
 
@@ -1065,12 +1072,19 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.register_no_document();
         },
 
+        _renderGetError: function() {
+            this.$el.empty();
+            this.$el.append($('<p/>').text(_t("Unable to retrieve the document. The resource might have been deleted in the CMIS.")))
+        },
+
         _get_document: function (objectId) {
             var self = this;
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 self.cmis_session.getObject(objectId, "latest", DEFAULT_CMIS_OPTIONS)
                 .ok(function (document) {
                     resolve(document);
+                }).notOk(function (error) {
+                    reject(error);
                 });
             });
         },
