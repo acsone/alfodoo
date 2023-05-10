@@ -4,13 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0+e\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-29 10:37+0000\n"
-"PO-Revision-Date: 2019-04-25 16:05+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2023-05-10 09:22+0000\n"
+"PO-Revision-Date: 2023-05-10 09:22+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -47,6 +46,7 @@ msgstr ": activer pour trier la colonne par ordre décroissant"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "A document with the same name already exists."
 msgstr "Un document avec le même nom existe déjà."
@@ -60,6 +60,7 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Add"
@@ -82,12 +83,16 @@ msgstr "Ajouter un document"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Alfresco Error"
 msgstr "Erreur Alfresco"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Browse&hellip;"
@@ -125,6 +130,7 @@ msgstr "Erreur CMIS"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Cancel"
 msgstr "Annuler"
@@ -139,6 +145,7 @@ msgstr "Annuler l'édition"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
 msgid "Cancel checkout"
 msgstr "Annuler la modification en cours"
 
@@ -151,6 +158,11 @@ msgstr "Cliquez ici pour voir les détails techniques"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
@@ -166,6 +178,7 @@ msgstr "Colonnes"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Comment"
@@ -194,6 +207,7 @@ msgstr "Créer"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Create Documents "
@@ -251,6 +265,7 @@ msgstr "Veuillez d'abord enregistrer votre objet une première fois."
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Created"
 msgstr "Date de création"
@@ -286,9 +301,11 @@ msgstr "Supprimer"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Description"
-msgstr "Description"
+msgstr ""
 
 #. module: cmis_web
 #. openerp-web
@@ -300,6 +317,9 @@ msgstr "Historique du document"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
+#: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Download"
@@ -321,6 +341,13 @@ msgstr "Nom du répertoire:"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Identifier"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Image"
@@ -329,6 +356,7 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Import new version"
@@ -371,10 +399,31 @@ msgstr "Date de dernière modification"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid "Link"
+msgstr "Lien"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid "Link Document"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Link with an existing document"
+msgstr "Lier avec un document existant"
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Loading"
-msgstr "Chargement en cours..."
+msgstr "En cours de chargement..."
 
 #. module: cmis_web
 #. openerp-web
@@ -414,12 +463,14 @@ msgstr "Mineure"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Modified"
 msgstr "Date de modification"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Modifier"
@@ -428,12 +479,16 @@ msgstr "Modifié par"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "More actions"
 msgstr "Actions supplémentaires"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Name"
@@ -473,7 +528,7 @@ msgstr "Aucune donnée disponible"
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "Ok"
 
 #. module: cmis_web
 #. openerp-web
@@ -501,10 +556,13 @@ msgstr "Editer hors ligne"
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "PDF file"
-msgstr ""
+msgstr "Fichier PDF "
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Paste"
@@ -512,6 +570,9 @@ msgstr "Coller"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Preview"
@@ -523,14 +584,14 @@ msgstr "Prévisualiser"
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Previous"
-msgstr "Précédent"
+msgstr "Précedent"
 
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "Imprimer"
 
 #. module: cmis_web
 #. openerp-web
@@ -557,6 +618,7 @@ msgstr "Rafraichir le contenu de la table"
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Rename"
 msgstr "Renommer"
@@ -573,7 +635,7 @@ msgstr "Renommer en"
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Reset Zoom"
-msgstr ""
+msgstr "Réinitialiser le zoom"
 
 #. module: cmis_web
 #. openerp-web
@@ -587,7 +649,7 @@ msgstr "Racine"
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Rotate"
-msgstr ""
+msgstr "Tourner"
 
 #. module: cmis_web
 #. openerp-web
@@ -627,9 +689,20 @@ msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Title"
 msgstr "Titre"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid ""
+"Unable to retrieve the document. The resource might have been deleted "
+"in the CMIS."
+msgstr "Impossible de récupérer le document. La ressource a peut être été supprimée dans la GED."
 
 #. module: cmis_web
 #. openerp-web
@@ -655,19 +728,21 @@ msgstr "Mise à jour du contenu de "
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Version"
-msgstr "Version"
+msgstr ""
 
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Video"
-msgstr ""
+msgstr "Vidéo"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "View Details"
@@ -678,18 +753,18 @@ msgstr "Afficher les détails"
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Viewer"
-msgstr ""
+msgstr "Viseur"
 
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Zoom In"
-msgstr ""
+msgstr "Agrandir"
 
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Zoom Out"
-msgstr ""
+msgstr "Réduire"
