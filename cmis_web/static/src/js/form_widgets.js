@@ -999,7 +999,8 @@ odoo.define('cmis_web.form_widgets', function (require) {
     };
 
     var FieldCmisDocument = basicFields.FieldChar.extend(CmisMixin, {
-        template: "FieldCmisDocument", widget_class: 'field_cmis_document',
+        template: "FieldCmisDocument",
+        widget_class: 'field_cmis_document',
 
         init: function (parent, name, record, options) {
             this._super.apply(this, arguments);
@@ -1013,8 +1014,8 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.on('cmis_node_content_updated', this, this.onDocumentUpdated);
         },
 
-        willStart: function () {
-            var self =  this;
+        loadData: function () {
+            let self =  this;
             this.load_cmis_config();
             this.init_cmis_session();
             this.cmisSessionReady = Promise.all([
@@ -1024,9 +1025,15 @@ odoo.define('cmis_web.form_widgets', function (require) {
             return new Promise(function(resolve) {
                 self.cmisSessionReady.then(function() {
                     if (self.value) {
-                        self._get_document(self.value).then(function (document) {
-                            self.document = self.wrap_cmis_object(document);
-                            resolve(document);
+                        self._get_document(self.value).catch(function(error) {
+                            self.value = "error";
+                            resolve({});
+                            return false;
+                        }).then(function (document) {
+                            if (!!document) {
+                                self.document = self.wrap_cmis_object(document);
+                                resolve(document);
+                            }
                         });
                     } else {
                         resolve({});
@@ -1035,22 +1042,38 @@ odoo.define('cmis_web.form_widgets', function (require) {
             });
         },
 
-        _render: function () {
-            this._super.apply(this, arguments);
-            if (this.value && this.value !== "empty") {
-                this._renderCmisDocument(this.document);
-            } else {
+        refreshWidget: function () {
+            let value = this.value;
+            if (value === "empty") {
                 this._renderNoDocument();
+            } if (value === "error") {
+                this._renderGetError();
+            } else {
+                this._renderCmisDocument(this.document);
             }
         },
 
+        _render: function() {
+            let res = this._super.apply(this, arguments);
+            if (!this.value || this.value === "empty") {
+                this._renderNoDocument();
+            }
+            return res;
+        },
+
         start: function () {
+            let self = this;
+            let res = this._super.apply(this, arguments);
             if (!this.value) {
                 // This is a bit of a hack, but there is no hook that allows removing
                 // the `o_field_empty` class on a widget with no value.
                 this.value = "empty";
+            } else {
+                this.loadData().finally(function() {
+                   self.refreshWidget();
+                });
             }
-            return this._super.apply(this, arguments);
+            return res;
         },
 
         _renderCmisDocument: function (document) {
@@ -1065,12 +1088,19 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.register_no_document();
         },
 
+        _renderGetError: function() {
+            this.$el.empty();
+            this.$el.append($('<p/>').text(_t("Unable to retrieve the document. The resource might have been deleted in the CMIS.")))
+        },
+
         _get_document: function (objectId) {
             var self = this;
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 self.cmis_session.getObject(objectId, "latest", DEFAULT_CMIS_OPTIONS)
                 .ok(function (document) {
                     resolve(document);
+                }).notOk(function(error) {
+                    reject(error);
                 });
             });
         },
