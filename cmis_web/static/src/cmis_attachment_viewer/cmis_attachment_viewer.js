@@ -348,12 +348,12 @@ export class CmisAttachmentViewer extends Component {
 
     _onKeydown(ev) {
         switch (ev.key) {
-            /* case 'ArrowRight':
-                this.attachmentViewer.next();
+            case 'ArrowRight':
+                this.next();
                 break;
             case 'ArrowLeft':
-                this.attachmentViewer.previous();
-                break; */
+                this.previous();
+                break;
             case 'Escape':
                 this.props.close();
                 break;

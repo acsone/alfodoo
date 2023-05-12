@@ -34,7 +34,6 @@
             "/cmis_web/static/src/rename_dialog/rename_dialog.js",
             "/cmis_web/static/src/rename_dialog/rename_dialog.xml",
             "/cmis_web/static/src/cmis_breadcrumbs/cmis_breadcrumbs.js",
-            "/cmis_web/static/src/cmis_breadcrumbs/cmis_breadcrumbs.scss",
             "/cmis_web/static/src/cmis_breadcrumbs/cmis_breadcrumbs.xml",
             "/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.js",
             "/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml",

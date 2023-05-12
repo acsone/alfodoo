@@ -140,6 +140,9 @@
             <t t-foreach="list.cmisObjects || []" t-as="cmisObject" t-key="cmisObject.objectId">
                 <t t-call="{{ constructor.recordRowTemplate }}"/>
             </t>
+            <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
+                <td t-att-colspan="nbCols">&#8203;</td>
+            </tr>
             <!-- <tr t-if="displayRowCreates">
                 <td t-if="withHandleColumn"/>
                 <td t-att-colspan="withHandleColumn ? nbCols - 1 : nbCols"

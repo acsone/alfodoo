@@ -149,6 +149,8 @@ class CmisFolderField extends Component {
                 field_name: this.props.name,
             },
         );
+        await this.props.record.load();
+        this.props.record.model.notify();
         this.state.value = cmisFolderValue.value;
     }
 
@@ -178,7 +180,7 @@ class CmisFolderField extends Component {
             })
             .notOk(function (error) {
                 if (error) {
-                    console.error(error.text);
+                    self.onCmisError(error);
                     framework.unblockUI();
                     /* if (error.type == 'application/json') {
                         var jerror = JSON.parse(error.text);

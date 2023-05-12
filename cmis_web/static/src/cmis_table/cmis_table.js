@@ -1,5 +1,9 @@
 /** @odoo-module **/
 
+/**
+ * Most of the code copied from odoo's list_renderer component from 'web'
+ */
+
 /* ---------------------------------------------------------
 + * Odoo cmis_web
 + * Authors Laurent Mignon 2016, Quentin Groulard 2023 Acsone SA/NV
@@ -31,7 +35,7 @@ export class CmisTable extends Component {
             {id: 4, type: "field", name: "description", label: "Description", hasLabel: true, active: true, optional: true},
             {id: 5, type: "field", name: "lastModificationDate", label: "Modified", hasLabel: true, active: true, optional: true},
             {id: 6, type: "field", name: "creationDate", label: "Created", hasLabel: true, active: false, optional: true},
-            {id: 7, type: "field", name: "lastModifiedBy", label: "Modifier", hasLabel: true, active: false, optional: true},
+            {id: 7, type: "field", name: "lastModifiedBy", label: "Modifier", hasLabel: true, active: true, optional: true},
             {id: 8, type: "widget", name: "actions", label: "", hasLabel: false, active: true, optional: false, props: {
                 name: "cmis_actions"
             }},
@@ -48,6 +52,9 @@ export class CmisTable extends Component {
             classNames.push("o_column_sortable", "position-relative", "cursor-pointer");
         } else {
             classNames.push("cursor-default");
+        }
+        if (!this.props.list.orderBy) {
+            classNames.join(" ");
         }
         const orderBy = this.props.list.orderBy;
         if (
@@ -73,6 +80,9 @@ export class CmisTable extends Component {
     }
 
     onHoverSortColumn(ev, column) {
+        if (!this.props.list.orderBy) {
+            return;
+        }
         if (this.props.list.orderBy.length && this.props.list.orderBy[0].name === column.name) {
             return;
         } else if (this.isSortable(column)) { //&& column.widget !== "handle") {
@@ -209,6 +219,27 @@ export class CmisTable extends Component {
         return classNames.join(" "); */
         const value = cmisObject.classMapper[column.name]
         return value ? value : ""
+    }
+
+    get nbCols() {
+        let nbCols = this.state.columns.length;
+        /* if (this.hasSelectors) {
+            nbCols++;
+        }
+        if (this.activeActions.onDelete || this.displayOptionalFields) {
+            nbCols++;
+        } */
+        nbCols++;   //Column selector
+        return nbCols;
+    }
+
+    get getEmptyRowIds() {
+        const length = this.props.list.cmisObjects ? this.props.list.cmisObjects.length : 0;
+        let nbEmptyRow = Math.max(0, 4 - length);
+        /* if (nbEmptyRow > 0 && this.displayRowCreates) {
+            nbEmptyRow -= 1;
+        } */
+        return Array.from(Array(nbEmptyRow).keys());
     }
 
     canUseFormatter(column, record) {
