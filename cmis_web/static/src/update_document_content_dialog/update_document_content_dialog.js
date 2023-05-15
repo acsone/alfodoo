@@ -33,3 +33,8 @@ export class UpdateDocumentContentDialog extends Component {
 
 UpdateDocumentContentDialog.components = { Dialog };
 UpdateDocumentContentDialog.template = "cmis_web.UpdateDocumentContentDialog";
+UpdateDocumentContentDialog.props = {
+    title: String,
+    confirm: Function,
+    close: Function,
+};

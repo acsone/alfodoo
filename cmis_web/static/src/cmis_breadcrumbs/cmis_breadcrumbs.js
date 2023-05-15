@@ -12,3 +12,11 @@ const { Component } = owl;
 export class CmisBreadcrumbs extends Component {}
 
 CmisBreadcrumbs.template = "cmis_web.CmisBreadcrumbs";
+CmisBreadcrumbs.props = {
+    displayFolder: Function,
+    parentFolders: {
+        type: Array,
+        optional: true,
+        element: { type: Object, shape: { id: String, name: String } },
+    },
+};

@@ -33,3 +33,4 @@ export class AddDocumentDialog extends Component {
 
 AddDocumentDialog.components = { Dialog };
 AddDocumentDialog.template = "cmis_web.AddDocumentDialog";
+AddDocumentDialog.props = { confirm: Function, close: Function };

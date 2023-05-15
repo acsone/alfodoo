@@ -33,3 +33,9 @@ export class RenameDialog extends Component {
 
 RenameDialog.components = { Dialog };
 RenameDialog.template = "cmis_web.RenameDialog";
+RenameDialog.props = {
+    title: String,
+    name: String,
+    confirm: Function,
+    close: Function,
+};

@@ -83,8 +83,6 @@ class CmisFolderField extends Component {
 
     get dynamicProps() {
         const props = {
-            displayFolderId: this.displayFolderId,
-            cmisSession: this.cmisSession,
             list: this.state.cmisObjectsWrap,
             deleteObject: this.deleteObject.bind(this),
             renameObject: this.renameObject.bind(this),

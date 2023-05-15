@@ -11,6 +11,8 @@
 + *---------------------------------------------------------
 +*/
 
+import { CmisObjectWrapper } from "../cmis_object_wrapper_service"
+
 const { Component, onMounted, onPatched, onWillUnmount, useRef, useState } = owl;
 
 const MIN_SCALE = 0.5;
@@ -421,3 +423,8 @@ export class CmisAttachmentViewer extends Component {
 }
 
 CmisAttachmentViewer.template = "cmis_web.AttachmentViewer";
+CmisAttachmentViewer.props = {
+    close: Function,
+    cmisObject: CmisObjectWrapper,
+    cmisFolderObjects: { type: Array, element: CmisObjectWrapper },
+};

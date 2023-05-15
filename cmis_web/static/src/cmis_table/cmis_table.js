@@ -15,6 +15,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Widget } from "@web/views/widgets/widget";
+import { CmisObjectCollection } from "../cmis_object_wrapper_service"
 
 const { Component, useState } = owl;
 
@@ -291,3 +292,12 @@ CmisTable.rowsTemplate = "cmis_web.CmisTable.Rows";
 CmisTable.recordRowTemplate = "cmis_web.CmisTable.RecordRow";
 
 CmisTable.components = { DropdownItem, CheckBox, Dropdown, Widget };
+
+export const cmisTableProps = {
+    list: [CmisObjectCollection, Array],
+    displayFolder: Function,
+    renameObject: Function,
+    updateDocumentContent: Function,
+    deleteObject: Function,
+};
+CmisTable.props = cmisTableProps;

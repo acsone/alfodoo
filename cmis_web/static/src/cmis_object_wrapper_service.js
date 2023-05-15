@@ -12,7 +12,7 @@ import { localization } from "@web/core/l10n/localization";
 import { luxonToMomentFormat } from "@web/core/l10n/dates";
 import { sortBy } from "@web/core/utils/arrays";
 
-class CmisObjectWrapper {
+export class CmisObjectWrapper {
     constructor(cmisObject, cmisSession) {
         //this.parent = parent;
         this.cmisObject = cmisObject;
@@ -204,7 +204,7 @@ class CmisObjectWrapper {
 
 }
 
-class CmisObjectCollection {
+export class CmisObjectCollection {
     constructor(cmisObjects, cmisSession) {
         this.cmisObjects = cmisObjects.map(cmisObject => new CmisObjectWrapper(cmisObject.object, cmisSession));
         this.orderBy = [];

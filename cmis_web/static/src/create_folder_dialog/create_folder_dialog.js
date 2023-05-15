@@ -33,3 +33,4 @@ export class CreateFolderDialog extends Component {
 
 CreateFolderDialog.components = { Dialog };
 CreateFolderDialog.template = "cmis_web.CreateFolderDialog";
+CreateFolderDialog.props = { confirm: Function, close: Function };
