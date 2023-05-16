@@ -21,18 +21,18 @@ Alfodoo is a set of addons to seamlessly integrate an external Document Manageme
 
 Unported addons
 ---------------
-addon | version | maintainers | summary
---- | --- | --- | ---
-[cmis_alf](cmis_alf/) | 16.0.1.0.0 (unported) |  | Alfresco extension for the CMIS Connector
-[cmis_field](cmis_field/) | 16.0.1.0.0 (unported) |  | Specialized field to work with a CMIS server
-[cmis_report_write](cmis_report_write/) | 14.0.1.0.1 (unported) |  | Cmis Report Write
-[cmis_web](cmis_web/) | 16.0.1.0.0 (unported) |  | CMIS Web browser widget
-[cmis_web_alf](cmis_web_alf/) | 16.0.1.0.0 (unported) |  | Extensions to the Alfodoo web widgets for Alfresco
-[cmis_web_bus](cmis_web_bus/) | 16.0.1.0.0 (unported) |  | Cmis Web Bus
-[cmis_web_proxy](cmis_web_proxy/) | 14.0.1.0.1 (unported) |  | Odoo as proxy server for your cmis requests.
-[cmis_web_proxy_alf](cmis_web_proxy_alf/) | 14.0.1.0.1 (unported) |  | Alfodoo CMIS Web Proxy for Alfresco
-[cmis_web_report_write](cmis_web_report_write/) | 16.0.1.0.0 (unported) |  | Cmis Web Report Write
-[cmis_web_report_write_alf](cmis_web_report_write_alf/) | 14.0.1.0.1 (unported) |  | Cmis Web Report Write Alf
+addon | version | summary
+--- | --- | ---
+[cmis_alf](cmis_alf/) | 16.0.1.0.0 (unported) | Alfresco extension for the CMIS Connector
+[cmis_field](cmis_field/) | 16.0.1.0.0 (unported) | Specialized field to work with a CMIS server
+[cmis_report_write](cmis_report_write/) | 14.0.1.0.1 (unported) | Cmis Report Write
+[cmis_web](cmis_web/) | 16.0.1.0.0 (unported) | CMIS Web browser widget
+[cmis_web_alf](cmis_web_alf/) | 16.0.1.0.0 (unported) | Extensions to the Alfodoo web widgets for Alfresco
+[cmis_web_bus](cmis_web_bus/) | 16.0.1.0.0 (unported) | Cmis Web Bus
+[cmis_web_proxy](cmis_web_proxy/) | 14.0.1.0.1 (unported) | Odoo as proxy server for your cmis requests.
+[cmis_web_proxy_alf](cmis_web_proxy_alf/) | 14.0.1.0.1 (unported) | Alfodoo CMIS Web Proxy for Alfresco
+[cmis_web_report_write](cmis_web_report_write/) | 16.0.1.0.0 (unported) | Cmis Web Report Write
+[cmis_web_report_write_alf](cmis_web_report_write_alf/) | 14.0.1.0.1 (unported) | Cmis Web Report Write Alf
 
 [//]: # (end addons)
 
@@ -42,7 +42,7 @@ addon | version | maintainers | summary
 
 This repository is licensed under [AGPL-3.0](LICENSE).
 
-However, each module can have a totally different license, as long as they adhere to ACSONE
+However, each module can have a totally different license, as long as they adhere to ACSONE SA/NV
 policy. Consult each module's `__manifest__.py` file, which contains a `license` key
 that explains its license.
 
