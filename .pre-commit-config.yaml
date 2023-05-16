@@ -3,7 +3,6 @@ exclude: |
   # NOT INSTALLABLE ADDONS
   ^cmis_alf/|
   ^cmis_report_write/|
-  ^cmis_web/|
   ^cmis_web_alf/|
   ^cmis_web_bus/|
   ^cmis_web_proxy/|

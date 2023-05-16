@@ -7,13 +7,13 @@
 + *---------------------------------------------------------
 +*/
 
-import { Dialog } from "@web/core/dialog/dialog";
+import {Dialog} from "@web/core/dialog/dialog";
 
-const { Component, useRef } = owl;
+const {Component, useRef} = owl;
 
 export class UpdateDocumentContentDialog extends Component {
     setup() {
-        this.fileInput = useRef("fileInput")
+        this.fileInput = useRef("fileInput");
     }
 
     async onClose() {
@@ -31,7 +31,7 @@ export class UpdateDocumentContentDialog extends Component {
     }
 }
 
-UpdateDocumentContentDialog.components = { Dialog };
+UpdateDocumentContentDialog.components = {Dialog};
 UpdateDocumentContentDialog.template = "cmis_web.UpdateDocumentContentDialog";
 UpdateDocumentContentDialog.props = {
     title: String,

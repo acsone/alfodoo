@@ -27,8 +27,10 @@
             "/cmis_web/static/src/cmis_actions/cmis_actions.xml",
             "/cmis_web/static/src/add_document_dialog/add_document_dialog.js",
             "/cmis_web/static/src/add_document_dialog/add_document_dialog.xml",
-            "/cmis_web/static/src/update_document_content_dialog/update_document_content_dialog.js",
-            "/cmis_web/static/src/update_document_content_dialog/update_document_content_dialog.xml",
+            "/cmis_web/static/src/"
+            "update_document_content_dialog/update_document_content_dialog.js",
+            "/cmis_web/static/src/"
+            "update_document_content_dialog/update_document_content_dialog.xml",
             "/cmis_web/static/src/create_folder_dialog/create_folder_dialog.js",
             "/cmis_web/static/src/create_folder_dialog/create_folder_dialog.xml",
             "/cmis_web/static/src/rename_dialog/rename_dialog.js",
@@ -38,6 +40,6 @@
             "/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.js",
             "/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml",
             "/cmis_web/static/src/cmis_object_wrapper_service.js",
-        ],
-    }
+        ]
+    },
 }

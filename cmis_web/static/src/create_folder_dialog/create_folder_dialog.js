@@ -7,13 +7,13 @@
 + *---------------------------------------------------------
 +*/
 
-import { Dialog } from "@web/core/dialog/dialog";
+import {Dialog} from "@web/core/dialog/dialog";
 
-const { Component, useRef } = owl;
+const {Component, useRef} = owl;
 
 export class CreateFolderDialog extends Component {
     setup() {
-        this.folderName = useRef("folderName")
+        this.folderName = useRef("folderName");
     }
 
     async onClose() {
@@ -31,6 +31,6 @@ export class CreateFolderDialog extends Component {
     }
 }
 
-CreateFolderDialog.components = { Dialog };
+CreateFolderDialog.components = {Dialog};
 CreateFolderDialog.template = "cmis_web.CreateFolderDialog";
-CreateFolderDialog.props = { confirm: Function, close: Function };
+CreateFolderDialog.props = {confirm: Function, close: Function};

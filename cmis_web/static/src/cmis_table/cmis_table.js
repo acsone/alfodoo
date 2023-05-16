@@ -11,13 +11,13 @@
 + *---------------------------------------------------------
 +*/
 
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Widget } from "@web/views/widgets/widget";
-import { CmisObjectCollection } from "../cmis_object_wrapper_service"
+import {CheckBox} from "@web/core/checkbox/checkbox";
+import {CmisObjectCollection} from "../cmis_object_wrapper_service";
+import {Dropdown} from "@web/core/dropdown/dropdown";
+import {DropdownItem} from "@web/core/dropdown/dropdown_item";
+import {Widget} from "@web/views/widgets/widget";
 
-const { Component, useState } = owl;
+const {Component, useState} = owl;
 
 export class CmisTable extends Component {
     setup() {
@@ -30,18 +30,75 @@ export class CmisTable extends Component {
 
     getAllColumns() {
         return [
-            { id: 1, type: "field", name: "name", label: "Name", hasLabel: true, active: true, optional: true },
-            { id: 2, type: "field", name: "title", label: "Title", hasLabel: true, active: false, optional: true },
-            { id: 3, type: "field", name: "description", label: "Description", hasLabel: true, active: true, optional: true },
-            { id: 4, type: "field", name: "lastModificationDate", label: "Modified", hasLabel: true, active: true, optional: true },
-            { id: 5, type: "field", name: "creationDate", label: "Created", hasLabel: true, active: false, optional: true },
-            { id: 6, type: "field", name: "lastModifiedBy", label: "Modifier", hasLabel: true, active: true, optional: true },
-            { id: 7, type: "widget", name: "actions", label: "", hasLabel: false, active: true, optional: false, props: { name: "cmis_actions" } },
+            {
+                id: 1,
+                type: "field",
+                name: "name",
+                label: "Name",
+                hasLabel: true,
+                active: true,
+                optional: true,
+            },
+            {
+                id: 2,
+                type: "field",
+                name: "title",
+                label: "Title",
+                hasLabel: true,
+                active: false,
+                optional: true,
+            },
+            {
+                id: 3,
+                type: "field",
+                name: "description",
+                label: "Description",
+                hasLabel: true,
+                active: true,
+                optional: true,
+            },
+            {
+                id: 4,
+                type: "field",
+                name: "lastModificationDate",
+                label: "Modified",
+                hasLabel: true,
+                active: true,
+                optional: true,
+            },
+            {
+                id: 5,
+                type: "field",
+                name: "creationDate",
+                label: "Created",
+                hasLabel: true,
+                active: false,
+                optional: true,
+            },
+            {
+                id: 6,
+                type: "field",
+                name: "lastModifiedBy",
+                label: "Modifier",
+                hasLabel: true,
+                active: true,
+                optional: true,
+            },
+            {
+                id: 7,
+                type: "widget",
+                name: "actions",
+                label: "",
+                hasLabel: false,
+                active: true,
+                optional: false,
+                props: {name: "cmis_actions"},
+            },
         ];
     }
 
     getActiveColumns() {
-        return this.allColumns.filter((col) => col.active)
+        return this.allColumns.filter((col) => col.active);
     }
 
     getColumnClass(column) {
@@ -77,10 +134,13 @@ export class CmisTable extends Component {
         if (!this.props.list.orderBy) {
             return;
         }
-        if (this.props.list.orderBy.length && this.props.list.orderBy[0].name === column.name) {
+        if (
+            this.props.list.orderBy.length &&
+            this.props.list.orderBy[0].name === column.name
+        ) {
             return;
         } else if (this.isSortable(column)) {
-            ev.target.classList.toggle("table-active", ev.type == "mouseenter");
+            ev.target.classList.toggle("table-active", ev.type === "mouseenter");
         }
     }
 
@@ -92,8 +152,10 @@ export class CmisTable extends Component {
         if (!this.props.list.cmisObjects) {
             return;
         }
-        const { orderBy } = this.props.list;
-        const classNames = this.isSortable(column) ? ["fa", "fa-lg", "px-2"] : ["d-none"];
+        const {orderBy} = this.props.list;
+        const classNames = this.isSortable(column)
+            ? ["fa", "fa-lg", "px-2"]
+            : ["d-none"];
         if (orderBy.length && orderBy[0].name === column.name) {
             classNames.push(orderBy[0].asc ? "fa-angle-up" : "fa-angle-down");
         } else {
@@ -115,46 +177,49 @@ export class CmisTable extends Component {
         }
     }
 
-    isNumericColumn(column) {
-        return false
+    isNumericColumn() {
+        return false;
     }
 
-    getRowClass(record) {
-        return ""
+    getRowClass() {
+        return "";
     }
 
-    getColumns(record) {
+    getColumns() {
         return this.state.columns;
     }
 
     getCellClass(column, cmisObject) {
-        const value = cmisObject.classMapper[column.name]
-        return value ? value : ""
+        const value = cmisObject.classMapper[column.name];
+        return value ? value : "";
     }
 
     get nbCols() {
         let nbCols = this.state.columns.length;
-        nbCols++;   //Column selector
+        // Column selector
+        nbCols++;
         return nbCols;
     }
 
     get getEmptyRowIds() {
-        const length = this.props.list.cmisObjects ? this.props.list.cmisObjects.length : 0;
-        let nbEmptyRow = Math.max(0, 4 - length);
+        const length = this.props.list.cmisObjects
+            ? this.props.list.cmisObjects.length
+            : 0;
+        const nbEmptyRow = Math.max(0, 4 - length);
         return Array.from(Array(nbEmptyRow).keys());
     }
 
-    canUseFormatter(column, record) {
-        return true
+    canUseFormatter() {
+        return true;
     }
 
     getFormattedValue(column, cmisObject) {
-        const value = cmisObject.columnMapper[column.name]
-        return value ? value : ""
+        const value = cmisObject.columnMapper[column.name];
+        return value ? value : "";
     }
 
     toggleOptionalColumn(columnId) {
-        let index = this.allColumns.findIndex((col) => col.id === columnId);
+        const index = this.allColumns.findIndex((col) => col.id === columnId);
         this.allColumns[index].active = !this.allColumns[index].active;
         this.state.columns = this.getActiveColumns();
     }
@@ -172,7 +237,7 @@ export class CmisTable extends Component {
 
     onClickRow(cmisObject) {
         if (cmisObject.baseTypeId === "cmis:folder") {
-            this.props.displayFolder({ name: cmisObject.name, id: cmisObject.objectId })
+            this.props.displayFolder({name: cmisObject.name, id: cmisObject.objectId});
         }
     }
 }
@@ -181,7 +246,7 @@ CmisTable.template = "cmis_web.CmisTable";
 CmisTable.rowsTemplate = "cmis_web.CmisTable.Rows";
 CmisTable.recordRowTemplate = "cmis_web.CmisTable.RecordRow";
 
-CmisTable.components = { DropdownItem, CheckBox, Dropdown, Widget };
+CmisTable.components = {DropdownItem, CheckBox, Dropdown, Widget};
 
 export const cmisTableProps = {
     list: [CmisObjectCollection, Array],

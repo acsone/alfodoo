@@ -7,9 +7,9 @@
 + *---------------------------------------------------------
 +*/
 
-import { Dialog } from "@web/core/dialog/dialog";
+import {Dialog} from "@web/core/dialog/dialog";
 
-const { Component, useRef } = owl;
+const {Component, useRef} = owl;
 
 export class RenameDialog extends Component {
     setup() {
@@ -31,7 +31,7 @@ export class RenameDialog extends Component {
     }
 }
 
-RenameDialog.components = { Dialog };
+RenameDialog.components = {Dialog};
 RenameDialog.template = "cmis_web.RenameDialog";
 RenameDialog.props = {
     title: String,

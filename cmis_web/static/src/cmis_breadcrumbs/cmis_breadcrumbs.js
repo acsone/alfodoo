@@ -7,7 +7,7 @@
 + *---------------------------------------------------------
 +*/
 
-const { Component } = owl;
+const {Component} = owl;
 
 export class CmisBreadcrumbs extends Component {}
 
@@ -17,6 +17,6 @@ CmisBreadcrumbs.props = {
     parentFolders: {
         type: Array,
         optional: true,
-        element: { type: Object, shape: { id: String, name: String } },
+        element: {type: Object, shape: {id: String, name: String}},
     },
 };

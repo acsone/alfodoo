@@ -7,15 +7,15 @@
 + *---------------------------------------------------------
 +*/
 
-import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { CmisAttachmentViewer } from "../cmis_attachment_viewer/cmis_attachment_viewer"
-import { cmisTableProps } from "../cmis_table/cmis_table"
-import { CmisObjectWrapper } from "../cmis_object_wrapper_service"
+import {CmisAttachmentViewer} from "../cmis_attachment_viewer/cmis_attachment_viewer";
+import {CmisObjectWrapper} from "../cmis_object_wrapper_service";
+import {Dropdown} from "@web/core/dropdown/dropdown";
+import {DropdownItem} from "@web/core/dropdown/dropdown_item";
+import {cmisTableProps} from "../cmis_table/cmis_table";
+import {registry} from "@web/core/registry";
+import {useService} from "@web/core/utils/hooks";
 
-const { Component } = owl;
+const {Component} = owl;
 
 class CmisActions extends Component {
     setup() {
@@ -28,13 +28,10 @@ class CmisActions extends Component {
     }
 
     onClickPreview() {
-        this.dialogService.add(
-            CmisAttachmentViewer,
-            {
-                cmisObject: this.props.cmisObject,
-                cmisFolderObjects: this.props.cmisFolderObjects
-            }
-        );
+        this.dialogService.add(CmisAttachmentViewer, {
+            cmisObject: this.props.cmisObject,
+            cmisFolderObjects: this.props.cmisFolderObjects,
+        });
     }
 
     onRename() {
@@ -51,11 +48,11 @@ class CmisActions extends Component {
 }
 
 CmisActions.template = "cmis_web.CmisActions";
-CmisActions.components = { Dropdown, DropdownItem };
+CmisActions.components = {Dropdown, DropdownItem};
 CmisActions.props = {
     ...cmisTableProps,
     cmisObject: CmisObjectWrapper,
-    cmisFolderObjects: { type: Array, element: CmisObjectWrapper },
+    cmisFolderObjects: {type: Array, element: CmisObjectWrapper},
 };
 
 registry.category("view_widgets").add("cmis_actions", CmisActions);

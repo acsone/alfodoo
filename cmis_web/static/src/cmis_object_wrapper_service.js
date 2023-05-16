@@ -7,10 +7,10 @@
 + *---------------------------------------------------------
 +*/
 
-import { registry } from "@web/core/registry";
-import { localization } from "@web/core/l10n/localization";
-import { luxonToMomentFormat } from "@web/core/l10n/dates";
-import { sortBy } from "@web/core/utils/arrays";
+import {localization} from "@web/core/l10n/localization";
+import {luxonToMomentFormat} from "@web/core/l10n/dates";
+import {registry} from "@web/core/registry";
+import {sortBy} from "@web/core/utils/arrays";
 
 export class CmisObjectWrapper {
     constructor(cmisObject, cmisSession) {
@@ -27,79 +27,91 @@ export class CmisObjectWrapper {
         };
         this.classMapper = {
             name: this.fNameClass(),
-        }
+        };
     }
 
     parseObject(cmisObject) {
-        this.name = this.getSuccinctProperty('cmis:name', cmisObject);
-        this.mimetype = this.getSuccinctProperty('cmis:contentStreamMimeType', cmisObject);
-        this.baseTypeId = this.getSuccinctProperty('cmis:baseTypeId', cmisObject);
-        this.title = this.getSuccinctProperty('cm:title', cmisObject) || '';
-        this.description = this.getSuccinctProperty('cmis:description', cmisObject);
-        this.lastModificationDate = this.getSuccinctProperty('cmis:lastModificationDate', cmisObject);
-        this.creationDate = this.getSuccinctProperty('cmis:creationDate', cmisObject);
-        this.lastModifiedBy = this.getSuccinctProperty('cmis:lastModifiedBy', cmisObject);
-        this.objectId = this.getSuccinctProperty('cmis:objectId', cmisObject);
-        this.versionSeriesId = this.getSuccinctProperty('cmis:versionSeriesId', cmisObject);
-        this.versionLabel = this.getSuccinctProperty('cmis:versionLabel');
-        this.url = this.cmisSession.getContentStreamURL(this.objectId, 'attachment');
+        this.name = this.getSuccinctProperty("cmis:name", cmisObject);
+        this.mimetype = this.getSuccinctProperty(
+            "cmis:contentStreamMimeType",
+            cmisObject
+        );
+        this.baseTypeId = this.getSuccinctProperty("cmis:baseTypeId", cmisObject);
+        this.title = this.getSuccinctProperty("cm:title", cmisObject) || "";
+        this.description = this.getSuccinctProperty("cmis:description", cmisObject);
+        this.lastModificationDate = this.getSuccinctProperty(
+            "cmis:lastModificationDate",
+            cmisObject
+        );
+        this.creationDate = this.getSuccinctProperty("cmis:creationDate", cmisObject);
+        this.lastModifiedBy = this.getSuccinctProperty(
+            "cmis:lastModifiedBy",
+            cmisObject
+        );
+        this.objectId = this.getSuccinctProperty("cmis:objectId", cmisObject);
+        this.versionSeriesId = this.getSuccinctProperty(
+            "cmis:versionSeriesId",
+            cmisObject
+        );
+        this.versionLabel = this.getSuccinctProperty("cmis:versionLabel");
+        this.url = this.cmisSession.getContentStreamURL(this.objectId, "attachment");
         this.allowableActions = cmisObject.allowableActions;
         this.renditions = cmisObject.renditions;
     }
 
     getSuccinctProperty(property, cmisObject) {
-        cmisObject = cmisObject || this.cmisObject;
-        return cmisObject.succinctProperties[property];
+        const object = cmisObject || this.cmisObject;
+        return object.succinctProperties[property];
     }
 
     _getCssClass() {
-        if (this.baseTypeId === 'cmis:folder') {
-            return 'fa fa-folder cmis-folder';
+        if (this.baseTypeId === "cmis:folder") {
+            return "fa fa-folder cmis-folder";
         }
 
         if (this.mimetype) {
             switch (this.mimetype) {
-                case 'application/pdf':
-                    return 'fa fa-file-pdf-o';
-                case 'text/plain':
-                    return 'fa fa-file-text-o';
-                case 'text/html':
-                    return 'fa fa-file-code-o';
-                case 'application/json':
-                    return 'fa fa-file-code-o';
-                case 'application/gzip':
-                    return 'fa fa-file-archive-o';
-                case 'application/zip':
-                    return 'fa fa-file-archive-o';
-                case 'application/octet-stream':
-                    return 'fa fa-file-o';
+                case "application/pdf":
+                    return "fa fa-file-pdf-o";
+                case "text/plain":
+                    return "fa fa-file-text-o";
+                case "text/html":
+                    return "fa fa-file-code-o";
+                case "application/json":
+                    return "fa fa-file-code-o";
+                case "application/gzip":
+                    return "fa fa-file-archive-o";
+                case "application/zip":
+                    return "fa fa-file-archive-o";
+                case "application/octet-stream":
+                    return "fa fa-file-o";
             }
-            switch (this.mimetype.split('/')[0]) {
-                case 'image':
-                    return 'fa fa-file-image-o';
-                case 'audio':
-                    return 'fa fa-file-audio-o';
-                case 'video':
-                    return 'fa fa-file-video-o';
+            switch (this.mimetype.split("/")[0]) {
+                case "image":
+                    return "fa fa-file-image-o";
+                case "audio":
+                    return "fa fa-file-audio-o";
+                case "video":
+                    return "fa fa-file-video-o";
             }
         }
-        if (this.baseTypeId === 'cmis:document') {
-            return 'fa fa-file-o';
+        if (this.baseTypeId === "cmis:document") {
+            return "fa fa-file-o";
         }
-        return 'fa fa-fw';
+        return "fa fa-fw";
     }
 
     /** FName
-     * return the cmis:name formatted to be rendered in ta datatable cell
+     * @returns the cmis:name formatted to be rendered in ta datatable cell
      *
      **/
     fNameClass() {
         var cls = this._getCssClass();
-        return cls
+        return cls;
     }
 
     /** FLastModificationDate
-     * return the cmis:mastModificationDate formatted to be rendered in ta datatable cell
+     * @returns the cmis:mastModificationDate formatted to be rendered in ta datatable cell
      *
      **/
     fLastModificationDate() {
@@ -107,14 +119,13 @@ export class CmisObjectWrapper {
     }
 
     /**
-    * Format cmis object creation date
-    * @returns the cmis:creationDate formatted to be rendered in a datatable cell
-    *
-    **/
+     * Format cmis object creation date
+     * @returns the cmis:creationDate formatted to be rendered in a datatable cell
+     *
+     **/
     fCreationDate() {
         return this.formatCmisTimestamp(this.creationDate);
     }
-
 
     fDetails() {
         return '<div class="fa fa-plus-circle"/>';
@@ -126,18 +137,18 @@ export class CmisObjectWrapper {
             var dateFormat = luxonToMomentFormat(localization.dateFormat);
             var timeFormat = luxonToMomentFormat(localization.timeFormat);
             var value = moment(d);
-            return value.format(dateFormat + ' ' + timeFormat);
+            return value.format(dateFormat + " " + timeFormat);
         }
-        return '';
+        return "";
     }
 
     getContentUrl() {
-        return this.cmisSession.getContentStreamURL(this.objectId, 'inline');
+        return this.cmisSession.getContentStreamURL(this.objectId, "inline");
     }
 
     getPreviewUrl() {
-        var rendition = _.findWhere(this.renditions, { mimeType: 'application/pdf' });
-        if (this.mimetype === 'application/pdf') {
+        var rendition = _.findWhere(this.renditions, {mimeType: "application/pdf"});
+        if (this.mimetype === "application/pdf") {
             return this.getContentUrl();
         } else if (rendition) {
             return this.cmisSession.getContentStreamURL(rendition.streamId);
@@ -146,14 +157,14 @@ export class CmisObjectWrapper {
     }
 
     getPreviewType() {
-        if (this.baseTypeId === 'cmis:folder') {
+        if (this.baseTypeId === "cmis:folder") {
             return undefined;
         }
         if (this.mimetype.match("(image)")) {
-            return 'image';
+            return "image";
         }
         if (this.mimetype.match("(video)")) {
-            return 'video';
+            return "video";
         }
         // Here we hope that alfresco is able to render the document as pdf
         return "pdf";
@@ -162,7 +173,9 @@ export class CmisObjectWrapper {
 
 export class CmisObjectCollection {
     constructor(cmisObjects, cmisSession) {
-        this.cmisObjects = cmisObjects.map(cmisObject => new CmisObjectWrapper(cmisObject.object, cmisSession));
+        this.cmisObjects = cmisObjects.map(
+            (cmisObject) => new CmisObjectWrapper(cmisObject.object, cmisSession)
+        );
         this.orderBy = [];
         this.sortBy("name");
     }
@@ -172,9 +185,13 @@ export class CmisObjectCollection {
             this.orderBy[0].asc = !this.orderBy[0].asc;
         } else {
             this.orderBy.length = 0;
-            this.orderBy.push({ name: field, asc: true });
+            this.orderBy.push({name: field, asc: true});
         }
-        this.cmisObjects = sortBy(this.cmisObjects, field, this.orderBy[0].asc ? "asc" : "desc");
+        this.cmisObjects = sortBy(
+            this.cmisObjects,
+            field,
+            this.orderBy[0].asc ? "asc" : "desc"
+        );
     }
 }
 
@@ -182,9 +199,9 @@ const cmisObjectWrapperService = {
     start() {
         function wrap(cmisObjects, cmisSession) {
             return new CmisObjectCollection(cmisObjects, cmisSession);
-        };
+        }
 
-        return { wrap }
+        return {wrap};
     },
 };
 

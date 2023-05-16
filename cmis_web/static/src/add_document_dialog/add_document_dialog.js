@@ -7,13 +7,13 @@
 + *---------------------------------------------------------
 +*/
 
-import { Dialog } from "@web/core/dialog/dialog";
+import {Dialog} from "@web/core/dialog/dialog";
 
-const { Component, useRef } = owl;
+const {Component, useRef} = owl;
 
 export class AddDocumentDialog extends Component {
     setup() {
-        this.filesInput = useRef("filesInput")
+        this.filesInput = useRef("filesInput");
     }
 
     async onClose() {
@@ -31,6 +31,6 @@ export class AddDocumentDialog extends Component {
     }
 }
 
-AddDocumentDialog.components = { Dialog };
+AddDocumentDialog.components = {Dialog};
 AddDocumentDialog.template = "cmis_web.AddDocumentDialog";
-AddDocumentDialog.props = { confirm: Function, close: Function };
+AddDocumentDialog.props = {confirm: Function, close: Function};
