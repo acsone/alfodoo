@@ -193,7 +193,7 @@
             <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')">
                 <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
                 <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
-                <li t-if='!isFolder'><a class='content-action-copy' href="#"><i class="fa fa-copy"></i> Copy</a></li>
+                <li t-if='!isFolder &amp; !isReadonly'><a class='content-action-copy' href="#"><i class="fa fa-copy"></i> Copy</a></li>
                 <li t-if='canMoveObject'><a class='content-action-cut' href="#"><i class="fa fa-cut"></i> Cut</a></li>
                 <li t-if='canCreateDocument &amp; object.parent.clipboardAction == "cut"'><a class='content-action-cut-paste' href="#"><i class="fa fa-paste"></i> Paste</a></li>
                 <li t-if='canCreateDocument &amp; object.parent.clipboardAction == "copy"'><a class='content-action-copy-paste' href="#"><i class="fa fa-paste"></i> Paste</a></li>
@@ -202,8 +202,8 @@
                 <li t-if='canCheckIn or canCancelCheckOut or canCheckOut' role="separator" class="divider"></li>
                 <li t-if='canCheckIn'><a class='content-action-checkin' href="#">Import new version</a></li>
                 <li t-if='canCancelCheckOut'><a class='content-action-cancel-checkout' href="#">Cancel Edit</a></li>
-                <li t-if='canCheckOut'><a class='content-action-checkout' href="#">Offline Edit</a></li>
-                <t t-if='canDeleteObject'>
+                <li t-if='canCheckOut &amp; !isReadonly'><a class='content-action-checkout' href="#">Offline Edit</a></li>
+                <t t-if='canDeleteObject &amp; !isReadonly'>
                     <li role="separator" class="divider"></li>
                     <li><a class='content-action-delete-object' href="#">Delete</a></li>
                 </t>
@@ -400,7 +400,7 @@
     </div>
 </t>
 
-    <t t-name='CmisVersionsHistoryDialog'>
+<t t-name='CmisVersionsHistoryDialog'>
     <div class="cmis-document-history">
         <div class="versions border-top container">
             <t t-set="versions" t-value="widget.versions"/>
@@ -549,4 +549,5 @@
         </ul>
     </div>
 </t>
+
 </templates>

@@ -674,6 +674,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.cmis_object = cmis_object;
             this.cmis_session = cmis_session;
             this.parse_object(cmis_object);
+            this.isReadonly = !!parent ? parent.isReadonly : false;
         },
 
         _clone: function () {
@@ -803,7 +804,24 @@ odoo.define('cmis_web.form_widgets', function (require) {
          * render the list of available actions
          */
         fContentActions: function () {
-            var ctx = this.getActionsContext();
+            var ctx = {object: this};
+            _.map(this.cmis_object.allowableActions, function (value, actionName) {
+                ctx[actionName] = value;
+            });
+            ctx.canPreview = ctx.canGetContentStream; // && this.mimetype === 'application/pdf';
+            ctx.isReadonly = this.isReadonly;
+            let readonly_props = [
+                'canCreateDocument',
+                'canUpdateProperties',
+                'canMoveObject',
+                'canSetContentStream',
+            ]
+            if (this.isReadonly) {
+                _.each(readonly_props, function(prop) {
+                   ctx[prop] = false;
+                });
+            }
+            ctx.isFolder = this.baseTypeId == 'cmis:folder';
             return QWeb.render("CmisContentActions", ctx);
         },
 
@@ -1364,6 +1382,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.formatType = 'char';
             this.clipboardAction = undefined;
             this.clipboardObject = undefined;
+            this.isReadonly = this.attrs.modifiers.readonly;
         },
 
         reset_widget: function () {
@@ -2314,6 +2333,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
             _.map(this.dislayed_folder_cmisobject.allowableActions, function (value, actionName) {
                 ctx[actionName] = value;
             });
+            if (this.isReadonly) {
+                ctx['canCreateDocument'] = false;
+                ctx['canCreateFolder'] = false;
+            }
             this.$el.find('.cmis-root-content-buttons').html(QWeb.render("CmisRootContentActions", ctx));
             this.register_root_content_events();
         },
