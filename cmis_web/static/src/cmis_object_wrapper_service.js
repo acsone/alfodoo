@@ -14,7 +14,6 @@ import { sortBy } from "@web/core/utils/arrays";
 
 export class CmisObjectWrapper {
     constructor(cmisObject, cmisSession) {
-        //this.parent = parent;
         this.cmisObject = cmisObject;
         this.cmisSession = cmisSession;
         this.parseObject(cmisObject);
@@ -96,12 +95,6 @@ export class CmisObjectWrapper {
      **/
     fNameClass() {
         var cls = this._getCssClass();
-        /* var val = "<div class='" + cls + " cmis_content_icon'>" + this.name;
-        val += "</div>";
-        if (this.getSuccinctProperty('cmis:isVersionSeriesCheckedOut')) {
-            val = val + "<div class='fa fa-key cmis-checked-out-by'> " + this.env._t('By:') + ' ' + this.getSuccinctProperty('cmis:versionSeriesCheckedOutBy') + '</div>';
-        }
-        return val; */
         return cls
     }
 
@@ -138,22 +131,6 @@ export class CmisObjectWrapper {
         return '';
     }
 
-    /**
-     * Content actions
-     *
-     * render the list of available actions
-     */
-    fContentActions() {
-        /* var ctx = {object: this};
-        _.map(this.cmisObject.allowableActions, function (value, actionName) {
-            ctx[actionName] = value;
-        });
-        ctx.canPreview = ctx.canGetContentStream;
-        ctx.isFolder = this.baseTypeId == 'cmis:folder';
-        return QWeb.render("CmisContentActions", ctx); */
-        return '';
-    }
-
     getContentUrl() {
         return this.cmisSession.getContentStreamURL(this.objectId, 'inline');
     }
@@ -181,27 +158,6 @@ export class CmisObjectWrapper {
         // Here we hope that alfresco is able to render the document as pdf
         return "pdf";
     }
-
-
-    /**
-     * Refresh the information by reloading data from the server
-     * The method return a deferred called once the information are up to date
-     */
-    /* refresh() {
-        var self = this;
-        var dfd = $.Deferred()
-        var options = DEFAULT_CMIS_OPTIONS;
-        var oldValue = this._clone();
-        this.cmisSession.getObject(
-            this.objectId,
-            'latest', options).ok(function (data) {
-            self.parse_object(data);
-            self.parent.trigger('wrapped_cmis_node_reloaded', oldValue, self);
-            dfd.resolve(self);
-        });
-        return dfd.promise();
-    } */
-
 }
 
 export class CmisObjectCollection {

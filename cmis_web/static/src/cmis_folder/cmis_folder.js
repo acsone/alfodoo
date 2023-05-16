@@ -180,17 +180,7 @@ class CmisFolderField extends Component {
                 if (error) {
                     self.onCmisError(error);
                     framework.unblockUI();
-                    /* if (error.type == 'application/json') {
-                        var jerror = JSON.parse(error.text);
-                        if (jerror.exception === 'contentAlreadyExists') {
-                            var dialog = new CmisDuplicateDocumentResolver(self, self.dislayed_folder_cmisobject, file);
-                            dialog.open();
-                            framework.unblockUI();
-                            return;
-                        }
-                    } */
                 }
-                //self.on_cmis_error(error);
             });
         })
     }
