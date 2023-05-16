@@ -136,7 +136,7 @@ export class CmisObjectWrapper {
     }
 
     getPreviewUrl() {
-        var rendition = _.findWhere(this.renditions, {mimeType: 'application/pdf'});
+        var rendition = _.findWhere(this.renditions, { mimeType: 'application/pdf' });
         if (this.mimetype === 'application/pdf') {
             return this.getContentUrl();
         } else if (rendition) {
@@ -172,9 +172,9 @@ export class CmisObjectCollection {
             this.orderBy[0].asc = !this.orderBy[0].asc;
         } else {
             this.orderBy.length = 0;
-            this.orderBy.push({name: field, asc: true});
+            this.orderBy.push({ name: field, asc: true });
         }
-        this.cmisObjects = sortBy(this.cmisObjects, field, this.orderBy[0].asc ? "asc": "desc");
+        this.cmisObjects = sortBy(this.cmisObjects, field, this.orderBy[0].asc ? "asc" : "desc");
     }
 }
 

@@ -3,7 +3,12 @@
     <t t-if="props.record.resId" t-name="cmis_web.CmisFolderField" owl="1">
         <t t-if="!state.value and props.allowCreate">
             <div class="mb-4">
-                <button t-ref="buttonCreateFolder" type="button" class="btn btn-primary hidden" t-on-click="createRootFolder">Create folder in DMS</button>
+                <button type="button"
+                        t-ref="buttonCreateFolder"
+                        class="btn btn-primary hidden"
+                        t-on-click="createRootFolder">
+                    Create folder in DMS
+                </button>
             </div>
         </t>
         <t t-if="state.value">
@@ -38,7 +43,10 @@
                 </div>
             </div>
             <CmisBreadcrumbs parentFolders="state.parentFolders" displayFolder.bind="displayFolder"/>
-            <div t-on-drop="ev => this.onDrop(ev)" t-on-dragenter="ev => this.onDragenter(ev)" t-on-dragleave="ev => this.onDragleave(ev)" t-att-class="{ 'o-dragging-inside': state.isDraggingInside }">
+            <div t-on-drop="ev => this.onDrop(ev)"
+                 t-on-dragenter="ev => this.onDragenter(ev)"
+                 t-on-dragleave="ev => this.onDragleave(ev)"
+                 t-att-class="{ 'o-dragging-inside': state.isDraggingInside }">
                 <CmisTable t-props="dynamicProps" displayFolder.bind="displayFolder"/>
             </div>
         </t>

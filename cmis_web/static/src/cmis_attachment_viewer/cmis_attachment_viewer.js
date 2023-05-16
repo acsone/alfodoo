@@ -103,7 +103,7 @@ export class CmisAttachmentViewer extends Component {
     setup() {
         this.MIN_SCALE = MIN_SCALE;
         this._translate = { x: 0, y: 0, dx: 0, dy: 0 };
-        
+
         this.attachmentViewer = useState({
             attachmentViewerViewables: this.getViewables(),
             onClick: () => {
@@ -113,7 +113,7 @@ export class CmisAttachmentViewer extends Component {
                 this.props.close();
             },
             onClickHeader: (ev) => { ev.stopPropagation(); },
-            onClickDownload: (ev) => { 
+            onClickDownload: (ev) => {
                 ev.stopPropagation();
                 this.attachmentViewer.attachmentViewerViewable.download();
             },
@@ -135,7 +135,7 @@ export class CmisAttachmentViewer extends Component {
             onClickRotate: (ev) => {
                 ev.stopPropagation();
                 this.rotate();
-             },
+            },
             onClickPrint: (ev) => {
                 ev.stopPropagation();
                 this.print();
@@ -240,14 +240,14 @@ export class CmisAttachmentViewer extends Component {
     }
 
     _stopDragging() {
-        this.attachmentViewer.isDragging = false ;
+        this.attachmentViewer.isDragging = false;
         this._translate.x += this._translate.dx;
         this._translate.y += this._translate.dy;
         this._translate.dx = 0;
         this._translate.dy = 0;
         this._updateZoomerStyle();
     }
-    
+
     _onMousedownImage(ev) {
         if (!this.attachmentViewer) {
             return;
@@ -275,7 +275,7 @@ export class CmisAttachmentViewer extends Component {
         this._translate.dy = ev.clientY - this._dragstartY;
         this._updateZoomerStyle();
     }
-    
+
     _updateZoomerStyle() {
         const attachmentViewer = this.attachmentViewer;
         const image = this._imageRefs[attachmentViewer.attachmentViewerViewable.localId].el
@@ -410,14 +410,22 @@ export class CmisAttachmentViewer extends Component {
     }
 
     previous() {
-        const index = this.attachmentViewer.attachmentViewerViewables.findIndex(attachment => attachment === this.attachmentViewer.attachmentViewerViewable);
-        const prevIndex = index === 0 ? this.attachmentViewer.attachmentViewerViewables.length - 1 : index - 1;
+        const index = this.attachmentViewer.attachmentViewerViewables.findIndex(
+            attachment => attachment === this.attachmentViewer.attachmentViewerViewable
+        );
+        const prevIndex = (
+            index === 0 ? this.attachmentViewer.attachmentViewerViewables.length - 1 : index - 1
+        );
         this.attachmentViewer.attachmentViewerViewable = this.attachmentViewer.attachmentViewerViewables[prevIndex];
     }
 
     next() {
-        const index = this.attachmentViewer.attachmentViewerViewables.findIndex(attachment => attachment === this.attachmentViewer.attachmentViewerViewable);
-        const nextIndex = index === this.attachmentViewer.attachmentViewerViewables.length - 1 ? 0 : index + 1;
+        const index = this.attachmentViewer.attachmentViewerViewables.findIndex(
+            attachment => attachment === this.attachmentViewer.attachmentViewerViewable
+        );
+        const nextIndex = (
+            index === this.attachmentViewer.attachmentViewerViewables.length - 1 ? 0 : index + 1
+        );
         this.attachmentViewer.attachmentViewerViewable = this.attachmentViewer.attachmentViewerViewables[nextIndex];
     }
 }

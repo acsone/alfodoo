@@ -28,7 +28,13 @@ class CmisActions extends Component {
     }
 
     onClickPreview() {
-        this.dialogService.add(CmisAttachmentViewer, { cmisObject: this.props.cmisObject, cmisFolderObjects: this.props.cmisFolderObjects });
+        this.dialogService.add(
+            CmisAttachmentViewer,
+            {
+                cmisObject: this.props.cmisObject,
+                cmisFolderObjects: this.props.cmisFolderObjects
+            }
+        );
     }
 
     onRename() {
@@ -38,7 +44,7 @@ class CmisActions extends Component {
     onUpdate() {
         this.props.updateDocumentContent(this.props.cmisObject);
     }
-    
+
     onDelete() {
         this.props.deleteObject(this.props.cmisObject);
     }

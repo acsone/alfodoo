@@ -30,15 +30,13 @@ export class CmisTable extends Component {
 
     getAllColumns() {
         return [
-            {id: 1, type: "field", name: "name", label: "Name", hasLabel: true, active: true, optional: true},
-            {id: 2, type: "field", name: "title", label: "Title", hasLabel: true, active: false, optional: true},
-            {id: 3, type: "field", name: "description", label: "Description", hasLabel: true, active: true, optional: true},
-            {id: 4, type: "field", name: "lastModificationDate", label: "Modified", hasLabel: true, active: true, optional: true},
-            {id: 5, type: "field", name: "creationDate", label: "Created", hasLabel: true, active: false, optional: true},
-            {id: 6, type: "field", name: "lastModifiedBy", label: "Modifier", hasLabel: true, active: true, optional: true},
-            {id: 7, type: "widget", name: "actions", label: "", hasLabel: false, active: true, optional: false, props: {
-                name: "cmis_actions"
-            }},
+            { id: 1, type: "field", name: "name", label: "Name", hasLabel: true, active: true, optional: true },
+            { id: 2, type: "field", name: "title", label: "Title", hasLabel: true, active: false, optional: true },
+            { id: 3, type: "field", name: "description", label: "Description", hasLabel: true, active: true, optional: true },
+            { id: 4, type: "field", name: "lastModificationDate", label: "Modified", hasLabel: true, active: true, optional: true },
+            { id: 5, type: "field", name: "creationDate", label: "Created", hasLabel: true, active: false, optional: true },
+            { id: 6, type: "field", name: "lastModifiedBy", label: "Modifier", hasLabel: true, active: true, optional: true },
+            { id: 7, type: "widget", name: "actions", label: "", hasLabel: false, active: true, optional: false, props: { name: "cmis_actions" } },
         ];
     }
 
@@ -174,7 +172,7 @@ export class CmisTable extends Component {
 
     onClickRow(cmisObject) {
         if (cmisObject.baseTypeId === "cmis:folder") {
-            this.props.displayFolder({name: cmisObject.name, id: cmisObject.objectId})
+            this.props.displayFolder({ name: cmisObject.name, id: cmisObject.objectId })
         }
     }
 }
