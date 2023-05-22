@@ -419,7 +419,7 @@ class CmisProxy(http.Controller):
             else:
                 cmis_content = repo.getObjectByPath(cmis_path)
             request_cmis_objectid = cmis_content.getObjectId()
-        if request_cmis_objectid == token_cmis_objectid:
+        if self._is_cmis_objectid_equals(request_cmis_objectid, token_cmis_objectid):
             # the operation is on the CMIS content linked to the Odoo model
             # instance
             return True
@@ -440,6 +440,18 @@ class CmisProxy(http.Controller):
             request_cmis_objectid,
             token_cmis_objectid,
         )
+        return False
+
+    def _is_cmis_objectid_equals(self, oid1, oid2):
+        if oid1 == oid2:
+            return True
+        # object version is included in the object path so we can't
+        # make a simple name check, otherwise we won't be able to import
+        # a new version
+        oid1_parts = oid1.split(';')
+        oid2_parts = oid2.split(';')
+        if oid1_parts[:1] == oid2_parts[:1]:
+            return True
         return False
 
     def _check_content_action_access(
