@@ -228,3 +228,7 @@ div.cmis-version-row {
         line-height: 30px;
     }
 }
+
+.o_field_x2many td.o_field_cmis_document_cell {
+    overflow: auto !important;
+}
