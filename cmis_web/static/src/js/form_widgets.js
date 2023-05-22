@@ -1049,6 +1049,20 @@ odoo.define('cmis_web.form_widgets', function (require) {
             } else if (this.document) {
                 this._renderCmisDocument(this.document);
             }
+
+            this.$el.find('.dropdown-menu').off('mouseleave');
+            // hide the dropdown menu on mouseleave
+            this.$el.find('.dropdown-menu').on('mouseleave', function (e) {
+                if ($(e.target).is(':visible')) {
+                    $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+                }
+            });
+            // hide the dropdown menu on link clicked
+            this.$el.find('.dropdown-menu a').on('click', function (e) {
+                if ($(e.target).is(':visible')) {
+                    $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
+                }
+            });
         },
 
         start: function () {
