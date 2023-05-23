@@ -14,7 +14,7 @@ from odoo.tools.safe_eval import time
 
 _logger = logging.getLogger(__name__)
 
-SAVE_IN_CMIS_MARKER = "{}".format(id(object()))
+SAVE_IN_CMIS_MARKER = "'{}'".format(id(object()))
 
 
 class IrActionsReport(models.Model):
@@ -122,8 +122,12 @@ class IrActionsReport(models.Model):
                 )
 
     def _render_qweb_pdf(self, report_ref, res_ids, data=None):
-        with self._get_report(report_ref).save_in_attachment_if_required():
-            return super()._render_qweb_pdf(report_ref, res_ids, data=data)
+        report = self._get_report(report_ref)
+        with report.save_in_attachment_if_required():
+            return super(
+                IrActionsReport,
+                self.with_context(cmis_report_keys=(report, SAVE_IN_CMIS_MARKER)),
+            )._render_qweb_pdf(report_ref, res_ids, data=data)
 
     def retrieve_attachment(self, record):
         if self.attachment != SAVE_IN_CMIS_MARKER:
@@ -131,16 +135,6 @@ class IrActionsReport(models.Model):
         if self._get_backend(record) and self.cmis_duplicate_handler == "use_existing":
             return self._retrieve_cmis_attachment(record)
         return None
-
-    def _create_attachments(self, attachment_vals_list, record, buffer):
-        res = None
-        if self.attachment != SAVE_IN_CMIS_MARKER:
-            res = super()._create_attachments(attachment_vals_list, record, buffer)
-            if self.cmis_filename and self.cmis_folder_field_id:
-                self._save_in_cmis(record, buffer)
-        else:
-            self._save_in_cmis(record, buffer)
-        return res
 
     ##################
     # specific methods
