@@ -7,7 +7,7 @@
           <t t-call="web.internal_layout">
             <div class="page">
               <div class="my-name">
-                <p><t t-esc="o.name" /></p>
+                <p><t t-out="o.name" /></p>
               </div>
             </div>
           </t>

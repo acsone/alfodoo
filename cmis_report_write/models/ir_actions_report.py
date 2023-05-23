@@ -121,13 +121,9 @@ class IrActionsReport(models.Model):
                     }
                 )
 
-    def _render_qweb_pdf(self, res_ids, data=None):
-        with self.save_in_attachment_if_required():
-            return super()._render_qweb_pdf(res_ids, data=data)
-
-    def _render(self, res_ids, data=None):
-        with self.save_in_attachment_if_required():
-            return super()._render(res_ids, data=data)
+    def _render_qweb_pdf(self, report_ref, res_ids, data=None):
+        with self._get_report(report_ref).save_in_attachment_if_required():
+            return super()._render_qweb_pdf(report_ref, res_ids, data=data)
 
     def retrieve_attachment(self, record):
         if self.attachment != SAVE_IN_CMIS_MARKER:
@@ -136,14 +132,15 @@ class IrActionsReport(models.Model):
             return self._retrieve_cmis_attachment(record)
         return None
 
-    def _postprocess_pdf_report(self, record, buffer):
+    def _create_attachments(self, attachment_vals_list, record, buffer):
+        res = None
         if self.attachment != SAVE_IN_CMIS_MARKER:
-            super()._postprocess_pdf_report(record, buffer)
+            res = super()._create_attachments(attachment_vals_list, record, buffer)
             if self.cmis_filename and self.cmis_folder_field_id:
                 self._save_in_cmis(record, buffer)
         else:
             self._save_in_cmis(record, buffer)
-        return buffer
+        return res
 
     ##################
     # specific methods

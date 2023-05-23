@@ -7,7 +7,7 @@ Configuration
 =============
 
 To make this module functional you have to use a patched odoo version found here:
-https://github.com/acsone/odoo/tree/9.0-report_postprocess_hook-lmi
+https://github.com/acsone/odoo/tree/16.0-qweb_pdf_create_attachment-qgr
 
 Credits
 =======
