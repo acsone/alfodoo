@@ -232,7 +232,7 @@ class CmisProxy(http.Controller):
 
     @classmethod
     def _get_redirect_url(cls, proxy_info, url_path):
-        cmis_location = proxy_info["location"]
+        cmis_location = proxy_info["location"] + ("/" if url_path else "")
         return urllib.parse.urljoin(cmis_location, url_path)
 
     def _forward_get_file(self, url, proxy_info, params):
@@ -259,6 +259,10 @@ class CmisProxy(http.Controller):
         :rtype: werkzeug.Response
         """
         url = self._get_redirect_url(proxy_info, url_path)
+        change_object = False
+        if params.get('cmisselector') == 'object':
+            change_object = True
+            params.pop('cmisselector')
         if params.get("cmisselector") == "content":
             return self._forward_get_file(url, proxy_info, params)
         r = requests.get(
@@ -268,8 +272,12 @@ class CmisProxy(http.Controller):
         )
         r.raise_for_status()
         if r.text:
+            json_result = r.json()
+            if change_object and params.get('objectId'):
+                if json_result['numItems'] == 1:
+                    json_result = json_result['objects'][0]['object']
             response = self._prepare_json_response(
-                r.json(), dict(list(r.headers.items())), proxy_info, model_inst
+                json_result, dict(list(r.headers.items())), proxy_info, model_inst
             )
         else:
             response = werkzeug.Response()
