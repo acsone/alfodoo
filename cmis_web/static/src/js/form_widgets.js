@@ -1221,6 +1221,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 e.preventDefault();
                 e.stopPropagation();
                 var row = self._get_event_row(e);
+                console.log("cmis: register_content_events");
                 self.display_folder(0, row.data().objectId);
             });
             var $el_actions = this.$el.find('.field_cmis_folder_content_actions');
@@ -1688,13 +1689,16 @@ odoo.define('cmis_web.form_widgets', function (require) {
          */
         set_root_folder_id: function (folderId) {
             var self = this;
+            console.log("cmis: set_root_folder_id");
             if (self.root_folder_id === folderId) {
                 return;
             }
             self.root_folder_id = folderId;
+            console.log("cmis: set_root_folder_id init");
             $.when(self.cmis_session_initialized, self.table_rendered).done(function () {
                 self.load_cmis_repositories().done(function () {
                     self.reset_breadcrumb();
+                    console.log("cmis: set_root_folder_id display_folder");
                     self.display_folder(0, self.root_folder_id);
                 });
             });
@@ -1708,6 +1712,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
         },
 
         reload_displayed_folder: function () {
+            console.log("cmis: reloading");
             if (!this.displayed_folder_id) {
                 return;
             }
@@ -1721,6 +1726,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
          * Add a link to the folder in the breadcrumb and display children
          */
         display_folder: function (pageIndex, folderId) {
+            console.log("cmis: display object");
             if (this.displayed_folder_id === folderId &&
                 this.page_index === pageIndex) {
                 return;
@@ -1730,18 +1736,26 @@ odoo.define('cmis_web.form_widgets', function (require) {
             this.page_index = pageIndex;
             this.$el.find('.cmis-root-content-buttons').empty();
             if (folderId) {
+                console.log("cmis: getting object");
                 this.cmis_session.getObject(folderId, "latest", {
                     includeAllowableActions: true
                 })
                     .ok(function (cmisobject) {
                         self.dislayed_folder_cmisobject = new CmisObjectWrapper(this, cmisobject, self.cmis_session);
                         self.render_folder_actions();
+                    })
+                    .notOk(function (cmisobject) {
+                        console.log("cmis: not ok");
+                    })
+                    .error(function (cmisobject) {
+                        console.log("cmis: error");
                     });
                 this.display_folder_in_breadcrumb(folderId);
                 this.datatable.rows().clear();
                 this.datatable.ajax.reload(null, true);
             } else {
                 self.datatable.clear().draw();
+                console.log("cmis: no folder id");
             }
         },
 
@@ -1814,3 +1828,4 @@ odoo.define('cmis_web.form_widgets', function (require) {
     };
 
 });
+
