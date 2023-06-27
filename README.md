@@ -45,6 +45,7 @@ addon | version | maintainers | summary
 [cmis_web_report_write](cmis_web_report_write/) | 14.0.1.0.1 |  | Cmis Web Report Write
 [cmis_web_report_write_alf](cmis_web_report_write_alf/) | 14.0.1.0.1 |  | Cmis Web Report Write Alf
 
+
 [//]: # (end addons)
 
 <!-- prettier-ignore-end -->

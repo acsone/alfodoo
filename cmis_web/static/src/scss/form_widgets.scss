@@ -22,6 +22,29 @@
         content:'';
     }
 }
+div.field_cmis_document {
+    .select-cmis {
+        width: fit-content;
+        padding-top: 0.375em;
+        padding-bottom: 0.375em;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+    }
+    select {
+        appearance: none;
+        background-color: transparent;
+        border: none;
+        font-family: inherit;
+        font-size: inherit;
+        cursor: inherit;
+        line-height: inherit;
+        outline: none;
+        width: fit-content;
+        padding: 0;
+        margin: 0;
+        min-width: 40px;
+    }
+}
 
 div.field_cmis_folder {
 
@@ -118,6 +141,39 @@ div.field_cmis_folder_content_actions {
     }
 }
 
+span.field_cmis_document_actions {
+    a.dropdown-toggle.fa-align-justify {
+        top: 0px;
+    }
+    ul.dropdown-menu {
+        width: auto;
+   }
+    .divider {
+        height: 1px;
+        margin: 8px 0;
+        overflow: hidden;
+        background-color: #e5e5e5;
+    }
+
+    a {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333333;
+        white-space: nowrap;
+    }
+    a:hover {
+        color: white;
+        background-color: #00A09D;
+    }
+}
+
+span.document-details {
+    margin: 2rem;
+}
+
 form.cmis_update_content_stream,
 form.cmis_create_document,
 form.cmis_duplicate_document_resolver{
@@ -154,4 +210,25 @@ form.cmis_duplicate_document_resolver{
 
 .form-control:invalid {
     background-image: linear-gradient(blank, red), linear-gradient(red, red);
+}
+td.o_cmis_document_cell{
+    overflow: visible !important;
+}
+
+div.field_cmis_document.no-version div.select-cmis{
+    display:none;
+}
+div.field_cmis_document.show-file-name span.file-name{
+    display: inherit !important;
+}
+
+div.cmis-version-row {
+    height: 30px;
+    .version-text {
+        line-height: 30px;
+    }
+}
+
+.o_field_x2many td.o_field_cmis_document_cell {
+    overflow: auto !important;
 }
