@@ -13,13 +13,11 @@ from cmislib.exceptions import ObjectNotFoundException
 class CmisDocument(fields.Field):
     type = 'cmis_document'
     column_type = ('varchar', pg_varchar())
-    _slots = {
-        'backend_name': None,
-        'copy': False,  # noderef are not copied by default
-        'create_parent_get': None,
-        'create_properties_get': None,
-        'create_method': None
-    }
+    backend_name = None
+    copy = None
+    create_parent_get = None
+    create_properties_get = None
+    create_method = None
 
     def __init__(self, string=None, **kwargs):
         super(CmisDocument, self).__init__(string=string, **kwargs)

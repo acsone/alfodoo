@@ -1021,23 +1021,30 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 this.cmis_session_initialized,
                 this.load_cmis_repositories()
             ]);
-            return new Promise(function(resolve) {
-                self.cmisSessionReady.then(function() {
-                    if (self.value) {
-                        self._get_document(self.value).catch(function(error) {
-                            self.value = "__error__";
+
+            if (Object.keys(self.document).length === 0) {
+                return new Promise(function(resolve) {
+                    self.cmisSessionReady.then(function() {
+                        if (self.value) {
+                            self._get_document(self.value).catch(function(error) {
+                                self.value = "__error__";
+                                resolve({});
+                            }).then(function (document) {
+                                if (!!document) {
+                                    self.document = self.wrap_cmis_object(document);
+                                    resolve(document);
+                                }
+                            });
+                        } else {
                             resolve({});
-                        }).then(function (document) {
-                            if (!!document) {
-                                self.document = self.wrap_cmis_object(document);
-                                resolve(document);
-                            }
-                        });
-                    } else {
-                        resolve({});
-                    }
+                        }
+                    });
                 });
-            });
+            }
+
+            return new Promise(function(resolve) {
+                 resolve();
+            })
         },
 
         _render: function () {
@@ -1063,6 +1070,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                     $(e.target).closest('.btn-group').find('.dropdown-toggle[aria-expanded="true"]').trigger('click').blur();
                 }
             });
+
         },
 
         start: function () {
@@ -1075,9 +1083,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
         },
 
         _renderCmisDocument: function (document) {
-            var $cmisDoc = QWeb.render("CmisDocumentReadOnly", {object: document});
-            this.$el.html($cmisDoc);
-            this.register_document_action_events();
+            if (Object.keys(document).length > 0) {
+                var $cmisDoc = QWeb.render("CmisDocumentReadOnly", {object: document});
+                this.$el.html($cmisDoc);
+                this.register_document_action_events();
+            }
+
         },
 
         _renderNoDocument: function () {
@@ -1345,6 +1356,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             e.preventDefault();
             e.stopPropagation();
         },
+
     });
 
     var FieldCmisFolder = basicFields.FieldChar.extend(CmisMixin, {
