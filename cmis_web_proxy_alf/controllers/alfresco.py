@@ -30,8 +30,8 @@ class AlfrescoProxy(cmis.CmisProxy):
 
     @http.route(
         [
-            ALFRESCO_API_PROXY_PATH + "/<int:backend_id>"
-            "/content/thumbnails/pdf/" + "<string:cmis_name>",
+            ALFRESCO_API_PROXY_PATH + "/<int:backend_id>",
+            ALFRESCO_API_PROXY_PATH + "/<int:backend_id>/<path:cmis_path>",
         ],
         type="http",
         auth="user",
@@ -39,7 +39,7 @@ class AlfrescoProxy(cmis.CmisProxy):
         methods=["GET"],
     )
     @main.serialize_exception
-    def get_thumnails(self, backend_id, cmis_name, **kwargs):
+    def get_thumnails(self, backend_id, cmis_path, **kwargs):
         """Call at the root of the CMIS repository. These calls are for
         requesting the global services provided by the CMIS Container
         """
@@ -50,12 +50,6 @@ class AlfrescoProxy(cmis.CmisProxy):
         )
         if proxy_info["apply_odoo_security"]:
             self._check_alfresco_access(proxy_info, kwargs)
-        url = (
-            proxy_info["alfresco_api_location"]
-            + "/node/workspace/SpacesStore/"
-            + kwargs["versionSeriesId"]
-            + "/content/thumbnails/pdf/"
-            + cmis_name
-        )
+        url = proxy_info["alfresco_api_location"] + "/" + cmis_path
         params = {"c": kwargs["c"], "lastModified": kwargs["lastModified"]}
         return self._forward_get_file(url, proxy_info, params)
