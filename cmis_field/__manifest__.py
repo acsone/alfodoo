@@ -12,6 +12,9 @@
     'depends': [
         'cmis'
     ],
+    'external_dependencies': {
+        'python': ['cmislib'],
+    },
     'data': [
         'views/cmis_backend_view.xml'
     ],

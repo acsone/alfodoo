@@ -64,5 +64,38 @@ form_widgets.FieldCmisFolder.include({
         return params;
     },
  });
+ form_widgets.FieldCmisDocument.include({
+    willStart: function () {
+        if (this.res_id) {
+            return this._super.apply(this, arguments);
+        }
+        return Promise.resolve();
+    },
+    gen_cmis_session_token: function(){
+        return JSON.stringify({
+            'model': this.model,
+            'res_id': this.res_id,
+            'field_name': this.name});
+    },
 
+    set_cmis_session_token: function(){
+        if (this.apply_odoo_security){
+            this.cmis_session.setToken(this.gen_cmis_session_token());
+        }
+    },
+
+    init_cmis_session: function() {
+        var self = this;
+        var res = this._super.apply(this, arguments);
+        $.when(self.cmis_session_initialized).done(function() {
+            self.set_cmis_session_token();
+        });
+        return res
+    },
+
+    bind_cmis_config: function(backend){
+        this._super.apply(this, arguments);
+        this.apply_odoo_security = backend.apply_odoo_security;
+    },
+ });
 });
