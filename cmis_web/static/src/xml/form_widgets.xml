@@ -210,7 +210,7 @@
             </ul>
         </div>
     </div>
-    
+
 </t>
 
 <t t-name='CmisUpdateContentStreamView'>
@@ -342,6 +342,37 @@
         </div>
     </form>
 </t>
+<t t-name='CmisAddDocumentDialog'>
+    <form class="form-horizontal cmis_create_document" role="form" t-att-id="id">
+        <div class="form-group mb0">
+            <div class="col-sm-12">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file" autofocus="autofocus">
+                        Browse&amp;hellip; <input type="file" required="required" multiple="false"/>
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly='1'/>
+            </div>
+            </div>
+        </div>
+    </form>
+</t>
+
+<t t-name='CmisLinkDocumentDialog'>
+<form class="form-horizontal cmis_link_document" role="form" t-att-id="id">
+    <div class="form-group mb0">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <span class="input-group-text col-sm-8">
+                    <label for="identifier">Identifier</label>
+                    <input class="ml-1" id="identifier" type="text"/>
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
+</t>
 
 <t t-name='CmisCreateFolderDialog'>
     <form class="form-horizontal" role="form" t-att-id="id">
@@ -369,4 +400,153 @@
     </div>
 </t>
 
+    <t t-name='CmisVersionsHistoryDialog'>
+    <div class="cmis-document-history">
+        <div class="versions border-top container">
+            <t t-set="versions" t-value="widget.versions"/>
+                <div class="cmis-version-row row border border-top-0">
+                    <div class="col-sm-1">Version</div>
+                    <div class="col-sm-4">Name</div>
+                    <div class="col-sm-4">Actions</div>
+                </div>
+                <div t-foreach="versions" t-as="version">
+                    <div class="cmis-version-row row border border-top-0">
+                        <div class="col-sm-1 version-text" t-esc="version.versionLabel"/>
+                        <div class="col-sm-4 version-text" t-esc="version.name"/>
+                        <div class="col-sm-4" t-if="version.allowableActions.canGetContentStream">
+                            <button type="button"
+                                    t-att-id="'download_' + version.objectId"
+                                    t-att-value = "version.objectId"
+                                    class="btn btn-default btn-xs version-download px-2"
+                                    data-toggle="tooltip"
+                                    title="Download"
+                                    aria-label="Preview">
+                                    <span t-att-value="version.objectId" class="fa fa fa-download"></span>
+                            </button>
+                            <button type="button"
+                                    t-att-id="'preview_' + version.objectId"
+                                    t-att-value = "version.objectId"
+                                    class="btn btn-default btn-xs version-preview px-2"
+                                    data-toggle="tooltip"
+                                    title="Preview"
+                                    aria-label="Preview">
+                                    <span t-att-value="version.objectId" class="fa fa-eye"></span>
+                            </button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="FieldCmisDocument">
+    <div t-att-class="'oe_form_field ' + widget.widget_class" t-att-style="widget.attrs.style">
+        <t t-call="CmisDocumentWaiting" />
+    </div>
+</t>
+
+<t t-name="CmisDocumentWaiting">
+    <div class="cmis-doc-waiting">
+        <span>Loading cmis document...</span>
+        <span class="fa fa-spinner fa-spin"></span>
+    </div>
+</t>
+
+<t t-name="CmisDocumentReadOnly">
+    <div class="cmis-doc-readonly">
+        <span>
+            <t t-raw="object.documentActions()" />
+        </span>
+        <span class="file-name o_hidden" t-raw="object.fName()"/>
+        <span class="document-details"/>
+    </div>
+</t>
+
+<t t-name="CmisDocumentAdd">
+    <div class="cmis-doc-add">
+        <div class="px-2">
+            <span class="fa fa-plus-circle mr-2 content-action-add"/>
+            <small class="text-muted">Add a document</small>
+        </div>
+    </div>
+</t>
+
+<t t-name="CmisDocumentLink">
+<div class="cmis-doc-link">
+    <div class="px-2">
+        <span class="fa fa-solid fa-link mr-2 content-action-link"/>
+        <small class="text-muted">Link with an existing document</small>
+    </div>
+</div>
+</t>
+
+<t t-name="CmisNoDocumentActions">
+    <t t-call="CmisDocumentAdd"/>
+    <t t-call="CmisDocumentLink"/>
+</t>
+
+<t t-name="CmisDocumentActions">
+    <span class="field_cmis_document_actions">
+        <div class="btn-group" role="group">
+            <t t-call="cmisDocumentDownloadButton" />
+            <t t-call="cmisDocumentPreviewButton" />
+            <t t-call="cmisContextDropdown" />
+        </div>
+    </span>
+</t>
+
+<t t-name="cmisDocumentDownloadButton">
+    <t t-if='canGetContentStream'>
+        <button type="button"
+            class="btn btn-default btn-xs content-action-download px-2"
+            aria-label="Download"
+            data-toggle="tooltip"
+            title="Download">
+            <span class="fa fa-download"></span>
+        </button>
+    </t>
+</t>
+
+<t t-name="cmisDocumentPreviewButton">
+    <t t-if='canPreview'>
+        <button type="button"
+            class="btn btn-default btn-xs content-action-preview px-2 "
+            data-toggle="tooltip"
+            title="Preview"
+            aria-label="Preview">
+            <span class="fa fa-eye"></span>
+        </button>
+    </t>
+</t>
+
+<t t-name="cmisDocumentContentDetails">
+    <div>
+        <div class="toggle-document-details pull-right">
+            <i class="fa fa-times-circle p-2"></i>
+        </div>
+        <t t-call="CmisContentDetails"/>
+    </div>
+</t>
+
+<t t-name="cmisContextDropdown">
+    <div class="dropdown context-actions-dropdown">
+        <button type="button"
+            class="btn btn-default btn-xs dropdown-toggle fa fa-align-justify cmis-dropdown-more-actions px-2 "
+            t-att-id="object.getSuccinctProperty('cmis:objectId')"
+            aria-label="More actions"
+            data-toggle="dropdown"
+            title="More actions"
+            aria-haspopup="true"
+            aria-expanded="true">
+        </button>
+        <ul class="dropdown-menu btn-block" t-att-aria-labelledby="object.getSuccinctProperty('cmis:objectId')" overflow-working="0">
+            <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
+            <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
+            <li t-if='canUpdateProperties'><a class='content-action-checkin' href="#">Import new version</a></li>
+            <li t-if="canGetContentStream"><a class='content-action-history' href="#">Show document history</a></li>
+            <li t-if='object.isCheckedOut' role="separator" class="divider"></li>
+            <li t-if='object.isCheckedOut'><a class='content-action-cancel-checkout' href="#">Cancel checkout</a></li>
+        </ul>
+    </div>
+</t>
 </templates>
