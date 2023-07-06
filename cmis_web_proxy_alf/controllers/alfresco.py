@@ -50,6 +50,7 @@ class AlfrescoProxy(cmis.CmisProxy):
         )
         if proxy_info["apply_odoo_security"]:
             self._check_alfresco_access(proxy_info, kwargs)
+
         url = proxy_info["alfresco_api_location"] + "/" + cmis_path
         params = {"c": kwargs["c"], "lastModified": kwargs["lastModified"]}
         return self._forward_get_file(url, proxy_info, params)

@@ -44,6 +44,10 @@ class IrActionsReport(models.Model):
                 "folder_field",
                 _("Store as child of the folder on the related " "model"),
             ),
+            (
+                "document_field",
+                _("Store as document field on the related " "model"),
+            )
         ],
         default="backend",
     )
@@ -57,6 +61,10 @@ class IrActionsReport(models.Model):
         string="Save generated report into",
         help="""If empty, deadline will be computed
                 from the task creation date""",
+    )
+    cmis_document_field_id = fields.Many2one(
+        comodel_name='ir.model.fields',
+        string="Save report in field"
     )
     cmis_duplicate_handler = fields.Selection(
         selection=[
@@ -179,6 +187,16 @@ class IrActionsReport(models.Model):
                         "store your file in CMIS"
                     )
                 )
+            if (
+                rec.cmis_parent_type == "document_field"
+                and not rec.cmis_document_field_id
+            ):
+                raise ValidationError(
+                    _(
+                        "You must select the document field to use to "
+                        "store your file in CMIS"
+                    )
+                )
 
     def _cleanup_vals(self, vals_list):
         for vals in vals_list:
@@ -232,6 +250,9 @@ class IrActionsReport(models.Model):
         if self.cmis_folder_field_id:
             field = record._fields[self.cmis_folder_field_id.name]
             return field.get_backend(self.env)
+        elif self.cmis_document_field_id:
+            field = record._fields[self.cmis_document_field_id.name]
+            return field.get_backend(self.env)
         return self.cmis_backend_id
 
     def _get_eval_context(self, record):
@@ -259,9 +280,16 @@ class IrActionsReport(models.Model):
             record, cmis_filename
         )
         cmis_filename = os.path.basename(cmis_filename)
-        return self._create_or_update_cmis_document(
+        doc = self._create_or_update_cmis_document(
             buffer, record, cmis_filename, cmis_parent_folder
         )
+        cmis_doc_field = self.cmis_document_field_id
+        if cmis_doc_field:
+            fname = cmis_doc_field.name
+            record.write({
+                fname: doc.doc.id,
+            })
+        return doc
 
     def _get_cmis_parent_folder(self, record, cmis_filename):
         self.ensure_one()
@@ -276,6 +304,12 @@ class IrActionsReport(models.Model):
                 # the folder must be initialized on demand
                 field.create_value(record)
                 root_objectId = record[field_name]
+        elif self.cmis_document_field_id:
+            field_name = self.cmis_document_field_id.name
+            field = record._fields[field_name]
+            cmis_backend = field.get_backend(self.env)
+            parents = field.get_create_parents(record, cmis_backend)
+            root_objectId = parents[record.id]
         else:
             root_objectId = self.cmis_backend_id.initial_directory_write
             cmis_backend = self.cmis_backend_id

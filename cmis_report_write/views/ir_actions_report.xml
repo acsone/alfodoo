@@ -17,7 +17,10 @@
                               <field name="cmis_backend_id" attrs="{'invisible':[('cmis_parent_type','!=','backend')]}"/>
                               <field name="cmis_folder_field_id"
                                     domain="[('model', '=', model), ('ttype', '=', 'cmis_folder')]"
-                                    attrs="{'invisible':[('cmis_parent_type','=','backend')]}"/>
+                                    attrs="{'invisible':[('cmis_parent_type','!=','folder_field')]}"/>
+                              <field name="cmis_document_field_id"
+                                    domain="[('model', '=', model), ('ttype', '=', 'cmis_document')]"
+                                    attrs="{'invisible':[('cmis_parent_type','!=','document_field')]}"/>
                               <field name="cmis_duplicate_handler"/>
                               <field name="cmis_objectTypeId"/>
                               <field name="cmis_properties"/>
