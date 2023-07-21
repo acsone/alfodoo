@@ -52,5 +52,5 @@ class AlfrescoProxy(cmis.CmisProxy):
             self._check_alfresco_access(proxy_info, kwargs)
 
         url = proxy_info["alfresco_api_location"] + "/" + cmis_path
-        params = {"c": kwargs.get("c"), "lastModified": kwargs["lastModified"]}
+        params = {"c": kwargs.get("c"), "lastModified": kwargs.get("lastModified")}
         return self._forward_get_file(url, proxy_info, params)
