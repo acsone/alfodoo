@@ -1042,12 +1042,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         _render: function () {
             this._super.apply(this, arguments);
-            if (this.value === "empty") {
-                this._renderNoDocument();
-            } else if (this.value === "__error__") {
+            if (this.value === "__error__") {
                 this._renderGetError();
-            } else if (this.document) {
+            } else if (this.value && this.value !== "empty" && this.document) {
                 this._renderCmisDocument(this.document);
+            } else {
+                this._renderNoDocument();
             }
 
             this.$el.find('.dropdown-menu').off('mouseleave');
