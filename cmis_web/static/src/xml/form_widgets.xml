@@ -440,7 +440,7 @@
 </t>
 
 <t t-name="FieldCmisDocument">
-    <div t-att-class="'oe_form_field ' + widget.widget_class" t-att-style="widget.attrs.style">
+    <div t-att-class="'oe_form_field oe_read_only ' + widget.widget_class" t-att-style="widget.attrs.style">
         <t t-call="CmisDocumentWaiting" />
     </div>
 </t>
