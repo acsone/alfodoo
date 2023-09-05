@@ -1,9 +1,9 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import base64
 
-import mock
+from unittest import mock
+
 import pkg_resources
 
 from odoo.exceptions import UserError, ValidationError
@@ -18,7 +18,9 @@ class TestIrActionsReport(common.BaseTestCmis):
         cls.cmis_folder_field_id = cls.env["ir.model.fields"].search(
             [("model", "=", "cmis.test.model"), ("name", "=", "cmis_folder")]
         )
-        action_report = cls.env["ir.actions.report"]
+        cls.action_report = cls.env["ir.actions.report"].with_context(
+            force_report_rendering=True
+        )
         cls.vals = {
             "name": "test_report_cmis_write",
             "model": "cmis.test.model",
@@ -31,9 +33,7 @@ class TestIrActionsReport(common.BaseTestCmis):
             "cmis_parent_type": "folder_field",
             "cmis_duplicate_handler": "error",
         }
-        cls.report = action_report.create(cls.vals).with_context(
-            force_report_rendering=True
-        )
+        cls.report = cls.action_report.create(cls.vals)
 
     @classmethod
     def setUpClass(cls):
@@ -128,7 +128,7 @@ class TestIrActionsReport(common.BaseTestCmis):
     def test_simple_report(self):
         with mock.patch.object(self.report.__class__, "_save_in_cmis") as mocked_save:
             # test the call the the create method inside our custom parser
-            self.report._render(self.inst.ids)
+            self.action_report._render(self.report, self.inst.ids)
             # check that the method is called
             self.assertEqual(mocked_save.call_count, 1)
             record, bugger = mocked_save.call_args[0]
@@ -144,7 +144,7 @@ class TestIrActionsReport(common.BaseTestCmis):
             self.report.__class__, "_create_or_update_cmis_document"
         ) as mocked_save:
             # test the call the the create method inside our custom parser
-            self.report._render(self.inst.ids)
+            self.action_report._render(self.report, self.inst.ids)
             # check that the method is called
             self.assertEqual(mocked_save.call_count, 0)
 
@@ -164,14 +164,14 @@ class TestIrActionsReport(common.BaseTestCmis):
             rp.query.return_value = rs
             rs.getNumItems.return_value = 0
             # test the call the the create method inside our custom parser
-            self.report._render(self.inst.ids)
+            self.action_report._render(self.report, self.inst.ids)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 1)
 
             with self.assertRaises(UserError):
                 # a second call must fails
                 rs.getNumItems.return_value = 1
-                self.report._render(self.inst.ids)
+                self.action_report._render(self.report, self.inst.ids)
 
     @mute_logger("odoo.addons.base.models.assetsbundle")
     def test_duplicate_handle_new_version(self):
@@ -191,7 +191,7 @@ class TestIrActionsReport(common.BaseTestCmis):
             rp.query.return_value = rs
             rs.getNumItems.return_value = 1
             # test the call the the create method inside our custom parser
-            self.report._render(self.inst.ids)
+            self.action_report._render(self.report, self.inst.ids)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 0)
             self.assertEqual(mocked_update.call_count, 1)
@@ -215,14 +215,14 @@ class TestIrActionsReport(common.BaseTestCmis):
             cmis_parent_folder.getChildren.return_value = rs
             rs.getNumItems.return_value = 1
             # test the call the the create method inside our custom parser
-            self.report._render(self.inst.ids)
+            self.action_report._render(self.report, self.inst.ids)
             # the first call must succeed
             self.assertEqual(mocked_create.call_count, 1)
             file_name = mocked_create.call_args[0][2]
             self.assertEqual(file_name, "folder_name(1).pdf")
 
     @mute_logger("odoo.addons.base.models.assetsbundle")
-    def test_use_existing_hanlder(self):
+    def test_use_existing_handler(self):
         self.report.cmis_duplicate_handler = "use_existing"
         with mock.patch.object(
             self.report.__class__, "_get_cmis_parent_folder"
@@ -246,10 +246,10 @@ class TestIrActionsReport(common.BaseTestCmis):
             ].new(
                 {
                     "mimetype": "plain/text",
-                    "datas": base64.b64encode(self.pdf_content_2),
+                    "raw": self.pdf_content_2,
                 }
             )
             self.mocked_merge_pdfs.side_effect = lambda a: a[0].getvalue()
             # test the call the the create method inside our custom parser
-            res = self.report._render(self.inst.ids)
+            res = self.action_report._render(self.report, self.inst.ids)
             self.assertEqual(res[0], self.pdf_content_2)
