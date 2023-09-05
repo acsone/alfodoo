@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="cmis_web.CmisBreadcrumbs" owl="1">
+        <div class="row mb-2">
+            <div class="col-sm-12">
+                <ol class="breadcrumb">
+                    <t t-foreach="props.parentFolders" t-as="folder" t-key="folder.id">
+                        <li class="breadcrumb-item">
+                            <a
+                                href="#"
+                                t-esc="folder.name"
+                                t-on-click="(ev) => props.displayFolder(folder)"
+                            />
+                        </li>
+                    </t>
+                </ol>
+            </div>
+        </div>
+    </t>
+</templates>

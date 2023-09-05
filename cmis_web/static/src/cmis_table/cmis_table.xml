@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="cmis_web.CmisTable" owl="1">
+        <div
+            class="o_list_renderer o_renderer table-responsive"
+            tabindex="-1"
+            t-ref="root"
+        >
+            <table
+                class="o_list_table table table-sm table-hover position-relative mb-0 o_list_table_ungrouped table-striped cmis_table"
+                t-ref="table"
+            >
+                <thead>
+                    <tr>
+                        <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                            <th
+                                t-if="column.type === 'field'"
+                                t-att-data-name="column.name"
+                                t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
+                                t-on-mouseenter="ev => this.onHoverSortColumn(ev, column)"
+                                t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
+                                t-on-click="() => this.onClickSortColumn(column)"
+                                tabindex="-1"
+                            >
+                                <t
+                                    t-set="isNumeric"
+                                    t-value="isNumericColumn(column)"
+                                />
+                                <div
+                                    t-att-class="{'d-flex': true, 'flex-row-reverse': isNumeric}"
+                                >
+                                    <span
+                                        class="d-block min-w-0 text-truncate flex-grow-1"
+                                        t-att-class="isNumeric ? 'text-end' : ''"
+                                        t-esc="column.label"
+                                    />
+                                    <i t-att-class="getSortableIconClass(column)" />
+                                </div>
+                            </th>
+                            <th
+                                t-else=""
+                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"
+                                t-att-class="{o_list_button: column.type === 'button_group'}"
+                            />
+                        </t>
+                        <th
+                            class="o_list_controller o_list_actions_header"
+                            style="width: 32px; min-width: 32px"
+                        >
+                            <Dropdown
+                                class="'o_optional_columns_dropdown text-center border-top-0'"
+                                togglerClass="'btn p-0'"
+                                skipTogglerTabbing="true"
+                                position="'bottom-end'"
+                            >
+                                <t t-set-slot="toggler">
+                                    <i
+                                        class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"
+                                    />
+                                </t>
+
+                                <t
+                                    t-foreach="getOptionalColumns"
+                                    t-as="column"
+                                    t-key="column.id"
+                                >
+                                    <DropdownItem
+                                        parentClosingMode="'none'"
+                                        onSelected="() => this.toggleOptionalColumn(column.id)"
+                                    >
+                                        <CheckBox
+                                            onChange="() => this.toggleOptionalColumn(column.id)"
+                                            value="column.value"
+                                            name="column.name"
+                                        >
+                                            <t t-esc="column.label" />
+                                        </CheckBox>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="ui-sortable">
+                    <t t-call="{{ constructor.rowsTemplate }}">
+                        <t t-set="list" t-value="props.list" />
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="cmis_web.CmisTable.Rows" owl="1">
+        <t
+            t-foreach="list.cmisObjects || []"
+            t-as="cmisObject"
+            t-key="cmisObject.objectId"
+        >
+            <t t-call="{{ constructor.recordRowTemplate }}" />
+        </t>
+        <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
+            <td t-att-colspan="nbCols">&#8203;</td>
+        </tr>
+    </t>
+
+    <t t-name="cmis_web.CmisTable.RecordRow" owl="1">
+        <tr
+            class="o_data_row"
+            t-att-class="getRowClass(cmisObject)"
+            t-att-data-id="cmisObject.objectId"
+            t-on-click="(ev) => this.onClickRow(cmisObject)"
+        >
+            <t t-foreach="getColumns(cmisObject)" t-as="column" t-key="column.id">
+                <t t-if="column.type === 'field'">
+                    <td
+                        class="o_data_cell cursor-pointer"
+                        t-att-class="getCellClass(column, cmisObject)"
+                        t-att-name="column.name"
+                    >
+                        <t
+                            t-if="canUseFormatter(column, cmisObject)"
+                            t-out="getFormattedValue(column, cmisObject)"
+                        />
+                    </td>
+                </t>
+                <t t-if="column.type === 'widget'">
+                    <td
+                        class="o_data_cell"
+                        t-att-class="getCellClass(column, cmisObject)"
+                    >
+                        <Widget
+                            t-props="{...props, ...column.props}"
+                            cmisObject="cmisObject"
+                            cmisFolderObjects="list.cmisObjects"
+                        />
+                    </td>
+                </t>
+            </t>
+        </tr>
+    </t>
+
+</templates>

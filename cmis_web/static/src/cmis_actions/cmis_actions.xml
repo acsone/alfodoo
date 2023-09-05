@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="cmis_web.CmisActions" owl="1">
+        <div class="btn-group" role="group">
+            <button
+                type="button"
+                t-if="allowableActions.canGetContentStream"
+                title="Download"
+                class="btn btn-outline-primary btn-sm"
+                t-on-click="onClickDownload"
+            >
+                <i class="fa fa-download" />
+            </button>
+            <button
+                type="button"
+                t-if="allowableActions.canGetContentStream"
+                title="Preview"
+                class="btn btn-outline-primary btn-sm"
+                t-on-click="onClickPreview"
+            >
+                <i class="fa fa-eye" />
+            </button>
+            <button
+                type="button"
+                title="More actions"
+                class="btn btn-outline-primary btn-sm"
+                t-on-click="(ev) => ev.stopPropagation()"
+            >
+                <i class="fa fa-align-justify" />
+                <Dropdown toggler="'parent'">
+                    <DropdownItem t-if="allowableActions.canUpdateProperties">
+                        <div t-on-click="onRename">Rename</div>
+                    </DropdownItem>
+                    <DropdownItem
+                        t-if="allowableActions.canSetContentStream and !allowableActions.canCheckIn"
+                    >
+                        <div t-on-click="onUpdate">Update</div>
+                    </DropdownItem>
+                    <t t-if="allowableActions.canDeleteObject">
+                        <div class="dropdown-divider" />
+                        <DropdownItem>
+                            <div t-on-click="onDelete">Delete</div>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </button>
+        </div>
+    </t>
+</templates>

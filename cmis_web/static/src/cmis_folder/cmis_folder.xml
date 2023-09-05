@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-if="props.record.resId" t-name="cmis_web.CmisFolderField" owl="1">
+        <t t-if="!state.value and props.allowCreate">
+            <div class="mb-4">
+                <button
+                    type="button"
+                    t-ref="buttonCreateFolder"
+                    class="btn btn-primary hidden"
+                    t-on-click="createRootFolder"
+                >
+                    Create folder in DMS
+                </button>
+            </div>
+        </t>
+        <t t-if="state.value">
+            <div class="btn-toolbar">
+                <button
+                    type="button"
+                    class="btn btn-outline-primary mb-2 me-2"
+                    data-toggle="tooltip"
+                    title="Refresh content table"
+                    aria-label="Refresh content table"
+                    t-on-click="queryCmisData"
+                >
+                    <i class="fa fa-refresh" />
+                </button>
+                <div class="btn-group">
+                    <button
+                        type="button"
+                        t-if="state.allowableActions.canCreateFolder"
+                        class="btn btn-outline-primary mb-2"
+                        data-toggle="tooltip"
+                        title="Create folder"
+                        aria-label="Create folder"
+                        t-on-click="onClickCreateFolder"
+                    >
+                        <i class="fa fa-folder" />
+                    </button>
+                    <button
+                        type="button"
+                        t-if="state.allowableActions.canCreateDocument"
+                        class="btn btn-outline-primary mb-2"
+                        data-toggle="tooltip"
+                        title="Add document"
+                        aria-label="Add document"
+                        t-on-click="onClickAddDocument"
+                    >
+                        <i class="fa fa-file" />
+                    </button>
+                </div>
+            </div>
+            <CmisBreadcrumbs
+                parentFolders="state.parentFolders"
+                displayFolder.bind="displayFolder"
+            />
+            <div
+                t-on-drop="ev => this.onDrop(ev)"
+                t-on-dragenter="ev => this.onDragenter(ev)"
+                t-on-dragleave="ev => this.onDragleave(ev)"
+                t-att-class="{ 'o-dragging-inside': state.isDraggingInside }"
+            >
+                <CmisTable t-props="dynamicProps" displayFolder.bind="displayFolder" />
+            </div>
+        </t>
+    </t>
+</templates>
