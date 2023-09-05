@@ -21,6 +21,6 @@
     "external_dependencies": {
         "python": ["requests"],
     },
-    "installable": False,
+    "installable": True,
     "auto_install": False,
 }

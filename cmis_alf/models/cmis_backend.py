@@ -45,7 +45,7 @@ class CmisBackend(models.Model):
 
     def _get_alf_noderef_from_objectid(self, cmis_objectid):
         """
-        Return the nodref from the cmis_objectid
+        Return the noderef from the cmis_objectid
         :param cmis_objectid:
         :return:
         """
@@ -57,10 +57,10 @@ class CmisBackend(models.Model):
     @api.model
     def _get_cmis_objectid_from_noderef(self, alf_noderef):
         """
-        Return the cmis objectid from an alfresco  noderef
+        Return the cmis objectid from an alfresco noderef
         The alfresco noderef looks like
-        u'workspace://SpacesStore/1c8007c5-da05-4889-83e1-c8c43dbf4683' The
-        last part seems to always be the cmis_objectid
+        u'workspace://SpacesStore/1c8007c5-da05-4889-83e1-c8c43dbf4683'
+        The last part seems to always be the cmis_objectid
         :param alf_noderef:
         :return:
         """
@@ -82,6 +82,7 @@ class CmisBackend(models.Model):
             self.alf_folder_template_url,
             json=payload,
             auth=self._get_alf_api_auth_params(),
+            timeout=10,
         )
         r.raise_for_status()
         resp = r.json()
