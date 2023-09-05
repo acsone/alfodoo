@@ -1,6 +1,6 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-import mock
+from unittest import mock
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -219,7 +219,7 @@ class TestCmisFields(common.BaseTestCmis):
     def test_cmis_folder_get_desciption(self):
         inst = self.env["cmis.test.model"].create({"name": "folder_name"})
         # get_description is the method call by the method fields_get
-        # to return to the UI the desciption of the UI
+        # to return to the UI the description of the UI
         descr = inst._fields["cmis_folder"].get_description(self.env)
         backend_description = descr.get("backend")
         self.assertDictEqual(
@@ -233,7 +233,7 @@ class TestCmisFields(common.BaseTestCmis):
         self.assertEqual(descr.get("type"), "cmis_folder")
         self.assertEqual(descr.get("allow_create"), True)
         self.assertEqual(descr.get("allow_delete"), False)
-        # if no backend exists an error message is put into the desciption
+        # if no backend exists an error message is put into the description
         self.cmis_backend.unlink()
         descr = inst._fields["cmis_folder"].get_description(self.env)
         backend_description = descr.get("backend")
