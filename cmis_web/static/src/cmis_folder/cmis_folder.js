@@ -24,7 +24,7 @@ import {useService} from "@web/core/utils/hooks";
 
 const {Component, onWillRender, useRef, useState} = owl;
 
-class CmisFolderField extends Component {
+export class CmisFolderField extends Component {
     setup() {
         this.rpc = useService("rpc");
         this.cmisObjectWrapperService = useService("cmisObjectWrapperService");
@@ -53,6 +53,10 @@ class CmisFolderField extends Component {
         });
     }
 
+    getCmisObjectWrapperParams() {
+        return {};
+    }
+
     async queryCmisData() {
         var self = this;
         if (!this.displayFolderId) {
@@ -69,9 +73,11 @@ class CmisFolderField extends Component {
                     resolve(data);
                 });
         });
+        const params = this.getCmisObjectWrapperParams();
         this.state.cmisObjectsWrap = this.cmisObjectWrapperService.wrap(
             cmisObjectsData.objects,
-            this.cmisSession
+            this.cmisSession,
+            params
         );
         return;
     }

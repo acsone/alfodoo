@@ -13,7 +13,11 @@ import {registry} from "@web/core/registry";
 import {sortBy} from "@web/core/utils/arrays";
 
 export class CmisObjectWrapper {
-    constructor(cmisObject, cmisSession) {
+    constructor(cmisObject, cmisSession, params) {
+        this.setup(cmisObject, cmisSession, params);
+    }
+
+    setup(cmisObject, cmisSession) {
         this.cmisObject = cmisObject;
         this.cmisSession = cmisSession;
         this.parseObject(cmisObject);
@@ -172,9 +176,10 @@ export class CmisObjectWrapper {
 }
 
 export class CmisObjectCollection {
-    constructor(cmisObjects, cmisSession) {
+    constructor(cmisObjects, cmisSession, params) {
         this.cmisObjects = cmisObjects.map(
-            (cmisObject) => new CmisObjectWrapper(cmisObject.object, cmisSession)
+            (cmisObject) =>
+                new CmisObjectWrapper(cmisObject.object, cmisSession, params)
         );
         this.orderBy = [];
         this.sortBy("name");
@@ -197,8 +202,8 @@ export class CmisObjectCollection {
 
 const cmisObjectWrapperService = {
     start() {
-        function wrap(cmisObjects, cmisSession) {
-            return new CmisObjectCollection(cmisObjects, cmisSession);
+        function wrap(cmisObjects, cmisSession, params) {
+            return new CmisObjectCollection(cmisObjects, cmisSession, params);
         }
 
         return {wrap};

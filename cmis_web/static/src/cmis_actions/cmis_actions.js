@@ -17,7 +17,7 @@ import {useService} from "@web/core/utils/hooks";
 
 const {Component} = owl;
 
-class CmisActions extends Component {
+export class CmisActions extends Component {
     setup() {
         this.dialogService = useService("dialog");
         this.allowableActions = this.props.cmisObject.allowableActions;
