@@ -49,6 +49,7 @@ export class CmisFolderField extends Component {
         this.initCmisSession();
 
         onWillRender(async () => {
+            this.state.value = this.props.value;
             this.setRootFolderId();
         });
     }
@@ -129,6 +130,7 @@ export class CmisFolderField extends Component {
                 .notOk((error) => reject(error));
         });
 
+        this.state.parentFolders = [];
         loadCmisRepositories.then(() =>
             this.displayFolder({name: "Root", id: this.rootFolderId})
         );
