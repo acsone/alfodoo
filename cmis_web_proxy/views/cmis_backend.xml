@@ -10,10 +10,13 @@
         <field name="arch" type="xml">
             <group name="cmis_right" position="after">
                 <group name="cmis_proxy_left">
-                    <field name="is_cmis_proxy"/>
+                    <field name="is_cmis_proxy" />
                 </group>
                 <group name="cmis_proxy_right">
-                    <field name="apply_odoo_security" attrs="{'invisible': [('is_cmis_proxy', '=', False)]}"/>
+                    <field
+                        name="apply_odoo_security"
+                        attrs="{'invisible': [('is_cmis_proxy', '=', False)]}"
+                    />
                 </group>
             </group>
         </field>
