@@ -347,6 +347,11 @@ odoo.define('cmis_web.form_widgets', function (require) {
     var CmisLinkDocumentDialog = Dialog.extend({
         template: 'CmisLinkDocumentDialog',
 
+        events: {
+            'click .btn-search': 'on_click_search',
+            'keypress .search-input': 'on_keypress_search_input',
+        },
+
         init: function (parent, parentCmisObject) {
             var self = this;
             var options = {
@@ -376,6 +381,116 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 title: _t("Link Document"),
             };
             this._super(parent, options);
+            this.parent = parent;
+            this.cmis_src_folder_fname = parent.nodeOptions.link_document_src_folders;
+            this.search_enabled = (
+                this.cmis_src_folder_fname !== undefined
+                && this.parent.recordData.hasOwnProperty(this.cmis_src_folder_fname)
+                && this.parent.recordData[this.cmis_src_folder_fname] !== "[]"
+            );
+            this.search_results = [];
+        },
+
+        wrap_cmis_object: function (cmisObject) {
+            if (_.has(cmisObject, 'object')) {
+                cmisObject = cmisObject.object;
+            }
+            return new CmisObjectWrapper(this, cmisObject, this.parent.cmis_session);
+        },
+
+        start: function() {
+            this._super.apply(this, arguments);
+            this.$search_input = this.$el.find('.search-input');
+            this.$document_list = this.$el.find('.document-list');
+            this.$identifier = this.$el.find("input[id='identifier']")
+            this.on_click_search();
+            this.add_link_events();
+        },
+
+        get_folder_cmis_ids: function() {
+            let record = this.parent.recordData;
+            return JSON.parse(record[this.cmis_src_folder_fname]);
+        },
+
+        on_keypress_search_input: function (e) {
+          if (e.keyCode === 13) {
+            e.preventDefault();
+            e.stopPropagation();
+             this.on_click_search();
+          }
+        },
+
+        on_click_search: function (e) {
+            let self = this;
+            let $input = self.$search_input;
+            let search_value = $input.val();
+            if (search_value.length === 1) {
+                alert(_t(
+                    "The search criteria should at least contains 2 characters. " +
+                    "Or empty if you want to see all documents."
+                ))
+                return false;
+            }
+
+            let parent = self.parent;
+            let cmis_session = parent.cmis_session;
+            let cmis_folders = self.get_folder_cmis_ids()
+
+            let tree_where_clauses = [];
+            _.each(cmis_folders, function(cmis_folder) {
+                tree_where_clauses.push("IN_TREE('" + cmis_folder + "')");
+            });
+
+            let fnames_to_search = [
+                "cmis:name",
+                "cmis:description",
+            ]
+            let text_clauses = [];
+            if (search_value.length > 0) {
+                text_clauses.push("CONTAINS('"+ search_value +"')");
+            }
+            _.each(fnames_to_search, function(fname_to_search) {
+                text_clauses.push(fname_to_search + " like '%" + search_value + "%'");
+            });
+
+            let query = (
+                "SELECT * FROM cmis:document " +
+                "WHERE (" + tree_where_clauses.join(" OR ") + ") "+
+                " AND " +
+                "(" +
+                text_clauses.join(" OR ") +
+                ")"
+            )
+
+            return cmis_session.query(query).ok(function (search_result) {
+                let results = [];
+                _.each(search_result.results, function(result) {
+                    results.push(self.wrap_cmis_object(result));
+                })
+                self.search_results = results;
+                self.display_document_list();
+            });
+        },
+
+        display_document_list: function() {
+            let $document_list = QWeb.render("CmisLinkDocumentDialogDocumentList", {
+                widget: this,
+            });
+            this.$document_list.html($document_list);
+            this.add_link_events();
+        },
+
+        add_link_events: function() {
+            let self = this;
+            this.$document_list.find('.link-button').click(function(e) {
+                let $target = $(e.target);
+                let $tr = $target.closest('tr');
+                let cmis_object_id = $tr.data('cmis-id');
+                self.$identifier.val(cmis_object_id);
+                if (self.check_validity()) {
+                   self.on_click_link();
+                }
+            });
         },
 
         on_click_link: function () {
@@ -401,6 +516,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
             var options = {
                 buttons: [
                     {
+
                         text: _t("Add"),
                         classes: "btn-primary",
                         click: function (e) {
