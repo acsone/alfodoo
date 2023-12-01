@@ -360,8 +360,8 @@
 </t>
 
 <t t-name='CmisLinkDocumentDialog'>
-<form class="form-horizontal cmis_link_document" role="form" t-att-id="id">
-    <div class="form-group mb0">
+<form class="form-horizontal cmis_link_document" role="form">
+    <div class="form-group">
         <div class="col-sm-12">
             <div class="input-group">
                 <span class="input-group-text col-sm-8">
@@ -371,7 +371,64 @@
             </div>
         </div>
     </div>
+    <div class="form-group" t-if="widget.search_enabled">
+        <div class="col-sm-12">
+            <div class="input-group">
+                  <div class="input-group-prepend">
+                      <span class="input-group-text">
+                          <label for="search">Search based on document name</label>
+                      </span>
+
+                  </div>
+                <input class="ml-1 form-control search-input" type="text"/>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary btn-search" type="button"><i class="fa fa-search"/>Search</button>
+                  </div>
+            </div>
+        </div>
+        <div class="col-sm-12 document-list">
+
+        </div>
+    </div>
 </form>
+</t>
+
+<t t-name="CmisLinkDocumentDialogDocumentList">
+    <table
+    class="table table-striped table-bordered document-list-table"
+    cellspacing="0"
+    width="100%">
+      <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created</th>
+<!--            <th>Created by</th>-->
+            <th>Modified</th>
+<!--            <th>Modified by</th>-->
+            <th>Version</th>
+            <th></th>
+        </tr>
+     </thead>
+      <tbody>
+          <tr t-foreach="widget.search_results" t-as="item" class="search-result-row"
+              t-att-data-cmis-id="item.getSuccinctProperty('cmis:versionSeriesId')">
+              <td><t t-esc="item.getSuccinctProperty('cmis:name')"/></td>
+              <td><t t-esc="item.getSuccinctProperty('cmis:description')"/></td>
+              <td><t t-esc="item.fCreationDate()"/></td>
+<!--              <td><t t-esc="item.getSuccinctProperty('cmis:createdBy')"/></td>-->
+              <td><t t-esc="item.fLastModificationDate()"/></td>
+<!--              <td><t t-esc="item.getSuccinctProperty('cmis:lastModifiedBy')"/></td>-->
+              <td><t t-esc="item.getSuccinctProperty('cmis:versionLabel')"/></td>
+              <td><button class="btn-primary btn link-button"><i class="fa fa-link link-action"/></button></td>
+          </tr>
+          <tr t-if="widget.search_results.length === 0">
+              <td colspan="6">
+                  No document found.
+              </td>
+          </tr>
+      </tbody>
+    </table>
 </t>
 
 <t t-name='CmisCreateFolderDialog'>
