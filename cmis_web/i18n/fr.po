@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-10 09:22+0000\n"
-"PO-Revision-Date: 2023-05-10 09:22+0000\n"
+"POT-Creation-Date: 2023-12-01 08:20+0000\n"
+"PO-Revision-Date: 2023-12-01 08:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -89,6 +89,11 @@ msgid "Alfresco Error"
 msgstr "Erreur Alfresco"
 
 #. module: cmis_web
+#: model:ir.model,name:cmis_web.model_cmis_document_link_src_folder_mixin
+msgid "Allow to search files to link on parent record folders cmis"
+msgstr ""
+
+#. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
@@ -168,6 +173,11 @@ msgstr "Cliquez ici pour voir les détails techniques"
 #, python-format
 msgid "Close"
 msgstr "Fermer"
+
+#. module: cmis_web
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin__cmis_document_link_src_folders
+msgid "Cmis Document Link Src Folders"
+msgstr ""
 
 #. module: cmis_web
 #. openerp-web
@@ -266,6 +276,7 @@ msgstr "Veuillez d'abord enregistrer votre objet une première fois."
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Created"
 msgstr "Date de création"
@@ -303,8 +314,14 @@ msgstr "Supprimer"
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Description"
+msgstr ""
+
+#. module: cmis_web
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: cmis_web
@@ -338,6 +355,11 @@ msgstr "Premier"
 #, python-format
 msgid "Folder Name:"
 msgstr "Nom du répertoire:"
+
+#. module: cmis_web
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin__id
+msgid "ID"
+msgstr ""
 
 #. module: cmis_web
 #. openerp-web
@@ -398,6 +420,11 @@ msgid "Last Modified Date"
 msgstr "Date de dernière modification"
 
 #. module: cmis_web
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
@@ -437,7 +464,7 @@ msgstr "Chargement en cours..."
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Loading..."
-msgstr "Chargement en cours..."
+msgstr "Chargement..."
 
 #. module: cmis_web
 #. openerp-web
@@ -464,6 +491,7 @@ msgstr "Mineure"
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Modified"
 msgstr "Date de modification"
@@ -486,6 +514,7 @@ msgstr "Actions supplémentaires"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
@@ -515,6 +544,13 @@ msgstr "Suivant"
 #, python-format
 msgid "No data available in table"
 msgstr "Aucun élément à afficher"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "No document found."
+msgstr ""
 
 #. module: cmis_web
 #. openerp-web
@@ -653,6 +689,20 @@ msgstr "Tourner"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Search"
+msgstr "Rechercher"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Search based on document name"
+msgstr "Recherche sur base du nom et du contenu"
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Search:"
@@ -688,6 +738,16 @@ msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid ""
+"The search criteria should at least contains 2 characters. Or empty if you "
+"want to see all documents."
+msgstr "Le critère de recherche doit au moins 2 caractères. Vous pouvez vider "
+"la recherche pour afficher tout les documents."
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
@@ -700,9 +760,11 @@ msgstr "Titre"
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid ""
-"Unable to retrieve the document. The resource might have been deleted "
-"in the CMIS."
-msgstr "Impossible de récupérer le document. La ressource a peut être été supprimée dans la GED."
+"Unable to retrieve the document. The resource might have been deleted in the"
+" CMIS."
+msgstr ""
+"Impossible de récupérer le document. La ressource a peut être été supprimée "
+"dans la GED."
 
 #. module: cmis_web
 #. openerp-web
@@ -727,6 +789,7 @@ msgstr "Mise à jour du contenu de "
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
