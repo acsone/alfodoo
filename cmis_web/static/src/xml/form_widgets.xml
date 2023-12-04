@@ -361,7 +361,7 @@
 
 <t t-name='CmisLinkDocumentDialog'>
 <form class="form-horizontal cmis_link_document" role="form">
-    <div class="form-group">
+    <div class="form-group" name="identifier">
         <div class="col-sm-12">
             <div class="input-group">
                 <span class="input-group-text col-sm-8">
@@ -378,13 +378,15 @@
                       <span class="input-group-text">
                           <label for="search">Search based on document name</label>
                       </span>
-
                   </div>
-                <input class="ml-1 form-control search-input" type="text"/>
+                  <input class="ml-1 form-control search-input" type="text"/>
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary btn-search" type="button"><i class="fa fa-search"/>Search</button>
                   </div>
             </div>
+          <p class="text-muted">
+              Note : the search query is case sensitive.
+          </p>
         </div>
         <div class="col-sm-12 document-list">
 
@@ -600,6 +602,7 @@
             <li t-if='canGetProperties'><a class='content-action-get-properties' href="#">View Details</a></li>
             <li t-if='canUpdateProperties'><a class='content-action-rename' href="#">Rename</a></li>
             <li t-if='canUpdateProperties'><a class='content-action-checkin' href="#">Import new version</a></li>
+            <li t-if='canUpdateProperties'><a class='content-action-delete-link' href="#">Delete link</a></li>
             <li t-if="canGetContentStream"><a class='content-action-history' href="#">Show document history</a></li>
             <li t-if='object.isCheckedOut' role="separator" class="divider"></li>
             <li t-if='object.isCheckedOut'><a class='content-action-cancel-checkout' href="#">Cancel checkout</a></li>
