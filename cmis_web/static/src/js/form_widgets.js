@@ -1359,6 +1359,20 @@ odoo.define('cmis_web.form_widgets', function (require) {
             }
         },
 
+        on_click_delete_link: function () {
+            let self = this;
+            let values = {};
+            values[this.name] = false;
+            this._rpc({
+                model: this.model,
+                method: "write",
+                args: [this.res_id, values],
+            }).then(function() {
+                self.value = "empty";
+                self._render();
+            });
+        },
+
         on_cancel_checkout: function (e) {
             var self = this;
             this._cancel_checkout().finally(() => self.trigger_up('reload'));
@@ -1442,6 +1456,10 @@ odoo.define('cmis_web.form_widgets', function (require) {
                 self.stopEvent(e);
                 self.on_cancel_checkout();
             });
+            $el_actions.find('.content-action-delete-link').on('click', function(e) {
+                self.stopEvent(e);
+                self.on_click_delete_link();
+            })
         },
 
         register_no_document: function () {
