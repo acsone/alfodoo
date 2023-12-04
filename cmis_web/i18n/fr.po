@@ -312,6 +312,13 @@ msgstr "Supprimer"
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Delete link"
+msgstr "Supprimer le lien"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
@@ -558,6 +565,13 @@ msgstr ""
 #, python-format
 msgid "No matching records found"
 msgstr "Aucune donnée disponible"
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Note : the search query is case sensitive."
+msgstr "Note : la requête de recherche est sensible aux minuscules/majuscules"
 
 #. module: cmis_web
 #. openerp-web
