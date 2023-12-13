@@ -10,5 +10,5 @@ class IrModelFields(models.Model):
 
     ttype = fields.Selection(
         selection_add=[('cmis_folder', 'CMIS Folder'), ('cmis_document', 'CMIS Document')],
-        ondelete = {"cmis_folder": "cascade"},
+        ondelete = {"cmis_folder": "cascade", "cmis_document": "cascade"},
     )
