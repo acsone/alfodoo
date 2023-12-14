@@ -2,9 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
+from importlib import resources as importlib_resources
 from unittest import mock
-
-import pkg_resources
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
@@ -41,16 +40,16 @@ class TestIrActionsReport(common.BaseTestCmis):
         # mock commit since it"s called in the _auto_init method
         cls.cr.commit = mock.MagicMock()
         cls.create_sample_report()
-        cls.pdf_filename_1 = pkg_resources.resource_filename(
-            "odoo.addons.cmis_report_write.tests", "dummy.pdf"
-        )
-        cls.pdf_filename_2 = pkg_resources.resource_filename(
-            "odoo.addons.cmis_report_write.tests", "dummy.pdf"
-        )
+        cls.pdf_filename_1 = importlib_resources.files(
+            "odoo.addons.cmis_report_write.tests"
+        ).joinpath("dummy.pdf")
+        cls.pdf_filename_2 = importlib_resources.files(
+            "odoo.addons.cmis_report_write.tests"
+        ).joinpath("dummy.pdf")
         cls.inst = cls.env["cmis.test.model"].create({"name": "folder_name"})
-        with open(cls.pdf_filename_1, "rb") as pdf:
+        with cls.pdf_filename_1.open("rb") as pdf:
             cls.pdf_content_1 = pdf.read()
-        with open(cls.pdf_filename_1, "rb") as pdf:
+        with cls.pdf_filename_2.open("rb") as pdf:
             cls.pdf_content_2 = pdf.read()
 
     def setUp(self):
