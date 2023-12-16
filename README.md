@@ -19,15 +19,21 @@ Alfodoo is a set of addons to seamlessly integrate an external Document Manageme
 
 [//]: # (addons)
 
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[cmis_alf](cmis_alf/) | 16.0.1.0.0 |  | Alfresco extension for the CMIS Connector
+[cmis_field](cmis_field/) | 16.0.1.0.0 |  | Specialized field to work with a CMIS server
+[cmis_report_write](cmis_report_write/) | 16.0.1.0.1 |  | Save your report into a CMIS container
+[cmis_web](cmis_web/) | 16.0.1.0.0 |  | CMIS Web browser widget
+[cmis_web_alf](cmis_web_alf/) | 16.0.1.0.0 |  | Extensions to the Alfodoo web widgets for Alfresco
+
+
 Unported addons
 ---------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[cmis_alf](cmis_alf/) | 16.0.1.0.0 (unported) |  | Alfresco extension for the CMIS Connector
-[cmis_field](cmis_field/) | 16.0.1.0.0 (unported) |  | Specialized field to work with a CMIS server
-[cmis_report_write](cmis_report_write/) | 14.0.1.0.1 (unported) |  | Cmis Report Write
-[cmis_web](cmis_web/) | 16.0.1.0.0 (unported) |  | CMIS Web browser widget
-[cmis_web_alf](cmis_web_alf/) | 16.0.1.0.0 (unported) |  | Extensions to the Alfodoo web widgets for Alfresco
 [cmis_web_bus](cmis_web_bus/) | 16.0.1.0.0 (unported) |  | Cmis Web Bus
 [cmis_web_proxy](cmis_web_proxy/) | 14.0.1.0.1 (unported) |  | Odoo as proxy server for your cmis requests.
 [cmis_web_proxy_alf](cmis_web_proxy_alf/) | 14.0.1.0.1 (unported) |  | Alfodoo CMIS Web Proxy for Alfresco
