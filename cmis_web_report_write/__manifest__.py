@@ -3,7 +3,7 @@
 
 {
     "name": "Cmis Web Report Write",
-    "description": """
+    "summary": """
         Notify CMIS web component on report saved into CMIS""",
     "version": "16.0.1.0.0",
     "license": "AGPL-3",
@@ -15,5 +15,5 @@
     ],
     "data": [],
     "demo": [],
-    "installable": False,
+    "installable": True,
 }
