@@ -575,6 +575,13 @@ msgstr "Remarque : la recherche est sensible aux minuscules et majuscules"
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Note : the search tool can't be used because current record has no CMIS folder."
+msgstr "Remarque : la recherche n'est pas utilisable car l'enregistrement courant n'a pas de dossier CMIS."
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "OK"
