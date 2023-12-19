@@ -575,6 +575,13 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Note : the search tool can't be used because current record has no CMIS folder."
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "OK"

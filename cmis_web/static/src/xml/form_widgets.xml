@@ -392,6 +392,13 @@
 
         </div>
     </div>
+    <div class="form-group" t-if="!widget.search_enabled">
+        <div class="col-sm-12">
+          <p class="text-muted">
+              Note : the search tool can't be used because current record has no CMIS folder.
+          </p>
+        </div>
+    </div>
 </form>
 </t>
 

@@ -422,9 +422,12 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         on_click_search: function (e) {
             let self = this;
+            if (!self.search_enabled) {
+                return false;
+            }
             let $input = self.$search_input;
             let search_value = $input.val();
-            if (search_value.length === 1) {
+            if (search_value !== undefined && search_value.length === 1) {
                 alert(_t(
                     "The search criteria should at least contains 2 characters. " +
                     "Or empty if you want to see all documents."
