@@ -194,6 +194,16 @@ export class CmisTable extends Component {
         return value ? value : "";
     }
 
+    get dynamicActionsProps() {
+        const props = {
+            deleteObject: this.props.deleteObject,
+            renameObject: this.props.renameObject,
+            updateDocumentContent: this.props.updateDocumentContent,
+            dynamicActions: {},
+        };
+        return props;
+    }
+
     get nbCols() {
         let nbCols = this.state.columns.length;
         // Column selector

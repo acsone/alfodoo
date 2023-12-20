@@ -61,7 +61,8 @@ class CmisDocument(fields.Field):
             else:
                 msg = _('No backend found. Please check your configuration.')
             return {'backend_error': msg}
-        return backend.get_web_description()[backend.id]
+        result = backend.get_web_description()[backend.id]
+        return result
 
     def get_cmis_object(self, record):
         """Returns an instance of
@@ -135,10 +136,9 @@ class CmisDocument(fields.Field):
                         pass
 
             # remove created resource in case of rollback
-            test_mode = getattr(threading.currentThread(), 'testing', False)
+            test_mode = getattr(threading.current_thread(), 'testing', False)
             if not test_mode:
-                record.env.cr.after(
-                    'rollback',
+                record.env.cr.postrollback.add(
                     partial(
                         clean_up_document,
                         object_id,
