@@ -7,6 +7,15 @@
 + *---------------------------------------------------------
 +*/
 
-import {cmisTableProps} from "@cmis_web/cmis_table/cmis_table";
+import {CmisTable, cmisTableProps} from "@cmis_web/cmis_table/cmis_table";
+import {patch} from "@web/core/utils/patch";
+
+patch(CmisTable.prototype, "open_in_alfresco", {
+    get dynamicActionsProps() {
+        const props = this._super(...arguments);
+        props.openInAlf = this.props.openInAlf;
+        return props;
+    },
+});
 
 cmisTableProps.openInAlf = Function;

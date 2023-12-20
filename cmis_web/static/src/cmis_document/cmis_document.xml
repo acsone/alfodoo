@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-if="props.record.data.id" t-name="cmis_web.CmisDocumentField" owl="1">
+        <div class="cmis-document">
+            <t t-if="!state.value">
+                <div class="cmis-doc-link">
+                    <div class="px-2">
+                        <div t-on-click="" class="cmis-document-action">
+                            <span
+                                class="fa fa-solid fa-link mr-2 content-action-link"
+                            />
+                            <small
+                                class="px-2 action-label"
+                            >Link with an existing document</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="cmis-doc-add">
+                    <div t-on-click="onClickAddDocument" class="cmis-document-action">
+                        <div class="px-2">
+                            <span class="fa fa-plus-circle mr-2 content-action-add" />
+                            <small class="px-2 action-label">Add a document</small>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-if="state.value">
+                <t t-set="cmisObject" t-value="state.cmisObjectWrap" />
+                <t t-set="cmisObjects" t-value="state.cmisObjectsWrap" />
+                <span t-esc="cmisObject.name" />
+                <div t-if="state.hasData">
+                    <CmisActions
+                        t-props="dynamicActionsProps"
+                        cmisObject="cmisObject"
+                    />
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
