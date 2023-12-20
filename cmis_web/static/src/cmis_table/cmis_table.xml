@@ -130,9 +130,8 @@
                         t-att-class="getCellClass(column, cmisObject)"
                     >
                         <Widget
-                            t-props="{...props, ...column.props}"
+                            t-props="{...dynamicActionsProps, ...column.props}"
                             cmisObject="cmisObject"
-                            cmisFolderObjects="list.cmisObjects"
                         />
                     </td>
                 </t>

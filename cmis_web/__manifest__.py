@@ -18,6 +18,7 @@
         "web.assets_backend": [
             "/cmis_web/static/lib/cmisjs/superagent.7.2.0.js",
             "/cmis_web/static/lib/cmisjs/cmis.0.3.1.js",
+            "/cmis_web/static/src/cmis_document/*",
             "/cmis_web/static/src/cmis_folder/cmis_folder.js",
             "/cmis_web/static/src/cmis_folder/cmis_folder.scss",
             "/cmis_web/static/src/cmis_folder/cmis_folder.xml",

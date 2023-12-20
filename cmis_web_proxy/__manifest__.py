@@ -16,6 +16,7 @@
     "images": ["static/description/main_icon.png"],
     "assets": {
         "web.assets_backend": [
+            "/cmis_web_proxy/static/src/cmis_document/cmis_document.js",
             "/cmis_web_proxy/static/src/cmis_folder/cmis_folder.js",
             "/cmis_web_proxy/static/src/cmis_object_wrapper_service.js",
         ],

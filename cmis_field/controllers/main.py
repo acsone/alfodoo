@@ -27,6 +27,18 @@ class CmisController(http.Controller):
             return {'value': value}
         return {'value': None}
 
+    @http.route(
+    '/web/cmis/field/cmis_document/get_document_parent',
+        type='json',
+        methods=['POST'],
+        auth="user"
+    )
+    def get_document_parent(self, model_name, res_id, backend_id, field_name):
+        env = http.request.env
+        record = env[model_name].browse(int(res_id))
+        backend = env["cmis.backend"].browse(int(backend_id))
+        return record._fields[field_name].get_create_parents(record, backend)[record.id]
+
     def _decode_files(self, documents):
         for doc in documents:
             file_ = doc.get("data")

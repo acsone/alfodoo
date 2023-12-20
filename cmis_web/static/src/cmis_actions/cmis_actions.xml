@@ -28,6 +28,24 @@
             >
                 <i class="fa fa-align-justify" />
                 <Dropdown toggler="'parent'">
+                    <t
+                        t-if="allowableActions.canUpdateProperties"
+                        t-foreach="state.dynamicActions"
+                        t-as="dynamicActionName"
+                        t-key="dynamicActionName"
+                    >
+                        <t
+                            t-set="dynamicAction"
+                            t-value="state.dynamicActions[dynamicActionName]"
+                        />
+                        <DropdownItem t-if="allowableActions.canUpdateProperties">
+                            <div
+                                t-on-click="ev => this.onClickDynamicAction(dynamicActionName)"
+                            >
+                                <span t-esc="dynamicAction.name" />
+                            </div>
+                        </DropdownItem>
+                    </t>
                     <DropdownItem t-if="allowableActions.canUpdateProperties">
                         <div t-on-click="onRename">Rename</div>
                     </DropdownItem>
