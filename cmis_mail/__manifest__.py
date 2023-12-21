@@ -11,7 +11,7 @@
         folder, it is possible to specify in which one the attachments must be
         stored.""",
     "category": "Document Management",
-    "version": "13.0.1.0.0",
+    "version": "16.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV",
     "website": "https://alfodoo.org",
@@ -20,6 +20,8 @@
         "cmis_field",
     ],
     "data": [
+        "security/acl_ir_model_fields.xml",
+        "security/rules_ir_model_fields.xml",
         "wizards/mail_compose_message.xml",
     ],
     "installable": True,

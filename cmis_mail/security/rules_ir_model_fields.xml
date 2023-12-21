@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+  <record model="ir.rule" id="ir_model_fields_cmis_user_rule">
+    <field name="name">ir.model.fields cmis user rule</field>
+    <field name="model_id" ref="base.model_ir_model_fields" />
+    <field name="domain_force">[('ttype', '=', 'cmis_folder')]</field>
+    <field name="perm_read" eval="1" />
+    <field name="perm_create" eval="0" />
+    <field name="perm_write" eval="0" />
+    <field name="perm_unlink" eval="0" />
+    <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
+  </record>
+</odoo>
