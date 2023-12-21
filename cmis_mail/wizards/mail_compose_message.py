@@ -49,8 +49,10 @@ class MailComposeMessage(models.TransientModel):
         related_model = res.get("model")
         if not related_model:
             return res
-        cmis_fields = self.env["ir.model.fields"].search(
-            [("model", "=", related_model), ("ttype", "=", "cmis_folder")]
+        cmis_fields = (
+            self.env["ir.model.fields"]
+            .sudo()
+            .search([("model", "=", related_model), ("ttype", "=", "cmis_folder")])
         )
         if cmis_fields:
             res.update(
@@ -64,7 +66,7 @@ class MailComposeMessage(models.TransientModel):
 
     def _get_cmis_parent_folder(self):
         self.ensure_one()
-        field_name = self.cmis_folder_field_id.name
+        field_name = self.cmis_folder_field_id.sudo().name
         related_record = self.env[self.model].browse(self.res_id)
         field = related_record._fields[field_name]
         cmis_backend = field.get_backend(self.env)
@@ -154,8 +156,8 @@ class MailComposeMessage(models.TransientModel):
             properties=props,
         )
 
-    def send_mail(self, auto_commit=False):
-        res = super().send_mail(auto_commit=auto_commit)
+    def _action_send_mail(self, auto_commit=False):
+        res = super()._action_send_mail(auto_commit=auto_commit)
         for rec in self:
             if rec.is_save_in_cmis_enabled:
                 rec._save_attachments_in_cmis()
