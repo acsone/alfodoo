@@ -10,11 +10,16 @@
       <field name="template_id" position="after">
         <field name="allowed_cmis_folder_field_ids" invisible="1" />
         <field name="is_multiple_cmis_fields" invisible="1" />
-        <field name="is_save_in_cmis_enabled" attrs="{'invisible': [('attachment_ids', '=', [])]}" />
+        <field
+                    name="is_save_in_cmis_enabled"
+                    attrs="{'invisible': [('attachment_ids', '=', [])]}"
+                />
         <newline />
-        <field name="cmis_folder_field_id"
-               domain="[('model', '=', model), ('ttype', '=', 'cmis_folder')]"
-               attrs="{'invisible': ['|', '|', ('is_save_in_cmis_enabled', '=', False), ('attachment_ids', '=', []), ('is_multiple_cmis_fields', '=', False)]}" />
+        <field
+                    name="cmis_folder_field_id"
+                    domain="[('model', '=', model), ('ttype', '=', 'cmis_folder')]"
+                    attrs="{'invisible': ['|', '|', ('is_save_in_cmis_enabled', '=', False), ('attachment_ids', '=', []), ('is_multiple_cmis_fields', '=', False)]}"
+                />
       </field>
     </field>
   </record>

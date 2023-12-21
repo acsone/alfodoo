@@ -10,11 +10,11 @@
         enable the CMIS storage. If the source model has more than one CMIS
         folder, it is possible to specify in which one the attachments must be
         stored.""",
-    'category': 'Document Management',
+    "category": "Document Management",
     "version": "13.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV",
-    'website': 'http://alfodoo.org/',
+    "website": "https://alfodoo.org",
     "depends": [
         "mail",
         "cmis_field",
@@ -22,8 +22,8 @@
     "data": [
         "wizards/mail_compose_message.xml",
     ],
-    'installable': True,
-    'images': [
-        'static/description/main_icon.png',
+    "installable": True,
+    "images": [
+        "static/description/main_icon.png",
     ],
 }
