@@ -3,7 +3,7 @@
 
 {
     "name": "Cmis Mail",
-    "description": """
+    "summary": """
         This module allows to store attachments with CMIS from the mail
         composer if the source model has at least one CMIS folder.
         When attachments are added on the mail composer, a checkbox allows to
@@ -11,7 +11,7 @@
         folder, it is possible to specify in which one the attachments must be
         stored.""",
     "category": "Document Management",
-    "version": "13.0.1.0.0",
+    "version": "16.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV",
     "website": "https://alfodoo.org",
