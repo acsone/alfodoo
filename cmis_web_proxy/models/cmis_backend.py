@@ -10,9 +10,6 @@ class CmisBackend(models.Model):
 
     _inherit = "cmis.backend"
 
-    def _clear_caches(self):
-        self.get_by_id.clear_cache(self)
-
     @api.onchange("is_cmis_proxy")
     def _onchange_is_cmis_proxy(self):
         self.apply_odoo_security = self.is_cmis_proxy
@@ -27,7 +24,7 @@ class CmisBackend(models.Model):
         help="If checked, all the CMIS requests from the client will be "
         "done to the Odoo server in place of to a direct call to the"
         "CMIS Container. In such a case, Odoo act as a proxy server "
-        "between the widget and the cmis container and all the requets "
+        "between the widget and the cmis container and all the requests "
         "are done by using the configured account on the backend. ",
     )
     apply_odoo_security = fields.Boolean(
@@ -75,7 +72,6 @@ class CmisBackend(models.Model):
         return backend
 
     def write(self, vals):
-        self.get_proxy_info_by_id.clear_cache(self)
         if "is_cmis_proxy" in vals and vals["is_cmis_proxy"] is False:
             vals["apply_odoo_security"] = False
         return super(CmisBackend, self).write(vals)
