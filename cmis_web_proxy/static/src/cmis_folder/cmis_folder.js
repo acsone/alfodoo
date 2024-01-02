@@ -36,17 +36,6 @@ patch(CmisFolderField.prototype, "open_with_proxy", {
         self.setCmisSessionToken();
         this._super(...arguments);
     },
-
-    getPreviewUrlParams() {
-        // Pas sur de l'utilité de la méthode je n'ia trouvé aucun appel à cette fonction
-        var params = this._super(...arguments);
-        if (this.backend.apply_odoo_security) {
-            // Add the token as parameter and into the http headers
-            var token = this.genCmisSessionToken();
-            params.token = token;
-        }
-        return params;
-    },
 });
 
 CmisFolderField.props.backend[0].shape.apply_odoo_security = Boolean;
