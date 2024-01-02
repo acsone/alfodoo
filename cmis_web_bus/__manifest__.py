@@ -3,7 +3,7 @@
 
 {
     "name": "Cmis Web Bus",
-    "description": """
+    "summary": """
         Instant Messaging Bus to send notification to the CMIS components
         in live""",
     "version": "16.0.1.0.0",
@@ -11,7 +11,10 @@
     "author": "ACSONE SA/NV",
     "website": "https://alfodoo.org",
     "depends": ["cmis_web", "bus"],
-    "data": ["views/cmis_web_bus.xml"],
-    "demo": [],
-    "installable": False,
+    "installable": True,
+    "assets": {
+        "web.assets_backend": [
+            "cmis_web_bus/static/src/**/*",
+        ],
+    },
 }

@@ -20,4 +20,4 @@ class BusBus(models.Model):
             "action": action,
             "user_id": self.env.user.id,
         }
-        self.sendone("notify_cmis_node", bus_message)
+        self._sendone(self.env.user.partner_id, "cmis_node_notification", bus_message)

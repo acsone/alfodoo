@@ -1,7 +1,6 @@
 exclude: |
   (?x)
   # NOT INSTALLABLE ADDONS
-  ^cmis_web_bus/|
   ^cmis_web_proxy/|
   ^cmis_web_proxy_alf/|
   ^cmis_web_report_write/|
