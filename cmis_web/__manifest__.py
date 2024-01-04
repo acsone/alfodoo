@@ -19,6 +19,8 @@
             "/cmis_web/static/lib/cmisjs/superagent.7.2.0.js",
             "/cmis_web/static/lib/cmisjs/cmis.0.3.1.js",
             "/cmis_web/static/src/cmis_document/*",
+            "/cmis_web/static/src/cmis_document_link_existing/*",
+            "/cmis_web/static/src/cmis_document_search/*",
             "/cmis_web/static/src/cmis_folder/cmis_folder.js",
             "/cmis_web/static/src/cmis_folder/cmis_folder.scss",
             "/cmis_web/static/src/cmis_folder/cmis_folder.xml",
@@ -41,6 +43,7 @@
             "/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.js",
             "/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml",
             "/cmis_web/static/src/cmis_object_wrapper_service.js",
+            "/cmis_web/static/src/cmis_utils.js",
         ]
     },
 }

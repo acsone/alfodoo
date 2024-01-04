@@ -20,21 +20,4 @@ patch(CmisDocumentField.prototype, "open_in_alfresco", {
     onClickOpenInAlf() {
         this.openInAlf(this.displayDocumentId);
     },
-
-    async openInAlf(cmisObjectId) {
-        const url = await this.rpc("/web/cmis/content_details_url", {
-            backend_id: this.backend.id,
-            cmis_objectid: cmisObjectId,
-        });
-        window.open(url);
-    },
-
-    getCmisObjectWrapperParams() {
-        const params = this._super(...arguments);
-        params.alfrescoApiLocation = this.backend.alfresco_api_location;
-        return params;
-    },
 });
-
-CmisDocumentField.props.backend[0].shape.share_location = String;
-CmisDocumentField.props.backend[0].shape.alfresco_api_location = String;

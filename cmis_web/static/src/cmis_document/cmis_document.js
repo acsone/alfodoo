@@ -1,5 +1,4 @@
 /** @odoo-module **/
-/* global cmis */
 
 /* ---------------------------------------------------------
 + * Odoo cmis_web
@@ -8,31 +7,31 @@
 + *---------------------------------------------------------
 +*/
 
+const {onWillRender, useState} = owl;
+import {CmisSessionComponent, propsCmisBackend} from "../cmis_utils";
+
 import {AddDocumentDialog} from "../add_document_dialog/add_document_dialog";
 import {CmisActions} from "../cmis_actions/cmis_actions";
+import {CmisDocumentLinkExisting} from "../cmis_document_link_existing/cmis_document_link_existing";
 import {CmisObjectWrapper} from "../cmis_object_wrapper_service";
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
 import {RenameDialog} from "../rename_dialog/rename_dialog";
 import {UpdateDocumentContentDialog} from "../update_document_content_dialog/update_document_content_dialog";
+
 import {WarningDialog} from "@web/core/errors/error_dialogs";
 
 import {registry} from "@web/core/registry";
-import {sprintf} from "@web/core/utils/strings";
 import {standardFieldProps} from "@web/views/fields/standard_field_props";
 import {useService} from "@web/core/utils/hooks";
 
-import framework from "web.framework";
-
-const {Component, onWillRender, useState} = owl;
-
-export class CmisDocumentField extends Component {
+export class CmisDocumentField extends CmisSessionComponent {
     setup() {
+        this.setupCmisSessionComponent();
         this.rpc = useService("rpc");
         this.orm = useService("orm");
-        this.cmisObjectWrapperService = useService("cmisObjectWrapperService");
-        this.dialogService = useService("dialog");
 
-        this.backend = this.props.backend;
+        this.linkDocumentSrcFolders = null;
+
         this.state = useState({
             value: this.props.value,
             cmisObjectsWrap: [],
@@ -41,11 +40,8 @@ export class CmisDocumentField extends Component {
             hasData: false,
         });
 
-        this.cmisSession = null;
         this.documentId = null;
         this.displayDocumentId = null;
-
-        this.initCmisSession();
 
         onWillRender(async () => {
             this.setDocumentId();
@@ -54,22 +50,6 @@ export class CmisDocumentField extends Component {
 
     getCmisObjectWrapperParams() {
         return {};
-    }
-
-    initCmisSession() {
-        if (this.backend.backend_error) {
-            this.dialogService.add(WarningDialog, {
-                title: "CMIS Error",
-                message: this.backend.backend_error,
-            });
-            return;
-        }
-        this.cmisSession = cmis.createSession(this.backend.location);
-        this.cmisSession.setGlobalHandlers(
-            this.onCmisError.bind(this),
-            this.onCmisError.bind(this)
-        );
-        this.cmisSession.setCharacterSet(document.characterSet);
     }
 
     get dynamicActionsProps() {
@@ -95,19 +75,8 @@ export class CmisDocumentField extends Component {
         if (!this.documentId) {
             return;
         }
-
-        var self = this;
-        const loadCmisRepositories = new Promise(function (resolve, reject) {
-            if (self.cmisSession.repositories) {
-                resolve();
-            }
-            self.cmisSession
-                .loadRepositories()
-                .ok(() => resolve())
-                .notOk((error) => reject(error));
-        });
-
-        loadCmisRepositories.then(() => this.displayDocument());
+        await this.setCmisSessionDefaultRepository();
+        this.displayDocument();
     }
 
     async displayDocument() {
@@ -123,6 +92,7 @@ export class CmisDocumentField extends Component {
         const options = {
             includeAllowableActions: true,
         };
+        await self.initCmisSession();
         const cmisData = await new Promise((resolve) => {
             self.cmisSession
                 .getObject(self.displayDocumentId, "latest", options)
@@ -150,16 +120,6 @@ export class CmisDocumentField extends Component {
             },
         };
         this.dialogService.add(AddDocumentDialog, dialogProps);
-    }
-
-    onCmisError(error) {
-        framework.unblockUI();
-        if (error) {
-            this.dialogService.add(WarningDialog, {
-                title: "CMIS Error",
-                message: error.body.message,
-            });
-        }
     }
 
     async uploadFile(documents) {
@@ -200,10 +160,34 @@ export class CmisDocumentField extends Component {
         );
     }
 
+    onClickLinkExisting() {
+        this.linkExisting();
+    }
+
+    linkExisting() {
+        var self = this;
+        const dialogProps = {
+            title: this.env._t("Link with an existing document"),
+            name: this.env._t("Link with an existing document"),
+            confirm: (cmisObjectIdentifier) => {
+                self.performLinkExisting(cmisObjectIdentifier);
+            },
+            srcFolderIdentifiers: self.getSrcFolderIdentifiers(),
+            backend: this.backend,
+            cmisSession: this.cmisSession,
+        };
+        this.dialogService.add(CmisDocumentLinkExisting, dialogProps);
+    }
+
+    getSrcFolderIdentifiers() {
+        const linkDocumentSrcFolders = this.props.linkDocumentSrcFolders;
+        return JSON.parse(this.props.record.data[linkDocumentSrcFolders]);
+    }
+
     renameObject(cmisObject) {
         var self = this;
         const dialogProps = {
-            title: `Rename ${cmisObject.name}`,
+            title: this.env._t("Rename") + ` ${cmisObject.name}`,
             name: cmisObject.name,
             confirm: (newName) => {
                 if (newName !== cmisObject.name) {
@@ -221,7 +205,7 @@ export class CmisDocumentField extends Component {
     updateDocumentContent(cmisObject) {
         var self = this;
         const dialogProps = {
-            title: `Update content of ${cmisObject.name}`,
+            title: this.env._t("Update content of") + ` ${cmisObject.name}`,
             confirm: (file) => {
                 if (file) {
                     this.cmisSession
@@ -238,9 +222,9 @@ export class CmisDocumentField extends Component {
     deleteLink(cmisObject) {
         const self = this;
         const dialogProps = {
-            title: "Delete Link with the file",
-            body: sprintf('Confirm the link deletion of "%s".', cmisObject.name),
-            confirmLabel: "Delete link",
+            title: this.env._t("Delete Link with the file"),
+            body: this.env._t("Confirm the link deletion of ") + ` ${cmisObject.name}`,
+            confirmLabel: this.env._t("Delete link"),
             confirm: () => {
                 return self.performDeleteLink();
             },
@@ -261,6 +245,17 @@ export class CmisDocumentField extends Component {
         record.model.notify();
         this.state.value = false;
     }
+
+    async performLinkExisting(cmisObjectIdentifier) {
+        const props = this.props;
+        const record = props.record;
+        const values = {};
+        values[props.name] = cmisObjectIdentifier;
+        await this.orm.write(record.resModel, [record.data.id], values);
+        await record.load();
+        record.model.notify();
+        this.state.value = cmisObjectIdentifier;
+    }
 }
 
 CmisDocumentField.template = "cmis_web.CmisDocumentField";
@@ -268,29 +263,19 @@ CmisDocumentField.supportedTypes = ["cmis_document"];
 CmisDocumentField.components = {CmisActions};
 CmisDocumentField.props = {
     ...standardFieldProps,
-    backend: [
+    backend: propsCmisBackend,
+    linkDocumentSrcFolders: [
         {
-            type: Object,
+            type: String,
             optional: true,
-            shape: {
-                id: Number,
-                location: String,
-                name: {type: String, optional: true},
-                share_location: {type: String, optional: true},
-                alfresco_api_location: {type: String, optional: true},
-            },
-        },
-        {
-            type: Object,
-            optional: true,
-            shape: {backend_error: String},
         },
     ],
 };
 
-CmisDocumentField.extractProps = ({field}) => {
+CmisDocumentField.extractProps = ({field, attrs}) => {
     return {
         backend: field.backend,
+        linkDocumentSrcFolders: attrs.options.linkDocumentSrcFolders,
     };
 };
 

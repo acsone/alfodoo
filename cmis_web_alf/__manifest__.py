@@ -28,6 +28,7 @@
             "/cmis_web_alf/static/src/cmis_actions/cmis_actions.js",
             "/cmis_web_alf/static/src/cmis_actions/cmis_actions.xml",
             "/cmis_web_alf/static/src/cmis_object_wrapper_service.js",
+            "/cmis_web_alf/static/src/cmis_utils.js",
         ],
     },
 }

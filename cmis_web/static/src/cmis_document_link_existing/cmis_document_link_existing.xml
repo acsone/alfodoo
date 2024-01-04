@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="cmis_web.CmisDocumentLinkExisting" owl="1">
+        <Dialog size="'md'" title="props.title">
+            <form class="form-horizontal cmis-link-document-existing" role="form">
+                <div class="row" name="identifierInput">
+
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text">
+                                          <label for="identifier">Identifier</label>
+                                      </span>
+                                  </div>
+                                <input
+                                    class="ml-1 form-control"
+                                    id="identifier"
+                                    type="text"
+                                    t-ref="existingCmisObjectId"
+                                    placeholder="CMIS Object Identifier of an existing document"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" t-if="searchEnabled">
+                    <CmisDocumentSearch t-props="searchDynamicProps" />
+                </div>
+                <div class="row" t-if="!searchEnabled">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                          <p class="text-muted">
+                              Note : the search tool can't be used because current record has no CMIS folder.
+                          </p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <t t-set-slot="footer" owl="1">
+                <button class="btn btn-primary" t-on-click="onConfirm">Link</button>
+                <button class="btn btn-secondary" t-on-click="onClose">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
