@@ -21,6 +21,11 @@ const {Component, useState} = owl;
 
 export class CmisTable extends Component {
     setup() {
+        this.displayActions = this.props.displayActions;
+        console.log(this.displayActions);
+        if (this.displayActions === undefined) {
+            this.displayActions = true;
+        }
         this.allColumns = this.getAllColumns();
         this.state = useState({
             columns: this.getActiveColumns(),
@@ -29,63 +34,58 @@ export class CmisTable extends Component {
     }
 
     getAllColumns() {
-        return [
+        const columns = [
             {
-                id: 1,
                 type: "field",
                 name: "name",
-                label: "Name",
+                label: this.env._t("Name"),
                 hasLabel: true,
                 active: true,
                 optional: true,
             },
             {
-                id: 2,
                 type: "field",
                 name: "title",
-                label: "Title",
+                label: this.env._t("Title"),
                 hasLabel: true,
                 active: false,
                 optional: true,
             },
             {
-                id: 3,
                 type: "field",
                 name: "description",
-                label: "Description",
+                label: this.env._t("Description"),
                 hasLabel: true,
                 active: true,
                 optional: true,
             },
             {
-                id: 4,
                 type: "field",
                 name: "lastModificationDate",
-                label: "Modified",
+                label: this.env._t("Modified"),
                 hasLabel: true,
                 active: true,
                 optional: true,
             },
             {
-                id: 5,
                 type: "field",
                 name: "creationDate",
-                label: "Created",
+                label: this.env._t("Created"),
                 hasLabel: true,
                 active: false,
                 optional: true,
             },
             {
-                id: 6,
                 type: "field",
                 name: "lastModifiedBy",
-                label: "Modifier",
+                label: this.env._t("Modifier"),
                 hasLabel: true,
                 active: true,
                 optional: true,
             },
-            {
-                id: 7,
+        ];
+        if (this.displayActions) {
+            columns.push({
                 type: "widget",
                 name: "actions",
                 label: "",
@@ -93,8 +93,18 @@ export class CmisTable extends Component {
                 active: true,
                 optional: false,
                 props: {name: "cmis_actions"},
-            },
-        ];
+            });
+        }
+        const result = [];
+        let index = 0,
+            element = {};
+        for ([index, element] of columns.entries()) {
+            result.push({
+                id: index,
+                ...element,
+            });
+        }
+        return result;
     }
 
     getActiveColumns() {
@@ -194,13 +204,20 @@ export class CmisTable extends Component {
         return value ? value : "";
     }
 
+    getDynamicPropsNameToCopy() {
+        return ["deleteObject", "renameObject", "updateDocumentContent"];
+    }
+
     get dynamicActionsProps() {
         const props = {
-            deleteObject: this.props.deleteObject,
-            renameObject: this.props.renameObject,
-            updateDocumentContent: this.props.updateDocumentContent,
             dynamicActions: {},
         };
+        const dynamicPropsNames = this.getDynamicPropsNameToCopy();
+        _.each(dynamicPropsNames, (propName) => {
+            if (this.props[propName]) {
+                props[propName] = this.props[propName];
+            }
+        });
         return props;
     }
 
@@ -246,6 +263,9 @@ export class CmisTable extends Component {
     }
 
     onClickRow(cmisObject) {
+        if (this.props.onClickRow) {
+            this.props.onClickRow(cmisObject);
+        }
         if (cmisObject.baseTypeId === "cmis:folder") {
             this.props.displayFolder({name: cmisObject.name, id: cmisObject.objectId});
         }
@@ -260,9 +280,29 @@ CmisTable.components = {DropdownItem, CheckBox, Dropdown, Widget};
 
 export const cmisTableProps = {
     list: [CmisObjectCollection, Array],
-    displayFolder: Function,
-    renameObject: Function,
-    updateDocumentContent: Function,
-    deleteObject: Function,
+    displayActions: {
+        type: Boolean,
+        optional: true,
+    },
+    displayFolder: {
+        type: [Function, undefined],
+        optional: true,
+    },
+    renameObject: {
+        type: Function,
+        optional: true,
+    },
+    updateDocumentContent: {
+        type: Function,
+        optional: true,
+    },
+    onClickRow: {
+        type: Function,
+        optional: true,
+    },
+    deleteObject: {
+        type: Function,
+        optional: true,
+    },
 };
 CmisTable.props = cmisTableProps;
