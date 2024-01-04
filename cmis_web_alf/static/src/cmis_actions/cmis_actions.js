@@ -17,4 +17,7 @@ patch(CmisActions.prototype, "action_open_in_alfresco", {
     },
 });
 
-CmisActions.props.openInAlf = Function;
+CmisActions.props.openInAlf = {
+    type: Function,
+    optional: true,
+};

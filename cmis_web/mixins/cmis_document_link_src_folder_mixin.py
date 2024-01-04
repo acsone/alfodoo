@@ -12,7 +12,7 @@ class CmisDocumentLinkSrcFolderMixin(models.AbstractModel):
     _description = "Allow to search files to link on parent record folders cmis"
 
     cmis_document_link_src_folders = fields.Char(
-        compute='_compute_cmis_document_link_src_folders',
+        compute="_compute_cmis_document_link_src_folders",
     )
 
     def _compute_cmis_document_link_src_folders(self):
@@ -20,9 +20,12 @@ class CmisDocumentLinkSrcFolderMixin(models.AbstractModel):
         for rec in self:
             folders = []
             for fname in fnames:
-                folder_value = safe_eval(f"rec.{fname}", globals_dict={
-                    "rec": rec,
-                })
+                folder_value = safe_eval(
+                    f"rec.{fname}",
+                    globals_dict={
+                        "rec": rec,
+                    },
+                )
                 if folder_value:
                     folders.append(folder_value)
             rec.cmis_document_link_src_folders = json.dumps(folders)

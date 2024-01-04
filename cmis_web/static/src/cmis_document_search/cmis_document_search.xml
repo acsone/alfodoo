@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="cmis_web.CmisDocumentSearch" owl="1">
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">
+                              <label for="search">Search based on document name</label>
+                          </span>
+                      </div>
+                    <input
+                        class="ml-1 form-control search-input"
+                        t-ref="existingCmisObjectId"
+                        type="text"
+                    />
+                    <div class="input-group-append">
+                        <button
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            t-on-click="onClickSearch"
+                        ><i class="fa fa-search" />Search</button>
+                      </div>
+                </div>
+                <p class="text-muted">
+                  Note : the search query is case sensitive. It can be empty or must contain at least 3 characters.
+                </p>
+            </div>
+            <div class="col-sm-12 document-list">
+                <t t-if="state.hasData">
+                    <CmisTable t-props="cmisTableDynamicProps" />
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
