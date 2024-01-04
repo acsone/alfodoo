@@ -10,13 +10,9 @@
 import {CmisFolderField} from "@cmis_web/cmis_folder/cmis_folder";
 import {patch} from "@web/core/utils/patch";
 
-patch(CmisFolderField.prototype, "open_with_proxy", {
-    getCmisObjectWrapperParams() {
-        const params = this._super(...arguments);
-        params.applyOdooSecurity = this.backend.apply_odoo_security;
-        return params;
-    },
+console.log("patch cmis folder componenet");
 
+patch(CmisFolderField.prototype, "open_with_proxy", {
     genCmisSessionToken() {
         return JSON.stringify({
             model: this.props.record.resModel,
@@ -25,10 +21,15 @@ patch(CmisFolderField.prototype, "open_with_proxy", {
         });
     },
 
-    setCmisSessionToken() {
+    getPreviewUrlParams() {
+        // Pas sur de l'utilité de la méthode je n'ia trouvé aucun appel à cette fonction
+        var params = this._super(...arguments);
         if (this.backend.apply_odoo_security) {
-            this.cmisSession.setToken(this.genCmisSessionToken());
+            // Add the token as parameter and into the http headers
+            var token = this.genCmisSessionToken();
+            params.token = token;
         }
+        return params;
     },
 
     async setRootFolderId() {
@@ -37,5 +38,3 @@ patch(CmisFolderField.prototype, "open_with_proxy", {
         this._super(...arguments);
     },
 });
-
-CmisFolderField.props.backend[0].shape.apply_odoo_security = Boolean;

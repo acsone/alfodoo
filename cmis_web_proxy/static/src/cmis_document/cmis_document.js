@@ -11,24 +11,12 @@ import {CmisDocumentField} from "@cmis_web/cmis_document/cmis_document";
 import {patch} from "@web/core/utils/patch";
 
 patch(CmisDocumentField.prototype, "open_with_proxy", {
-    getCmisObjectWrapperParams() {
-        const params = this._super(...arguments);
-        params.applyOdooSecurity = this.backend.apply_odoo_security;
-        return params;
-    },
-
     genCmisSessionToken() {
         return JSON.stringify({
             model: this.props.record.resModel,
             res_id: this.props.record.resId,
             field_name: this.props.name,
         });
-    },
-
-    setCmisSessionToken() {
-        if (this.backend.apply_odoo_security) {
-            this.cmisSession.setToken(this.genCmisSessionToken());
-        }
     },
 
     async setDocumentId() {
@@ -48,5 +36,3 @@ patch(CmisDocumentField.prototype, "open_with_proxy", {
         return params;
     },
 });
-
-CmisDocumentField.props.backend[0].shape.apply_odoo_security = Boolean;
