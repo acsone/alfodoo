@@ -34,7 +34,7 @@ class MailComposeMessage(models.TransientModel):
         related_model = res.get("model")
         if not related_model:
             return res
-        cmis_fields = self.env["ir.model.fields"].search(
+        cmis_fields = self.env["ir.model.fields"].sudo().search(
             [("model", "=", related_model), ("ttype", "=", "cmis_folder")]
         )
         if cmis_fields:
