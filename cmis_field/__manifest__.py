@@ -18,6 +18,7 @@
     "external_dependencies": {
         "python": [
             "cmislib>=0.7.0",
+            "cmislib.exceptions",
         ]
     },
 }
