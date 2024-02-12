@@ -354,7 +354,20 @@ odoo.define('cmis_web.form_widgets', function (require) {
 
         init: function (parent, parentCmisObject) {
             var self = this;
-            var options = {
+            var options = this.get_dialog_options();
+            this._super(parent, options);
+            this.parent = parent;
+            this.cmis_src_folder_fname = parent.nodeOptions.link_document_src_folders;
+            this.search_enabled = (
+                this.cmis_src_folder_fname !== undefined
+                && this.parent.recordData.hasOwnProperty(this.cmis_src_folder_fname)
+                && this.parent.recordData[this.cmis_src_folder_fname] !== "[]"
+            );
+            this.search_results = [];
+        },
+
+        get_dialog_options: function () {
+            return {
                 buttons: [
                     {
                         text: _t("Link"),
@@ -379,16 +392,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                     self.close();
                 },
                 title: _t("Link Document"),
-            };
-            this._super(parent, options);
-            this.parent = parent;
-            this.cmis_src_folder_fname = parent.nodeOptions.link_document_src_folders;
-            this.search_enabled = (
-                this.cmis_src_folder_fname !== undefined
-                && this.parent.recordData.hasOwnProperty(this.cmis_src_folder_fname)
-                && this.parent.recordData[this.cmis_src_folder_fname] !== "[]"
-            );
-            this.search_results = [];
+            }
         },
 
         wrap_cmis_object: function (cmisObject) {
@@ -2501,6 +2505,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
         CmisCreateDocumentDialog: CmisCreateDocumentDialog,
         CmisVersionsHistoryDialog: CmisVersionsHistoryDialog,
         CmisDuplicateDocumentResolver: CmisDuplicateDocumentResolver,
+        CmisLinkDocumentDialog: CmisLinkDocumentDialog,
         DEFAULT_CMIS_OPTIONS: DEFAULT_CMIS_OPTIONS,
     };
 
