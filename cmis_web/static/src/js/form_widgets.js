@@ -381,10 +381,7 @@ odoo.define('cmis_web.form_widgets', function (require) {
                     },
                     {
                         text: _t("Close"),
-                        click: function (e) {
-                            e.stopPropagation();
-                            self.$el.parents('.modal').modal('hide');
-                        }
+                        close: true,
                     },
 
                 ],
