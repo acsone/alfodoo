@@ -4,8 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-12 10:59+0000\n"
+"PO-Revision-Date: 2023-12-12 10:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,9 +53,24 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Actions"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Add"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Add a document"
 msgstr ""
 
 #. module: cmis_web
@@ -72,7 +89,13 @@ msgid "Alfresco Error"
 msgstr ""
 
 #. module: cmis_web
+#: model:ir.model,name:cmis_web.model_cmis_document_link_src_folder_mixin
+msgid "Allow to search files to link on parent record folders cmis"
+msgstr ""
+
+#. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
@@ -128,6 +151,13 @@ msgstr ""
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
+msgid "Cancel checkout"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
 msgid "Click here to see more technical info"
 msgstr ""
 
@@ -136,9 +166,17 @@ msgstr ""
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Close"
+msgstr ""
+
+#. module: cmis_web
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin__cmis_document_link_src_folders
+msgid "Cmis Document Link Src Folders"
 msgstr ""
 
 #. module: cmis_web
@@ -179,6 +217,7 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Create Documents "
@@ -237,6 +276,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Created"
 msgstr ""
@@ -272,6 +312,14 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Delete link"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
@@ -279,9 +327,23 @@ msgid "Description"
 msgstr ""
 
 #. module: cmis_web
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid "Document history"
+msgstr ""
+
+#. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Download"
@@ -302,6 +364,18 @@ msgid "Folder Name:"
 msgstr ""
 
 #. module: cmis_web
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin__id
+msgid "ID"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Identifier"
+msgstr ""
+
+#. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
@@ -311,6 +385,7 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Import new version"
@@ -352,10 +427,43 @@ msgid "Last Modified Date"
 msgstr ""
 
 #. module: cmis_web
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid "Link"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid "Link Document"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Link with an existing document"
+msgstr ""
+
+#. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/document_viewer.xml:0
 #, python-format
 msgid "Loading"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Loading cmis document..."
 msgstr ""
 
 #. module: cmis_web
@@ -390,6 +498,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Modified"
 msgstr ""
@@ -405,12 +514,15 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "More actions"
 msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
@@ -442,9 +554,30 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "No document found."
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "No matching records found"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Note : the search query is case sensitive."
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Note : the search tool can't be used because current record has no CMIS folder."
 msgstr ""
 
 #. module: cmis_web
@@ -495,6 +628,9 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Preview"
 msgstr ""
@@ -539,6 +675,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Rename"
 msgstr ""
@@ -573,6 +710,20 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Search"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Search based on document name"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Search:"
@@ -583,6 +734,13 @@ msgstr ""
 #: code:addons/cmis_web/static/src/js/form_widgets.js:0
 #, python-format
 msgid "Show _MENU_ entries"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#, python-format
+msgid "Show document history"
 msgstr ""
 
 #. module: cmis_web
@@ -601,11 +759,29 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid ""
+"The search criteria should at least contains 2 characters. Or empty if you "
+"want to see all documents."
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Title"
+msgstr ""
+
+#. module: cmis_web
+#. openerp-web
+#: code:addons/cmis_web/static/src/js/form_widgets.js:0
+#, python-format
+msgid ""
+"Unable to retrieve the document. The resource might have been deleted in the"
+" CMIS."
 msgstr ""
 
 #. module: cmis_web
@@ -632,6 +808,8 @@ msgstr ""
 #. module: cmis_web
 #. openerp-web
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "Version"
 msgstr ""
@@ -645,6 +823,7 @@ msgstr ""
 
 #. module: cmis_web
 #. openerp-web
+#: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #: code:addons/cmis_web/static/src/xml/form_widgets.xml:0
 #, python-format
 msgid "View Details"
