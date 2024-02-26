@@ -219,7 +219,7 @@ class IrActionsReport(models.Model):
     def _get_backend(self, record):
         self.ensure_one()
         if self.cmis_folder_field_id:
-            field = record._fields[self.cmis_folder_field_id.name]
+            field = record._fields[self.sudo().cmis_folder_field_id.name]
             return field.get_backend(self.env)
         return self.cmis_backend_id
 
