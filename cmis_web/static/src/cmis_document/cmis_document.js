@@ -181,7 +181,11 @@ export class CmisDocumentField extends CmisSessionComponent {
 
     getSrcFolderIdentifiers() {
         const linkDocumentSrcFolders = this.props.linkDocumentSrcFolders;
-        return JSON.parse(this.props.record.data[linkDocumentSrcFolders]);
+        let folders = [];
+        if (linkDocumentSrcFolders) {
+            folders = JSON.parse(this.props.record.data[linkDocumentSrcFolders]);
+        }
+        return folders;
     }
 
     renameObject(cmisObject) {
@@ -264,19 +268,21 @@ CmisDocumentField.components = {CmisActions};
 CmisDocumentField.props = {
     ...standardFieldProps,
     backend: propsCmisBackend,
-    linkDocumentSrcFolders: [
-        {
-            type: String,
-            optional: true,
-        },
-    ],
+    linkDocumentSrcFolders: {
+        type: String,
+        optional: true,
+    },
 };
 
 CmisDocumentField.extractProps = ({field, attrs}) => {
-    return {
+    let res = {
         backend: field.backend,
-        linkDocumentSrcFolders: attrs.options.linkDocumentSrcFolders,
-    };
+    }
+    let linkDocumentSrcFolders = attrs.options.linkDocumentSrcFolders;
+    if (linkDocumentSrcFolders) {
+        res["linkDocumentSrcFolders"] = linkDocumentSrcFolders;
+    }
+    return res;
 };
 
 registry.category("fields").add("cmis_document", CmisDocumentField);
