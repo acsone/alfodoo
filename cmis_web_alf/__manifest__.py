@@ -21,12 +21,14 @@
     "assets": {
         "web.assets_backend": [
             "/cmis_web_alf/static/src/images/images.scss",
+            "/cmis_web_alf/static/src/cmis_document/cmis_document.js",
             "/cmis_web_alf/static/src/cmis_folder/cmis_folder.js",
             "/cmis_web_alf/static/src/cmis_folder/cmis_folder.xml",
             "/cmis_web_alf/static/src/cmis_table/cmis_table.js",
             "/cmis_web_alf/static/src/cmis_actions/cmis_actions.js",
             "/cmis_web_alf/static/src/cmis_actions/cmis_actions.xml",
             "/cmis_web_alf/static/src/cmis_object_wrapper_service.js",
+            "/cmis_web_alf/static/src/cmis_utils.js",
         ],
     },
 }

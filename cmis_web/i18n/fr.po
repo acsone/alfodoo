@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* cmis_web
+# 	* cmis_web
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0+e\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-25 16:05+0000\n"
-"PO-Revision-Date: 2019-04-25 16:05+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2024-01-04 15:21+0000\n"
+"PO-Revision-Date: 2024-01-04 15:21+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,660 +16,415 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:117
-#, python-format
-msgid " already exists"
-msgstr " existe déjà"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1005
-#, python-format
-msgid "(filtered from _MAX_ total entries)"
-msgstr "(filtré de _MAX_ éléments au total)"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1020
-#, python-format
-msgid ": activate to sort column ascending"
-msgstr ": activer pour trier la colonne par ordre croissant"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1021
-#, python-format
-msgid ": activate to sort column descending"
-msgstr ": activer pour trier la colonne par ordre décroissant"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1393
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1557
-#, python-format
-msgid "A document with the same name already exists."
-msgstr "Un document avec le même nom existe déjà."
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:283
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/add_document_dialog/add_document_dialog.xml:0
 #, python-format
 msgid "Add"
 msgstr "Ajouter"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:138
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.xml:0
+#, python-format
+msgid "Add a document"
+msgstr "Ajouter un document"
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.xml:0
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.xml:0
 #, python-format
 msgid "Add document"
 msgstr "Ajouter un document"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1396
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1560
-#, python-format
-msgid "Alfresco Error"
-msgstr "Erreur Alfresco"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:220
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:237
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:333
-#, python-format
-msgid "Browse&hellip;"
-msgstr "Parcourir&hellip;"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:558
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:105
-#, python-format
-msgid "By:"
-msgstr "Par:"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:684
-#, python-format
-msgid "CMIS Backend Config Error"
+#: model:ir.model,name:cmis_web.model_cmis_document_link_src_folder_mixin
+msgid "Allow to search files to link on parent record folders cmis"
 msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:757
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document_link_existing/cmis_document_link_existing.xml:0
 #, python-format
-msgid "CMIS Error"
-msgstr "Erreur CMIS"
+msgid "CMIS Object Identifier of an existing document"
+msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:751
-#, python-format
-msgid "CMIS Error "
-msgstr "Erreur CMIS"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:53
-#: code:addons/cmis_web/static/src/js/form_widgets.js:106
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document_link_existing/cmis_document_link_existing.xml:0
+#: code:addons/cmis_web/static/src/rename_dialog/rename_dialog.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Annuler"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:202
-#, python-format
-msgid "Cancel Edit"
-msgstr "Annuler l'édition"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:360
-#, python-format
-msgid "Click here to see more technical info"
-msgstr "Cliquez ici pour voir les détails techniques"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:238
-#: code:addons/cmis_web/static/src/js/form_widgets.js:293
-#: code:addons/cmis_web/static/src/js/form_widgets.js:372
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:18
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/add_document_dialog/add_document_dialog.xml:0
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
+#: code:addons/cmis_web/static/src/create_folder_dialog/create_folder_dialog.xml:0
+#: code:addons/cmis_web/static/src/update_document_content_dialog/update_document_content_dialog.xml:0
 #, python-format
 msgid "Close"
 msgstr "Fermer"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:965
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
-msgid "Columns"
-msgstr "Colonnes"
+msgid "Close (Esc)"
+msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:263
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:304
-#, python-format
-msgid "Comment"
-msgstr "Commentaire"
+#: model:ir.model.fields,field_description:cmis_web.field_cmis_document_link_src_folder_mixin__cmis_document_link_src_folders
+msgid "Cmis Document Link Src Folders"
+msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1578
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.js:0
 #, python-format
 msgid "Confirm deletion of "
-msgstr "Veuillez confirmer la suppression de "
+msgstr "Confirmer la suppression de "
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:194
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
 #, python-format
-msgid "Copy"
-msgstr "Copier"
+msgid "Confirm the link deletion of "
+msgstr "Confirmer la suppression du lien avec"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:229
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/create_folder_dialog/create_folder_dialog.xml:0
 #, python-format
 msgid "Create"
 msgstr "Créer"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:304
-#, python-format
-msgid "Create Documents "
-msgstr "Ajouter un/des documents"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:247
-#, python-format
-msgid "Create Folder "
-msgstr "Ajouter un répertoire"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:256
-#, python-format
-msgid "Create a new major version"
-msgstr "Créer une nouvelle version majeure"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:290
-#, python-format
-msgid "Create a new version"
-msgstr "Créer une nouvelle version"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:130
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.xml:0
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.xml:0
 #, python-format
 msgid "Create folder"
 msgstr "Ajouter un répertoire"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:11
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.xml:0
 #, python-format
 msgid "Create folder in DMS"
 msgstr "Créer le répertoire dans la GED"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:250
-#, python-format
-msgid "Create new minor version"
-msgstr "Créer une nouvelle version mineure"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:909
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.js:0
 #, python-format
 msgid "Create your object first"
 msgstr "Veuillez d'abord enregistrer votre objet une première fois."
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:24
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:36
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_table/cmis_table.js:0
 #, python-format
 msgid "Created"
-msgstr "Date de création"
+msgstr "Créé le"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:90
-#, python-format
-msgid "Created By"
-msgstr "Créé par"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:86
-#, python-format
-msgid "Creation Date"
-msgstr "Date de création"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:195
-#, python-format
-msgid "Cut"
-msgstr "Couper"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:206
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_actions/cmis_actions.xml:0
 #, python-format
 msgid "Delete"
 msgstr "Supprimer"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:22
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:33
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:70
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
 #, python-format
-msgid "Description"
-msgstr "Description"
+msgid "Delete Link"
+msgstr "Supprimer le lien"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:15
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:43
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:169
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
+#, python-format
+msgid "Delete Link with the file"
+msgstr "Supprimer le lien avec le fichier"
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.js:0
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.js:0
+#, python-format
+msgid "Delete file"
+msgstr "Supprimer le fichier"
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
+#, python-format
+msgid "Delete link"
+msgstr "Supprimer le lien"
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_table/cmis_table.js:0
+#, python-format
+msgid "Description"
+msgstr ""
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_actions/cmis_actions.xml:0
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
 msgid "Download"
 msgstr "Télécharger"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1014
-#, python-format
-msgid "First"
-msgstr "Premier"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:347
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/create_folder_dialog/create_folder_dialog.xml:0
 #, python-format
 msgid "Folder Name:"
 msgstr "Nom du répertoire:"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:11
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document_link_existing/cmis_document_link_existing.xml:0
+#, python-format
+msgid "Identifier"
+msgstr ""
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
 msgid "Image"
 msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:454
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:201
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document_link_existing/cmis_document_link_existing.xml:0
 #, python-format
-msgid "Import new version"
-msgstr "Importer une nouvelle version"
+msgid "Link"
+msgstr "Lier"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:455
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.xml:0
 #, python-format
-msgid "Import new version of "
-msgstr "Importer une nouvelle version de "
+msgid "Link with an existing document"
+msgstr "Lier avec un document existant"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:103
-#, python-format
-msgid "Is Checked Out"
-msgstr "Verrouillé"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1015
-#, python-format
-msgid "Last"
-msgstr "Dernier"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:98
-#, python-format
-msgid "Last Modified By"
-msgstr "Dernière modification par"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:94
-#, python-format
-msgid "Last Modified Date"
-msgstr "Date de dernière modification"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:23
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
 msgid "Loading"
-msgstr "Chargement en cours..."
+msgstr "En cours de chargement..."
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1009
-#, python-format
-msgid "Loading..."
-msgstr "Chargement en cours..."
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:75
-#, python-format
-msgid "MIME Type"
-msgstr ""
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:298
-#, python-format
-msgid "Major"
-msgstr "Majeure"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:297
-#, python-format
-msgid "Minor"
-msgstr "Mineure"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:23
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:34
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_table/cmis_table.js:0
 #, python-format
 msgid "Modified"
-msgstr "Date de modification"
+msgstr "Modifié le"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:24
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:35
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_table/cmis_table.js:0
 #, python-format
 msgid "Modifier"
 msgstr "Modifié par"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:189
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_actions/cmis_actions.xml:0
 #, python-format
 msgid "More actions"
 msgstr "Actions supplémentaires"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:20
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:31
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:62
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_table/cmis_table.js:0
 #, python-format
 msgid "Name"
 msgstr "Nom"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:317
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/rename_dialog/rename_dialog.xml:0
 #, python-format
-msgid "New name:"
-msgstr "Nouveau nom"
+msgid "New Name:"
+msgstr "Nouveau nom:"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1016
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:58
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
-msgid "Next"
-msgstr "Suivant"
+msgid "Next (Right-Arrow)"
+msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1002
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document_search/cmis_document_search.xml:0
 #, python-format
-msgid "No data available in table"
-msgstr "Aucun élément à afficher"
+msgid ""
+"Note : the search query is case sensitive. It can be empty or must contain "
+"at least 3 characters."
+msgstr ""
+"Remarque : la recherche est sensible aux minuscules et majuscules. Elle peut"
+" être vide ou doit contenir au moins 3 caractères."
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1012
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document_link_existing/cmis_document_link_existing.xml:0
 #, python-format
-msgid "No matching records found"
-msgstr "Aucune donnée disponible"
+msgid ""
+"Note : the search tool can't be used because current record has no CMIS "
+"folder."
+msgstr ""
+"Remarque : l'outil de recherche ne peut être utilisé car il n'y a pas de "
+"dossier CMIS à cibler"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:355
-#, python-format
-msgid "OK"
-msgstr "OK"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:53
-#, python-format
-msgid "Object Id"
-msgstr "Identifiant"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:49
-#, python-format
-msgid "Object Type Id"
-msgstr "Type de contenu"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:203
-#, python-format
-msgid "Offline Edit"
-msgstr "Editer hors ligne"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:12
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
 msgid "PDF file"
-msgstr ""
+msgstr "Fichier PDF"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:146
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:154
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:196
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:197
-#, python-format
-msgid "Paste"
-msgstr "Coller"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:178
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_actions/cmis_actions.xml:0
 #, python-format
 msgid "Preview"
-msgstr "Prévisualiser"
+msgstr "Aperçu"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1017
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:55
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
-msgid "Previous"
-msgstr "Précédent"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:42
-#, python-format
-msgid "Print"
+msgid "Previous (Left-Arrow)"
 msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:96
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
-msgid "Process"
-msgstr "Exécuter"
+msgid "Print"
+msgstr "Imprimer"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1010
-#, python-format
-msgid "Processing..."
-msgstr "Traitement en cours..."
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:120
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.xml:0
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.xml:0
 #, python-format
 msgid "Refresh content table"
 msgstr "Rafraichir le contenu de la table"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:43
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:193
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_actions/cmis_actions.xml:0
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.js:0
+#: code:addons/cmis_web/static/src/rename_dialog/rename_dialog.xml:0
 #, python-format
 msgid "Rename"
 msgstr "Renommer"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:278
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
-msgid "Rename as"
-msgstr "Renommer en"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:35
-#, python-format
-msgid "Reset Zoom"
+msgid "Reset Zoom (0)"
 msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1735
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
-msgid "Root"
-msgstr "Racine"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:39
-#, python-format
-msgid "Rotate"
+msgid "Rotate (r)"
 msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1011
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document_search/cmis_document_search.xml:0
 #, python-format
-msgid "Search:"
-msgstr "Recherche:"
+msgid "Search"
+msgstr "Rechercher"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1008
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document_search/cmis_document_search.xml:0
 #, python-format
-msgid "Show _MENU_ entries"
-msgstr "Afficher _MENU_ éléments"
+msgid "Search based on document name"
+msgstr "Rechercher sur base du nom du document"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1004
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
-msgid "Showing 0 to 0 of 0 entries"
-msgstr "Affichage de l'élément 0 à 0 sur 0 élément"
+msgid "Text file"
+msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:1003
-#, python-format
-msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:21
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:32
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:66
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_table/cmis_table.js:0
 #, python-format
 msgid "Title"
 msgstr "Titre"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:198
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_actions/cmis_actions.xml:0
 #, python-format
 msgid "Update"
 msgstr "Mettre à jour"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:431
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/update_document_content_dialog/update_document_content_dialog.xml:0
 #, python-format
 msgid "Update content"
 msgstr "Mettre à jour le contenu"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/js/form_widgets.js:432
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_document/cmis_document.js:0
+#: code:addons/cmis_web/static/src/cmis_folder/cmis_folder.js:0
 #, python-format
-msgid "Update content of "
-msgstr "Mise à jour du contenu de "
+msgid "Update content of"
+msgstr "Mettre à jour le contenu de"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:81
-#, python-format
-msgid "Version"
-msgstr "Version"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:13
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
 msgid "Video"
-msgstr ""
+msgstr "Vidéo"
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/form_widgets.xml:192
-#, python-format
-msgid "View Details"
-msgstr "Afficher les détails"
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:25
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
 msgid "Viewer"
+msgstr "Viseur"
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
+#, python-format
+msgid "Zoom In (+)"
 msgstr ""
 
 #. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:34
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
-msgid "Zoom In"
+msgid "Zoom Out (-)"
 msgstr ""
-
-#. module: cmis_web
-#. openerp-web
-#: code:addons/cmis_web/static/src/xml/document_viewer.xml:36
-#, python-format
-msgid "Zoom Out"
-msgstr ""
-

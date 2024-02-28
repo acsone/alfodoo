@@ -14,6 +14,7 @@ import {sortBy} from "@web/core/utils/arrays";
 
 export class CmisObjectWrapper {
     constructor(cmisObject, cmisSession, params) {
+        console.log(cmisObject);
         this.setup(cmisObject, cmisSession, params);
     }
 
@@ -181,6 +182,8 @@ export class CmisObjectCollection {
             (cmisObject) =>
                 new CmisObjectWrapper(cmisObject.object, cmisSession, params)
         );
+        console.log("CmisObjectCollection");
+        console.log(this.cmisObjects);
         this.orderBy = [];
         this.sortBy("name");
     }
