@@ -111,7 +111,9 @@ export class CmisDocumentField extends CmisSessionComponent {
         this.state.hasData = true;
     }
 
-    onClickAddDocument() {
+    onClickAddDocument(e) {
+        e.preventDefault();
+        e.stopPropagation();
         const dialogProps = {
             confirm: (files) => {
                 this._getDocumentsFromFiles(files).then((documents) => {
@@ -160,7 +162,9 @@ export class CmisDocumentField extends CmisSessionComponent {
         );
     }
 
-    onClickLinkExisting() {
+    onClickLinkExisting(e) {
+        e.preventDefault();
+        e.stopPropagation();
         this.linkExisting();
     }
 
