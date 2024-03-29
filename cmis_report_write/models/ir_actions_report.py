@@ -129,6 +129,15 @@ class IrActionsReport(models.Model):
                 self.with_context(cmis_report_keys=(report, SAVE_IN_CMIS_MARKER)),
             )._render_qweb_pdf(report_ref, res_ids, data=data)
 
+    @api.model
+    def _render(self, report_ref, res_ids, data=None):
+        report = self._get_report(report_ref)
+        with report.save_in_attachment_if_required():
+            return super(
+                IrActionsReport,
+                self.with_context(cmis_report_keys=(report, SAVE_IN_CMIS_MARKER)),
+            )._render(report_ref, res_ids, data=data)
+
     def retrieve_attachment(self, record):
         if self.attachment != SAVE_IN_CMIS_MARKER:
             return super().retrieve_attachment(record)
@@ -210,7 +219,7 @@ class IrActionsReport(models.Model):
     def _get_backend(self, record):
         self.ensure_one()
         if self.cmis_folder_field_id:
-            field = record._fields[self.cmis_folder_field_id.name]
+            field = record._fields[self.sudo().cmis_folder_field_id.name]
             return field.get_backend(self.env)
         return self.cmis_backend_id
 
