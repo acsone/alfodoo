@@ -11,8 +11,6 @@
 
 Alfodoo is a set of addons to seamlessly integrate an external Document Management System with Odoo.
 
-
-
 <!-- /!\ do not modify below this line -->
 
 <!-- prettier-ignore-start -->
