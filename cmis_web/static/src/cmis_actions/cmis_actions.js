@@ -11,16 +11,24 @@ import {CmisAttachmentViewer} from "../cmis_attachment_viewer/cmis_attachment_vi
 import {CmisObjectWrapper} from "../cmis_object_wrapper_service";
 import {Dropdown} from "@web/core/dropdown/dropdown";
 import {DropdownItem} from "@web/core/dropdown/dropdown_item";
-import {cmisTableProps} from "../cmis_table/cmis_table";
 import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
 
-const {Component} = owl;
+const {Component, useState} = owl;
 
 export class CmisActions extends Component {
     setup() {
         this.dialogService = useService("dialog");
         this.allowableActions = this.props.cmisObject.allowableActions;
+        this.dynamicActions = this.props.dynamicActions || {};
+
+        this.state = useState({
+            dynamicActions: this.dynamicActions,
+        });
+    }
+
+    onClickDynamicAction(name) {
+        this.props.dynamicActions[name].actionClick(this.props.cmisObject);
     }
 
     onClickDownload() {
@@ -28,9 +36,10 @@ export class CmisActions extends Component {
     }
 
     onClickPreview() {
+        const props = this.props;
         this.dialogService.add(CmisAttachmentViewer, {
-            cmisObject: this.props.cmisObject,
-            cmisFolderObjects: this.props.cmisFolderObjects,
+            cmisObject: props.cmisObject,
+            cmisFolderObjects: [props.cmisObject],
         });
     }
 
@@ -50,9 +59,19 @@ export class CmisActions extends Component {
 CmisActions.template = "cmis_web.CmisActions";
 CmisActions.components = {Dropdown, DropdownItem};
 CmisActions.props = {
-    ...cmisTableProps,
     cmisObject: CmisObjectWrapper,
-    cmisFolderObjects: {type: Array, element: CmisObjectWrapper},
+    renameObject: Function,
+    updateDocumentContent: Function,
+    deleteObject: {
+        type: Function,
+        optional: true,
+    },
+    dynamicActions: [
+        {
+            type: Object,
+            optional: true,
+        },
+    ],
 };
 
 registry.category("view_widgets").add("cmis_actions", CmisActions);
