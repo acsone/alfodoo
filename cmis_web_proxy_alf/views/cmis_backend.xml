@@ -8,11 +8,10 @@
         <field name="model">cmis.backend</field>
         <field name="inherit_id" ref="cmis_web_proxy.cmis_backend_form_view" />
         <field name="arch" type="xml">
-          <field name="location" position="after">
+          <field name="is_cmis_proxy" position="after">
               <field
                     name="alfresco_api_location"
                     placeholder="e.g. http://localhost:8080/alfresco/s/api"
-                    colspan="4"
                 />
           </field>
       </field>
