@@ -63,6 +63,12 @@ export class CmisDocumentSearch extends CmisSessionComponent {
         this.performSearch();
     }
 
+    onSearchInputKeydown(ev) {
+        if (ev.keyCode === 13) {
+            return this.onClickSearch(ev);
+        }
+    }
+
     async performSearch() {
         var self = this;
         const cmisQuery = self.getCmisQuery();
@@ -119,7 +125,6 @@ export class CmisDocumentSearch extends CmisSessionComponent {
     }
 
     onClickRow(cmisObject) {
-        console.log(cmisObject);
         if (this.props.onClickRow) {
             this.props.onClickRow(cmisObject);
         }

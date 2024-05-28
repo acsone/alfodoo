@@ -22,7 +22,6 @@ const {Component, useState} = owl;
 export class CmisTable extends Component {
     setup() {
         this.displayActions = this.props.displayActions;
-        console.log(this.displayActions);
         if (this.displayActions === undefined) {
             this.displayActions = true;
         }
@@ -219,6 +218,15 @@ export class CmisTable extends Component {
             }
         });
         return props;
+    }
+
+    get cmisTableDropdownDynamicProps() {
+        return {
+            beforeOpen: () => {
+                // prevent to refresh the view when clicking on the button
+                return false;
+            }
+        }
     }
 
     get nbCols() {
