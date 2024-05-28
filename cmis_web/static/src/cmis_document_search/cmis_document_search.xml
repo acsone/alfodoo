@@ -12,6 +12,7 @@
                     <input
                         class="ml-1 form-control search-input"
                         t-ref="existingCmisObjectId"
+                        t-on-keydown="onSearchInputKeydown"
                         type="text"
                     />
                     <div class="input-group-append">
