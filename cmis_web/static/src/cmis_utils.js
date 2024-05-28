@@ -40,7 +40,6 @@ export class CmisSessionComponent extends Component {
 
     async setCmisSessionDefaultRepository() {
         const self = this;
-        console.log("setCmisSessionDefaultRepository");
         return new Promise(function (resolve, reject) {
             if (self.cmisSession.repositories) {
                 resolve();

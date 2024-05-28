@@ -10,8 +10,6 @@
 import {CmisFolderField} from "@cmis_web/cmis_folder/cmis_folder";
 import {patch} from "@web/core/utils/patch";
 
-console.log("patch cmis folder componenet");
-
 patch(CmisFolderField.prototype, "open_with_proxy", {
     genCmisSessionToken() {
         return JSON.stringify({
