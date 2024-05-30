@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="cmis_web.CmisDocumentLinkExisting" owl="1">
-        <Dialog size="'md'" title="props.title">
+        <Dialog size="'xl'" title="props.title">
             <form class="form-horizontal cmis-link-document-existing" role="form">
                 <div class="row" name="identifierInput">
 

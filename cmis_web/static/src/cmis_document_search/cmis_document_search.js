@@ -120,6 +120,7 @@ export class CmisDocumentSearch extends CmisSessionComponent {
             list: this.state.cmisObjectsWrap,
             displayActions: false,
             onClickRow: this.onClickRow.bind(this),
+            hideOptionalColumns: true,
         };
         return props;
     }

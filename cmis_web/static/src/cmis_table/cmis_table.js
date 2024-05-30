@@ -22,6 +22,7 @@ const {Component, useState} = owl;
 export class CmisTable extends Component {
     setup() {
         this.displayActions = this.props.displayActions;
+        this.hideOptionalColumns = this.props.hideOptionalColumns;
         if (this.displayActions === undefined) {
             this.displayActions = true;
         }
@@ -207,6 +208,12 @@ export class CmisTable extends Component {
         return ["deleteObject", "renameObject", "updateDocumentContent"];
     }
 
+    onClickToggler(ev) {
+        // clicking on the optional columns button perform a page refresh
+        // when the cmis table is displayed inside a modal
+        ev.preventDefault();
+    }
+
     get dynamicActionsProps() {
         const props = {
             dynamicActions: {},
@@ -312,5 +319,9 @@ export const cmisTableProps = {
         type: Function,
         optional: true,
     },
+    hideOptionalColumns: {
+        type: Boolean,
+        optional: true,
+    }
 };
 CmisTable.props = cmisTableProps;
