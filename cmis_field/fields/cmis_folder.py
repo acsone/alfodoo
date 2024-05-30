@@ -66,7 +66,6 @@ class CmisFolder(fields.Field):
             {record.id: {'cmis:xxx': 'val1', ...}}
 
     """
-
     type = "cmis_folder"
     column_type = ("varchar", pg_varchar())
     backend_name = None

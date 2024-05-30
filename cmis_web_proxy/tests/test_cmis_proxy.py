@@ -9,6 +9,7 @@ from cmislib.browser.binding import BrowserBinding
 from cmislib.exceptions import NotSupportedException
 
 import odoo.tests.common as common
+from odoo.tools import config as odoo_config
 
 _logger = logging.getLogger(__name__)
 
@@ -59,18 +60,17 @@ class BaseTestCmisProxy(common.HttpCase):
                 "apply_odoo_security": False,
                 "username": cmis_user,
                 "password": cmis_pwd,
-                "version": "1.0",
             }
         )
         web_descr = self.cmis_backend.get_web_description()[self.cmis_backend.id]
-        proxy_path = web_descr["cmis_location"]
+        proxy_path = web_descr["location"]
         self.authenticate("admin", "admin")
         self.cmis_url = "http://%s:%d%s" % (
             common.HOST,
-            common.PORT,
+            odoo_config["http_port"],
             proxy_path,
         )
-        self.headers = {"Cookie": "session_id=%s" % self.session_id}
+        self.headers = {"Cookie": "session_id=%s" % self.opener.cookies["session_id"]}
         self.cmis_client = CmisClient(
             self.cmis_url, "admin", "admin", headers=self.headers
         )
