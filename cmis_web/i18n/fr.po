@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-04 15:21+0000\n"
-"PO-Revision-Date: 2024-01-04 15:21+0000\n"
+"POT-Creation-Date: 2024-05-30 08:50+0000\n"
+"PO-Revision-Date: 2024-05-30 08:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,13 @@ msgstr ""
 #, python-format
 msgid "Add"
 msgstr "Ajouter"
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/add_document_dialog/add_document_dialog.js:0
+#, python-format
+msgid "Add Document"
+msgstr "Ajouter un document"
 
 #. module: cmis_web
 #. odoo-javascript
@@ -99,6 +106,13 @@ msgstr "Confirmer la suppression du lien avec"
 #, python-format
 msgid "Create"
 msgstr "Créer"
+
+#. module: cmis_web
+#. odoo-javascript
+#: code:addons/cmis_web/static/src/create_folder_dialog/create_folder_dialog.js:0
+#, python-format
+msgid "Create Folder"
+msgstr "Créer un répertoire"
 
 #. module: cmis_web
 #. odoo-javascript
@@ -370,7 +384,7 @@ msgstr "Rechercher sur base du nom du document"
 #: code:addons/cmis_web/static/src/cmis_attachment_viewer/cmis_attachment_viewer.xml:0
 #, python-format
 msgid "Text file"
-msgstr ""
+msgstr "Fichier Texte"
 
 #. module: cmis_web
 #. odoo-javascript

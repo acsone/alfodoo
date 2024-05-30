@@ -14,6 +14,7 @@ const {Component, useRef} = owl;
 export class AddDocumentDialog extends Component {
     setup() {
         this.filesInput = useRef("filesInput");
+        this.title = this.env._t("Add Document");
     }
 
     async onClose() {
