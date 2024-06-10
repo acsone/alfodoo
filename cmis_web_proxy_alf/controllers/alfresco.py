@@ -6,7 +6,6 @@ from odoo.exceptions import AccessError
 from odoo.http import request
 
 from odoo.addons.cmis_web_proxy.controllers import cmis
-from odoo.addons.web.controllers import main
 
 ALFRESCO_API_PROXY_PATH = "/alfresco/s/api"
 
@@ -36,7 +35,6 @@ class AlfrescoProxy(cmis.CmisProxy):
         csrf=False,
         methods=["GET"],
     )
-    @main.serialize_exception
     def get_thumnails(self, backend_id, cmis_name, **kwargs):
         """Call at the root of the CMIS repository. These calls are for
         requesting the global services provided by the CMIS Container

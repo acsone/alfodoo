@@ -10,8 +10,6 @@ from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 
-from odoo.addons.web.controllers import main
-
 _logger = logging.getLogger(__name__)
 
 try:
@@ -24,68 +22,68 @@ CMIS_PROXY_PATH = "/cmis/1.1/browser"
 READ_ACCESS_CMIS_ACTIONS = {"query"}
 
 WRITE_ACCESS_CMIS_ACTIONS = {
-        "createRelationship",
-        # "createPolicy", method at repository level:  not supported
-        # "createItem", method at repository level:  not supported
-        "bulkUpdate",
-        # "createType", method at repository level:  not supported
-        # "updateType", method at repository level:  not supported
-        "createDocument",
-        "createFolder",
-        "createDocumentFromSource",
-        # "createPolicy", method at repository level:  not supported
-        "update",
-        "setContent",
-        "checkOut",
-        "cancelCheckOut",
-        "checkIn",
-        # "applyPolicy", method at repository level:  not supported
-        # "applyACL", method at repository level:  not supported
+    "createRelationship",
+    # "createPolicy", method at repository level:  not supported
+    # "createItem", method at repository level:  not supported
+    "bulkUpdate",
+    # "createType", method at repository level:  not supported
+    # "updateType", method at repository level:  not supported
+    "createDocument",
+    "createFolder",
+    "createDocumentFromSource",
+    # "createPolicy", method at repository level:  not supported
+    "update",
+    "setContent",
+    "checkOut",
+    "cancelCheckOut",
+    "checkIn",
+    # "applyPolicy", method at repository level:  not supported
+    # "applyACL", method at repository level:  not supported
 }
 
 UNLINK_ACCESS_CMIS_ACTIONS = {
-        "delete",
-        "deleteContent",
-        "removeObjectFromFolder",
-        # "removePolicy", method at repository level:  not supported
-        # "deleteType", method at repository level:  not supported
+    "delete",
+    "deleteContent",
+    "removeObjectFromFolder",
+    # "removePolicy", method at repository level:  not supported
+    # "deleteType", method at repository level:  not supported
 }
 
 READ_ACCESS_ALLOWABLE_ACTIONS = {
-        "canGetDescendants",
-        "canGetChildren",
-        "canGetFolderParent",
-        "canGetObjectParents",
-        "canGetProperties",
-        "canGetContentStream",
-        "canGetAllVersions",
-        "canGetObjectRelationships",
-        "canGetAppliedPolicies",
-        "canGetACL",
+    "canGetDescendants",
+    "canGetChildren",
+    "canGetFolderParent",
+    "canGetObjectParents",
+    "canGetProperties",
+    "canGetContentStream",
+    "canGetAllVersions",
+    "canGetObjectRelationships",
+    "canGetAppliedPolicies",
+    "canGetACL",
 }
 
 WRITE_ACCESS_ALLOWABLE_ACTIONS = {
-        "canCreateDocument",
-        "canCreateFolder",
-        # "canCreatePolicy",
-        "canCreateRelationship",
-        "canUpdateProperties",
-        "canMoveObject",
-        "canSetContentStream",
-        "canAddObjectToFolder",
-        "canCheckOut",
-        "canCancelCheckOut",
-        "canCheckIn",
-        # "canApplyPolicy",
-        # "canApplyACL",
+    "canCreateDocument",
+    "canCreateFolder",
+    # "canCreatePolicy",
+    "canCreateRelationship",
+    "canUpdateProperties",
+    "canMoveObject",
+    "canSetContentStream",
+    "canAddObjectToFolder",
+    "canCheckOut",
+    "canCancelCheckOut",
+    "canCheckIn",
+    # "canApplyPolicy",
+    # "canApplyACL",
 }
 
 UNLINK_ACCESS_ALLOWABLE_ACTIONS = {
-        "canRemoveObjectFromFolder",
-        "canDeleteObject",
-        "canDeleteContentStream",
-        "canDeleteTree",
-        # "canRemovePolicy",
+    "canRemoveObjectFromFolder",
+    "canDeleteObject",
+    "canDeleteContentStream",
+    "canDeleteTree",
+    # "canRemovePolicy",
 }
 
 CMSI_ACTIONS_OPERATION_MAP = {}
@@ -384,7 +382,7 @@ class CmisProxy(http.Controller):
         token_cmis_objectid = getattr(model_inst, field_name)
         if not token_cmis_objectid:
             _logger.info(
-                "The referenced model doesn't reference a CMIS " "content (%s, %s)",
+                "The referenced model doesn't reference a CMIS content (%s, %s)",
                 model_inst._name,
                 model_inst.id,
             )
@@ -506,7 +504,6 @@ class CmisProxy(http.Controller):
         csrf=False,
         methods=["GET", "POST"],
     )
-    @main.serialize_exception
     def call_cmis_services(self, backend_id, cmis_path="", **kwargs):
         """Call at the root of the CMIS repository. These calls are for
         requesting the global services provided by the CMIS Container
