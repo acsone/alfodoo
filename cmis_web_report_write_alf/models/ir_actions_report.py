@@ -32,5 +32,7 @@ class IrActionsReport(models.Model):
                 "action": "open_url",
                 "user_id": self.env.user.id,
             }
-            bus.sendone("notify_cmis_node", bus_message)
+            bus._sendone(
+                self.env.user.partner_id, "cmis_node_notification", bus_message
+            )
         return res
