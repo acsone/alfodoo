@@ -13,6 +13,11 @@ setuptools.setup(
         'odoo-addon-cmis_report_write>=16.0dev,<16.1dev',
         'odoo-addon-cmis_web>=16.0dev,<16.1dev',
         'odoo-addon-cmis_web_alf>=16.0dev,<16.1dev',
+        'odoo-addon-cmis_web_bus>=16.0dev,<16.1dev',
+        'odoo-addon-cmis_web_proxy>=16.0dev,<16.1dev',
+        'odoo-addon-cmis_web_proxy_alf>=16.0dev,<16.1dev',
+        'odoo-addon-cmis_web_report_write>=16.0dev,<16.1dev',
+        'odoo-addon-cmis_web_report_write_alf>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
