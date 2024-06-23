@@ -26,17 +26,11 @@ addon | version | maintainers | summary
 [cmis_report_write](cmis_report_write/) | 16.0.1.0.1 |  | Save your report into a CMIS container
 [cmis_web](cmis_web/) | 16.0.1.0.0 |  | CMIS Web browser widget
 [cmis_web_alf](cmis_web_alf/) | 16.0.1.0.0 |  | Extensions to the Alfodoo web widgets for Alfresco
-
-
-Unported addons
----------------
-addon | version | maintainers | summary
---- | --- | --- | ---
-[cmis_web_bus](cmis_web_bus/) | 16.0.1.0.0 (unported) |  | Cmis Web Bus
-[cmis_web_proxy](cmis_web_proxy/) | 14.0.1.0.1 (unported) |  | Odoo as proxy server for your cmis requests.
-[cmis_web_proxy_alf](cmis_web_proxy_alf/) | 14.0.1.0.1 (unported) |  | Alfodoo CMIS Web Proxy for Alfresco
-[cmis_web_report_write](cmis_web_report_write/) | 16.0.1.0.0 (unported) |  | Cmis Web Report Write
-[cmis_web_report_write_alf](cmis_web_report_write_alf/) | 14.0.1.0.1 (unported) |  | Cmis Web Report Write Alf
+[cmis_web_bus](cmis_web_bus/) | 16.0.1.0.0 |  | Instant Messaging Bus to send notification to the CMIS components in live
+[cmis_web_proxy](cmis_web_proxy/) | 16.0.1.0.1 |  | Odoo as proxy server for your cmis requests.
+[cmis_web_proxy_alf](cmis_web_proxy_alf/) | 16.0.1.0.1 |  | Alfodoo CMIS Web Proxy for Alfresco
+[cmis_web_report_write](cmis_web_report_write/) | 16.0.1.0.0 |  | Notify CMIS web component on report saved into CMIS
+[cmis_web_report_write_alf](cmis_web_report_write_alf/) | 16.0.1.0.1 |  | Automatically open generated editable reports into Alfresco
 
 [//]: # (end addons)
 
