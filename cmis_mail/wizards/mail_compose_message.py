@@ -2,9 +2,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import base64
-import os
 import logging
 import mimetypes
+import os
 from io import BytesIO
 
 from odoo import _, api, fields, models
@@ -85,9 +85,9 @@ class MailComposeMessage(models.TransientModel):
     def _cmis_document_exists(self, cmis_parent_folder, file_name):
         qfile_name = self._sanitize_query_arg(file_name)
         cmis_qry = (
-                "SELECT cmis:objectId FROM cmis:document WHERE "
-                "IN_FOLDER('%s') AND cmis:name='%s'"
-                % (cmis_parent_folder.getObjectId(), qfile_name)
+            "SELECT cmis:objectId FROM cmis:document WHERE "
+            "IN_FOLDER('%s') AND cmis:name='%s'"
+            % (cmis_parent_folder.getObjectId(), qfile_name)
         )
         _logger.debug("Query CMIS with %s", cmis_qry)
         rs = cmis_parent_folder.repository.query(cmis_qry)
@@ -118,18 +118,13 @@ class MailComposeMessage(models.TransientModel):
                     file_name,
                     cmis_parent_folder,
                 )
-            if (
-                    cmis_document_exists
-                    and self.cmis_duplicate_handler == "new_version"
-            ):
+            if cmis_document_exists and self.cmis_duplicate_handler == "new_version":
                 doc = cmis_parent_folder.repository.getObject(
                     rs.getResults()[0].getObjectId()
                 )
                 self._update_cmis_document(buffer, file_name, doc)
             if self.cmis_duplicate_handler == "error":
-                raise UserError(
-                    _('Document "%s" already exists in CMIS') % (file_name)
-                )
+                raise UserError(_('Document "%s" already exists in CMIS') % (file_name))
 
     def _create_cmis_document(self, buffer, file_name, cmis_parent_folder):
         self.ensure_one()

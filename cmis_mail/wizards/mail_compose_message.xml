@@ -8,15 +8,28 @@
     <field name="inherit_id" ref="mail.email_compose_message_wizard_form" />
     <field name="arch" type="xml">
       <xpath expr="//field[@name='template_id']/.." position="after">
-        <group name="cmis_mail_group" string="Save attachments in CMIS" attrs="{'invisible': ['|', ('attachment_ids', '=', []), ('allowed_cmis_folder_field_ids', '=', [])]}">
+        <group
+                    name="cmis_mail_group"
+                    string="Save attachments in CMIS"
+                    attrs="{'invisible': ['|', ('attachment_ids', '=', []), ('allowed_cmis_folder_field_ids', '=', [])]}"
+                >
           <group name="cmis_mail_group_left">
-            <field name="is_save_in_cmis_enabled" string="Enable" widget="boolean_toggle" />
-            <field name="cmis_folder_field_id"
-               domain="[('model', '=', model), ('ttype', '=', 'cmis_folder')]"
-               attrs="{'invisible': ['|', ('is_save_in_cmis_enabled', '=', False), ('is_multiple_cmis_fields', '=', False)]}" />
+            <field
+                            name="is_save_in_cmis_enabled"
+                            string="Enable"
+                            widget="boolean_toggle"
+                        />
+            <field
+                            name="cmis_folder_field_id"
+                            domain="[('model', '=', model), ('ttype', '=', 'cmis_folder')]"
+                            attrs="{'invisible': ['|', ('is_save_in_cmis_enabled', '=', False), ('is_multiple_cmis_fields', '=', False)]}"
+                        />
           </group>
           <group name="cmis_mail_group_right">
-            <field name="cmis_duplicate_handler" attrs="{'invisible': [('is_save_in_cmis_enabled', '=', False)]}" />
+            <field
+                            name="cmis_duplicate_handler"
+                            attrs="{'invisible': [('is_save_in_cmis_enabled', '=', False)]}"
+                        />
           </group>
           <group name="cmis_mail_group_invisible" invisible="1">
             <field name="allowed_cmis_folder_field_ids" invisible="1" />
