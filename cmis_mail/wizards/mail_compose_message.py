@@ -66,7 +66,7 @@ class MailComposeMessage(models.TransientModel):
 
     def _get_cmis_parent_folder(self):
         self.ensure_one()
-        field_name = self.cmis_folder_field_id.name
+        field_name = self.cmis_folder_field_id.sudo().name
         related_record = self.env[self.model].browse(self.res_id)
         field = related_record._fields[field_name]
         cmis_backend = field.get_backend(self.env)
