@@ -20,4 +20,5 @@ patch(CmisFolderField.prototype, "open_in_alfresco", {
     onClickOpenInAlf() {
         this.openInAlf(this.displayFolderId);
     },
+
 });
