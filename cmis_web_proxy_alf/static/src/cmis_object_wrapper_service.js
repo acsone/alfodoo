@@ -15,24 +15,4 @@ patch(CmisObjectWrapper.prototype, "alfresco_proxy_alf_url", {
         this._super(...arguments);
         this.alfrescoApiLocation = params.alfrescoApiLocation;
     },
-    getPreviewUrl() {
-        var _url = this._super(...arguments);
-        if (_url) {
-            return _url;
-        }
-        var params = {
-            c: "force",
-            lastModified: "pdf%" + new Date().getUTCMilliseconds(),
-            token: this.token,
-            objectId: this.objectId,
-            versionSeriesId: this.versionSeriesId,
-        };
-        return (
-            this.alfrescoApiLocation +
-            "/content/thumbnails/pdf/" +
-            this.name +
-            "?" +
-            $.param(params)
-        );
-    },
 });
