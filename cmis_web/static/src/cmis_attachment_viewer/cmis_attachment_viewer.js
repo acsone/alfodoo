@@ -91,7 +91,7 @@ class CmisAttachmentViewerViewable {
                 return encodeURIComponent(k) + "=" + encodeURIComponent(params[k]);
             })
             .join("&");
-        const path = "/cmis_web/static/lib/pdfjs-1.9.426/web/odoo-viewer.html";
+        const path = "/cmis_web/static/lib/pdfjs-2.2.228/web/odoo-viewer.html";
         return path + "?" + urlParams;
     }
 
