@@ -17,7 +17,7 @@
     "images": [
         "static/description/main_icon.png",
     ],
-    "installable": True,
+    "installable": False,
     "assets": {
         "web.assets_backend": [
             "/cmis_web_alf/static/src/images/images.scss",

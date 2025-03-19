@@ -19,5 +19,5 @@
             "/cmis_web_proxy_alf/static/src/cmis_object_wrapper_service.js",
         ],
     },
-    "installable": True,
+    "installable": False,
 }

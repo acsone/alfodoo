@@ -17,5 +17,5 @@
             "cmis_web_report_write_alf/static/src/**/*",
         ],
     },
-    "installable": True,
+    "installable": False,
 }

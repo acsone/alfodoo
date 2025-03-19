@@ -12,5 +12,5 @@
     "depends": ["cmis_field"],
     "data": ["views/ir_actions_report.xml"],
     "demo": ["demo/cmis_test_model_qweb.xml"],
-    "installable": True,
+    "installable": False,
 }

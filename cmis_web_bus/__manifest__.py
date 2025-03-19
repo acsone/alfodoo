@@ -11,7 +11,7 @@
     "author": "ACSONE SA/NV",
     "website": "https://alfodoo.org",
     "depends": ["cmis_web", "bus"],
-    "installable": True,
+    "installable": False,
     "assets": {
         "web.assets_backend": [
             "cmis_web_bus/static/src/**/*",

@@ -13,7 +13,7 @@
     "currency": "EUR",
     "depends": ["web", "cmis_field"],
     "images": ["static/description/main_icon.png"],
-    "installable": True,
+    "installable": False,
     "assets": {
         "web.assets_backend": [
             "/cmis_web/static/lib/cmisjs/superagent.7.2.0.js",

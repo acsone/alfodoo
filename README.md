@@ -1,8 +1,8 @@
 
 <!-- /!\ Non OCA Context : Set here the badge of your runbot / runboat instance. -->
-[![Pre-commit Status](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml/badge.svg?branch=16.0)](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml?query=branch%3A16.0)
-[![Build Status](https://github.com/acsone/alfodoo/actions/workflows/test.yml/badge.svg?branch=16.0)](https://github.com/acsone/alfodoo/actions/workflows/test.yml?query=branch%3A16.0)
-[![codecov](https://codecov.io/gh/acsone/alfodoo/branch/16.0/graph/badge.svg)](https://codecov.io/gh/acsone/alfodoo)
+[![Pre-commit Status](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml/badge.svg?branch=18.0)](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml?query=branch%3A18.0)
+[![Build Status](https://github.com/acsone/alfodoo/actions/workflows/test.yml/badge.svg?branch=18.0)](https://github.com/acsone/alfodoo/actions/workflows/test.yml?query=branch%3A18.0)
+[![codecov](https://codecov.io/gh/acsone/alfodoo/branch/18.0/graph/badge.svg)](https://codecov.io/gh/acsone/alfodoo)
 <!-- /!\ Non OCA Context : Set here the badge of your translation instance. -->
 
 <!-- /!\ do not modify above this line -->
