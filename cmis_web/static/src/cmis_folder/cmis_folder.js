@@ -164,6 +164,7 @@ export class CmisFolderField extends Component {
             });
             return;
         }
+        this.props.record.save()
         const cmisFolderValue = await this.rpc("/web/cmis/field/create_value", {
             model_name: this.props.record.resModel,
             res_id: this.props.record.data.id,
