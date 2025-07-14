@@ -7,7 +7,7 @@
         }
 
         .action-label {
-            color: rgba(52, 58, 64, 0.4);
+            color: $o-gray-700;
             &:hover {
                 color: $btn-link-color !important;
             }
