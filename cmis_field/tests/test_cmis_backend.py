@@ -10,7 +10,7 @@ from odoo.tests import common
 
 class TestCmisBackend(common.TransactionCase):
     def setUp(self):
-        super(TestCmisBackend, self).setUp()
+        super().setUp()
         self.cmis_backend = self.env["cmis.backend"]
         self.backend_instance = self.env.ref("cmis.cmis_backend_alfresco")
 

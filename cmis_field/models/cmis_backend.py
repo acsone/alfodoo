@@ -19,8 +19,10 @@ class CmisBackend(models.Model):
             rc = rec.sanitize_replace_char
             if rc and re.findall(CMIS_NAME_INVALID_CHARS_RX, rc):
                 raise ValidationError(
-                    _("The character to use as replacement can not be one of" "'%s'")
-                    % CMIS_NAME_INVALID_CHARS
+                    _(
+                        "The character to use as replacement can not be one of" "'%s'",
+                        CMIS_NAME_INVALID_CHARS,
+                    )
                 )
 
     enable_sanitize_cmis_name = fields.Boolean(
@@ -72,12 +74,13 @@ class CmisBackend(models.Model):
         backend = self.search(domain)
         if len(backend) != 1 and raise_if_not_found:
             if name:
-                msg = _("Expected 1 backend named %(name)s, %(number)s found") % {
-                    "name": name,
-                    "number": len(backend),
-                }
+                msg = self.env._(
+                    "Expected 1 backend named %(name)s, %(number)s found",
+                    name=name,
+                    number=len(backend),
+                )
             else:
-                msg = _("No backend found")
+                msg = self.env._("No backend found")
             raise UserError(msg)
         return backend
 
@@ -92,7 +95,7 @@ class CmisBackend(models.Model):
             if not raise_if_invalid:
                 return False
             raise UserError(
-                _(
+                self.env._(
                     "%(name)s is not a valid name.\n"
                     "The following chars are not allowed %(invalid_chars)s and"
                     "the name can not ends with a space or a '.'"
@@ -145,20 +148,20 @@ class CmisBackend(models.Model):
         conflict_handler = conflict_handler or self.folder_name_conflict_handler
         cmis_qry = (
             "SELECT cmis:objectId FROM cmis:folder WHERE "
-            "IN_FOLDER('%s') AND cmis:name='%s'"
-            % (parent.getObjectId(), name.replace("'", "\\'"))
+            "IN_FOLDER('%s') AND cmis:name='%s'",
+            [parent.getObjectId(), name.replace("'", "\\'")]
         )
         rs = parent.repository.query(cmis_qry)
         num_found_items = rs.getNumItems()
         if num_found_items > 0:
             if conflict_handler == "error":
-                raise ValidationError(_('Folder "%s" already exists in CMIS') % (name))
+                raise ValidationError(_('Folder "%s" already exists in CMIS', name))
             if conflict_handler == "increment":
                 testname = name + "_(%)"
                 cmis_qry = (
                     "SELECT * FROM cmis:folder WHERE "
-                    "IN_FOLDER('%s') AND cmis:name like '%s'"
-                    % (parent.getObjectId(), testname.replace("'", "\\'"))
+                    "IN_FOLDER('%s') AND cmis:name like '%s'",
+                    [parent.getObjectId(), testname.replace("'", "\\'")]
                 )
                 rs = parent.repository.query(cmis_qry)
                 names = [r.name for r in rs]

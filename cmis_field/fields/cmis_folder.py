@@ -8,8 +8,9 @@ from operator import attrgetter
 
 from cmislib.exceptions import ObjectNotFoundException
 
-from odoo import SUPERUSER_ID, _, api, fields, registry
+from odoo import SUPERUSER_ID, api, fields
 from odoo.exceptions import UserError
+from odoo.modules.registry import Registry
 from odoo.tools.sql import pg_varchar
 
 _logger = logging.getLogger(__name__)
@@ -105,16 +106,18 @@ class CmisFolder(fields.Field):
                 # into the list.
                 backend = backend[:1]
             else:
-                msg = _("Too many backend found. " "Please check your configuration.")
+                msg = self.env._("Too many backend found. " "Please check your configuration.")
                 return {"backend_error": msg}
         if not backend:
             if self.backend_name:
                 msg = (
-                    _("Backend named %s not found. " "Please check your configuration.")
-                    % self.backend_name
+                    self.env._(
+                        "Backend named %s not found. " "Please check your configuration.",
+                        self.backend_name
+                    )
                 )
             else:
-                msg = _("No backend found. Please check your configuration.")
+                msg = self.env._("No backend found. Please check your configuration.")
             return {"backend_error": msg}
         return backend.get_web_description()[backend.id]
 
@@ -172,7 +175,7 @@ class CmisFolder(fields.Field):
             value = repo.createFolder(parent, name, props)
 
             def clean_up_folder(cmis_object_id, backend_id, dbname):
-                db_registry = registry(dbname)
+                db_registry = Registry(dbname)
                 with db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     backend = env["cmis.backend"].browse(backend_id)
@@ -203,7 +206,7 @@ class CmisFolder(fields.Field):
     def _check_null(self, record, raise_exception=True):
         val = self.__get__(record, record)
         if val and raise_exception:
-            raise UserError(_("A value is already assigned to %s") % self)
+            raise UserError(self.env._("A value is already assigned to %s", self))
         return val
 
     def get_create_names(self, records, backend):
