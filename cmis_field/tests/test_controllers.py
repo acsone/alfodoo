@@ -23,7 +23,7 @@ def mock_http_request_env(env):
 class TestCmisController(common.BaseTestCmis):
     @classmethod
     def setUpClass(cls):
-        super(TestCmisController, cls).setUpClass()
+        super().setUpClass()
         cls.cmis_test_model_inst = cls.env["cmis.test.model"].create(
             {"name": "folder_name"}
         )

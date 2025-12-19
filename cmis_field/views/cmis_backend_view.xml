@@ -1,20 +1,16 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <record id="cmis_backend_form_view" model="ir.ui.view">
       <field name="name">cmis.backend.form (cmis_field)</field>
       <field name="model">cmis.backend</field>
-      <field name="inherit_id" ref="cmis.cmis_backend_form_view" />
+      <field name="inherit_id" ref="cmis.cmis_backend_form_view"/>
       <field name="arch" type="xml">
             <group name="cmis_left" position="inside">
-                <field name="enable_sanitize_cmis_name" />
+                <field name="enable_sanitize_cmis_name"/>
             </group>
             <group name="cmis_right" position="inside">
-                <field
-                    name="sanitize_replace_char"
-                    attrs="{'invisible': [('enable_sanitize_cmis_name', '=', False)]}"
-                />
-                <field name="folder_name_conflict_handler" />
+                <field name="sanitize_replace_char" invisible="enable_sanitize_cmis_name == False"/>
+                <field name="folder_name_conflict_handler"/>
             </group>
       </field>
     </record>

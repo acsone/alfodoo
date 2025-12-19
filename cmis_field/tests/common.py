@@ -29,7 +29,7 @@ class BaseTestCmis(common.TransactionCase, FakeModelLoader):
         cls.cmis_backend.initial_directory_write = "/odoo"
 
     def setUp(self):
-        super(BaseTestCmis, self).setUp()
+        super().setUp()
 
         # global patch
 
