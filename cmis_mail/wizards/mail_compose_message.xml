@@ -11,7 +11,7 @@
         <group
                     name="cmis_mail_group"
                     string="Save attachments in CMIS"
-                    attrs="{'invisible': ['|', ('attachment_ids', '=', []), ('allowed_cmis_folder_field_ids', '=', [])]}"
+                    attrs="{'invisible': ['|', ('attachment_ids', '=', []), ('has_cmis_fields', '=', False)]}"
                 >
           <group name="cmis_mail_group_left">
             <field
@@ -21,8 +21,7 @@
                             options="{'autosave': False}"
                         />
             <field
-                            name="cmis_folder_field_id"
-                            domain="[('model', '=', model), ('ttype', '=', 'cmis_folder')]"
+                            name="cmis_folder_selection"
                             attrs="{'invisible': ['|', ('is_save_in_cmis_enabled', '=', False), ('is_multiple_cmis_fields', '=', False)]}"
                         />
           </group>
@@ -33,8 +32,8 @@
                         />
           </group>
           <group name="cmis_mail_group_invisible" invisible="1">
-            <field name="allowed_cmis_folder_field_ids" />
             <field name="is_multiple_cmis_fields" />
+            <field name="has_cmis_fields" />
           </group>
         </group>
       </xpath>

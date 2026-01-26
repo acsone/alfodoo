@@ -21,7 +21,6 @@
     ],
     "data": [
         "security/acl_ir_model_fields.xml",
-        "security/rules_ir_model_fields.xml",
         "wizards/mail_compose_message.xml",
     ],
     "installable": True,

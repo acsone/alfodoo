@@ -7,8 +7,9 @@ import mimetypes
 import os
 from io import BytesIO
 
-from odoo import Command, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.osv.expression import AND
 
 _logger = logging.getLogger(__name__)
 
@@ -20,17 +21,20 @@ class MailComposeMessage(models.TransientModel):
         string="Save attachments in CMIS",
         default=False,
     )
-    allowed_cmis_folder_field_ids = fields.Many2many(
-        comodel_name="ir.model.fields",
-        readonly=True,
+    cmis_folder_selection = fields.Selection(
+        selection="_selection_cmis_folder_selection",
+        string="CMIS Folder",
+    )
+    has_cmis_fields = fields.Boolean(
+        default=False,
     )
     is_multiple_cmis_fields = fields.Boolean(
         readonly=True,
     )
     cmis_folder_field_id = fields.Many2one(
-        string="CMIS Folder",
+        compute="_compute_cmis_folder_field_id",
+        compute_sudo=True,
         comodel_name="ir.model.fields",
-        domain="[('id', 'in', allowed_cmis_folder_field_ids.ids)]",
     )
     cmis_duplicate_handler = fields.Selection(
         selection=[
@@ -49,20 +53,43 @@ class MailComposeMessage(models.TransientModel):
         related_model = res.get("model")
         if not related_model:
             return res
-        cmis_fields = (
-            self.env["ir.model.fields"]
-            .sudo()
-            .search([("model", "=", related_model), ("ttype", "=", "cmis_folder")])
-        )
+        cmis_fields = self.with_context(
+            cmis_mail_model_required=True
+        )._selection_cmis_folder_selection()
         if cmis_fields:
             res.update(
                 {
-                    "allowed_cmis_folder_field_ids": [Command.set(cmis_fields.ids)],
-                    "cmis_folder_field_id": cmis_fields[0].id,
+                    "cmis_folder_selection": str(cmis_fields[0][0]),
+                    "has_cmis_fields": True,
                     "is_multiple_cmis_fields": len(cmis_fields) > 1,
                 }
             )
         return res
+
+    @api.model
+    def _selection_cmis_folder_selection(self):
+        related_model = self.env.context.get("default_model")
+        domain = [("ttype", "=", "cmis_folder")]
+        if related_model:
+            domain = AND([domain, [("model", "=", related_model)]])
+        elif self.env.context.get("cmis_mail_model_required"):
+            return []
+        cmis_fields = self.env["ir.model.fields"].sudo().search(domain)
+        return [
+            (str(cmis_field.id), cmis_field.display_name) for cmis_field in cmis_fields
+        ]
+
+    @api.depends("cmis_folder_selection")
+    def _compute_cmis_folder_field_id(self):
+        fields_model = self.env["ir.model.fields"].sudo()
+        for rec in self:
+            field_id = rec.cmis_folder_selection
+            if not field_id:
+                rec.cmis_folder_field_id = False
+                continue
+            rec.cmis_folder_field_id = fields_model.search(
+                [("id", "=", int(rec.cmis_folder_selection))]
+            )
 
     def _get_cmis_parent_folder(self):
         self.ensure_one()
