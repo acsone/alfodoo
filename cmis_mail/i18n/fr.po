@@ -21,8 +21,13 @@ msgid "Allowed Cmis Folder Field"
 msgstr "Dossiers CMIS autorisés"
 
 #. module: cmis_mail
-#: model:ir.model.fields,field_description:cmis_mail.field_mail_compose_message__cmis_folder_field_id
+#: model:ir.model.fields,field_description:cmis_mail.field_mail_compose_message__cmis_folder_selection
 msgid "CMIS Folder"
+msgstr "Dossier CMIS"
+
+#. module: cmis_mail
+#: model:ir.model.fields,field_description:cmis_mail.field_mail_compose_message__cmis_folder_field_id
+msgid "CMIS Folder Field"
 msgstr "Dossier CMIS"
 
 #. module: cmis_mail
