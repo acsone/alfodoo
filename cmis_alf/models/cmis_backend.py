@@ -19,7 +19,7 @@ class CmisBackend(models.Model):
             location = record.alfresco_api_location.replace(
                 to_replace, "slingshot/doclib/folder-templates"
             )
-            record.alf_folder_template_url = location
+            record.alf_folder_template_url = self._backend_location_override(location)
 
     share_location = fields.Char(
         string="Alfresco Share Url",
