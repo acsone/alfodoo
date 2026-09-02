@@ -67,12 +67,17 @@ export class CmisDocumentField extends CmisSessionComponent {
     }
 
     async setDocumentId() {
-        if (this.documentId === this.state.value) {
+        const value = this.props.value;
+        if (this.documentId === value) {
             return;
         }
-        this.documentId = this.state.value;
-
-        if (!this.documentId) {
+        this.documentId = value;
+        this.state.value = value;
+        if (!value) {
+            this.state.hasData = false;
+            this.state.cmisObjectWrap = {};
+            this.state.allowableActions = {};
+            this.displayDocumentId = null;
             return;
         }
         await this.setCmisSessionDefaultRepository();
@@ -279,12 +284,12 @@ CmisDocumentField.props = {
 };
 
 CmisDocumentField.extractProps = ({field, attrs}) => {
-    let res = {
+    const res = {
         backend: field.backend,
-    }
-    let linkDocumentSrcFolders = attrs.options.linkDocumentSrcFolders;
+    };
+    const linkDocumentSrcFolders = attrs.options.linkDocumentSrcFolders;
     if (linkDocumentSrcFolders) {
-        res["linkDocumentSrcFolders"] = linkDocumentSrcFolders;
+        res.linkDocumentSrcFolders = linkDocumentSrcFolders;
     }
     return res;
 };
