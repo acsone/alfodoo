@@ -1,5 +1,4 @@
 /** @odoo-module **/
-/* global cmis */
 
 /* ---------------------------------------------------------
 + * Odoo cmis_web
@@ -7,6 +6,9 @@
 + * License in __openerp__.py at root level of the module
 + *---------------------------------------------------------
 +*/
+
+import {CmisSessionComponent, propsCmisBackend} from "../cmis_utils";
+const {onWillRender, useRef, useState} = owl;
 
 import {AddDocumentDialog} from "../add_document_dialog/add_document_dialog";
 import {CmisBreadcrumbs} from "../cmis_breadcrumbs/cmis_breadcrumbs";
@@ -18,19 +20,13 @@ import {UpdateDocumentContentDialog} from "../update_document_content_dialog/upd
 import {WarningDialog} from "@web/core/errors/error_dialogs";
 import framework from "web.framework";
 import {registry} from "@web/core/registry";
-import {sprintf} from "@web/core/utils/strings";
 import {standardFieldProps} from "@web/views/fields/standard_field_props";
 import {useService} from "@web/core/utils/hooks";
 
-const {Component, onWillRender, useRef, useState} = owl;
-
-export class CmisFolderField extends Component {
+export class CmisFolderField extends CmisSessionComponent {
     setup() {
+        this.setupCmisSessionComponent();
         this.rpc = useService("rpc");
-        this.cmisObjectWrapperService = useService("cmisObjectWrapperService");
-        this.dialogService = useService("dialog");
-
-        this.backend = this.props.backend;
         this.state = useState({
             value: this.props.value,
             cmisObjectsWrap: [],
@@ -39,23 +35,15 @@ export class CmisFolderField extends Component {
             allowableActions: {},
         });
         this.buttonCreateFolderRef = useRef("buttonCreateFolder");
-
-        this.cmisSession = null;
         this.rootFolderId = null;
         this.displayFolderId = null;
 
         this.dragCount = 0;
 
-        this.initCmisSession();
-
         onWillRender(async () => {
             this.state.value = this.props.value;
             this.setRootFolderId();
         });
-    }
-
-    getCmisObjectWrapperParams() {
-        return {};
     }
 
     async queryCmisData() {
@@ -83,22 +71,6 @@ export class CmisFolderField extends Component {
         return;
     }
 
-    initCmisSession() {
-        if (this.backend.backend_error) {
-            this.dialogService.add(WarningDialog, {
-                title: "CMIS Error",
-                message: this.backend.backend_error,
-            });
-            return;
-        }
-        this.cmisSession = cmis.createSession(this.backend.location);
-        this.cmisSession.setGlobalHandlers(
-            this.onCmisError.bind(this),
-            this.onCmisError.bind(this)
-        );
-        this.cmisSession.setCharacterSet(document.characterSet);
-    }
-
     get dynamicProps() {
         const props = {
             list: this.state.cmisObjectsWrap,
@@ -114,26 +86,12 @@ export class CmisFolderField extends Component {
             return;
         }
         this.rootFolderId = this.state.value;
-
         if (!this.rootFolderId) {
             return;
         }
-
-        var self = this;
-        const loadCmisRepositories = new Promise(function (resolve, reject) {
-            if (self.cmisSession.repositories) {
-                resolve();
-            }
-            self.cmisSession
-                .loadRepositories()
-                .ok(() => resolve())
-                .notOk((error) => reject(error));
-        });
-
         this.state.parentFolders = [];
-        loadCmisRepositories.then(() =>
-            this.displayFolder({name: "Root", id: this.rootFolderId})
-        );
+        await this.setCmisSessionDefaultRepository();
+        this.displayFolder({name: "Root", id: this.rootFolderId});
     }
 
     async displayFolder(folder) {
@@ -174,16 +132,6 @@ export class CmisFolderField extends Component {
         this.state.value = cmisFolderValue.value;
     }
 
-    onCmisError(error) {
-        framework.unblockUI();
-        if (error) {
-            this.dialogService.add(WarningDialog, {
-                title: "CMIS Error",
-                message: error.body.message,
-            });
-        }
-    }
-
     uploadFiles(files) {
         var self = this;
         var numFiles = files.length;
@@ -219,7 +167,7 @@ export class CmisFolderField extends Component {
     renameObject(cmisObject) {
         var self = this;
         const dialogProps = {
-            title: `Rename ${cmisObject.name}`,
+            title: this.env._t("Rename") + ` ${cmisObject.name}`,
             name: cmisObject.name,
             confirm: (newName) => {
                 if (newName !== cmisObject.name) {
@@ -237,7 +185,7 @@ export class CmisFolderField extends Component {
     updateDocumentContent(cmisObject) {
         var self = this;
         const dialogProps = {
-            title: `Update content of ${cmisObject.name}`,
+            title: this.env._t("Update content of") + ` ${cmisObject.name}`,
             confirm: (file) => {
                 if (file) {
                     this.cmisSession
@@ -254,9 +202,9 @@ export class CmisFolderField extends Component {
     deleteObject(cmisObject) {
         var self = this;
         const dialogProps = {
-            title: "Delete File",
-            body: sprintf('Confirm deletion of "%s".', cmisObject.name),
-            confirmLabel: "Delete",
+            title: this.env._t("Delete file"),
+            body: this.env._t("Confirm deletion of ") + ` ${cmisObject.name}`,
+            confirmLabel: this.env._t("Delete file"),
             confirm: () => {
                 this.cmisSession
                     .deleteObject(cmisObject.objectId, true)
@@ -347,22 +295,7 @@ CmisFolderField.supportedTypes = ["cmis_folder"];
 CmisFolderField.components = {CmisBreadcrumbs, CmisTable};
 CmisFolderField.props = {
     ...standardFieldProps,
-    backend: [
-        {
-            type: Object,
-            optional: true,
-            shape: {
-                id: Number,
-                location: String,
-                name: {type: String, optional: true},
-            },
-        },
-        {
-            type: Object,
-            optional: true,
-            shape: {backend_error: String},
-        },
-    ],
+    backend: propsCmisBackend,
     allowCreate: Boolean,
 };
 

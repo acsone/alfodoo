@@ -7,10 +7,10 @@
 + *---------------------------------------------------------
 +*/
 
-import {CmisFolderField} from "@cmis_web/cmis_folder/cmis_folder";
+import {CmisDocumentField} from "@cmis_web/cmis_document/cmis_document";
 import {patch} from "@web/core/utils/patch";
 
-patch(CmisFolderField.prototype, "open_with_proxy", {
+patch(CmisDocumentField.prototype, "open_with_proxy", {
     genCmisSessionToken() {
         let token = JSON.stringify({
             model: this.props.record.resModel,
@@ -21,7 +21,7 @@ patch(CmisFolderField.prototype, "open_with_proxy", {
         return token;
     },
 
-    async setRootFolderId() {
+    async setDocumentId() {
         var self = this;
         self.setCmisSessionToken();
         this._super(...arguments);

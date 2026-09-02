@@ -7,18 +7,17 @@
 + *---------------------------------------------------------
 +*/
 
-import {CmisFolderField} from "@cmis_web/cmis_folder/cmis_folder";
+import {CmisDocumentField} from "@cmis_web/cmis_document/cmis_document";
 import {patch} from "@web/core/utils/patch";
 
-patch(CmisFolderField.prototype, "open_in_alfresco", {
-    get dynamicProps() {
+patch(CmisDocumentField.prototype, "open_in_alfresco", {
+    get dynamicActionsProps() {
         const props = this._super(...arguments);
         props.openInAlf = this.openInAlf.bind(this);
         return props;
     },
 
     onClickOpenInAlf() {
-        this.openInAlf(this.displayFolderId);
+        this.openInAlf(this.displayDocumentId);
     },
-
 });
