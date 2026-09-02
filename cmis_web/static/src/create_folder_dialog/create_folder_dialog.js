@@ -14,6 +14,7 @@ const {Component, useRef} = owl;
 export class CreateFolderDialog extends Component {
     setup() {
         this.folderName = useRef("folderName");
+        this.title = this.env._t("Create Folder");
     }
 
     async onClose() {
