@@ -1,3 +1,16 @@
+16.0 (security fix)
+~~~~~~~~~~~~~~~~~~~
+
+* cmis: internal users no longer have read access on ``cmis.backend`` (the
+  credentials were readable by any logged user). Access is done through
+  ``sudo()`` in server-side code.
+* cmis_field: ``CmisFolder.get_backend()`` returns the backend in sudo mode.
+* cmis_web_proxy, cmis_web_proxy_alf: ``get_proxy_info_by_id`` is renamed to
+  ``_get_proxy_info_by_id`` so it can no longer be called through RPC (its
+  result, cached by backend id, contains the credentials).
+* cmis_web_alf, cmis_report_write: access the backend in sudo mode.
+
+
 13.0.?.?.?
 ~~~~~~~~~~
 
