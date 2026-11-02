@@ -53,7 +53,7 @@ class CmisBackend(models.Model):
 
     @api.model
     @tools.cache("backend_id")
-    def get_proxy_info_by_id(self, backend_id):
+    def _get_proxy_info_by_id(self, backend_id):
         backend = self.get_by_id(backend_id)
         return {
             "is_cmis_proxy": backend.is_cmis_proxy,
