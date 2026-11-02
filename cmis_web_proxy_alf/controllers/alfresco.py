@@ -41,7 +41,9 @@ class AlfrescoProxy(cmis.CmisProxy):
         """
         # proxy_info are information available into the cache without loading
         # the cmis.backend from the database
-        proxy_info = request.env["cmis.backend"].get_proxy_info_by_id(backend_id)
+        proxy_info = (
+            request.env["cmis.backend"].sudo()._get_proxy_info_by_id(backend_id)
+        )
         if proxy_info["apply_odoo_security"]:
             self._check_alfresco_access(proxy_info, kwargs)
         url = (
