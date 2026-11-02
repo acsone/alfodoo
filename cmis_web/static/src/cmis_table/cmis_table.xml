@@ -53,10 +53,13 @@
                                 togglerClass="'btn p-0'"
                                 skipTogglerTabbing="true"
                                 position="'bottom-end'"
+                                t-props="cmisTableDropdownDynamicProps"
+                                t-if="!hideOptionalColumns"
                             >
                                 <t t-set-slot="toggler">
                                     <i
                                         class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"
+                                        t-on-click="onClickToggler"
                                     />
                                 </t>
 
@@ -130,9 +133,8 @@
                         t-att-class="getCellClass(column, cmisObject)"
                     >
                         <Widget
-                            t-props="{...props, ...column.props}"
+                            t-props="{...dynamicActionsProps, ...column.props}"
                             cmisObject="cmisObject"
-                            cmisFolderObjects="list.cmisObjects"
                         />
                     </td>
                 </t>
