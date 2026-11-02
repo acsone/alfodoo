@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="cmis_web.AddDocumentDialog" owl="1">
-        <Dialog size="'md'" title="'Add Document'">
+        <Dialog size="'md'" title="title">
             <input
                 type="file"
                 class="form-control"
