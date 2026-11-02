@@ -122,7 +122,11 @@ class CmisFolder(fields.Field):
     _description_allow_delete = property(attrgetter("allow_delete"))
 
     def get_backend(self, env, raise_if_not_found=True):
-        return env["cmis.backend"].get_by_name(self.backend_name, raise_if_not_found)
+        return (
+            env["cmis.backend"]
+            .sudo()
+            .get_by_name(self.backend_name, raise_if_not_found)
+        )
 
     def create_value(self, records):
         """Create a new folder for each record into the cmis container and
