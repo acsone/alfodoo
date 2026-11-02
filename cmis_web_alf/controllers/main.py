@@ -9,5 +9,7 @@ class CmisController(http.Controller):
         "/web/cmis/content_details_url", type="json", methods=["POST"], auth="user"
     )
     def get_content_details_url(self, backend_id, cmis_objectid):
-        backend = http.request.env["cmis.backend"].search([("id", "=", backend_id)])
+        backend = (
+            http.request.env["cmis.backend"].sudo().browse(int(backend_id)).exists()
+        )
         return backend.get_content_details_url(cmis_objectid)

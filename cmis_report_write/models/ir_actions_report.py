@@ -217,11 +217,17 @@ class IrActionsReport(models.Model):
         return self._safe_eval(self.cmis_filename, record)
 
     def _get_backend(self, record):
+        """
+        Return the cmis.backend record to use for this folder field.
+        **Warning**: this method searches the cmis.backend with ``sudo()``.
+        The returned record must be used with caution.
+        :return: A cmis.backend record
+        """
         self.ensure_one()
         if self.cmis_folder_field_id:
             field = record._fields[self.sudo().cmis_folder_field_id.name]
             return field.get_backend(self.env)
-        return self.cmis_backend_id
+        return self.cmis_backend_id.sudo()
 
     def _get_eval_context(self, record):
         self.ensure_one()
@@ -264,8 +270,8 @@ class IrActionsReport(models.Model):
                 field.create_value(record)
                 root_objectId = record[field_name]
         else:
-            root_objectId = self.cmis_backend_id.initial_directory_write
-            cmis_backend = self.cmis_backend_id
+            cmis_backend = self.cmis_backend_id.sudo()
+            root_objectId = cmis_backend.initial_directory_write
         # the generated name can contains sub directories
         path = os.path.dirname(cmis_filename)
         if not path:

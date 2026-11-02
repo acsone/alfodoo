@@ -23,9 +23,9 @@ class CmisBackend(models.Model):
     )
 
     @api.model
-    def get_proxy_info_by_id(self, backend_id):
+    def _get_proxy_info_by_id(self, backend_id):
         backend = self.get_by_id(backend_id)
-        info = super(CmisBackend, self).get_proxy_info_by_id(backend_id)
+        info = super(CmisBackend, self)._get_proxy_info_by_id(backend_id)
         info["alfresco_api_location"] = backend.alfresco_api_location
         return info
 
