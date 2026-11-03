@@ -1,4 +1,6 @@
 
+
+# Alfodoo
 <!-- /!\ Non OCA Context : Set here the badge of your runbot / runboat instance. -->
 [![Pre-commit Status](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml/badge.svg?branch=16.0)](https://github.com/acsone/alfodoo/actions/workflows/pre-commit.yml?query=branch%3A16.0)
 [![Build Status](https://github.com/acsone/alfodoo/actions/workflows/test.yml/badge.svg?branch=16.0)](https://github.com/acsone/alfodoo/actions/workflows/test.yml?query=branch%3A16.0)
@@ -6,8 +8,6 @@
 <!-- /!\ Non OCA Context : Set here the badge of your translation instance. -->
 
 <!-- /!\ do not modify above this line -->
-
-# Alfodoo
 
 Alfodoo is a set of addons to seamlessly integrate an external Document Management System with Odoo.
 
