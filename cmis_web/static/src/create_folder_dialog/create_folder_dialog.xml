@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="cmis_web.CreateFolderDialog" owl="1">
-        <Dialog size="'md'" title="'Create Folder'">
+        <Dialog size="'md'" title="title">
             <div class="form-group row">
                 <label
                     for="folderName"

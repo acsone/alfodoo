@@ -1,0 +1,17 @@
+.cmis-document {
+    .cmis-document-action {
+        cursor: pointer;
+        width: fit-content;
+        &:hover {
+            color: $btn-link-color !important;
+        }
+
+        .action-label {
+            color: $o-gray-700;
+            &:hover {
+                color: $btn-link-color !important;
+            }
+        }
+
+    }
+}
