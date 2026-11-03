@@ -30,7 +30,13 @@ class CmisDocument(fields.Field):
         return env.context.get("install_mode")
 
     def get_backend(self, env, raise_if_not_found=True):
-        return env['cmis.backend'].get_by_name(
+        """
+        Return the cmis.backend record to use for this folder field.
+        **Warning**: this method searches the cmis.backend with ``sudo()``.
+        The returned record must be used with caution.
+        :return: A cmis.backend record
+        """
+        return env['cmis.backend'].sudo().get_by_name(
             self.backend_name, raise_if_not_found)
 
     def _description_backend(self, env):
@@ -124,7 +130,7 @@ class CmisDocument(fields.Field):
                 db_registry = registry(dbname)
                 with api.Environment.manage(), db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
-                    backend = env["cmis.backend"].browse(backend_id)
+                    backend = env["cmis.backend"].sudo().browse(backend_id)
                     _repo = backend.get_cmis_repository()
                     # The rollback is delayed by an arbitrary length of time to give
                     # the GED time to create the folder. If the folder is not properly
