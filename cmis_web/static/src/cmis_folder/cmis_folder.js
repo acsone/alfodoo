@@ -115,6 +115,7 @@ export class CmisFolderField extends CmisSessionComponent {
     }
 
     async createRootFolder() {
+        await this.props.record.save();
         if (!this.props.record.resId) {
             this.dialogService.add(WarningDialog, {
                 title: "CMIS Error",
