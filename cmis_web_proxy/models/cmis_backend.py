@@ -53,13 +53,13 @@ class CmisBackend(models.Model):
 
     @api.model
     @tools.cache("backend_id")
-    def get_proxy_info_by_id(self, backend_id):
+    def _get_proxy_info_by_id(self, backend_id):
         backend = self.get_by_id(backend_id)
         return {
             "is_cmis_proxy": backend.is_cmis_proxy,
             "apply_odoo_security": backend.apply_odoo_security,
-            "username": backend.username,
-            "password": backend.password,
+            "username": backend.sudo().username,
+            "password": backend.sudo().password,
             "proxy_location": backend.proxy_location,
             "location": backend.location,
             "cmis_repository": backend.get_cmis_repository(),

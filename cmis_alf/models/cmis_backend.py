@@ -41,7 +41,7 @@ class CmisBackend(models.Model):
         :return:
         """
         self.ensure_one()
-        return (self.username, self.password)
+        return (self.sudo().username, self.sudo().password)
 
     def _get_alf_noderef_from_objectid(self, cmis_objectid):
         """
