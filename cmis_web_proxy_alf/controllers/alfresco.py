@@ -41,9 +41,8 @@ class AlfrescoProxy(cmis.CmisProxy):
         """
         # proxy_info are information available into the cache without loading
         # the cmis.backend from the database
-        proxy_info = request.env['cmis.backend'].get_proxy_info_by_id(
-            backend_id)
-        if proxy_info['apply_odoo_security']:
+        proxy_info = request.env["cmis.backend"]._get_proxy_info_by_id(backend_id)
+        if proxy_info["apply_odoo_security"]:
             self._check_alfresco_access(proxy_info, kwargs)
         url = (proxy_info['alfresco_api_location'] +
                '/node/workspace/SpacesStore/' +

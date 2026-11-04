@@ -448,8 +448,7 @@ class CmisProxy(http.Controller):
         """
         # proxy_info are informations available into the cache without loading
         # the cmis.backend from the database
-        proxy_info = request.env['cmis.backend'].get_proxy_info_by_id(
-            backend_id)
+        proxy_info = request.env["cmis.backend"]._get_proxy_info_by_id(backend_id)
         method = request.httprequest.method
         model_inst = False
         if proxy_info.get('apply_odoo_security'):
